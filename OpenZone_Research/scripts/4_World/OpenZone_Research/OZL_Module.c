@@ -37,6 +37,11 @@ class OZL_Module : CF_ModuleWorld
         OZL_Config.ServerLoad();
         OZL_Config.RegisterEditors();
 
+        // Стан фракцій -- усі файли з теки одразу, а не при першому гравцеві
+        // кожної: проєкти офлайнових фракцій мають завершуватись по часу.
+        int states = OZL_State.Scan();
+        OZL_Log.Info("state: " + states.ToString() + " owner file(s) read");
+
         // Імена предметів з JSON їдуть клієнтові додатками пакета ядра:
         // ядро кличе цей інвокер на кожну відправку пакета.
         OZ_SyncExtras.OnFill().Insert(OZL_NamesFill);
