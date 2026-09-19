@@ -1,0 +1,36 @@
+# Portable half of the dayz-agentic-modding-mcp profile.
+# Machine paths live in dayz-mcp.local.toml, which is not committed.
+#
+# OpenZone_Research REQUIRES @OpenZone_Core (requiredAddons): the ether of
+# this mod -- configs, identity, transport, admin sections -- is the core's.
+# The RESEARCH pane for VPP is a separate optional pbo that requires the
+# OpenZone VPP tab and VPPAdminTools hard; a server without VPP runs the
+# research mod alone.
+
+[project]
+name = "openzone-research"
+
+[build]
+# Order matters: the pane requires the base mod, packing it first is pointless.
+mods = ["OpenZone_Research", "OpenZone_Research_VPP"]
+# The layout generator reads the series' design tokens from the core
+# repository; descriptions stay here (ui/<Mod>/).
+tokens = "../openzone-core/ui/tokens.json"
+
+[expect]
+ready_line   = "research loaded"
+max_warnings = 0
+forbid       = ["Bad type", "Can't compile", "NULL pointer to instance"]
+# The engine's own errors about our classes, and the mod's own ERROR lines --
+# OZL_Log.Error prints a plain `SCRIPT :` line, which the first pattern misses.
+error_regex  = ["SCRIPT\\s+\\(E\\).*OZL_", "\\[OpenZone/Research\\] ERROR"]
+# The core warns about the bridge URL on every local boot; a state, not an event.
+noise        = ["Bridge.Url is not https"]
+
+# Filled in once the starter pack is on the stand (plan T3).
+[expect.counters]
+
+[client]
+# mod_build keeps @<Mod>/<Mod> as a junction to the source tree, so a generated
+# .layout is read without repacking (the stand config carries allowFilePatching = 1).
+file_patching = true
