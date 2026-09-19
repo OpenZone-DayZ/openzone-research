@@ -1,0 +1,109 @@
+{
+    "Version": 1,
+    "Owners": [
+        {
+            "Id": "ecolog",
+            "TerminalClasses": [
+                "OZL_LabComputer"
+            ],
+            "DeviceClasses": [
+                "OZL_Microscope",
+                "OZL_LabComputer",
+                "OZL_SampleFridge",
+                "OZL_Eco_Pack_Bio",
+                "OZL_Eco_Proc_Bio",
+                "OZL_Eco_Pack_Anom",
+                "OZL_Eco_Proc_Anom",
+                "OZL_Eco_Pack_Electro",
+                "OZL_Eco_Proc_Electro"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "clearsky",
+            "TerminalClasses": [
+                "OZL_ChemBench"
+            ],
+            "DeviceClasses": [
+                "OZL_ChemBench",
+                "OZL_Sky_Pack_Bio",
+                "OZL_Sky_Proc_Bio",
+                "OZL_Sky_Pack_Anom",
+                "OZL_Sky_Proc_Anom",
+                "OZL_Sky_Pack_Electro",
+                "OZL_Sky_Proc_Electro"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "duty",
+            "TerminalClasses": [
+                "OZL_ServerRack"
+            ],
+            "DeviceClasses": [
+                "OZL_ServerRack",
+                "OZL_Dty_Pack_Ball",
+                "OZL_Dty_Proc_Ball",
+                "OZL_Dty_Pack_Prot",
+                "OZL_Dty_Proc_Prot"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "freedom",
+            "TerminalClasses": [
+                "OZL_Frd_Terminal"
+            ],
+            "DeviceClasses": [
+                "OZL_Frd_Terminal",
+                "OZL_Frd_Pack_Ball",
+                "OZL_Frd_Proc_Ball",
+                "OZL_Frd_Pack_Prot",
+                "OZL_Frd_Proc_Prot"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "sop",
+            "TerminalClasses": [
+                "OZL_Sop_Terminal"
+            ],
+            "DeviceClasses": [
+                "OZL_Sop_Terminal",
+                "OZL_Sop_Pack_Ball",
+                "OZL_Sop_Proc_Ball",
+                "OZL_Sop_Pack_Prot",
+                "OZL_Sop_Proc_Prot"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "bandit",
+            "TerminalClasses": [
+                "OZL_Bnd_Terminal"
+            ],
+            "DeviceClasses": [
+                "OZL_Bnd_Terminal",
+                "OZL_Bnd_Pack_Khabar",
+                "OZL_Bnd_Proc_Khabar",
+                "OZL_Bnd_Pack_Trail",
+                "OZL_Bnd_Proc_Trail"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "loner",
+            "TerminalClasses": [
+                "OZL_Lnr_Terminal"
+            ],
+            "DeviceClasses": [
+                "OZL_Lnr_Terminal",
+                "OZL_Lnr_Pack_Khabar",
+                "OZL_Lnr_Proc_Khabar",
+                "OZL_Lnr_Pack_Trail",
+                "OZL_Lnr_Proc_Trail"
+            ],
+            "TreeBackground": ""
+        }
+    ]
+}

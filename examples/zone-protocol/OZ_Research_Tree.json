@@ -1,0 +1,1523 @@
+{
+    "Version": 1,
+    "Branches": [
+        {
+            "Id": "bnd_poniattia",
+            "Name": "Поняття братви",
+            "Icon": "",
+            "SortOrder": 3,
+            "Owners": [
+                "bandit"
+            ],
+            "Nodes": [
+                {
+                    "Id": "bnd_poniattia",
+                    "Name": "Поняття братви",
+                    "Description": "Корінь: хто кому платить за хабар і хто ходить стежками. Відкриває пакувальники й аналізатори 1 тиру обох ліній.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t1",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "trails_lab_t1",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_skupka",
+                    "Name": "Скупка хабару",
+                    "Description": "Своя скупка з нормальними вагами: рідкісні артефакти вже не йдуть за безцінь. RequiredNode для пакування хабару 2 тиру.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 2,
+                    "Parents": [
+                        "bnd_poniattia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_navodka",
+                    "Name": "Навідка",
+                    "Description": "Хто куди ходить і що несе: маркери, зламані КПК, карти. RequiredNode для пакування стежок 2 тиру.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "bnd_poniattia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_kontrabanda",
+                    "Name": "Контрабандні канали",
+                    "Description": "Легендарний хабар за Периметр. Перехресна вартість — наукові anomaly_lab_t1: без довідки Вчених «Компас» не продати. RequiredNode для пакування хабару 3 тиру.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "bnd_skupka"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_reket",
+                    "Name": "Рекет на стежках",
+                    "Description": "Контроль проходів: чипи детекторів, карти доступу, планшети. RequiredNode для пакування стежок 3 тиру.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "bnd_navodka"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 8
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 45,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_oblava",
+                    "Name": "Облава на схрони",
+                    "Description": "Скупка плюс навідка: знаємо, де схрон, і знаємо, що в ньому. Перехресна — бойові ballistics_lab_t1 (зброя для облави).",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 3,
+                    "Parents": [
+                        "bnd_skupka",
+                        "bnd_navodka"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 45,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_chornyi_rynok",
+                    "Name": "Чорний ринок",
+                    "Description": "Глибина лінії хабару: власні ціни на артефакти 3 тиру.",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 4,
+                    "Parents": [
+                        "bnd_kontrabanda"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "anomaly_lab_t1",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "bnd_avtorytet",
+                    "Name": "Авторитет",
+                    "Description": "Капстоун: братва тримає і ринок, і стежки. Перехресна — бойові protection_lab_t2 (броня для охорони каналу).",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 5,
+                    "Parents": [
+                        "bnd_chornyi_rynok",
+                        "bnd_reket",
+                        "bnd_oblava"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t3",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "trails_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "dty_doktryna",
+            "Name": "Статут Долгу",
+            "Icon": "",
+            "SortOrder": 5,
+            "Owners": [
+                "duty"
+            ],
+            "Nodes": [
+                {
+                    "Id": "dty_statut",
+                    "Name": "Статут Долгу",
+                    "Description": "Корінь програми: облік трофейного обвісу й засобів захисту.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_prystrilka",
+                    "Name": "Пристрілка",
+                    "Description": "Догляд за зброєю. Відкриває t2 балістики.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "dty_statut"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_bronia",
+                    "Name": "Підгонка броні",
+                    "Description": "Шоломи й балони під бійця. Відкриває t2 захисту.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 2,
+                    "Parents": [
+                        "dty_statut"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_nich",
+                    "Name": "Нічне полювання",
+                    "Description": "Нічна оптика й важкі глушники. Відкриває t3 балістики. Перехресно: стежки сталкерів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "dty_prystrilka"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_ekzo",
+                    "Name": "Екзосервіс",
+                    "Description": "Модулі екзоскелетів і ребризери. Відкриває t3 захисту. Перехресно: електроніка Вчених.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 3,
+                    "Parents": [
+                        "dty_bronia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 8
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_vazhkyi_kalibr",
+                    "Name": "Важкий калібр",
+                    "Description": "Глушники 12,7x55 і оптика під великі калібри — нахил Долгу.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 4,
+                    "Parents": [
+                        "dty_nich"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "ballistics_lab_t3",
+                            "Amount": 3
+                        },
+                        {
+                            "Type": "trails_lab_t1",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [
+                        {
+                            "Classname": "Paper",
+                            "Quantity": 2,
+                            "Content": ""
+                        }
+                    ],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_mutantobii",
+                    "Name": "Засоби вбивства мутантів",
+                    "Description": "Доктрина винищення мутантів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 4,
+                    "Parents": [
+                        "dty_nich",
+                        "dty_ekzo"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "dty_shturm",
+                    "Name": "Штурмова доктрина Долгу",
+                    "Description": "Капстоун. Перехресно: хабар бандитів.",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 5,
+                    "Parents": [
+                        "dty_vazhkyi_kalibr",
+                        "dty_mutantobii"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t3",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "protection_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "eco_nauka",
+            "Name": "Програма Вчених",
+            "Icon": "",
+            "SortOrder": 1,
+            "Owners": [
+                "ecolog"
+            ],
+            "Nodes": [
+                {
+                    "Id": "eco_osnovy",
+                    "Name": "Лабораторні основи",
+                    "Description": "Протоколи прийому, маркування й зберігання проб у лабораторії Вчених. Корінь програми.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t1",
+                            "Amount": 5
+                        },
+                        {
+                            "Type": "bio_lab_t1",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t1",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_ano_detekt",
+                    "Name": "Детекція аномалій",
+                    "Description": "Калібрування детекторів під поля Зони. Відкриває переробку артефактів середньої рідкості.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 2,
+                    "Parents": [
+                        "eco_osnovy"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_bio_zbir",
+                    "Name": "Відбір біозразків",
+                    "Description": "Правильний забір тканин мутантів без псування матеріалу. Відкриває частини мутантів середньої небезпеки.",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 2,
+                    "Parents": [
+                        "eco_osnovy"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [
+                        {
+                            "Classname": "Paper",
+                            "Quantity": 2,
+                            "Content": ""
+                        }
+                    ],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_teh_elektro",
+                    "Name": "Лабораторна електроніка",
+                    "Description": "Ремонт і калібрування приладів. Відкриває переробку рідшої електроніки.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "eco_osnovy"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "electronics_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_ano_artefakt",
+                    "Name": "Природа артефактів",
+                    "Description": "Класифікація артефактів за породжуючою аномалією. Відкриває легендарні артефакти.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "eco_ano_detekt"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_bio_anatom",
+                    "Name": "Анатомія мутантів",
+                    "Description": "Систематизація будови тканин. Відкриває частини найнебезпечніших мутантів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "eco_bio_zbir"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 45,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_teh_dani",
+                    "Name": "Обробка даних",
+                    "Description": "Серверне зберігання й аналіз вимірів. Відкриває рідкісну електроніку.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 3,
+                    "Parents": [
+                        "eco_teh_elektro"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 8
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_ano_stabil",
+                    "Name": "Стабілізація артефактів",
+                    "Description": "Безпечне зберігання нестабільних артефактів. Потрібен хабар зі сталкерських ринків для порівняльних серій.",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 4,
+                    "Parents": [
+                        "eco_ano_artefakt"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t2",
+                            "Amount": 8
+                        },
+                        {
+                            "Type": "anomaly_lab_t3",
+                            "Amount": 3
+                        },
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_ano_kontur",
+                    "Name": "Контур аномалії",
+                    "Description": "Електронна модель аномального поля на базі артефактів і даних сталкерського хабару.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 4,
+                    "Parents": [
+                        "eco_ano_artefakt",
+                        "eco_teh_dani"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t3",
+                            "Amount": 2
+                        },
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "khabar_lab_t1",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "eco_protokol",
+                    "Name": "Протокол Зони",
+                    "Description": "Фінальна мета програми Вчених: зведена модель аномалій, мутантів і приладів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 5,
+                    "Parents": [
+                        "eco_ano_stabil",
+                        "eco_ano_kontur",
+                        "eco_bio_anatom"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t3",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "bio_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "khabar_lab_t3",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "frd_kordon",
+            "Name": "Вільний статут Волі",
+            "Icon": "",
+            "SortOrder": 6,
+            "Owners": [
+                "freedom"
+            ],
+            "Nodes": [
+                {
+                    "Id": "frd_volia",
+                    "Name": "Вільний статут",
+                    "Description": "Корінь програми Волі.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_zbroiar",
+                    "Name": "Зброярня Волі",
+                    "Description": "Натовський обвіс. Відкриває t2 балістики.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "frd_volia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_khimzakhyst",
+                    "Name": "Хімзахист",
+                    "Description": "Фільтри, маски, балони. Відкриває t2 захисту.",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 2,
+                    "Parents": [
+                        "frd_volia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_teplo",
+                    "Name": "Тепловізори",
+                    "Description": "Теплова й цифрова нічна оптика. Відкриває t3 балістики. Перехресно: електроніка Вчених.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 3,
+                    "Parents": [
+                        "frd_zbroiar"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 8
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_rebryzer",
+                    "Name": "Ребризери",
+                    "Description": "Автономне дихання. Відкриває t3 захисту. Перехресно: біологія Вчених.",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 3,
+                    "Parents": [
+                        "frd_khimzakhyst"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_ekzo_moduli",
+                    "Name": "Модулі екзоскелета",
+                    "Description": "Акумулятори, протигази екзо — нахил Волі в захист.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 4,
+                    "Parents": [
+                        "frd_rebryzer"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "protection_lab_t3",
+                            "Amount": 3
+                        },
+                        {
+                            "Type": "bio_lab_t1",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_anomalna_bronia",
+                    "Name": "Броня проти аномалій",
+                    "Description": "Захист t3 плюс балістика прикриття.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 4,
+                    "Parents": [
+                        "frd_rebryzer",
+                        "frd_teplo"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "frd_fortetsia",
+                    "Name": "Фортеця Волі",
+                    "Description": "Капстоун. Перехресно: хабар бандитів.",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 5,
+                    "Parents": [
+                        "frd_ekzo_moduli",
+                        "frd_anomalna_bronia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t3",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "ballistics_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "lnr_shkola",
+            "Name": "Сталкерська школа",
+            "Icon": "",
+            "SortOrder": 4,
+            "Owners": [
+                "loner"
+            ],
+            "Nodes": [
+                {
+                    "Id": "lnr_shkola",
+                    "Name": "Сталкерська школа",
+                    "Description": "Корінь: як ходити Зоною і не загинути, як не продешевити з хабаром. Відкриває лінії 1 тиру.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t1",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "trails_lab_t1",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_torh",
+                    "Name": "Торг із барменом",
+                    "Description": "Знаємо ціну рідкісному хабару. RequiredNode для пакування хабару 2 тиру.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 2,
+                    "Parents": [
+                        "lnr_shkola"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_stezhky",
+                    "Name": "Розвідка стежок",
+                    "Description": "Маркери, карти й чужі КПК складаються в мапу безпечних проходів. RequiredNode для пакування стежок 2 тиру.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "lnr_shkola"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_kartohrafiia",
+                    "Name": "Картографія Зони",
+                    "Description": "Глибина лінії стежок: чипи детекторів і планшети. Перехресна — наукові electronics_lab_t1 (читачі носіїв від Вчених). RequiredNode для пакування стежок 3 тиру.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "lnr_stezhky"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [
+                        {
+                            "Classname": "ChernarusMap",
+                            "Quantity": 1,
+                            "Content": ""
+                        }
+                    ],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_ridkisnyi",
+                    "Name": "Рідкісний хабар",
+                    "Description": "Легендарні артефакти здаються без посередників. RequiredNode для пакування хабару 3 тиру.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "lnr_torh"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 8
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 45,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_providnyk",
+                    "Name": "Провідник",
+                    "Description": "Водимо новачків і торгівців: стежки плюс товар. Без перехресної вартості.",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 3,
+                    "Parents": [
+                        "lnr_stezhky",
+                        "lnr_torh"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t1",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 45,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_reid",
+                    "Name": "Глибокий рейд",
+                    "Description": "Маршрути на Північ. Перехресна — бойові ballistics_lab_t2 (прикриття від Долгу/Волі).",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 4,
+                    "Parents": [
+                        "lnr_kartohrafiia",
+                        "lnr_providnyk"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "lnr_lehenda",
+                    "Name": "Легенда Зони",
+                    "Description": "Капстоун: знає всі стежки і весь хабар. Перехресна — наукові bio_lab_t2 (антидоти для глибоких рейдів).",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 5,
+                    "Parents": [
+                        "lnr_reid",
+                        "lnr_ridkisnyi"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails_lab_t3",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "khabar_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "bio_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "sky_nauka",
+            "Name": "Програма Чистого неба",
+            "Icon": "",
+            "SortOrder": 2,
+            "Owners": [
+                "clearsky"
+            ],
+            "Nodes": [
+                {
+                    "Id": "sky_osnovy",
+                    "Name": "Польова лабораторія",
+                    "Description": "Похідна лабораторія Чистого неба: прийом і зберігання проб на краю Зони. Корінь програми.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t1",
+                            "Amount": 5
+                        },
+                        {
+                            "Type": "anomaly_lab_t1",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t1",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_bio_zbir",
+                    "Name": "Польовий відбір проб",
+                    "Description": "Забір тканин мутантів у полі. Відкриває частини мутантів середньої небезпеки.",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 2,
+                    "Parents": [
+                        "sky_osnovy"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [
+                        {
+                            "Classname": "Paper",
+                            "Quantity": 2,
+                            "Content": ""
+                        }
+                    ],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_ano_detekt",
+                    "Name": "Розвідка аномалій",
+                    "Description": "Калібрування детекторів. Відкриває артефакти середньої рідкості.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 2,
+                    "Parents": [
+                        "sky_osnovy"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_teh_elektro",
+                    "Name": "Польова електроніка",
+                    "Description": "Ремонт приладів у польових умовах. Відкриває рідшу електроніку.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "sky_osnovy"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "electronics_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_bio_anatom",
+                    "Name": "Розтин мутантів",
+                    "Description": "Систематизація тканин. Відкриває частини найнебезпечніших мутантів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "sky_bio_zbir"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t2",
+                            "Amount": 12
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_ano_artefakt",
+                    "Name": "Каталог артефактів",
+                    "Description": "Класифікація артефактів. Відкриває легендарні артефакти.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "sky_ano_detekt"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 45,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_teh_dani",
+                    "Name": "Польова обробка даних",
+                    "Description": "Аналіз накопичених вимірів. Відкриває рідкісну електроніку.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 3,
+                    "Parents": [
+                        "sky_teh_elektro"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 8
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_bio_mutagen",
+                    "Name": "Мутагени",
+                    "Description": "Виділення активних сполук із тканин. Потрібні маршрутні дані сталкерів про лігва.",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 4,
+                    "Parents": [
+                        "sky_bio_anatom"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t2",
+                            "Amount": 8
+                        },
+                        {
+                            "Type": "bio_lab_t3",
+                            "Amount": 3
+                        },
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 4
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_bio_syrovatka",
+                    "Name": "Сироватка",
+                    "Description": "Препарат проти псі-впливу на базі тканин і електронних вимірів; ребризери бойових груп дають проби з заражених зон.",
+                    "Icon": "set:dayz_gui image:iconBacteria",
+                    "Tier": 4,
+                    "Parents": [
+                        "sky_bio_anatom",
+                        "sky_teh_dani"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t3",
+                            "Amount": 2
+                        },
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sky_protokol",
+                    "Name": "Протокол Чистого неба",
+                    "Description": "Фінальна мета програми: зведена модель біології Зони, аномалій і приладів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 5,
+                    "Parents": [
+                        "sky_bio_mutagen",
+                        "sky_bio_syrovatka",
+                        "sky_ano_artefakt"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "bio_lab_t3",
+                            "Amount": 8
+                        },
+                        {
+                            "Type": "anomaly_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "electronics_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "trails_lab_t3",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "sop_sluzhba",
+            "Name": "Статут СОП",
+            "Icon": "",
+            "SortOrder": 7,
+            "Owners": [
+                "sop"
+            ],
+            "Nodes": [
+                {
+                    "Id": "sop_statut",
+                    "Name": "Статут СОП",
+                    "Description": "Корінь програми СОП.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 5
+                        },
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 5
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_strilba",
+                    "Name": "Стрілецька підготовка",
+                    "Description": "Відкриває t2 балістики.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 2,
+                    "Parents": [
+                        "sop_statut"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_zakhyst",
+                    "Name": "Засоби захисту",
+                    "Description": "Відкриває t2 захисту.",
+                    "Icon": "set:dayz_gui image:gear",
+                    "Tier": 2,
+                    "Parents": [
+                        "sop_statut"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t1",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_snaiper",
+                    "Name": "Снайперська пара",
+                    "Description": "Відкриває t3 балістики. Перехресно: стежки сталкерів.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 3,
+                    "Parents": [
+                        "sop_strilba"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_vazhka_bronia",
+                    "Name": "Важка броня",
+                    "Description": "Відкриває t3 захисту. Перехресно: електроніка Вчених.",
+                    "Icon": "set:dayz_gui image:icon_refresh",
+                    "Tier": 3,
+                    "Parents": [
+                        "sop_zakhyst"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 10
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_polihon",
+                    "Name": "Полігон",
+                    "Description": "Досить будь-якого з двох напрямків.",
+                    "Icon": "set:dayz_gui image:icon_hammer",
+                    "Tier": 4,
+                    "Parents": [
+                        "sop_snaiper",
+                        "sop_vazhka_bronia"
+                    ],
+                    "ParentsMode": "any",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "protection_lab_t2",
+                            "Amount": 6
+                        },
+                        {
+                            "Type": "trails_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 60,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_shturmhrupa",
+                    "Name": "Штурмова група",
+                    "Description": "Симетричний t3-вузол.",
+                    "Icon": "set:dayz_gui image:iconSkull",
+                    "Tier": 4,
+                    "Parents": [
+                        "sop_snaiper",
+                        "sop_vazhka_bronia"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t3",
+                            "Amount": 3
+                        },
+                        {
+                            "Type": "protection_lab_t3",
+                            "Amount": 3
+                        },
+                        {
+                            "Type": "electronics_lab_t2",
+                            "Amount": 3
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 90,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "sop_spetsoperatsiia",
+                    "Name": "Спецоперація",
+                    "Description": "Капстоун СОП. Перехресно: хабар бандитів.",
+                    "Icon": "set:dayz_gui image:iconPill",
+                    "Tier": 5,
+                    "Parents": [
+                        "sop_polihon",
+                        "sop_shturmhrupa"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "protection_lab_t3",
+                            "Amount": 4
+                        },
+                        {
+                            "Type": "khabar_lab_t2",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 120,
+                    "RequiredFactions": []
+                }
+            ]
+        }
+    ]
+}

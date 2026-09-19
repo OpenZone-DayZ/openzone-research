@@ -27,8 +27,19 @@ error_regex  = ["SCRIPT\\s+\\(E\\).*OZL_", "\\[OpenZone/Research\\] ERROR"]
 # The core warns about the bridge URL on every local boot; a state, not an event.
 noise        = ["Bridge.Url is not https"]
 
-# Filled in once the starter pack is on the stand (plan T3).
+# The test-stand starter pack (examples/test-stand), measured on the first boot
+# 2026-09-20. `problems` counts the checks the configs failed: any rule, node or
+# item the loader had to disable.
 [expect.counters]
+owners      = 7
+pointTypes  = 24
+rules       = 43
+nodes       = 16
+dataItems   = 22
+modules     = 3
+sampleTypes = 6
+statics     = 51
+problems    = 0
 
 [client]
 # mod_build keeps @<Mod>/<Mod> as a junction to the source tree, so a generated

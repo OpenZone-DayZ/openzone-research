@@ -1,0 +1,77 @@
+{
+    "Version": 1,
+    "Modules": [
+        {
+            "Classname": "OZL_Tool_Optics",
+            "PurityBonus": 0.20000000298023224,
+            "Devices": [
+                "OZL_Microscope",
+                "OZL_Eco_Pack_Bio",
+                "OZL_Eco_Pack_Anom",
+                "OZL_Eco_Pack_Electro",
+                "OZL_Bnd_Pack_Khabar",
+                "OZL_Bnd_Pack_Trail",
+                "OZL_Dty_Pack_Ball",
+                "OZL_Dty_Pack_Prot",
+                "OZL_Frd_Pack_Ball",
+                "OZL_Frd_Pack_Prot",
+                "OZL_Lnr_Pack_Khabar",
+                "OZL_Lnr_Pack_Trail",
+                "OZL_Sky_Pack_Anom",
+                "OZL_Sky_Pack_Bio",
+                "OZL_Sky_Pack_Electro",
+                "OZL_Sop_Pack_Ball",
+                "OZL_Sop_Pack_Prot"
+            ],
+            "Notes": "оптика: рівніший зріз, менше сміття в пробі"
+        },
+        {
+            "Classname": "OZL_Tool_Centrifuge",
+            "PurityBonus": 0.30000001192092896,
+            "Devices": [
+                "OZL_SampleFridge",
+                "OZL_Eco_Pack_Bio",
+                "OZL_Eco_Pack_Anom",
+                "OZL_Eco_Pack_Electro",
+                "OZL_Sky_Pack_Bio",
+                "OZL_Sky_Pack_Anom",
+                "OZL_Sky_Pack_Electro",
+                "OZL_Bnd_Pack_Khabar",
+                "OZL_Bnd_Pack_Trail",
+                "OZL_Dty_Pack_Ball",
+                "OZL_Dty_Pack_Prot",
+                "OZL_Frd_Pack_Ball",
+                "OZL_Frd_Pack_Prot",
+                "OZL_Lnr_Pack_Khabar",
+                "OZL_Lnr_Pack_Trail",
+                "OZL_Sop_Pack_Ball",
+                "OZL_Sop_Pack_Prot"
+            ],
+            "Notes": "центрифуга: відділяє фракції"
+        },
+        {
+            "Classname": "OZL_Tool_Reagents",
+            "PurityBonus": 0.25,
+            "Devices": [
+                "OZL_ChemBench",
+                "OZL_Sky_Pack_Bio",
+                "OZL_Sky_Pack_Anom",
+                "OZL_Sky_Pack_Electro",
+                "OZL_Bnd_Pack_Khabar",
+                "OZL_Bnd_Pack_Trail",
+                "OZL_Dty_Pack_Ball",
+                "OZL_Dty_Pack_Prot",
+                "OZL_Eco_Pack_Anom",
+                "OZL_Eco_Pack_Bio",
+                "OZL_Eco_Pack_Electro",
+                "OZL_Frd_Pack_Ball",
+                "OZL_Frd_Pack_Prot",
+                "OZL_Lnr_Pack_Khabar",
+                "OZL_Lnr_Pack_Trail",
+                "OZL_Sop_Pack_Ball",
+                "OZL_Sop_Pack_Prot"
+            ],
+            "Notes": "реагенти: стабілізують матеріал"
+        }
+    ]
+}
