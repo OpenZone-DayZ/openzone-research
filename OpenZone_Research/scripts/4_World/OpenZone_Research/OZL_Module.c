@@ -32,6 +32,11 @@ class OZL_Module : CF_ModuleWorld
         OZ_Json.EnsureTree();
         OZ_Json.EnsureDir(OZL_Const.STATE_DIR);
 
+        // Конфіги -- до всього, що їх читає; редактор ядра -- після першого
+        // читання, щоб застосувач підміняв живий об'єкт, а не порожнечу.
+        OZL_Config.ServerLoad();
+        OZL_Config.RegisterEditors();
+
         // РЯДОК ГОТОВНОСТІ -- ТІКОМ ПІЗНІШЕ, і це не косметика. Порядок
         // CF-модулів не гарантований: на першому буті цей модуль відпрацював
         // раніше за мод фракцій і чесно написав `identity=absent` про службу,
@@ -64,8 +69,7 @@ class OZL_Module : CF_ModuleWorld
     // у ZP_Research це знайшли на восьмому доданку.
     static string ReadyLine()
     {
-        string s = "research loaded: owners=0 pointTypes=0 rules=0 nodes=0";
-        s += " dataItems=0 modules=0 sampleTypes=0 statics=0";
+        string s = "research loaded: " + OZL_Config.Get().Counters();
 
         // Чи стоїть мод фракцій: без нього кожен гравець -- типовий власник, і
         // адмін мусить бачити це тут, а не шукати, чому в усіх одне дерево.
