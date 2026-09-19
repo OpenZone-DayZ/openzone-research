@@ -260,6 +260,7 @@ class OZL_Config
         m_Statics = statics.Copy();
 
         CheckAll();
+        RefreshNames();
         m_Revision++;
     }
 
@@ -310,9 +311,63 @@ class OZL_Config
         }
 
         CheckAll();
+        RefreshNames();
         m_Revision++;
         OZL_Log.Info("config " + tag + " replaced, revision " + m_Revision.ToString());
+
+        // Імена предметів у клієнтів беруться з пакета синхронізації ядра;
+        // після правки той пакет треба надіслати знову всім, хто в грі.
+        OZ_SyncSender.SendAll("research configs edited");
         return true;
+    }
+
+    // Серверна дорога наповнення довідника імен (OZL_Names): з живих конфігів,
+    // після кожного читання й кожної правки.
+    private void RefreshNames()
+    {
+        OZL_Names.Clear();
+        int i;
+        for (i = 0; i < m_SampleTypes.Items.Count(); i++)
+        {
+            OZL_SampleTypeDef s = m_SampleTypes.Items[i];
+            if (s && s.Enabled)
+                OZL_Names.Set(s.Id, s.Name, s.Description);
+        }
+        for (i = 0; i < m_DataItems.Items.Count(); i++)
+        {
+            OZL_DataDef d = m_DataItems.Items[i];
+            if (d && d.Enabled)
+                OZL_Names.Set(d.Id, d.Name, d.Description);
+        }
+    }
+
+    // Імена -- у пакет синхронізації ядра, по додатку на предмет. Кличе
+    // інвокер OZ_SyncExtras через OZL_Module на кожну відправку пакета.
+    static void FillNames(OZ_SyncPayload p)
+    {
+        OZL_Config cfg = Get();
+        int i;
+        int n = 0;
+        for (i = 0; i < cfg.m_SampleTypes.Items.Count(); i++)
+        {
+            OZL_SampleTypeDef s = cfg.m_SampleTypes.Items[i];
+            if (!s || !s.Enabled)
+                continue;
+            OZL_Names.PutEntry(p, OZL_Names.SYNC_SAMPLE + n.ToString(), s.Id, s.Name, s.Description);
+            n++;
+        }
+        OZ_SyncExtras.Put(p, OZL_Names.SYNC_SAMPLES, n.ToString());
+
+        n = 0;
+        for (i = 0; i < cfg.m_DataItems.Items.Count(); i++)
+        {
+            OZL_DataDef d = cfg.m_DataItems.Items[i];
+            if (!d || !d.Enabled)
+                continue;
+            OZL_Names.PutEntry(p, OZL_Names.SYNC_DATA + n.ToString(), d.Id, d.Name, d.Description);
+            n++;
+        }
+        OZ_SyncExtras.Put(p, OZL_Names.SYNC_DATA_N, n.ToString());
     }
 
     // Реєстрація в редакторі ядра -- по рядку на файл, після першого читання.

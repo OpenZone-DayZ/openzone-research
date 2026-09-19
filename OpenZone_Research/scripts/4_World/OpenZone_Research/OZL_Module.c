@@ -37,6 +37,10 @@ class OZL_Module : CF_ModuleWorld
         OZL_Config.ServerLoad();
         OZL_Config.RegisterEditors();
 
+        // Імена предметів з JSON їдуть клієнтові додатками пакета ядра:
+        // ядро кличе цей інвокер на кожну відправку пакета.
+        OZ_SyncExtras.OnFill().Insert(OZL_NamesFill);
+
         // РЯДОК ГОТОВНОСТІ -- ТІКОМ ПІЗНІШЕ, і це не косметика. Порядок
         // CF-модулів не гарантований: на першому буті цей модуль відпрацював
         // раніше за мод фракцій і чесно написав `identity=absent` про службу,
@@ -56,12 +60,21 @@ class OZL_Module : CF_ModuleWorld
         OZL_Log.Info(ReadyLine());
     }
 
+    // Кличе інвокер OZ_SyncExtras -- метод мусить бути видимим (не private).
+    void OZL_NamesFill(OZ_SyncPayload p)
+    {
+        OZL_Config.FillNames(p);
+    }
+
     override void OnMissionFinish(Class sender, CF_EventArgs args)
     {
         super.OnMissionFinish(sender, args);
 
         if (m_ReadyTimer)
             m_ReadyTimer.Stop();
+
+        // Дзеркало підписки: інвокер ядра статичний і переживе місію.
+        OZ_SyncExtras.OnFill().Remove(OZL_NamesFill);
     }
 
     // РЯДОК ЗБИРАЄМО ПООПЕРАТОРНО, а не одним ланцюжком «+»: компілятор

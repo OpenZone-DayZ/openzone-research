@@ -387,7 +387,8 @@ class OZL_Rules : OZ_ConfigBase
 // опознання. У 3_Game, бо його читають і правила (перевірка), і предмет.
 class OZL_CarrierState
 {
-    static const int MAX_AMOUNT = 100000;
+    // Тисяча, як у ZP: носій на більше -- не результат переробки, а помилка правила.
+    static const int MAX_AMOUNT = 1000;
 
     static bool Parse(string state, out string pointType, out int amount)
     {
