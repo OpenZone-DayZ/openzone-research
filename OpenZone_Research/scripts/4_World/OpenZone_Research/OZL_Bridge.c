@@ -136,7 +136,8 @@ class OZL_Bridge
 
     // ---------- boot ----------
 
-    // Лист після старту: ревізія, лічильники, теги конфігів, файл класів.
+    // Лист після старту: ревізія, лічильники, теги конфігів. Перелік класів
+    // сервера тепер пише ядро (OZ_ClassDump), міст читає його сам.
     // Міст сам читає конфіги з профілю й переотправляє невідповідані команди.
     void Boot()
     {
@@ -145,8 +146,6 @@ class OZL_Bridge
         OZL_BootLetter l = new OZL_BootLetter();
         l.Revision   = OZL_Config.Get().Revision();
         l.Counters   = OZL_Config.Get().Counters();
-        l.Classes    = OZL_Const.CLASSES_FILE;
-        l.ClassCount = OZL_ClassDump.LastCount();
         OZL_Config.Tags(l.Names);
 
         string json;

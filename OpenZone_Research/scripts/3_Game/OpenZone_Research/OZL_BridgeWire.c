@@ -12,8 +12,6 @@ class OZL_BootLetter
 {
     int    Revision   = 0;
     string Counters   = "";
-    string Classes    = "";
-    int    ClassCount = 0;
     ref array<string> Names;
 
     void OZL_BootLetter()

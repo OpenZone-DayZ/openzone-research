@@ -69,13 +69,11 @@ the config.cpp, so a server can rename samples and data without a repack.
 
 With the Discord bridge (`openzone-bridge`, `RESEARCH_DIR` in its `.env`) the mod
 subscribes the kind `research` to the core's bridge client: after start it posts a boot
-letter (revision, counters, the nine config names, and a dump of every class of the five
-roots the rules check into `research\xchg\classes.tsv`: root, name, parent, game name
-in the `original` and the `english` column -- the server reads every `stringtable.csv` it
-can open in the loaded archives, ours and the neighbours', and a class whose key no table
-holds gets the name the server itself resolves; the whole dump takes under a second), after
-every applied edit a `changed` letter, and it answers every command of the bridge with a
-`result` letter by token. Commands come down
+letter (revision, counters, the nine config names), after every applied edit a `changed`
+letter, and it answers every command of the bridge with a `result` letter by token. The
+classes the editor checks against are the core's business: `OpenZone_Core` dumps every
+class of the server with its parent and its game names into `$profile:OpenZone\classes.tsv`
+at each start, and the bridge reads that file itself. Commands come down
 as poll items: `cfg_apply` reads a candidate file from `research\xchg\` and applies it
 the way the VPP editor does (validation, one backed-up write, a live replace, a resync of
 the clients), deleting the file on success and leaving it on refusal; `reset`, `grant`,

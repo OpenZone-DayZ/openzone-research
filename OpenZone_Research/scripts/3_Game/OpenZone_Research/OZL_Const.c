@@ -43,7 +43,6 @@ class OZL_Const
     static const string ROUTE_CHANGED = "v1/research/changed";
     static const string ROUTE_RESULT  = "v1/research/result";
     static const string XCHG_DIR      = "$profile:OpenZone\\research\\xchg";
-    static const string CLASSES_FILE  = "classes.tsv";
 
     // Ідентифікатор меню дерева. МАЄ БУТИ МАЛИМ (див. OZ_PdaConst: із великим
     // числом EnterScriptedMenu мовчки віддає NULL). Зайнято родиною OpenZone:
