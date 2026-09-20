@@ -1,11 +1,139 @@
 {
   "layout": "oz_research_node",
-  "note": "One node of the research tree: a 176 x 64 button the script creates inside TreeArea for every node of the picked branch and places at Col * 220, Row * 84. The script renames the root to the node id, paints NodeBar by status (muted locked, accent available, alert researching, ok completed) and fills NodeName and NodeCost.",
-  "root": {"button": {"name": "OZL_TreeNode", "size": [176, 64],
-    "children": [
-      {"panel": {"name": "NodeBg", "at": [0, 0], "size": [176, 64], "color": "$raised", "edge": "$edge"}},
-      {"panel": {"name": "NodeBar", "at": [0, 0], "size": [4, 64], "color": "$muted"}},
-      {"label": {"name": "NodeName", "at": [12, 6], "size": [156, 24], "font": "body", "color": "$text"}},
-      {"label": {"name": "NodeCost", "at": [12, 34], "size": [156, 20], "font": "small", "color": "$muted"}}
-    ]}}
+  "note": "One node of the research tree. The root is a CELL: the card plus the gap that separates it from its neighbour, so the tier row's spacer packs the cards with even gutters and the script never places a node itself -- add a node, remove a node, and the engine re-flows the row. Inside: the status stripe along the top (painted by the script), the node's own icon, its name over two lines and the price. NodeHit is the transparent button UNDER the card -- the script renames it to the node id and reads that back on click. NodeProgress shows only while the node is being researched.",
+  "root": {
+    "frame": {
+      "name": "OZL_NodeCell",
+      "size": [
+        228,
+        116
+      ],
+      "children": [
+        {
+          "button": {
+            "name": "NodeHit",
+            "at": [
+              10,
+              0
+            ],
+            "size": [
+              208,
+              92
+            ],
+            "text": "",
+            "bg": "$none",
+            "edge": "$none",
+            "note": "Under the card on purpose: a style-less button flashes white on hover unless something opaque covers it, and the card's own widgets ignore the pointer, so the press still reaches this."
+          }
+        },
+        {
+          "frame": {
+            "name": "NodeCard",
+            "at": [
+              10,
+              0
+            ],
+            "size": [
+              208,
+              92
+            ],
+            "children": [
+              {
+                "panel": {
+                  "name": "NodeBg",
+                  "size": [
+                    208,
+                    92
+                  ],
+                  "color": "$raised",
+                  "edge": "$edge"
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeTop",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    208,
+                    3
+                  ],
+                  "color": "$muted"
+                }
+              },
+              {
+                "hbox": {
+                  "name": "NodeRow",
+                  "at": [
+                    10,
+                    9
+                  ],
+                  "size": [
+                    188,
+                    74
+                  ],
+                  "gap": "$space.gap",
+                  "children": [
+                    {
+                      "icon": {
+                        "name": "NodeIcon",
+                        "set": "dayz_gui",
+                        "image": "missing",
+                        "size": [
+                          42,
+                          42
+                        ],
+                        "color": "$muted",
+                        "hidden": true,
+                        "note": "The node's Icon from the tree config, loaded by the script (LoadImageFile takes the set:…image:… form too); hidden when the node names none, and the name then keeps its own column."
+                      }
+                    },
+                    {
+                      "vbox": {
+                        "name": "NodeText",
+                        "w": "fill",
+                        "gap": 2,
+                        "children": [
+                          {
+                            "text": {
+                              "name": "NodeName",
+                              "h": "fill",
+                              "grow": false,
+                              "plain": true,
+                              "font": "body",
+                              "color": "$text",
+                              "note": "Wraps to the card's width instead of being cut: two lines at body size."
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "NodeCost",
+                              "h": "$size.hint",
+                              "font": "small",
+                              "color": "$muted"
+                            }
+                          },
+                          {
+                            "bar": {
+                              "name": "NodeProgress",
+                              "h": 4,
+                              "track": "$panel",
+                              "fill": "$alert",
+                              "hidden": true
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
 }

@@ -16,30 +16,42 @@ class OZL_PointName
     int    Tier     = 1;
 }
 
+// Матеріал, якого коштує вузол: клас, ЙОГО ІГРОВА НАЗВА (сервер питає
+// конфіг, клієнт не знає класів) і скільки штук.
+class OZL_ItemView
+{
+    // Не `Class`: так зветься тип рушія, і поле з таким іменем не збереться.
+    string Cls  = "";
+    string Name = "";
+    int    Qty  = 0;
+}
+
 class OZL_NodeView
 {
     string Id       = "";
     string Name     = "";
     string Desc     = "";
+    // Значок вузла з конфігу дерева ("set:<набір> image:<значок>"); порожньо
+    // -- значка немає, картка лишає колонку під нього порожньою.
+    string Icon     = "";
     // "locked" | "available" | "researching" | "completed"
     string Status   = "locked";
     // Календарні секунди OZL_Clock, коли проєкт завершиться (лише researching).
     int    EndSec   = 0;
     // Скільки триває дослідження цього вузла; 0 -- миттєво.
     int    Duration = 0;
-    // Місце на сітці: стовпець -- рівень, рядок -- порядок у рівні.
-    int    Col      = 0;
-    int    Row      = 0;
-    ref array<string>      Parents;
-    ref array<ref OZL_KV>  Cost;
-    // Матеріали з карго термінала, рядками "<клас> x <кількість>".
-    ref array<string>      Items;
+    // Рівень вузла: рядок екрана. Порядку в рядку немає -- він такий, яким
+    // вузли йдуть у масиві, а розкладає їх рушій.
+    int    Tier     = 1;
+    ref array<string>         Parents;
+    ref array<ref OZL_KV>     Cost;
+    ref array<ref OZL_ItemView> Items;
 
     void OZL_NodeView()
     {
         Parents = new array<string>();
         Cost    = new array<ref OZL_KV>();
-        Items   = new array<string>();
+        Items   = new array<ref OZL_ItemView>();
     }
 }
 
@@ -47,6 +59,10 @@ class OZL_BranchView
 {
     string Id   = "";
     string Name = "";
+    // Скільки вузлів у гілці НАСПРАВДІ: те, що нижче, -- лише видимі, а
+    // лічильник "досліджено N / M" має рахувати все дерево, інакше він
+    // росте, коли туман війни відступає.
+    int    Total = 0;
     ref array<ref OZL_NodeView> Nodes;
 
     void OZL_BranchView()

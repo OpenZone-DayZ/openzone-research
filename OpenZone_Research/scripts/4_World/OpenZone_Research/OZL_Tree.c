@@ -307,6 +307,60 @@ class OZL_Tree
 
     // ---------- відповідь клієнтові ----------
 
+    // Ігрова назва класу: рушій знає її на сервері так само, як на клієнті
+    // (ConfigGetTextOut розв'язує $STR_ мовою сервера). П'ять коренів у тому
+    // ж порядку, що в дампі класів ядра; класу без назви лишається сам клас,
+    // бо порожній рядок у картці гірший за ім'я класу.
+    static string ItemName(string cls)
+    {
+        if (cls == "")
+            return "";
+        string name = GetGame().ConfigGetTextOut("CfgVehicles " + cls + " displayName");
+        if (name == "")
+            name = GetGame().ConfigGetTextOut("CfgMagazines " + cls + " displayName");
+        if (name == "")
+            name = GetGame().ConfigGetTextOut("cfgWeapons " + cls + " displayName");
+        if (name == "")
+            name = GetGame().ConfigGetTextOut("CfgAmmo " + cls + " displayName");
+        if (name == "" || name.IndexOf("$") == 0 || name.IndexOf("STR_") == 0)
+            return cls;
+        return name;
+    }
+
+    // Наскільки глибоко закритий вузол лежить за межею відкритого: 0 --
+    // вузол не закритий, 1 -- його батько відкритий, 2 -- батько закритий і
+    // сам лежить на глибині 1, і так далі. Вузол без батьків, який закрито,
+    // має глибину 1: він на самій межі. Settings.TreeVisibilityDepth каже,
+    // скільки таких рівнів показувати; глибші клієнт не отримує взагалі --
+    // туман війни рахує сервер, бо клієнтові нічого знати про них.
+    static int LockedDepth(OZL_FactionState st, OZL_TreeConfig tree, OZL_TreeNode node, map<string, int> memo, int guard)
+    {
+        if (StatusOf(st, node) != "locked")
+            return 0;
+        int known;
+        if (memo.Find(node.Id, known))
+            return known;
+        if (guard > 32)
+            return 1;
+        // Поки глибина рахується, вузол уже "в роботі": цикл у батьках не
+        // має ганяти рекурсію по колу.
+        memo.Set(node.Id, 1);
+        int best = -1;
+        for (int i = 0; i < node.Parents.Count(); i++)
+        {
+            OZL_TreeNode par = tree.FindNode(node.Parents[i]);
+            if (!par)
+                continue;
+            int d = LockedDepth(st, tree, par, memo, guard + 1) + 1;
+            if (best < 0 || d < best)
+                best = d;
+        }
+        if (best < 0)
+            best = 1;
+        memo.Set(node.Id, best);
+        return best;
+    }
+
     static OZL_TreeView View(string owner, string uid)
     {
         OZL_Config cfg = OZL_Config.Get();
@@ -342,6 +396,11 @@ class OZL_Tree
         }
 
         OZL_TreeConfig tree = cfg.Tree();
+        // Туман війни: скільки рівнів закритих вузлів показувати за межею
+        // відкритого. Пам'ять глибин одна на весь обхід -- вузол спільний для
+        // двох гілок рахується раз.
+        int depthLimit = cfg.Settings().TreeVisibilityDepth;
+        map<string, int> depthMemo = new map<string, int>();
         for (int b = 0; b < tree.Branches.Count(); b++)
         {
             OZL_TreeBranch br = tree.Branches[b];
@@ -350,17 +409,23 @@ class OZL_Tree
             OZL_BranchView bv = new OZL_BranchView();
             bv.Id   = br.Id;
             bv.Name = br.Name;
-            // Рядок -- порядок серед вузлів того самого рівня в цій гілці.
-            array<int> rowsPerTier = new array<int>();
+            for (int all = 0; all < br.Nodes.Count(); all++)
+            {
+                if (br.Nodes[all] && tree.NodeBelongsTo(br.Nodes[all], owner))
+                    bv.Total++;
+            }
             for (int n = 0; n < br.Nodes.Count(); n++)
             {
                 OZL_TreeNode node = br.Nodes[n];
                 if (!node || !tree.NodeBelongsTo(node, owner))
                     continue;
+                if (LockedDepth(st, tree, node, depthMemo, 0) > depthLimit)
+                    continue;
                 OZL_NodeView nv = new OZL_NodeView();
                 nv.Id       = node.Id;
                 nv.Name     = node.Name;
                 nv.Desc     = node.Description;
+                nv.Icon     = node.Icon;
                 nv.Status   = StatusOf(st, node);
                 nv.Duration = node.ResearchTimeSec;
                 if (st)
@@ -369,14 +434,9 @@ class OZL_Tree
                     if (pr)
                         nv.EndSec = pr.EndSec;
                 }
-                int col = node.Tier - 1;
-                if (col < 0)
-                    col = 0;
-                while (rowsPerTier.Count() <= col)
-                    rowsPerTier.Insert(0);
-                nv.Col = col;
-                nv.Row = rowsPerTier[col];
-                rowsPerTier[col] = rowsPerTier[col] + 1;
+                nv.Tier = node.Tier;
+                if (nv.Tier < 1)
+                    nv.Tier = 1;
                 for (i = 0; i < node.Parents.Count(); i++)
                     nv.Parents.Insert(node.Parents[i]);
                 for (i = 0; i < node.Cost.Count(); i++)
@@ -389,10 +449,13 @@ class OZL_Tree
                     OZL_TreeItemCost ic = node.ItemCost[i];
                     if (!ic)
                         continue;
-                    string line = ic.Classname + " x " + ic.Quantity.ToString();
+                    OZL_ItemView iv = new OZL_ItemView();
+                    iv.Cls   = ic.Classname;
+                    iv.Name  = ItemName(ic.Classname);
                     if (ic.Content != "")
-                        line += " [" + ic.Content + "]";
-                    nv.Items.Insert(line);
+                        iv.Name += " [" + ic.Content + "]";
+                    iv.Qty   = ic.Quantity;
+                    nv.Items.Insert(iv);
                 }
                 bv.Nodes.Insert(nv);
             }

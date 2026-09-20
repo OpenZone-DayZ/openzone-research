@@ -1,67 +1,464 @@
 {
   "layout": "oz_research_tree",
-  "note": "The research tree screen (menu 135): a window over the whole screen with the faction header, the branch list on the left, the node grid in the middle with parent-child lines on a canvas, the node card on the right and a hint line. OZL_TreeMenu.c resolves by name: OwnerChip, OwnerName, PoolLine, BtnClose, BranchList (the stack the rows go into), TreeArea, TreeBg, TreeLines, CardName, CardDesc, CardCost, CardItems, CardTime, CardStatus, CardProgressBox, CardProgress, BtnResearch, TreeHint. Nodes are instances of oz_research_node.layout created by the script inside TreeArea at Col * 220, Row * 84 -- the inner geometry of a panel of known size, so coordinates are allowed there. Steel and cold light from the core's tokens; orange only for a node in progress.",
-  "root": {"frame": {"name": "OZL_TreeRoot", "size": "screen", "priority": 2,
-    "children": [
-      {"panel": {"name": "TreeDim", "size": "fill", "color": "$dim",
-        "note": "Dims the world behind the window."}},
-      {"frame": {"name": "TreeWindow", "anchor": "center", "size": [1720, 900], "inset": "$space.page",
-        "note": "1720 wide leaves 100 units a side at 16:9; five node columns of 220 (a 176-unit node and a 44-unit gap for the lines) fit the 1100-unit tree area. Vertical: 860 = 34 (header) + 10 + 784 (body) + 10 + 22 (hint).",
-        "children": [
-          {"panel": {"name": "TreeWindowBg", "size": "fill", "color": "$screen"}},
-          {"vbox": {"name": "TreeBody", "gap": "$space.gap", "children": [
-
-            {"hbox": {"name": "TreeHeader", "h": "$size.header", "gap": "$space.gap", "children": [
-              {"chip": {"name": "OwnerChip", "w": 6, "note": "Shown by the script, painted the faction colour the core gives."}},
-              {"label": {"name": "OwnerName", "w": 420, "font": "title", "color": "$accent"}},
-              {"label": {"name": "PoolLine", "w": "fill", "font": "small", "color": "$muted"}},
-              {"button": {"name": "BtnClose", "w": 140, "text": "#STR_OZL_TREE_CLOSE"}}
-            ]}},
-
-            {"hbox": {"name": "TreeCols", "h": "fill", "gap": "$space.column", "children": [
-
-              {"vbox": {"name": "BranchesCol", "w": 220, "gap": "$space.tight", "children": [
-                {"label": {"name": "BranchesHead", "h": "$size.hint", "text": "#STR_OZL_TREE_BRANCHES", "font": "small", "color": "$muted"}},
-                {"list": {"name": "BranchScroll", "stack": "BranchList", "h": "fill",
-                  "rows": {"oz_research_branch_row": {"row": {"name": "OZL_BranchRow", "h": 44, "click": true,
-                    "note": "One branch. The script renames the root to the branch id and reads it back on click.",
-                    "children": [
-                      {"panel": {"name": "RowBg", "size": "fill", "color": "$panel"}},
-                      {"panel": {"name": "RowPick", "size": "fill", "color": "$pick", "hidden": true}},
-                      {"label": {"name": "RowName", "at": [12, 4], "size": [190, 22], "font": "body", "color": "$text"}},
-                      {"label": {"name": "RowCount", "at": [12, 26], "size": [190, 16], "font": "small", "color": "$muted"}},
-                      {"rule": {"name": "RowLine", "anchor": "bottom", "at": [0, 0], "w": "fill"}}
-                    ]}}}}}
-              ]}},
-
-              {"panel": {"name": "TreeArea", "w": "fill", "color": "$panel",
-                "note": "The node grid host. TreeBg is the owner's background texture, swapped by the script (LoadImageFile) or hidden when the owner has none; TreeLines is the canvas the parent-child lines are drawn on.",
-                "children": [
-                  {"image": {"name": "TreeBg", "size": "fill", "file": "OpenZone_Research/gui/textures/tree/tree_bg_loner.paa", "color": "$white", "hidden": true}},
-                  {"raw": {"name": "TreeLines", "class": "CanvasWidgetClass", "size": "fill"}}
-                ]}},
-
-              {"vbox": {"name": "CardCol", "w": 320, "gap": "$space.tight", "children": [
-                {"label": {"name": "CardName", "h": 28, "text": "#STR_OZL_TREE_PICK", "font": "header", "color": "$text"}},
-                {"text": {"name": "CardDesc", "w": 320, "h": 100, "plain": true, "grow": false, "font": "small", "color": "$muted"}},
-                {"text": {"name": "CardCost", "w": 320, "h": 44, "plain": true, "grow": false, "font": "small", "color": "$text",
-                  "note": "Two lines: point type names are long and admin-written."}},
-                {"text": {"name": "CardItems", "w": 320, "h": 44, "plain": true, "grow": false, "font": "small", "color": "$text"}},
-                {"label": {"name": "CardTime", "h": "$size.hint", "font": "small", "color": "$muted"}},
-                {"label": {"name": "CardStatus", "h": "$size.hint", "font": "body", "color": "$accent"}},
-                {"frame": {"name": "CardProgressBox", "h": 8, "children": [
-                  {"panel": {"name": "CardProgressBg", "size": "fill", "color": "$edge"}},
-                  {"panel": {"name": "CardProgress", "at": [0, 0], "size": [1, 8], "color": "$alert",
-                    "note": "The script stretches it to the elapsed fraction of a running project."}}
-                ]}},
-                {"button": {"name": "BtnResearch", "h": "$size.header", "text": "#STR_OZL_TREE_RESEARCH", "edge": "$ok", "color": "$ok", "hidden": true,
-                  "note": "Visible only when the node is available and the server said MaySpend."}},
-                {"panel": {"name": "CardSpacer", "h": "fill", "color": "$none"}}
-              ]}}
-            ]}},
-
-            {"label": {"name": "TreeHint", "h": "$size.hint", "text": "#STR_OZL_TREE_HINT", "font": "hint", "color": "$faint"}}
-          ]}}
-        ]}}
-    ]}}
+  "note": "The research tree screen (menu 135). Three columns under one header: the faction's branches and its points on the left, the tree itself in the middle, the chosen node's card on the right. THE TREE GROWS DOWNWARDS -- one row per tier, and a row is a spacer the engine fills itself, so the script adds and removes node cells and never places one: a tier that gains a node re-flows, a tier that loses its last node collapses. Only the lines between parent and child are drawn by hand, on TreeLines, from the rectangles the engine gave the cells. OZL_TreeMenu.c resolves by name: OwnerChip, OwnerName, PoolLine, BtnClose, BranchList, PointList, TreeArea, TreeBg, TreeLines, TreeScroll, TierStack, CardName, CardMeta, CardDesc, CardCostHead, CardCostList, CardTime, CardStatus, BtnResearch, TreeHint. Steel and cold light from the core's tokens; orange only for a node in progress.",
+  "root": {
+    "frame": {
+      "name": "OZL_TreeRoot",
+      "size": "screen",
+      "priority": 2,
+      "children": [
+        {
+          "panel": {
+            "name": "TreeDim",
+            "size": "fill",
+            "color": "$dim",
+            "note": "Dims the world behind the window."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeWindow",
+            "anchor": "center",
+            "size": [
+              1720,
+              900
+            ],
+            "inset": "$space.page",
+            "note": "1720 x 900 leaves a hundred units a side at 16:9. Inside: header 34, body 784, hint 22, two gaps of 10.",
+            "children": [
+              {
+                "panel": {
+                  "name": "TreeWindowBg",
+                  "size": "fill",
+                  "color": "$screen"
+                }
+              },
+              {
+                "vbox": {
+                  "name": "TreeBody",
+                  "gap": "$space.gap",
+                  "children": [
+                    {
+                      "hbox": {
+                        "name": "TreeHeader",
+                        "h": "$size.header",
+                        "gap": "$space.gap",
+                        "children": [
+                          {
+                            "chip": {
+                              "name": "OwnerChip",
+                              "w": 6,
+                              "note": "Painted the faction colour the core gives."
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "OwnerName",
+                              "w": 440,
+                              "font": "title",
+                              "color": "$accent"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolLine",
+                              "w": "fill",
+                              "font": "small",
+                              "color": "$muted"
+                            }
+                          },
+                          {
+                            "button": {
+                              "name": "BtnClose",
+                              "w": 140,
+                              "text": "#STR_OZL_TREE_CLOSE"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "hbox": {
+                        "name": "TreeCols",
+                        "h": "fill",
+                        "gap": "$space.column",
+                        "children": [
+                          {
+                            "vbox": {
+                              "name": "LeftCol",
+                              "w": 280,
+                              "gap": "$space.tight",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "BranchesHead",
+                                    "h": "$size.hint",
+                                    "text": "#STR_OZL_TREE_BRANCHES",
+                                    "font": "small",
+                                    "color": "$accent"
+                                  }
+                                },
+                                {
+                                  "rule": {
+                                    "name": "BranchesRule"
+                                  }
+                                },
+                                {
+                                  "list": {
+                                    "name": "BranchScroll",
+                                    "stack": "BranchList",
+                                    "h": 180,
+                                    "rows": {
+                                      "oz_research_branch_row": {
+                                        "row": {
+                                          "name": "OZL_BranchRow",
+                                          "h": 40,
+                                          "click": true,
+                                          "note": "One branch. The script renames the root to the branch id and reads it back on click.",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "RowBg",
+                                                "size": "fill",
+                                                "color": "$panel"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "RowPick",
+                                                "size": "fill",
+                                                "color": "$pick",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "RowBar",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  3,
+                                                  40
+                                                ],
+                                                "color": "$accent",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "RowName",
+                                                "at": [
+                                                  12,
+                                                  3
+                                                ],
+                                                "size": [
+                                                  190,
+                                                  22
+                                                ],
+                                                "font": "body",
+                                                "color": "$text"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "RowCount",
+                                                "at": [
+                                                  0,
+                                                  3
+                                                ],
+                                                "w": "fill",
+                                                "font": "small",
+                                                "color": "$muted",
+                                                "align": "right"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "name": "LeftGap",
+                                    "h": "$space.gap"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PointsHead",
+                                    "h": "$size.hint",
+                                    "text": "#STR_OZL_TREE_POINTS",
+                                    "font": "small",
+                                    "color": "$accent"
+                                  }
+                                },
+                                {
+                                  "rule": {
+                                    "name": "PointsRule"
+                                  }
+                                },
+                                {
+                                  "list": {
+                                    "name": "PointScroll",
+                                    "stack": "PointList",
+                                    "h": "fill",
+                                    "note": "Every point type this faction's tree spends, with what the faction has. The script adds one row per type: nothing here is a fixed number of lines.",
+                                    "rows": {
+                                      "oz_research_point_row": {
+                                        "row": {
+                                          "name": "OZL_PointRow",
+                                          "h": 24,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "PointName",
+                                                "at": [
+                                                  0,
+                                                  1
+                                                ],
+                                                "size": [
+                                                  232,
+                                                  20
+                                                ],
+                                                "font": "small",
+                                                "color": "$text"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "PointHave",
+                                                "at": [
+                                                  0,
+                                                  1
+                                                ],
+                                                "w": "fill",
+                                                "font": "small",
+                                                "color": "$muted",
+                                                "align": "right"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "TreeArea",
+                              "w": "fill",
+                              "color": "$panel",
+                              "note": "TreeBg is the faction's own backdrop (swapped by the script, hidden when the faction names none); TreeLines carries the parent-child lines; TreeScroll holds one row per tier and scrolls when a tree is taller than the window.",
+                              "children": [
+                                {
+                                  "image": {
+                                    "name": "TreeBg",
+                                    "size": "fill",
+                                    "file": "OpenZone_Research/gui/textures/tree/tree_bg_loner.paa",
+                                    "color": "$white",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "list": {
+                                    "name": "TreeScroll",
+                                    "stack": "TierStack",
+                                    "size": "fill",
+                                    "rows": {
+                                      "oz_research_tier": {
+                                        "row": {
+                                          "name": "OZL_TierRow",
+                                          "stack": true,
+                                          "note": "One tier. A spacer: the script drops node cells in and the engine lays them out, centred, wrapping when a tier is wider than the tree area."
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "vbox": {
+                              "name": "CardCol",
+                              "w": 420,
+                              "gap": "$space.tight",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "CardName",
+                                    "h": 28,
+                                    "text": "#STR_OZL_TREE_PICK",
+                                    "font": "header",
+                                    "color": "$text"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardMeta",
+                                    "h": "$size.hint",
+                                    "font": "small",
+                                    "color": "$muted"
+                                  }
+                                },
+                                {
+                                  "rule": {
+                                    "name": "CardRule"
+                                  }
+                                },
+                                {
+                                  "text": {
+                                    "name": "CardDesc",
+                                    "h": 90,
+                                    "plain": true,
+                                    "grow": false,
+                                    "font": "small",
+                                    "color": "$muted"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardCostHead",
+                                    "h": "$size.hint",
+                                    "text": "#STR_OZL_TREE_COST",
+                                    "font": "small",
+                                    "color": "$accent"
+                                  }
+                                },
+                                {
+                                  "list": {
+                                    "name": "CardCostScroll",
+                                    "stack": "CardCostList",
+                                    "h": "fill",
+                                    "note": "One row per point type and per material the node costs -- the script adds as many as the node has.",
+                                    "rows": {
+                                      "oz_research_cost_row": {
+                                        "row": {
+                                          "name": "OZL_CostRow",
+                                          "h": 26,
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CostBg",
+                                                "size": "fill",
+                                                "color": "$panel"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CostBar",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  2,
+                                                  26
+                                                ],
+                                                "color": "$ok"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CostName",
+                                                "at": [
+                                                  10,
+                                                  2
+                                                ],
+                                                "size": [
+                                                  286,
+                                                  22
+                                                ],
+                                                "font": "small",
+                                                "color": "$text"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CostNeed",
+                                                "at": [
+                                                  0,
+                                                  2
+                                                ],
+                                                "w": "fill",
+                                                "font": "small",
+                                                "color": "$ok",
+                                                "align": "right"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "hbox": {
+                                    "name": "CardFacts",
+                                    "h": 38,
+                                    "gap": "$space.tight",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardTime",
+                                          "w": "fill",
+                                          "font": "small",
+                                          "color": "$muted"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardStatus",
+                                          "w": 160,
+                                          "font": "body",
+                                          "color": "$text",
+                                          "align": "right"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "button": {
+                                    "name": "BtnResearch",
+                                    "h": "$size.button",
+                                    "text": "#STR_OZL_TREE_RESEARCH"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "TreeHint",
+                        "h": "$size.hint",
+                        "font": "small",
+                        "color": "$faint"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
 }

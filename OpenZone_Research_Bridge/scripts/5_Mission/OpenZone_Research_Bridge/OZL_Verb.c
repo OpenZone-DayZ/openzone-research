@@ -15,6 +15,7 @@
 //   world_exec verb=oz_research args={"op":"bridge"}
 //   world_exec verb=oz_research args={"op":"admin","cmd":"grant:loner:bio_field_t1:5"}
 //   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
+//   world_exec verb=oz_research args={"op":"treeui"}                     (opens the tree SCREEN on the connected client)
 //   world_exec verb=oz_research args={"op":"research","node":"pb_osnovy","as":"post"}
 //
 // `target` names a station class; the nearest one to the player within
@@ -271,6 +272,31 @@ modded class DZMCP_BridgeCore
             if (OZL_Arg(args, "as", "") == "post")
                 OZL_Pretend(pt);
             detail = OZL_Tree.ViewJson(OZL_Owner.OfPlayer(pt), tuid);
+            return true;
+        }
+
+        // The tree screen without a terminal: the same show the terminal's
+        // action sends, straight to the connected player. The screen is the
+        // one thing on this mod that a bridge verb cannot inspect -- it lives
+        // on the client -- so opening it from here is how it gets looked at
+        // at all (`ui_tree`, `ui_click`, `client_shot` take over from there).
+        if (op == "treeui")
+        {
+            PlayerBase pu = OZL_FirstPlayer();
+            if (!pu)
+            {
+                detail = "nobody is connected";
+                return false;
+            }
+            if (!pu.GetIdentity())
+            {
+                detail = "the player has no identity yet";
+                return false;
+            }
+            if (OZL_Arg(args, "as", "") == "post")
+                OZL_Pretend(pu);
+            OZ_Rpc.Show(pu.GetIdentity(), OZL_Const.SHOW_TREE);
+            detail = "show " + OZL_Const.SHOW_TREE + " sent to " + pu.GetIdentity().GetPlainId() + ", owner " + OZL_Owner.OfPlayer(pu);
             return true;
         }
 
