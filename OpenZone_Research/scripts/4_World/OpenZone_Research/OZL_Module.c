@@ -40,8 +40,8 @@ class OZL_Module : CF_ModuleWorld
 
         // Перелік класів для редактора моста -- раз на старт, до підписки:
         // лист boot називає файл, який уже лежить.
-        int classes = OZL_ClassDump.Write(OZL_Const.XCHG_DIR + "\\" + OZL_Const.CLASSES_FILE);
-        OZL_Log.Info("classes: " + classes.ToString() + " written");
+        OZL_ClassDump.Write(OZL_Const.XCHG_DIR + "\\" + OZL_Const.CLASSES_FILE);
+        OZL_Log.Info("classes: " + OZL_ClassDump.Summary());
 
         // Рід research у мостовому клієнті ядра -- ДО відкладеного старту
         // клієнта (ядро відкладає його на тік саме заради підписок сусідів).

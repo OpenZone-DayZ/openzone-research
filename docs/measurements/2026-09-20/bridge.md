@@ -121,3 +121,31 @@ rides that poll's own items (research-routes.js, `poll`).
 - A Bash `printf` turned `\t` in a Windows path into a tab inside `.env`;
   the bridge said `no such directory: E:\dayzmod<TAB>estserver...`. The
   line was rewritten from PowerShell.
+
+## The class dump, from the server (evening)
+
+The owner asked for the classes to come from the server, names included
+("вивантажуй усе з сервера"), instead of the bridge or the browser reading
+PBOs. Measured on the stand (retail `DayZServer_x64.exe`, 6 mods):
+
+| What | Result |
+|---|---|
+| `OpenFile("<prefix>/stringtable.csv", READ)` on packed files | opens for every mod archive AND for `dta/languagecore.pbo` (`languagecore/stringtable.csv`) |
+| `FindFile("*", ..., FindFileFlags.ARCHIVES)` at the VFS root | 2244 entries (every archive prefix and root file); `<entry>/*` one level deeper works too |
+| `FGets` on long lines | the longest line returned was 8198 chars, nothing truncated, 0 rows dropped, the loop ends on -1 |
+| tables found | 6: VPPAdminTools, OpenZone_Core, OpenZone_Factions, OpenZone_Research, OpenZone_Storage, languagecore; 7301 keys (languagecore 6787 of 7247 lines: the rest are multi-line cells and repeated keys) |
+| `ConfigGetText(... displayName)` on the dedicated server | resolves `$STR_` keys in the server's language (`Apple`, `KA-M`); a key no table holds comes back as the key without `$` (`STR_DN_UNKNOWN`); a string the engine holds only in the original column comes back with a `$UNT$` prefix (`$UNT$Mouflon Steak`) |
+| `ConfigGetTextRaw` / `ConfigGetBaseName` | the raw `$STR_...` key and the parent class, per class |
+| the whole dump | 12 937 classes of the five roots, 2770 named from the tables, the rest from `ConfigGetText`; 0.8–1.8 s of the boot; `classes.tsv` 653 KB |
+| the bridge | index per server in `research_meta` (`classindex:<server>`), the site's live search answers `мікроскоп` → `OZL_Microscope · Лабораторний мікроскоп` and `AKM` → `KA-M` |
+
+Vanilla's item names are not in `languagecore` (its 7247 lines are UI and tutorial
+text); the engine resolves them from tables the script cannot open, so vanilla comes out
+in the server's language in both columns -- which is English, the only language vanilla
+has for us anyway. The PBO importer (browser worker and `CLASS_PBO_DIRS`) went with this
+change; commit `3f8522d` of the bridge keeps it in history.
+
+Enforce traps met: a local named `out` is a reserved word ("Broken expression (missing
+';'?)" at the declaration); `FileAttr` is a plain enum (0..3), so
+`attr & FileAttr.DIRECTORY` is always 0 -- the reader tries `<entry>/stringtable.csv`
+on every root entry instead of testing the attribute.
