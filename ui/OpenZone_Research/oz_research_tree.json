@@ -1,0 +1,67 @@
+{
+  "layout": "oz_research_tree",
+  "note": "The research tree screen (menu 135): a window over the whole screen with the faction header, the branch list on the left, the node grid in the middle with parent-child lines on a canvas, the node card on the right and a hint line. OZL_TreeMenu.c resolves by name: OwnerChip, OwnerName, PoolLine, BtnClose, BranchList (the stack the rows go into), TreeArea, TreeBg, TreeLines, CardName, CardDesc, CardCost, CardItems, CardTime, CardStatus, CardProgressBox, CardProgress, BtnResearch, TreeHint. Nodes are instances of oz_research_node.layout created by the script inside TreeArea at Col * 220, Row * 84 -- the inner geometry of a panel of known size, so coordinates are allowed there. Steel and cold light from the core's tokens; orange only for a node in progress.",
+  "root": {"frame": {"name": "OZL_TreeRoot", "size": "screen", "priority": 2,
+    "children": [
+      {"panel": {"name": "TreeDim", "size": "fill", "color": "$dim",
+        "note": "Dims the world behind the window."}},
+      {"frame": {"name": "TreeWindow", "anchor": "center", "size": [1720, 900], "inset": "$space.page",
+        "note": "1720 wide leaves 100 units a side at 16:9; five node columns of 220 (a 176-unit node and a 44-unit gap for the lines) fit the 1100-unit tree area. Vertical: 860 = 34 (header) + 10 + 784 (body) + 10 + 22 (hint).",
+        "children": [
+          {"panel": {"name": "TreeWindowBg", "size": "fill", "color": "$screen"}},
+          {"vbox": {"name": "TreeBody", "gap": "$space.gap", "children": [
+
+            {"hbox": {"name": "TreeHeader", "h": "$size.header", "gap": "$space.gap", "children": [
+              {"chip": {"name": "OwnerChip", "w": 6, "note": "Shown by the script, painted the faction colour the core gives."}},
+              {"label": {"name": "OwnerName", "w": 420, "font": "title", "color": "$accent"}},
+              {"label": {"name": "PoolLine", "w": "fill", "font": "small", "color": "$muted"}},
+              {"button": {"name": "BtnClose", "w": 140, "text": "#STR_OZL_TREE_CLOSE"}}
+            ]}},
+
+            {"hbox": {"name": "TreeCols", "h": "fill", "gap": "$space.column", "children": [
+
+              {"vbox": {"name": "BranchesCol", "w": 220, "gap": "$space.tight", "children": [
+                {"label": {"name": "BranchesHead", "h": "$size.hint", "text": "#STR_OZL_TREE_BRANCHES", "font": "small", "color": "$muted"}},
+                {"list": {"name": "BranchScroll", "stack": "BranchList", "h": "fill",
+                  "rows": {"oz_research_branch_row": {"row": {"name": "OZL_BranchRow", "h": 44, "click": true,
+                    "note": "One branch. The script renames the root to the branch id and reads it back on click.",
+                    "children": [
+                      {"panel": {"name": "RowBg", "size": "fill", "color": "$panel"}},
+                      {"panel": {"name": "RowPick", "size": "fill", "color": "$pick", "hidden": true}},
+                      {"label": {"name": "RowName", "at": [12, 4], "size": [190, 22], "font": "body", "color": "$text"}},
+                      {"label": {"name": "RowCount", "at": [12, 26], "size": [190, 16], "font": "small", "color": "$muted"}},
+                      {"rule": {"name": "RowLine", "anchor": "bottom", "at": [0, 0], "w": "fill"}}
+                    ]}}}}}
+              ]}},
+
+              {"panel": {"name": "TreeArea", "w": "fill", "color": "$panel",
+                "note": "The node grid host. TreeBg is the owner's background texture, swapped by the script (LoadImageFile) or hidden when the owner has none; TreeLines is the canvas the parent-child lines are drawn on.",
+                "children": [
+                  {"image": {"name": "TreeBg", "size": "fill", "file": "OpenZone_Research/gui/textures/tree/tree_bg_loner.paa", "color": "$white", "hidden": true}},
+                  {"raw": {"name": "TreeLines", "class": "CanvasWidgetClass", "size": "fill"}}
+                ]}},
+
+              {"vbox": {"name": "CardCol", "w": 320, "gap": "$space.tight", "children": [
+                {"label": {"name": "CardName", "h": 28, "text": "#STR_OZL_TREE_PICK", "font": "header", "color": "$text"}},
+                {"text": {"name": "CardDesc", "w": 320, "h": 100, "plain": true, "grow": false, "font": "small", "color": "$muted"}},
+                {"text": {"name": "CardCost", "w": 320, "h": 44, "plain": true, "grow": false, "font": "small", "color": "$text",
+                  "note": "Two lines: point type names are long and admin-written."}},
+                {"text": {"name": "CardItems", "w": 320, "h": 44, "plain": true, "grow": false, "font": "small", "color": "$text"}},
+                {"label": {"name": "CardTime", "h": "$size.hint", "font": "small", "color": "$muted"}},
+                {"label": {"name": "CardStatus", "h": "$size.hint", "font": "body", "color": "$accent"}},
+                {"frame": {"name": "CardProgressBox", "h": 8, "children": [
+                  {"panel": {"name": "CardProgressBg", "size": "fill", "color": "$edge"}},
+                  {"panel": {"name": "CardProgress", "at": [0, 0], "size": [1, 8], "color": "$alert",
+                    "note": "The script stretches it to the elapsed fraction of a running project."}}
+                ]}},
+                {"button": {"name": "BtnResearch", "h": "$size.header", "text": "#STR_OZL_TREE_RESEARCH", "edge": "$ok", "color": "$ok", "hidden": true,
+                  "note": "Visible only when the node is available and the server said MaySpend."}},
+                {"panel": {"name": "CardSpacer", "h": "fill", "color": "$none"}}
+              ]}}
+            ]}},
+
+            {"label": {"name": "TreeHint", "h": "$size.hint", "text": "#STR_OZL_TREE_HINT", "font": "hint", "color": "$faint"}}
+          ]}}
+        ]}}
+    ]}}
+}

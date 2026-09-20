@@ -1,0 +1,11 @@
+{
+  "layout": "oz_research_node",
+  "note": "One node of the research tree: a 176 x 64 button the script creates inside TreeArea for every node of the picked branch and places at Col * 220, Row * 84. The script renames the root to the node id, paints NodeBar by status (muted locked, accent available, alert researching, ok completed) and fills NodeName and NodeCost.",
+  "root": {"button": {"name": "OZL_TreeNode", "size": [176, 64],
+    "children": [
+      {"panel": {"name": "NodeBg", "at": [0, 0], "size": [176, 64], "color": "$raised", "edge": "$edge"}},
+      {"panel": {"name": "NodeBar", "at": [0, 0], "size": [4, 64], "color": "$muted"}},
+      {"label": {"name": "NodeName", "at": [12, 6], "size": [156, 24], "font": "body", "color": "$text"}},
+      {"label": {"name": "NodeCost", "at": [12, 34], "size": [156, 20], "font": "small", "color": "$muted"}}
+    ]}}
+}

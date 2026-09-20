@@ -61,3 +61,18 @@ restores the real one), so the gate itself runs unchanged.
 | `ui_preview` of `oz_research_vpp_pane.layout` (host 1000 x 620, root shown by a fixture) | 56 widgets, 0 issues; the two listboxes, the three fields, the five buttons and the statics text sit where the description says |
 
 The MCP bridge now rides on the client too (`dayz-mcp.local.toml`): the preview tools talk to its client half, and a fixture must name `nth` explicitly -- an absent member of a fixture op reads as 0, not the constructor's 1.
+
+# The tree screen (plan T9)
+
+| Step | Result |
+|---|---|
+| `OZL_ActionOpenTree` at the lab computer (`world_action`, radius 1.6 so the nearest of three computers is the target) | `show research_tree to <uid>` on the server, `ui_menu` reports `OZL_TreeMenu`, the client asked `tree` and got it |
+| the screen | faction name from the core in the header with its colour chip, the pool line, the branch list with done / total, the node grid by level and row with status bars, the card on a click (name, description, cost with names and the pool in brackets, materials, duration, status) |
+| geometry | TreeArea 1630 x 1161 px = 1100 x 784 units at 1.4815; a node instance created into it measures 296 x 95 px = 200 x 64 units: CreateWidgets into a panel keeps the layout scale, SetPos takes layout units |
+| `BtnResearch` | hidden while the server said MaySpend 0; visible after the stand verb pretended the post before the client's request |
+| a click on `BtnResearch` (through the menu's handler, `ui_click`) | `research` on the server, pool 10 -> 2 of the cost type, the node completed, the fresh tree repainted the node green and the branch counter 3 -> 4, the toast `Дослідження розпочато` |
+| first draw | connector lines went from a parent's bottom to a child's top and crossed the grid; the tree grows left to right, so they now run from the parent's right edge to the child's left edge |
+
+The stand's test account holds no post, so a real client sees no research button until Discord gives it the post: that part is the owner's check with a leader account.
+| English client (`client_start(language="english")`) | the mod's own strings switch (Branches, Close, Cost, Duration, Completed, the hint); node, branch and point type names stay the administrator's Ukrainian from the JSON, as designed |
+| node width 200 -> 176 | the 44-unit gap between columns gives the lines room; a single cost shows as "8 anomaly_field_t1", several as "10 + 4" with the names on the card |
