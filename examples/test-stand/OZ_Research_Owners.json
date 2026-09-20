@@ -94,14 +94,66 @@
         {
             "Id": "loner",
             "TerminalClasses": [
-                "OZL_Lnr_Terminal"
+                "OZL_Lnr_Terminal",
+                "OZL_LabComputer"
             ],
             "DeviceClasses": [
                 "OZL_Lnr_Terminal",
                 "OZL_Lnr_Pack_Khabar",
                 "OZL_Lnr_Proc_Khabar",
                 "OZL_Lnr_Pack_Trail",
-                "OZL_Lnr_Proc_Trail"
+                "OZL_Lnr_Proc_Trail",
+                "OZL_Microscope",
+                "OZL_LabComputer",
+                "OZL_SampleFridge"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "neutral",
+            "TerminalClasses": [
+                "OZL_LabComputer"
+            ],
+            "DeviceClasses": [
+                "OZL_Microscope",
+                "OZL_LabComputer",
+                "OZL_SampleFridge"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "mercenary",
+            "TerminalClasses": [
+                "OZL_LabComputer"
+            ],
+            "DeviceClasses": [
+                "OZL_Microscope",
+                "OZL_LabComputer",
+                "OZL_SampleFridge"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "military",
+            "TerminalClasses": [
+                "OZL_LabComputer"
+            ],
+            "DeviceClasses": [
+                "OZL_Microscope",
+                "OZL_LabComputer",
+                "OZL_SampleFridge"
+            ],
+            "TreeBackground": ""
+        },
+        {
+            "Id": "monolith",
+            "TerminalClasses": [
+                "OZL_LabComputer"
+            ],
+            "DeviceClasses": [
+                "OZL_Microscope",
+                "OZL_LabComputer",
+                "OZL_SampleFridge"
             ],
             "TreeBackground": ""
         }

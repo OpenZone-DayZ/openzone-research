@@ -101,9 +101,10 @@ class OZL_Owners : OZ_ConfigBase
             }
         }
 
-        // Спільні прилади й термінали -- не помилка, а те, про що адмін має
-        // знати: дві фракції з одним терміналом бачать дерева одна одної.
-        // Це попередження не рахується як виправлення файла.
+        // Спільні прилади й термінали -- не помилка, а факт, про який адмін
+        // має знати: дві фракції з одним терміналом бачать дерева одна одної.
+        // Тому рядок Info, не попередження: спільна лабораторія кількох
+        // фракцій -- звичайна конфігурація, а не те, що треба лагодити.
         WarnShared();
     }
 
@@ -119,12 +120,12 @@ class OZL_Owners : OZ_ConfigBase
                 for (k = 0; k < a.TerminalClasses.Count(); k++)
                 {
                     if (b.TerminalClasses.Find(a.TerminalClasses[k]) > -1)
-                        OZL_Log.Warn("Owners: terminal '" + a.TerminalClasses[k] + "' belongs to both '" + a.Id + "' and '" + b.Id + "' - they will see each other's trees");
+                        OZL_Log.Info("Owners: terminal '" + a.TerminalClasses[k] + "' belongs to both '" + a.Id + "' and '" + b.Id + "' - they will see each other's trees");
                 }
                 for (k = 0; k < a.DeviceClasses.Count(); k++)
                 {
                     if (b.DeviceClasses.Find(a.DeviceClasses[k]) > -1)
-                        OZL_Log.Warn("Owners: device '" + a.DeviceClasses[k] + "' belongs to both '" + a.Id + "' and '" + b.Id + "' - they will share it");
+                        OZL_Log.Info("Owners: device '" + a.DeviceClasses[k] + "' belongs to both '" + a.Id + "' and '" + b.Id + "' - they will share it");
                 }
             }
         }

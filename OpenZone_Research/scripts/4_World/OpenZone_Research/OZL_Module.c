@@ -42,6 +42,13 @@ class OZL_Module : CF_ModuleWorld
         int states = OZL_State.Scan();
         OZL_Log.Info("state: " + states.ToString() + " owner file(s) read");
 
+        // Статики -- після конфігів (їхній список звідти) і стану.
+        OZL_StaticSpawner.SpawnAll();
+
+        // Сброс фракції зупиняє її станції: станції не знають про стан, стан
+        // не знає про станції, зв'язок -- подія.
+        OZL_Events.OnOwnerReset.Insert(OZL_OwnerReset);
+
         // Імена предметів з JSON їдуть клієнтові додатками пакета ядра:
         // ядро кличе цей інвокер на кожну відправку пакета.
         OZ_SyncExtras.OnFill().Insert(OZL_NamesFill);
@@ -65,6 +72,12 @@ class OZL_Module : CF_ModuleWorld
         OZL_Log.Info(ReadyLine());
     }
 
+    // Кличе інвокер OZL_Events -- метод мусить бути видимим (не private).
+    void OZL_OwnerReset(string owner)
+    {
+        int n = OZL_Station.CancelAllOf(owner);
+        OZL_Log.Info("owner '" + owner + "' reset: " + n.ToString() + " station(s) stopped");
+    }
     // Кличе інвокер OZ_SyncExtras -- метод мусить бути видимим (не private).
     void OZL_NamesFill(OZ_SyncPayload p)
     {
@@ -80,6 +93,7 @@ class OZL_Module : CF_ModuleWorld
 
         // Дзеркало підписки: інвокер ядра статичний і переживе місію.
         OZ_SyncExtras.OnFill().Remove(OZL_NamesFill);
+        OZL_Events.OnOwnerReset.Remove(OZL_OwnerReset);
     }
 
     // РЯДОК ЗБИРАЄМО ПООПЕРАТОРНО, а не одним ланцюжком «+»: компілятор

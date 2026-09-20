@@ -12,7 +12,9 @@ name = "openzone-research"
 
 [build]
 # Order matters: the pane requires the base mod, packing it first is pointless.
-mods = ["OpenZone_Research", "OpenZone_Research_VPP"]
+# OpenZone_Research_Bridge -- server only: the `oz_research` verb for the MCP
+#                             bridge (world_exec). Requires @DZMCP_Bridge.
+mods = ["OpenZone_Research", "OpenZone_Research_VPP", "OpenZone_Research_Bridge"]
 # The layout generator reads the series' design tokens from the core
 # repository; descriptions stay here (ui/<Mod>/).
 tokens = "../openzone-core/ui/tokens.json"
@@ -31,14 +33,14 @@ noise        = ["Bridge.Url is not https"]
 # 2026-09-20. `problems` counts the checks the configs failed: any rule, node or
 # item the loader had to disable.
 [expect.counters]
-owners      = 7
+owners      = 11
 pointTypes  = 24
 rules       = 43
 nodes       = 16
 dataItems   = 22
 modules     = 3
 sampleTypes = 6
-statics     = 51
+statics     = 47
 problems    = 0
 
 [client]

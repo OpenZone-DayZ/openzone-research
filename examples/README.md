@@ -16,3 +16,9 @@ The tree background textures the pack refers to
 - `test-stand/` -- the stand pack: vanilla inputs only, so every rule is live on a
   server without the modpack; a few static stations placed for the test stand.
   This is what the `dayz` MCP stand of this repository runs.
+  Completed by hand after conversion: every faction of the core's registry
+  has an owner entry, the five ZP factions with their own device sets and the
+  other four (neutral, mercenary, military, monolith) and loner with the generic lab
+  (microscope, lab computer, sample fridge), so a test account of any faction
+  can run the `pb_*` chain; the four static entries with a class that does
+  not exist or a duplicate position are gone.
