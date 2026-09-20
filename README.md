@@ -62,10 +62,35 @@ running projects. `OZ_Research_Statics_State.json` remembers which statics were 
 Editing: the nine configs are registered with the core's editor, so they are edited in
 the OpenZone admin window (VPPAdminTools, CONFIG pane) with validation and a backup on
 every write; the RESEARCH pane (the `_VPP` glue mod) lists the factions with their pools
-and runs resets, grants, completions and reloads. A web editor in the Discord bridge is
-the next step. Item names come from the JSON, not from the config.cpp, so a server can
-rename samples and data without a repack.
+and runs resets, grants, completions and reloads. Item names come from the JSON, not from
+the config.cpp, so a server can rename samples and data without a repack.
 
+## The bridge and the web editor
+
+With the Discord bridge (`openzone-bridge`, `RESEARCH_DIR` in its `.env`) the mod
+subscribes the kind `research` to the core's bridge client: after start it posts a boot
+letter (revision, counters, the nine config names, a dump of every `CfgVehicles` class
+into `research\xchg\classes.txt`), after every applied edit a `changed` letter, and it
+answers every command of the bridge with a `result` letter by token. Commands come down
+as poll items: `cfg_apply` reads a candidate file from `research\xchg\` and applies it
+the way the VPP editor does (validation, one backed-up write, a live replace, a resync of
+the clients), deleting the file on success and leaving it on refusal; `reset`, `grant`,
+`complete`, `reload` and `respawn` share the admin section with the VPP pane and are
+logged as `admin bridge:<who>`. The last hundred answered tokens are remembered, so a
+command the bridge re-sends after its own restart gets its stored answer. The boot letter
+retries with a doubling pause (5 s up to 5 min) while the bridge does not answer; a
+bridge that knows the kind asks for it with a poll item `{op:"hello"}`.
+
+The bridge's admin site edits the nine configs as tables and canvases (the tree by
+Tier columns, the rules as chains), checks them the way the game will, keeps every
+version with restore, and shows the factions with their pools, the statics and a
+journal. The console client `scripts/research.mjs` does the same from a terminal.
+Without the bridge nothing changes: the mod writes one line, `bridge: boot refused`,
+and the VPP editor remains the way to edit. The shared secret of the bridge is the
+whole authority of its commands; `OZ_Perm.IsAdmin` takes no part in them.
+
+Measurements: `docs/measurements/2026-09-20/bridge.md`. Design:
+`E:\openzone\docs\specs\2026-09-20-openzone-research-bridge-design.md`.
 ## Requires
 
 - [Community Framework](https://steamcommunity.com/sharedfiles/filedetails/?id=1559212036)
