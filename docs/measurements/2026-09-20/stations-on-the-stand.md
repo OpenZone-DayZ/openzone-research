@@ -50,3 +50,14 @@ The stand player holds no Discord post, and posts come from the live projection
 of the bridge, not from the player file: the `as=post` argument of the stand
 verb applies a projection with the post for one call (the next bridge poll
 restores the real one), so the gate itself runs unchanged.
+
+# The admin section and the RESEARCH pane (plan T8)
+
+| Step | Result |
+|---|---|
+| boot | the core's line reads `admin=research,spawns,news,players,config,factions services=research` |
+| section `list` through the stand verb | one row per faction of the core's registry plus every state file: id, name, pool, completed/active, `Known` 0 for factions without a state file (the list creates none) |
+| section `grant:loner:bio_field_t1:5` | the loner file went 7 -> 12 with `admin <uid>: owner 'loner' granted 5 bio_field_t1` in the log; the answer is the fresh list |
+| `ui_preview` of `oz_research_vpp_pane.layout` (host 1000 x 620, root shown by a fixture) | 56 widgets, 0 issues; the two listboxes, the three fields, the five buttons and the statics text sit where the description says |
+
+The MCP bridge now rides on the client too (`dayz-mcp.local.toml`): the preview tools talk to its client half, and a fixture must name `nth` explicitly -- an absent member of a fixture op reads as 0, not the constructor's 1.

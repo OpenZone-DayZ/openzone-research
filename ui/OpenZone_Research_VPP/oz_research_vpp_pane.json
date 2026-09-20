@@ -1,0 +1,62 @@
+{
+  "layout": "oz_research_vpp_pane",
+  "note": "RESEARCH pane of the OpenZone admin window -- its own pbo and its own layout, because a server without the research mod never loads this file and the core must not know the pane exists. OZL_VppPane.OnCreate builds it under M_SUB_WIDGET and calls RegisterPane(research, RESEARCH, pane, ResHint), so the root stands at [0, vpp.paneY] and starts hidden like the core panes. Names the script resolves by string: ResOwners, ResConfigs, ResPicked, ResStatics (FindAnyWidget) and GrantType, GrantN, NodeId (SetEdit/GetEdit); ResHint is resolved by the core from the hint name handed to RegisterPane. Buttons dispatched in OnClick: BtnRefresh, BtnReload, BtnReset, BtnGrant, BtnComplete, BtnEditCfg. Tokens come from the core repository through [build] tokens: the admin window is a platform surface. Console captions stay English.",
+  "root": {"frame": {"name": "PaneResearch", "size": "$vpp.pane", "at": [0, "$vpp.paneY"], "inset": "$vpp.inset",
+    "hidden": true, "priority": 2,
+    "note": "Hidden: ShowPane shows the open tab's pane and hides the rest.",
+    "children": [
+      {"vbox": {"name": "ResBody", "gap": "$space.gap",
+        "note": "Vertical budget 524 - 2 * 20 = 484: 322 (the two columns) + 10 + 120 (the configs band) + 10 + 22 (ResHint) = 484. Columns 600 + 20 + 340 = 960 = 1000 - 2 * 20.",
+        "children": [
+          {"hbox": {"name": "ResCols", "h": 322, "gap": "$space.column", "children": [
+
+            {"vbox": {"name": "ResOwnersCol", "w": 600, "gap": "$space.tight", "children": [
+              {"label": {"name": "ResOwnersHead", "h": "$size.hint", "text": "FACTIONS: id -- name | pool | done / running", "font": "small", "color": "$accent"}},
+              {"listbox": {"name": "ResOwners", "h": "fill", "font": "field", "color": "$text",
+                "props": {"title visible": false, "highlight row": true, "lines": 10},
+                "note": "The engine's own listbox, filled by AddItem: one row per faction the core's registry or a state file knows. 322 - 22 - 6 = 294 units for ten rows of 29.4."}}
+            ]}},
+
+            {"vbox": {"name": "ResActsCol", "w": 340, "gap": "$space.tight",
+              "note": "22 + 3 * 28 + 3 * 30 + 30 = 256 plus seven gaps of 6 = 298; the spacer panel takes the 24 left.",
+              "children": [
+              {"label": {"name": "ResPicked", "h": "$size.hint", "text": "pick a faction on the list", "font": "small", "color": "$muted"}},
+              {"hrow": {"h": "$size.field", "children": [
+                {"label": {"name": "GrantTypeLbl", "w": 90, "text": "point type", "font": "small", "color": "$muted"}},
+                {"field": {"name": "GrantType", "w": 250}}
+              ]}},
+              {"hrow": {"h": "$size.field", "children": [
+                {"label": {"name": "GrantNLbl", "w": 90, "text": "amount", "font": "small", "color": "$muted"}},
+                {"field": {"name": "GrantN", "w": 250}}
+              ]}},
+              {"hrow": {"h": "$size.field", "children": [
+                {"label": {"name": "NodeIdLbl", "w": 90, "text": "node id", "font": "small", "color": "$muted"}},
+                {"field": {"name": "NodeId", "w": 250}}
+              ]}},
+              {"button": {"name": "BtnGrant", "h": "$size.button", "text": "GRANT POINTS", "edge": "$ok", "color": "$ok"}},
+              {"button": {"name": "BtnComplete", "h": "$size.button", "text": "COMPLETE NODE", "edge": "$ok", "color": "$ok"}},
+              {"button": {"name": "BtnReset", "h": "$size.button", "text": "RESET FACTION", "edge": "$bad", "color": "$bad"}},
+              {"hbox": {"name": "ResReloadRow", "h": "$size.button", "gap": "$space.tight", "children": [
+                {"button": {"name": "BtnReload", "w": "fill", "text": "RELOAD CONFIGS", "edge": "$alert", "color": "$alert"}},
+                {"button": {"name": "BtnRefresh", "w": "fill", "text": "REFRESH"}}
+              ]}},
+              {"panel": {"name": "ResActsSpacer", "h": "fill", "color": "$none"}}
+            ]}}
+          ]}},
+
+          {"hbox": {"name": "ResCfgRow", "h": 120, "gap": "$space.column", "children": [
+            {"listbox": {"name": "ResConfigs", "w": "fill", "font": "field", "color": "$text",
+              "props": {"title visible": false, "highlight row": true, "lines": 4},
+              "note": "The nine config names the mod registered with the core's editor; EDIT opens the core's CONFIG pane on the picked one."}},
+            {"vbox": {"name": "ResCfgActs", "w": 250, "gap": "$space.tight", "children": [
+              {"button": {"name": "BtnEditCfg", "h": "$size.button", "text": "EDIT IN CONFIG"}},
+              {"text": {"name": "ResStatics", "w": 250, "h": 84, "plain": true, "grow": false, "font": "tiny", "color": "$muted",
+                "text": "statics: -",
+                "note": "The static spawner's line: entries with spawned/pending, or the reason auto-spawn is off."}}
+            ]}}
+          ]}},
+
+          {"label": {"name": "ResHint", "h": "$size.hint", "font": "hint", "color": "$muted"}}
+        ]}}
+    ]}}
+}

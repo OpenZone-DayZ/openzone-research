@@ -52,6 +52,7 @@ class OZL_Module : CF_ModuleWorld
         // Служба дерева -- до першого клієнта; проєкти завершуються
         // опитуванням, бо їхній строк живе у файлі, а не в таймері.
         OZ_ServiceRegistry.Register(OZL_Const.SERVICE, new OZL_Service());
+        OZ_AdminRegistry.Register(OZL_Const.SECTION, new OZL_Admin());
         m_PollTimer = new Timer(CALL_CATEGORY_SYSTEM);
         m_PollTimer.Run(OZL_Tree.POLL_SEC, this, "OZL_PollProjects", NULL, true);
 

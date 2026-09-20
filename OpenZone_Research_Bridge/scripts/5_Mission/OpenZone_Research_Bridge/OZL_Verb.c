@@ -12,6 +12,7 @@
 //   world_exec verb=oz_research args={"op":"grant","owner":"mercenary","type":"bio","amount":"5"}
 //   world_exec verb=oz_research args={"op":"reset","owner":"mercenary"}
 //   world_exec verb=oz_research args={"op":"reload"}
+//   world_exec verb=oz_research args={"op":"admin","cmd":"grant:loner:bio_field_t1:5"}
 //   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
 //   world_exec verb=oz_research args={"op":"research","node":"pb_osnovy","as":"post"}
 //
@@ -291,6 +292,32 @@ modded class DZMCP_BridgeCore
             detail = "research started: " + rwhy;
             return true;
         }
+        if (op == "admin")
+        {
+            // Drive the admin section the way the VPP pane does, minus the
+            // permission gate (the dispatcher's job, not the section's).
+            string cmd = OZL_Arg(args, "cmd", "list");
+            OZ_AdminSection sec = OZ_AdminRegistry.Get(OZL_Const.SECTION);
+            if (!sec)
+            {
+                detail = "no admin section '" + OZL_Const.SECTION + "' registered";
+                return false;
+            }
+            bool aok;
+            string aerr;
+            PlayerIdentity ident;
+            PlayerBase pa = OZL_FirstPlayer();
+            if (pa)
+                ident = pa.GetIdentity();
+            string body = sec.Handle(cmd, "{}", ident, aok, aerr);
+            if (!aok)
+            {
+                detail = "admin " + cmd + " refused: " + aerr;
+                return false;
+            }
+            detail = "admin " + cmd + ": " + body;
+            return true;
+        }
         if (op == "reload")
         {
             OZL_Config.Reload();
@@ -298,7 +325,7 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research)";
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research, admin)";
         return false;
     }
 

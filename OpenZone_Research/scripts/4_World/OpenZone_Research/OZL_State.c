@@ -197,6 +197,12 @@ class OZL_State
         return true;
     }
 
+    // Чи є стан у кеші -- без читання й без заведення файла: адмінський
+    // список питає саме так, щоб погляд не плодив файлів.
+    static bool Known(string owner)
+    {
+        return s_Cache.Contains(owner);
+    }
     static int Count()
     {
         return s_Cache.Count();
