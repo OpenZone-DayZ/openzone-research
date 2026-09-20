@@ -1,5 +1,6 @@
 // Адмінський розділ `research` у реєстрі ядра: список фракцій із пулами,
-// сброс, нарахування, завершення вузла, перечитування конфігів.
+// сброс, нарахування, завершення вузла, перечитування конфігів, повторний
+// спавн статика.
 //
 // Права перевірив диспетчер ядра (OZ_Perm.IsAdmin) до розбору операції --
 // тут їх не перевіряємо, друге місце перевірки означало б друге місце, де її
@@ -35,6 +36,16 @@ class OZL_Admin : OZ_AdminSection
 {
     override string Handle(string op, string json, PlayerIdentity sender, out bool ok, out string error)
     {
+        string who = "?";
+        if (sender)
+            who = sender.GetPlainId();
+        return Run(op, who, ok, error);
+    }
+
+    // Тіло розділу без відправника: той самий рядок операції приходить з
+    // панелі VPP, від моста (who = bridge:<хто>) і зі стендового verb.
+    static string Run(string op, string who, out bool ok, out string error)
+    {
         ok = false;
         error = "STR_OZ_ERR_UNKNOWN_OP";
 
@@ -43,9 +54,6 @@ class OZL_Admin : OZ_AdminSection
         if (parts.Count() == 0)
             return "";
         string verb = parts[0];
-        string who = "?";
-        if (sender)
-            who = sender.GetPlainId();
 
         if (verb == "list")
         {
@@ -112,6 +120,22 @@ class OZL_Admin : OZ_AdminSection
             }
             OZL_Tree.Complete(parts[1], parts[2]);
             OZL_Log.Info("admin " + who + ": owner '" + parts[1] + "' node '" + parts[2] + "' completed");
+            ok = true;
+            error = "";
+            return ListJson();
+        }
+
+        if (verb == "respawn")
+        {
+            if (parts.Count() < 2)
+                return "";
+            string swhy;
+            if (!OZL_StaticSpawner.Respawn(parts[1], swhy))
+            {
+                error = swhy;
+                return "";
+            }
+            OZL_Log.Info("admin " + who + ": static '" + parts[1] + "' respawned");
             ok = true;
             error = "";
             return ListJson();

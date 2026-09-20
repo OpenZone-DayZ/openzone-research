@@ -284,7 +284,7 @@ class OZL_Config
     // Один файл із редактора ядра: підмінити за тегом, перевірити все знову.
     // Копія знову, бо застосувач віддає об'єкт, який щойно зробив
     // серіалізатор.
-    bool Replace(string tag, OZ_ConfigBase cfg)
+    bool Replace(string tag, OZ_ConfigBase cfg, string by = "vpp")
     {
         if (tag == TAG_SETTINGS)
             m_Settings = OZL_Settings.Cast(cfg).Copy();
@@ -318,6 +318,9 @@ class OZL_Config
         // Імена предметів у клієнтів беруться з пакета синхронізації ядра;
         // після правки той пакет треба надіслати знову всім, хто в грі.
         OZ_SyncSender.SendAll("research configs edited");
+
+        // Міст перечитує файл із профілю сам; лист лише каже, який і хто.
+        OZL_Bridge.Changed(tag, by);
         return true;
     }
 
@@ -395,6 +398,19 @@ class OZL_Config
     }
 
     // Реєстрація в редакторі ядра -- по рядку на файл, після першого читання.
+    // Дев'ять тегів у порядку файлів -- для листа boot і для reload.
+    static void Tags(array<string> outTags)
+    {
+        outTags.Insert(TAG_SETTINGS);
+        outTags.Insert(TAG_POINT_TYPES);
+        outTags.Insert(TAG_OWNERS);
+        outTags.Insert(TAG_RULES);
+        outTags.Insert(TAG_TREE);
+        outTags.Insert(TAG_DATA_ITEMS);
+        outTags.Insert(TAG_MODULES);
+        outTags.Insert(TAG_SAMPLE_TYPES);
+        outTags.Insert(TAG_STATICS);
+    }
     static void RegisterEditors()
     {
         OZ_AdminCfg.Register(TAG_SETTINGS, OZL_Const.SETTINGS, new OZL_SettingsApplier(), "research");

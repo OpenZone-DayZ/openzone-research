@@ -36,6 +36,15 @@ class OZL_Const
     // Що сервер каже показати (OZ_Show): екран дерева.
     static const string SHOW_TREE = "research_tree";
 
+    // Рід у мостовому клієнті ядра, його дороги й тека обміну (міст пише
+    // кандидатів конфігів, гра пише перелік класів).
+    static const string BRIDGE_KIND   = "research";
+    static const string ROUTE_BOOT    = "v1/research/boot";
+    static const string ROUTE_CHANGED = "v1/research/changed";
+    static const string ROUTE_RESULT  = "v1/research/result";
+    static const string XCHG_DIR      = "$profile:OpenZone\\research\\xchg";
+    static const string CLASSES_FILE  = "classes.txt";
+
     // Ідентифікатор меню дерева. МАЄ БУТИ МАЛИМ (див. OZ_PdaConst: із великим
     // числом EnterScriptedMenu мовчки віддає NULL). Зайнято родиною OpenZone:
     // 131 КПК, 132 його HUD-редактор, 133 прив'язка, 134 клавіатура рації.

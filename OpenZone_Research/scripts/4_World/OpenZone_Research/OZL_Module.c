@@ -31,11 +31,21 @@ class OZL_Module : CF_ModuleWorld
         // відпрацьовували раніше за ядро. Ідемпотентно.
         OZ_Json.EnsureTree();
         OZ_Json.EnsureDir(OZL_Const.STATE_DIR);
+        OZ_Json.EnsureDir(OZL_Const.XCHG_DIR);
 
         // Конфіги -- до всього, що їх читає; редактор ядра -- після першого
         // читання, щоб застосувач підміняв живий об'єкт, а не порожнечу.
         OZL_Config.ServerLoad();
         OZL_Config.RegisterEditors();
+
+        // Перелік класів для редактора моста -- раз на старт, до підписки:
+        // лист boot називає файл, який уже лежить.
+        int classes = OZL_ClassDump.Write(OZL_Const.XCHG_DIR + "\\" + OZL_Const.CLASSES_FILE);
+        OZL_Log.Info("classes: " + classes.ToString() + " written");
+
+        // Рід research у мостовому клієнті ядра -- ДО відкладеного старту
+        // клієнта (ядро відкладає його на тік саме заради підписок сусідів).
+        OZL_Bridge.Subscribe();
 
         // Стан фракцій -- усі файли з теки одразу, а не при першому гравцеві
         // кожної: проєкти офлайнових фракцій мають завершуватись по часу.
@@ -78,6 +88,9 @@ class OZL_Module : CF_ModuleWorld
     void Ready()
     {
         OZL_Log.Info(ReadyLine());
+        // Лист boot -- після рядка готовності: міст мовчить або відмовляє,
+        // поки не знає роду, і повтор іде раз на п'ять секунд без шуму.
+        OZL_Bridge.Get().Boot();
     }
 
     // Кличе таймер на ім'я -- метод мусить бути видимим (не private).
@@ -105,6 +118,7 @@ class OZL_Module : CF_ModuleWorld
             m_ReadyTimer.Stop();
         if (m_PollTimer)
             m_PollTimer.Stop();
+        OZL_Bridge.Get().Stop();
 
         // Дзеркало підписки: інвокер ядра статичний і переживе місію.
         OZ_SyncExtras.OnFill().Remove(OZL_NamesFill);
@@ -124,6 +138,10 @@ class OZL_Module : CF_ModuleWorld
             s += " identity=present";
         else
             s += " identity=absent";
+        if (OZL_Bridge.Enabled())
+            s += " bridge=on";
+        else
+            s += " bridge=off";
         return s;
     }
 }

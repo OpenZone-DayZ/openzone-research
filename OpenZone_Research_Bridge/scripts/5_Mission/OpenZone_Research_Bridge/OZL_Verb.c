@@ -12,6 +12,7 @@
 //   world_exec verb=oz_research args={"op":"grant","owner":"mercenary","type":"bio","amount":"5"}
 //   world_exec verb=oz_research args={"op":"reset","owner":"mercenary"}
 //   world_exec verb=oz_research args={"op":"reload"}
+//   world_exec verb=oz_research args={"op":"bridge"}
 //   world_exec verb=oz_research args={"op":"admin","cmd":"grant:loner:bio_field_t1:5"}
 //   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
 //   world_exec verb=oz_research args={"op":"research","node":"pb_osnovy","as":"post"}
@@ -318,6 +319,11 @@ modded class DZMCP_BridgeCore
             detail = "admin " + cmd + ": " + body;
             return true;
         }
+        if (op == "bridge")
+        {
+            detail = OZL_Bridge.Describe();
+            return true;
+        }
         if (op == "reload")
         {
             OZL_Config.Reload();
@@ -325,7 +331,7 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research, admin)";
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research, admin, bridge)";
         return false;
     }
 
