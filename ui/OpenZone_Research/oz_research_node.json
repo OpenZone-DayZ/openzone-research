@@ -1,12 +1,12 @@
 {
   "layout": "oz_research_node",
-  "note": "One node of the research tree. The root is a CELL: the card plus the gap that separates it from its neighbour, so the tier row's spacer packs the cards with even gutters and the script never places a node itself -- add a node, remove a node, and the engine re-flows the row. Inside: the status stripe along the top (painted by the script), the node's own icon, its name over two lines and the price. NodeHit is the transparent button UNDER the card -- the script renames it to the node id and reads that back on click. NodeProgress shows only while the node is being researched.",
+  "note": "One node of the research tree. The root is a CELL: the card plus the gap that separates it from its neighbour, so the tier row's spacer packs the cards with even gutters and the script never places a node itself -- add a node, remove a node, and the engine re-flows the row. Inside, top to bottom: the status stripe (painted by the script), then a row of the node's icon beside its name, then the price line, then the progress bar. THE PRICE LINE SPANS THE WHOLE CARD and does NOT share the row with the icon: it used to sit in the 136-unit column beside it and the engine cut the text off, because a label neither wraps nor shrinks -- it clips. NodeHit is the transparent button UNDER the card: the script renames it to the node id and reads that back on click. NodeProgress shows only while the node is being researched.",
   "root": {
     "frame": {
       "name": "OZL_NodeCell",
       "size": [
         228,
-        116
+        126
       ],
       "children": [
         {
@@ -18,7 +18,7 @@
             ],
             "size": [
               208,
-              92
+              104
             ],
             "text": "",
             "bg": "$none",
@@ -35,7 +35,7 @@
             ],
             "size": [
               208,
-              92
+              104
             ],
             "children": [
               {
@@ -43,7 +43,7 @@
                   "name": "NodeBg",
                   "size": [
                     208,
-                    92
+                    104
                   ],
                   "color": "$raised",
                   "edge": "$edge"
@@ -64,67 +64,76 @@
                 }
               },
               {
-                "hbox": {
-                  "name": "NodeRow",
+                "vbox": {
+                  "name": "NodeBody",
                   "at": [
                     10,
                     9
                   ],
                   "size": [
                     188,
-                    74
+                    86
                   ],
-                  "gap": "$space.gap",
+                  "gap": "$space.tight",
                   "children": [
                     {
-                      "icon": {
-                        "name": "NodeIcon",
-                        "set": "dayz_gui",
-                        "image": "missing",
-                        "size": [
-                          42,
-                          42
-                        ],
-                        "color": "$muted",
-                        "hidden": true,
-                        "note": "The node's Icon from the tree config, loaded by the script (LoadImageFile takes the set:…image:… form too); hidden when the node names none, and the name then keeps its own column."
-                      }
-                    },
-                    {
-                      "vbox": {
-                        "name": "NodeText",
-                        "w": "fill",
-                        "gap": 2,
+                      "hbox": {
+                        "name": "NodeRow",
+                        "h": "fill",
+                        "gap": "$space.gap",
                         "children": [
                           {
-                            "text": {
-                              "name": "NodeName",
-                              "h": "fill",
-                              "grow": false,
-                              "plain": true,
-                              "font": "body",
-                              "color": "$text",
-                              "note": "Wraps to the card's width instead of being cut: two lines at body size."
+                            "icon": {
+                              "name": "NodeIcon",
+                              "set": "dayz_gui",
+                              "image": "missing",
+                              "size": [
+                                42,
+                                42
+                              ],
+                              "color": "$muted",
+                              "hidden": true,
+                              "note": "The node's Icon from the tree config, loaded by the script (LoadImageFile takes the set:…image:… form too); hidden when the node names none, and the name then keeps its own column."
                             }
                           },
                           {
-                            "label": {
-                              "name": "NodeCost",
-                              "h": "$size.hint",
-                              "font": "small",
-                              "color": "$muted"
-                            }
-                          },
-                          {
-                            "bar": {
-                              "name": "NodeProgress",
-                              "h": 4,
-                              "track": "$panel",
-                              "fill": "$alert",
-                              "hidden": true
+                            "vbox": {
+                              "name": "NodeText",
+                              "w": "fill",
+                              "children": [
+                                {
+                                  "text": {
+                                    "name": "NodeName",
+                                    "h": "fill",
+                                    "grow": false,
+                                    "plain": true,
+                                    "font": "body",
+                                    "color": "$text",
+                                    "note": "Wraps to the column beside the icon instead of being cut: two lines at body size."
+                                  }
+                                }
+                              ]
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeCost",
+                        "h": "$size.hint",
+                        "font": "small",
+                        "color": "$muted",
+                        "note": "The whole inner width, 188 units: a label clips rather than wraps, and the price of the longest point type plus a `+N` tail does not fit in the 136 the icon column left it."
+                      }
+                    },
+                    {
+                      "bar": {
+                        "name": "NodeProgress",
+                        "h": 4,
+                        "track": "$panel",
+                        "fill": "$alert",
+                        "hidden": true
                       }
                     }
                   ]

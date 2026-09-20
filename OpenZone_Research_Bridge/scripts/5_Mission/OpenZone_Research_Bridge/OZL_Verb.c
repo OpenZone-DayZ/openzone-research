@@ -16,6 +16,7 @@
 //   world_exec verb=oz_research args={"op":"admin","cmd":"grant:loner:bio_field_t1:5"}
 //   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
 //   world_exec verb=oz_research args={"op":"treeui"}                     (opens the tree SCREEN on the connected client)
+//   world_exec verb=oz_research args={"op":"treeui","owner":"duty"}      (…as that faction: stand only, see OZL_PretendOrg)
 //   world_exec verb=oz_research args={"op":"research","node":"pb_osnovy","as":"post"}
 //
 // `target` names a station class; the nearest one to the player within
@@ -293,6 +294,9 @@ modded class DZMCP_BridgeCore
                 detail = "the player has no identity yet";
                 return false;
             }
+            string wantOwner = OZL_Arg(args, "owner", "");
+            if (wantOwner != "")
+                OZL_PretendOrg(pu, wantOwner);
             if (OZL_Arg(args, "as", "") == "post")
                 OZL_Pretend(pu);
             OZ_Rpc.Show(pu.GetIdentity(), OZL_Const.SHOW_TREE);
@@ -489,6 +493,36 @@ modded class DZMCP_BridgeCore
             v.Posts.Insert(post);
         OZ_Roles.Apply(v);
     }
+    // STAND ONLY. Pretend the connected player belongs to one faction, so the
+    // tree screen can be looked at as every faction in turn without seven
+    // characters and seven characters' worth of Discord roles. Same road as
+    // OZL_Pretend -- a role projection, which the next bridge poll undoes by
+    // itself -- and the same reason: nothing downstream is special-cased, the
+    // owner is still resolved by OZ_Identity from the roles it finds.
+    protected void OZL_PretendOrg(PlayerBase p, string org)
+    {
+        if (!p || !p.GetIdentity())
+            return;
+        string uid = p.GetIdentity().GetPlainId();
+        OZ_RoleView v = new OZ_RoleView();
+        OZ_RoleView had = OZ_Roles.Of(uid);
+        v.Uid = uid;
+        if (had)
+        {
+            v.Base  = had.Base;
+            v.Rank  = had.Rank;
+            v.FRank = had.FRank;
+            for (int i = 0; i < had.Posts.Count(); i++)
+                v.Posts.Insert(had.Posts[i]);
+        }
+        else
+        {
+            v.Base = OZ_Identity.Get().BaseOf(uid);
+        }
+        v.Org = org;
+        OZ_Roles.Apply(v);
+    }
+
     protected PlayerBase OZL_FirstPlayer()
     {
         array<Man> players = new array<Man>();
