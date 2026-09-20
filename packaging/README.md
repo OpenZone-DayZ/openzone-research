@@ -12,6 +12,9 @@ packaging/<Mod>.workshop.bbcode
                             the Workshop listing, English and Ukrainian in one field
 packaging/<Mod>.workshop.png
                             the preview image the item's page shows, 1024x512
+packaging/OZ_Research_types.xml
+                            the item economy example: every class of the mod with nominal=0,
+                            for server owners to copy next to the mission and turn on
 ```
 
 Publishing, in order: `mod_build` (packs and signs) -> `.\package.ps1` (puts the rest in
