@@ -142,6 +142,19 @@ class OZL_StaticSpawner
             why = "STR_OZL_ERR_NO_STATIC";
             return false;
         }
+        // Стоїть -- значить, видаляти не було чого: окрема відмова, бо
+        // «спавн не вдався» посилає адміна шукати в лозі те, чого там немає.
+        vector pos = Vector(found.Pos[0], found.Pos[1], found.Pos[2]);
+        if (OZL_StaticStation.FindNear(found.ClassName, pos, 1.0))
+        {
+            if (s_State.SpawnedIds.Find(id) < 0)
+            {
+                s_State.SpawnedIds.Insert(id);
+                SaveState();
+            }
+            why = "STR_OZL_ERR_STATIC_STANDS";
+            return false;
+        }
         int idx = s_State.SpawnedIds.Find(id);
         if (idx > -1)
             s_State.SpawnedIds.RemoveOrdered(idx);
