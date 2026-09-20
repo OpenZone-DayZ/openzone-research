@@ -20,5 +20,5 @@ The tree background textures the pack refers to
   has an owner entry, the five ZP factions with their own device sets and the
   other four (neutral, mercenary, military, monolith) and loner with the generic lab
   (microscope, lab computer, sample fridge), so a test account of any faction
-  can run the `pb_*` chain; the four static entries with a class that does
+  can run the `pb_*` chain and research the `pb_nauka` branch; the four static entries with a class that does
   not exist or a duplicate position are gone.

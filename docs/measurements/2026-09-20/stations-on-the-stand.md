@@ -32,3 +32,21 @@ deadline is now an `int` end to end. Recorded in the dayz-modding skill.
 
 `CanReleaseAttachment` (a tool locked while a rule runs) needs an inventory
 drag; a stream of a foreign version needs a future build. Both stay as read.
+
+# The terminal and the tree (plan T7), same stand, later the same night
+
+| Step | Result |
+|---|---|
+| `OZL_ActionIdentify` with a carrier `bio_lab_t1:7` in hands at the lab computer | status line `Наукові дані: Лабораторне дослідження біології 1 тиру (Біологія, лабораторні, T1) +7`, toast `Дані визначено`; the prompt list on the terminal shows start (instant), identify/open tree (instant, cycled) and `Здати дані [УДЕРЖИВАЙТЕ]` |
+| `OZL_ActionDeposit` (3 s hold) | carrier deleted, `bio_lab_t1` +7 in `research/loner.json`, status line with the amount, `deposit: ... -> loner` in the log |
+| `OZL_ActionOpenTree` with empty hands | `show research_tree to <uid>` -- the core's OZ_Show reaches the client (the menu is plan T9) |
+| service `research`, op `research` without the post | `STR_OZL_ERR_NO_ACCESS`: the gate asks the core (OZ_Roles), the stand player holds no post in Discord |
+| `pb_osnovy` (instant, cost 5) with the post pretended for one call | pool 20 -> 15, node completed, `OZL_Events.OnNodeCompleted` |
+| `pb_bio_zbir` (cost 8 + Paper x2 from the terminal cargo) | pool 15 -> 7, both papers consumed from the lab computer's cargo, node completed |
+| `pb_bio_anatom` (60 s project, cost bio_field_t2 10 + bio_lab_t1 4) | pool paid at the start, the project written to the state file with its EndSec; the 10 s poller completed it after the deadline (see the log line below) |
+| `reload` op | the tree pack edited on disk (loner added to the science branch) took effect on the running server without a restart |
+
+The stand player holds no Discord post, and posts come from the live projection
+of the bridge, not from the player file: the `as=post` argument of the stand
+verb applies a projection with the post for one call (the next bridge poll
+restores the real one), so the gate itself runs unchanged.

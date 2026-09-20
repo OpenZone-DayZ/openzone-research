@@ -12,6 +12,8 @@
 //   world_exec verb=oz_research args={"op":"grant","owner":"mercenary","type":"bio","amount":"5"}
 //   world_exec verb=oz_research args={"op":"reset","owner":"mercenary"}
 //   world_exec verb=oz_research args={"op":"reload"}
+//   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
+//   world_exec verb=oz_research args={"op":"research","node":"pb_osnovy","as":"post"}
 //
 // `target` names a station class; the nearest one to the player within
 // `radius` (default 30 m) is taken. Items are CREATED in the station's cargo,
@@ -221,6 +223,74 @@ modded class DZMCP_BridgeCore
             detail = "no '" + cls + "' in the cargo of " + st3.GetType();
             return false;
         }
+        if (op == "give")
+        {
+            // Create an item in the player's hands, with a sample content or a
+            // carrier state: what a deposit or an identify test needs held.
+            PlayerBase pg = OZL_FirstPlayer();
+            if (!pg || !pg.GetHumanInventory())
+            {
+                detail = "nobody is connected";
+                return false;
+            }
+            string giveCls = OZL_Arg(args, "item", "");
+            if (giveCls == "" || !OZL_Match.ClassExists(giveCls))
+            {
+                detail = "give needs item=<an existing class>";
+                return false;
+            }
+            EntityAI held = pg.GetHumanInventory().CreateInHands(giveCls);
+            if (!held)
+            {
+                detail = "the hands are not free for " + giveCls;
+                return false;
+            }
+            string giveContent = OZL_Arg(args, "content", "");
+            float givePurity = OZL_Arg(args, "purity", "1").ToFloat();
+            OZL_Sample_Base.ApplyFields(held, giveContent, givePurity);
+            OZL_Carrier_Base.ApplyState(held, giveContent);
+            detail = "created " + giveCls + " in hands";
+            if (giveContent != "")
+                detail += " content=" + giveContent;
+            return true;
+        }
+
+        if (op == "tree")
+        {
+            PlayerBase pt = OZL_FirstPlayer();
+            if (!pt)
+            {
+                detail = "nobody is connected";
+                return false;
+            }
+            string tuid = "";
+            if (pt.GetIdentity())
+                tuid = pt.GetIdentity().GetPlainId();
+            if (OZL_Arg(args, "as", "") == "post")
+                OZL_Pretend(pt);
+            detail = OZL_Tree.ViewJson(OZL_Owner.OfPlayer(pt), tuid);
+            return true;
+        }
+
+        if (op == "research")
+        {
+            PlayerBase pr = OZL_FirstPlayer();
+            if (!pr)
+            {
+                detail = "nobody is connected";
+                return false;
+            }
+            if (OZL_Arg(args, "as", "") == "post")
+                OZL_Pretend(pr);
+            string rwhy;
+            if (!OZL_Tree.Start(pr, OZL_Owner.OfPlayer(pr), OZL_Arg(args, "node", ""), rwhy))
+            {
+                detail = "research refused: " + rwhy;
+                return false;
+            }
+            detail = "research started: " + rwhy;
+            return true;
+        }
         if (op == "reload")
         {
             OZL_Config.Reload();
@@ -228,7 +298,7 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, station, points, grant, reset, reload)";
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research)";
         return false;
     }
 
@@ -327,6 +397,39 @@ modded class DZMCP_BridgeCore
         return best;
     }
 
+    // STAND ONLY. Pretend the connected player holds the post that lets them
+    // spend (BasePost on the base axis, ResearchPost in an org) by applying a
+    // role projection the way the Discord bridge does. The next bridge poll
+    // (a few seconds) puts the real roles back, so it holds for THIS call:
+    // the gate itself (OZL_Access -> OZ_Identity -> OZ_Roles) runs unchanged.
+    protected void OZL_Pretend(PlayerBase p)
+    {
+        if (!p || !p.GetIdentity())
+            return;
+        string uid = p.GetIdentity().GetPlainId();
+        OZL_Settings st = OZL_Config.Get().Settings();
+        OZ_RoleView v = new OZ_RoleView();
+        OZ_RoleView had = OZ_Roles.Of(uid);
+        v.Uid = uid;
+        if (had)
+        {
+            v.Base  = had.Base;
+            v.Org   = had.Org;
+            v.Rank  = had.Rank;
+            v.FRank = had.FRank;
+        }
+        else
+        {
+            v.Base = OZ_Identity.Get().BaseOf(uid);
+            v.Org  = OZ_Identity.Get().OrgOf(uid);
+        }
+        string post = st.ResearchPost;
+        if (v.Org == "")
+            post = st.BasePost;
+        if (post != "" && v.Posts.Find(post) < 0)
+            v.Posts.Insert(post);
+        OZ_Roles.Apply(v);
+    }
     protected PlayerBase OZL_FirstPlayer()
     {
         array<Man> players = new array<Man>();

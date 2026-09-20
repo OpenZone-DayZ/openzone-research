@@ -49,6 +49,12 @@ class OZL_Module : CF_ModuleWorld
         // не знає про станції, зв'язок -- подія.
         OZL_Events.OnOwnerReset.Insert(OZL_OwnerReset);
 
+        // Служба дерева -- до першого клієнта; проєкти завершуються
+        // опитуванням, бо їхній строк живе у файлі, а не в таймері.
+        OZ_ServiceRegistry.Register(OZL_Const.SERVICE, new OZL_Service());
+        m_PollTimer = new Timer(CALL_CATEGORY_SYSTEM);
+        m_PollTimer.Run(OZL_Tree.POLL_SEC, this, "OZL_PollProjects", NULL, true);
+
         // Імена предметів з JSON їдуть клієнтові додатками пакета ядра:
         // ядро кличе цей інвокер на кожну відправку пакета.
         OZ_SyncExtras.OnFill().Insert(OZL_NamesFill);
@@ -64,6 +70,7 @@ class OZL_Module : CF_ModuleWorld
     }
 
     private ref Timer m_ReadyTimer;
+    private ref Timer m_PollTimer;
     private static const float READY_DELAY = 1.0;
 
     // Кличеться таймером на ім'я -- метод мусить бути видимим (не private).
@@ -72,6 +79,11 @@ class OZL_Module : CF_ModuleWorld
         OZL_Log.Info(ReadyLine());
     }
 
+    // Кличе таймер на ім'я -- метод мусить бути видимим (не private).
+    void OZL_PollProjects()
+    {
+        OZL_Tree.Poll();
+    }
     // Кличе інвокер OZL_Events -- метод мусить бути видимим (не private).
     void OZL_OwnerReset(string owner)
     {
@@ -90,6 +102,8 @@ class OZL_Module : CF_ModuleWorld
 
         if (m_ReadyTimer)
             m_ReadyTimer.Stop();
+        if (m_PollTimer)
+            m_PollTimer.Stop();
 
         // Дзеркало підписки: інвокер ядра статичний і переживе місію.
         OZ_SyncExtras.OnFill().Remove(OZL_NamesFill);

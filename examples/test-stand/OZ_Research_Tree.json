@@ -7,7 +7,12 @@
             "Icon": "",
             "SortOrder": 1,
             "Owners": [
-                "ecolog"
+                "ecolog",
+                "loner",
+                "neutral",
+                "mercenary",
+                "military",
+                "monolith"
             ],
             "Nodes": [
                 {

@@ -368,6 +368,30 @@ class OZL_Config
             n++;
         }
         OZ_SyncExtras.Put(p, OZL_Names.SYNC_DATA_N, n.ToString());
+
+        // Класи терміналів -- порціями, коротшими за межу рядка рушія.
+        array<string> terms;
+        cfg.m_Owners.TerminalUnion(terms);
+        string chunk = "";
+        int chunks = 0;
+        for (i = 0; i < terms.Count(); i++)
+        {
+            if (chunk != "" && chunk.Length() + terms[i].Length() + 1 > OZL_ClientConfig.CHUNK_CHARS)
+            {
+                OZ_SyncExtras.Put(p, OZL_ClientConfig.SYNC_TERMINALS + chunks.ToString(), chunk);
+                chunks++;
+                chunk = "";
+            }
+            if (chunk != "")
+                chunk += ",";
+            chunk += terms[i];
+        }
+        if (chunk != "")
+        {
+            OZ_SyncExtras.Put(p, OZL_ClientConfig.SYNC_TERMINALS + chunks.ToString(), chunk);
+            chunks++;
+        }
+        OZ_SyncExtras.Put(p, OZL_ClientConfig.SYNC_TERMINALS_N, chunks.ToString());
     }
 
     // Реєстрація в редакторі ядра -- по рядку на файл, після першого читання.

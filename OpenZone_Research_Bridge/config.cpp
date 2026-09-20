@@ -16,6 +16,7 @@ class CfgPatches
             "DZ_Data",
             "DZ_Scripts",
             "DZMCP_Bridge",
+            "OpenZone_Factions",
             "OpenZone_Research"
         };
     };

@@ -23,6 +23,9 @@ modded class ActionConstructor
         super.RegisterActions(actions);
         actions.Insert(OZL_ActionStart);
         actions.Insert(OZL_ActionCollect);
+        actions.Insert(OZL_ActionDeposit);
+        actions.Insert(OZL_ActionIdentify);
+        actions.Insert(OZL_ActionOpenTree);
     }
 }
 
@@ -33,5 +36,8 @@ modded class PlayerBase
         super.SetActions(InputActionMap);
         AddAction(OZL_ActionStart, InputActionMap);
         AddAction(OZL_ActionCollect, InputActionMap);
+        AddAction(OZL_ActionDeposit, InputActionMap);
+        AddAction(OZL_ActionIdentify, InputActionMap);
+        AddAction(OZL_ActionOpenTree, InputActionMap);
     }
 }

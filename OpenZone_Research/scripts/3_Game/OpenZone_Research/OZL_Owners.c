@@ -194,6 +194,34 @@ class OZL_Owners : OZ_ConfigBase
         return OZL_Match.InList(classname, o.DeviceClasses);
     }
 
+    // Чи цей клас -- термінал ХОЧ КОГОСЬ: підказка дії й пошук термінала
+    // поруч. Без списків ні в кого терміналів немає взагалі.
+    bool IsTerminalClass(string classname)
+    {
+        for (int i = 0; i < Owners.Count(); i++)
+        {
+            if (Owners[i] && OZL_Match.InList(classname, Owners[i].TerminalClasses))
+                return true;
+        }
+        return false;
+    }
+
+    // Об'єднання списків терміналів -- клієнтові для підказок.
+    void TerminalUnion(out array<string> outClasses)
+    {
+        outClasses = new array<string>();
+        for (int i = 0; i < Owners.Count(); i++)
+        {
+            if (!Owners[i])
+                continue;
+            for (int k = 0; k < Owners[i].TerminalClasses.Count(); k++)
+            {
+                string cls = Owners[i].TerminalClasses[k];
+                if (cls != "" && outClasses.Find(cls) < 0)
+                    outClasses.Insert(cls);
+            }
+        }
+    }
     string BackgroundOf(string owner)
     {
         OZL_OwnerDef o = Find(owner);

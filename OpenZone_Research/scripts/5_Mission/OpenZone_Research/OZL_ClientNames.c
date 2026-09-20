@@ -12,6 +12,12 @@ class OZL_ClientNames
         Take(OZL_Names.SYNC_SAMPLES, OZL_Names.SYNC_SAMPLE);
         Take(OZL_Names.SYNC_DATA_N, OZL_Names.SYNC_DATA);
         OZL_Log.Dbg("names: " + OZL_Names.Count().ToString() + " item name(s) from the sync packet");
+
+        OZL_ClientConfig.Clear();
+        int chunks = OZ_ClientState.Extra(OZL_ClientConfig.SYNC_TERMINALS_N, "0").ToInt();
+        for (int c = 0; c < chunks; c++)
+            OZL_ClientConfig.AddTerminals(OZ_ClientState.Extra(OZL_ClientConfig.SYNC_TERMINALS + c.ToString(), ""));
+        OZL_Log.Dbg("terminals: " + OZL_ClientConfig.TerminalCount().ToString() + " class(es) from the sync packet");
     }
 
     private static void Take(string countKey, string prefix)
