@@ -132,6 +132,7 @@ PBOs. Measured on the stand (retail `DayZServer_x64.exe`, 6 mods):
 |---|---|
 | `OpenFile("<prefix>/stringtable.csv", READ)` on packed files | opens for every mod archive AND for `dta/languagecore.pbo` (`languagecore/stringtable.csv`) |
 | `FindFile("*", ..., FindFileFlags.ARCHIVES)` at the VFS root | 2244 entries (every archive prefix and root file); `<entry>/*` one level deeper works too |
+| the same on 1.30 Experimental (1.30.164014, measured 2026-10-11) | lists the server WORKING DIRECTORY: `FindFileFlags` read 0 from script and the flag became a file-system index; archive prefixes and `$profile:` listings return no handle; the string tables are still found through `CfgMods` + `OpenFile`. Details: `E:/openzone/docs/specs/2026-10-11-dayz-1-30-findfile-research.md` |
 | `FGets` on long lines | the longest line returned was 8198 chars, nothing truncated, 0 rows dropped, the loop ends on -1 |
 | tables found | 6: VPPAdminTools, OpenZone_Core, OpenZone_Factions, OpenZone_Research, OpenZone_Storage, languagecore; 7301 keys (languagecore 6787 of 7247 lines: the rest are multi-line cells and repeated keys) |
 | `ConfigGetText(... displayName)` on the dedicated server | resolves `$STR_` keys in the server's language (`Apple`, `KA-M`); a key no table holds comes back as the key without `$` (`STR_DN_UNKNOWN`); a string the engine holds only in the original column comes back with a `$UNT$` prefix (`$UNT$Mouflon Steak`) |
@@ -146,6 +147,5 @@ has for us anyway. The PBO importer (browser worker and `CLASS_PBO_DIRS`) went w
 change; commit `3f8522d` of the bridge keeps it in history.
 
 Enforce traps met: a local named `out` is a reserved word ("Broken expression (missing
-';'?)" at the declaration); `FileAttr` is a plain enum (0..3), so
-`attr & FileAttr.DIRECTORY` is always 0 -- the reader tries `<entry>/stringtable.csv`
-on every root entry instead of testing the attribute.
+';'?)" at the declaration); `FileAttr` was assumed to be a plain enum (0..3) and the attribute test was skipped -- the reader tries `<entry>/stringtable.csv`
+on every root entry instead of testing the attribute. Corrected 2026-10-11: `FileAttr` is bit flags (DIRECTORY=1, HIDDEN=2, READONLY=4, INVALID=-1) and FindFile does set 1 on a directory entry, measured on 1.29 and 1.30.
