@@ -5,429 +5,429 @@
             "Id": "ts_OZL_Eco_Terminal",
             "ClassName": "OZL_Eco_Terminal",
             "Pos": [
-                4670,
+                4726.06,
                 339.03,
-                10150
+                10134.37
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Eco_Pack_Bio",
             "ClassName": "OZL_Eco_Pack_Bio",
             "Pos": [
-                4676,
+                4724.09,
                 339.03,
-                10150
+                10137.85
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Eco_Proc_Bio",
             "ClassName": "OZL_Eco_Proc_Bio",
             "Pos": [
-                4682,
+                4722.12,
                 339.03,
-                10150
+                10141.33
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Eco_Pack_Anom",
             "ClassName": "OZL_Eco_Pack_Anom",
             "Pos": [
-                4688,
+                4720.15,
                 339.03,
-                10150
+                10144.81
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Eco_Proc_Anom",
             "ClassName": "OZL_Eco_Proc_Anom",
             "Pos": [
-                4694,
+                4718.18,
                 339.03,
-                10150
+                10148.29
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Eco_Pack_Electro",
             "ClassName": "OZL_Eco_Pack_Electro",
             "Pos": [
-                4700,
+                4716.22,
                 339.03,
-                10150
+                10151.77
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Eco_Proc_Electro",
             "ClassName": "OZL_Eco_Proc_Electro",
             "Pos": [
-                4706,
+                4714.25,
                 339.03,
-                10150
+                10155.25
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: ecolog"
         },
         {
             "Id": "ts_OZL_Sky_Terminal",
             "ClassName": "OZL_Sky_Terminal",
             "Pos": [
-                4670,
+                4710.31,
                 339.03,
-                10158
+                10162.22
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Sky_Pack_Bio",
             "ClassName": "OZL_Sky_Pack_Bio",
             "Pos": [
-                4676,
+                4708.34,
                 339.03,
-                10158
+                10165.7
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Sky_Proc_Bio",
             "ClassName": "OZL_Sky_Proc_Bio",
             "Pos": [
-                4682,
+                4706.37,
                 339.03,
-                10158
+                10169.18
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Sky_Pack_Anom",
             "ClassName": "OZL_Sky_Pack_Anom",
             "Pos": [
-                4688,
+                4704.4,
                 339.03,
-                10158
+                10172.66
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Sky_Proc_Anom",
             "ClassName": "OZL_Sky_Proc_Anom",
             "Pos": [
-                4694,
+                4702.43,
                 339.03,
-                10158
+                10176.14
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Sky_Pack_Electro",
             "ClassName": "OZL_Sky_Pack_Electro",
             "Pos": [
-                4700,
+                4700.46,
                 339.03,
-                10158
+                10179.62
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Sky_Proc_Electro",
             "ClassName": "OZL_Sky_Proc_Electro",
             "Pos": [
-                4706,
+                4698.49,
                 339.03,
-                10158
+                10183.11
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: clearsky"
         },
         {
             "Id": "ts_OZL_Bnd_Terminal",
             "ClassName": "OZL_Bnd_Terminal",
             "Pos": [
-                4670,
+                4694.55,
                 339.03,
-                10166
+                10190.07
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: bandit"
         },
         {
             "Id": "ts_OZL_Bnd_Pack_Khabar",
             "ClassName": "OZL_Bnd_Pack_Khabar",
             "Pos": [
-                4676,
+                4692.58,
                 339.03,
-                10166
+                10193.55
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: bandit"
         },
         {
             "Id": "ts_OZL_Bnd_Proc_Khabar",
             "ClassName": "OZL_Bnd_Proc_Khabar",
             "Pos": [
-                4682,
+                4690.61,
                 339.03,
-                10166
+                10197.03
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: bandit"
         },
         {
             "Id": "ts_OZL_Bnd_Pack_Trail",
             "ClassName": "OZL_Bnd_Pack_Trail",
             "Pos": [
-                4688,
+                4688.64,
                 339.03,
-                10166
+                10200.51
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: bandit"
         },
         {
             "Id": "ts_OZL_Bnd_Proc_Trail",
             "ClassName": "OZL_Bnd_Proc_Trail",
             "Pos": [
-                4694,
+                4686.67,
                 339.03,
-                10166
+                10203.99
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: bandit"
         },
         {
             "Id": "ts_OZL_Lnr_Terminal",
             "ClassName": "OZL_Lnr_Terminal",
             "Pos": [
-                4670,
+                4682.73,
                 339.03,
-                10174
+                10210.96
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: neutral"
         },
         {
             "Id": "ts_OZL_Lnr_Pack_Khabar",
             "ClassName": "OZL_Lnr_Pack_Khabar",
             "Pos": [
-                4676,
+                4680.76,
                 339.03,
-                10174
+                10214.44
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: neutral"
         },
         {
             "Id": "ts_OZL_Lnr_Proc_Khabar",
             "ClassName": "OZL_Lnr_Proc_Khabar",
             "Pos": [
-                4682,
+                4678.79,
                 339.03,
-                10174
+                10217.92
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: neutral"
         },
         {
             "Id": "ts_OZL_Lnr_Pack_Trail",
             "ClassName": "OZL_Lnr_Pack_Trail",
             "Pos": [
-                4688,
+                4676.82,
                 339.03,
-                10174
+                10221.4
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: neutral"
         },
         {
             "Id": "ts_OZL_Lnr_Proc_Trail",
             "ClassName": "OZL_Lnr_Proc_Trail",
             "Pos": [
-                4694,
+                4674.85,
                 339.03,
-                10174
+                10224.88
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: neutral"
         },
         {
             "Id": "ts_OZL_Dty_Terminal",
             "ClassName": "OZL_Dty_Terminal",
             "Pos": [
-                4670,
+                4670.91,
                 339.03,
-                10182
+                10231.85
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: duty"
         },
         {
             "Id": "ts_OZL_Dty_Pack_Ball",
             "ClassName": "OZL_Dty_Pack_Ball",
             "Pos": [
-                4676,
+                4668.94,
                 339.03,
-                10182
+                10235.33
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: duty"
         },
         {
             "Id": "ts_OZL_Dty_Proc_Ball",
             "ClassName": "OZL_Dty_Proc_Ball",
             "Pos": [
-                4682,
+                4666.97,
                 339.03,
-                10182
+                10238.81
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: duty"
         },
         {
             "Id": "ts_OZL_Dty_Pack_Prot",
             "ClassName": "OZL_Dty_Pack_Prot",
             "Pos": [
-                4688,
+                4665.0,
                 339.03,
-                10182
+                10242.29
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: duty"
         },
         {
             "Id": "ts_OZL_Dty_Proc_Prot",
             "ClassName": "OZL_Dty_Proc_Prot",
             "Pos": [
-                4694,
+                4663.03,
                 339.03,
-                10182
+                10245.77
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: duty"
         },
         {
             "Id": "ts_OZL_Frd_Terminal",
             "ClassName": "OZL_Frd_Terminal",
             "Pos": [
-                4670,
+                4659.09,
                 339.03,
-                10190
+                10252.73
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: freedom"
         },
         {
             "Id": "ts_OZL_Frd_Pack_Ball",
             "ClassName": "OZL_Frd_Pack_Ball",
             "Pos": [
-                4676,
+                4657.12,
                 339.03,
-                10190
+                10256.22
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: freedom"
         },
         {
             "Id": "ts_OZL_Frd_Proc_Ball",
             "ClassName": "OZL_Frd_Proc_Ball",
             "Pos": [
-                4682,
+                4655.15,
                 339.03,
-                10190
+                10259.7
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: freedom"
         },
         {
             "Id": "ts_OZL_Frd_Pack_Prot",
             "ClassName": "OZL_Frd_Pack_Prot",
             "Pos": [
-                4688,
+                4653.18,
                 339.03,
-                10190
+                10263.18
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: freedom"
         },
         {
             "Id": "ts_OZL_Frd_Proc_Prot",
             "ClassName": "OZL_Frd_Proc_Prot",
             "Pos": [
-                4694,
+                4651.21,
                 339.03,
-                10190
+                10266.66
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: freedom"
         },
         {
             "Id": "ts_OZL_Sop_Terminal",
             "ClassName": "OZL_Sop_Terminal",
             "Pos": [
-                4670,
+                4647.27,
                 339.03,
-                10198
+                10273.62
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: sop"
         },
         {
             "Id": "ts_OZL_Sop_Pack_Ball",
             "ClassName": "OZL_Sop_Pack_Ball",
             "Pos": [
-                4676,
+                4645.31,
                 339.03,
-                10198
+                10277.1
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: sop"
         },
         {
             "Id": "ts_OZL_Sop_Proc_Ball",
             "ClassName": "OZL_Sop_Proc_Ball",
             "Pos": [
-                4682,
+                4643.34,
                 339.03,
-                10198
+                10280.59
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: sop"
         },
         {
             "Id": "ts_OZL_Sop_Pack_Prot",
             "ClassName": "OZL_Sop_Pack_Prot",
             "Pos": [
-                4688,
+                4641.37,
                 339.03,
-                10198
+                10284.07
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: sop"
         },
         {
             "Id": "ts_OZL_Sop_Proc_Prot",
             "ClassName": "OZL_Sop_Proc_Prot",
             "Pos": [
-                4694,
+                4639.4,
                 339.03,
-                10198
+                10287.55
             ],
-            "Yaw": 0,
+            "Yaw": 60.5,
             "Note": "test stand: sop"
         }
     ]
