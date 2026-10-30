@@ -1,8 +1,9 @@
 // Миттєва дія «запустити станцію» на приладі у стані «вільна».
 //
 // CCINone, не CCIDummy: у CCIDummy Can() = (item != null), і підказка не
-// з'являлась би з порожніми руками. Умова на обох боках -- лише ціль і її
-// netsync-стан; власника, правило й карго судить сервер, а відповідь їде
+// з'являлась би з порожніми руками. Умова на обох боках -- лише ціль, її
+// netsync-стан і те, чи не термінал це (правил у термінала немає, запускати
+// нічого); власника, правило й карго судить сервер, а відповідь їде
 // звісткою ядра ключем рядка (успіх і відмова однаково).
 
 class OZL_ActionStart : ActionInteractBase
@@ -25,6 +26,8 @@ class OZL_ActionStart : ActionInteractBase
             return false;
         OZL_Station st = OZL_Station.Cast(target.GetObject());
         if (!st || st.IsDamageDestroyed())
+            return false;
+        if (OZL_Terminal.IsTerminalTarget(st))
             return false;
         return st.OZL_GetState() == OZL_Station.STATE_IDLE;
     }
