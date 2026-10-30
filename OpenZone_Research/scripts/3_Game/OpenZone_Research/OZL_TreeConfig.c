@@ -24,14 +24,12 @@ class OZL_TreeItemCost
 {
     string Classname = "";
     int    Quantity  = 1;
-    string Content   = "";
 
     OZL_TreeItemCost Copy()
     {
         OZL_TreeItemCost c = new OZL_TreeItemCost();
         c.Classname = Classname;
         c.Quantity  = Quantity;
-        c.Content   = Content;
         return c;
     }
 }
@@ -142,7 +140,13 @@ class OZL_TreeConfig : OZ_ConfigBase
 
     override int LatestVersion()
     {
-        return 1;
+        return 2;
+    }
+
+    // Версія 1 платила балами з тирами: переносити нічого, файл -- у карантин.
+    override bool Migrate(int from)
+    {
+        return false;
     }
 
     override void LoadDefaults()
@@ -254,9 +258,6 @@ class OZL_TreeConfig : OZ_ConfigBase
                 return "unknown class in ItemCost";
             if (ic.Quantity < 1 || ic.Quantity > 100)
                 return "ItemCost.Quantity outside 1..100";
-            string err = OZL_Rules.ContentProblem("ItemCost", ic.Classname, ic.Content, pointTypes);
-            if (err != "")
-                return err;
         }
         return "";
     }

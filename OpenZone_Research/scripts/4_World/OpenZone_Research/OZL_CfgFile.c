@@ -6,7 +6,8 @@
 // Далі хвіст той самий, що в аппликаторів: перевірка, ОДИН запис із бекапом,
 // підміна живого об'єкта, яка сама перевіряє все проти гри й пересилає
 // пакет синхронізації. Файл новішої версії, ніж знає цей білд, відкидається
-// -- як і при завантаженні на старті.
+// -- як і при завантаженні на старті; типи балів, правила, дерево й модулі
+// приймаються лише своєї версії: старішу завантажувач однаково відправив би в карантин.
 
 class OZL_CfgFile
 {
@@ -38,8 +39,8 @@ class OZL_CfgFile
             OZL_PointTypes c2 = new OZL_PointTypes();
             if (!JsonFileLoader<OZL_PointTypes>.LoadFile(path, c2, err))
                 return Unreadable(tag, err, why);
-            if (c2.Version > c2.LatestVersion())
-                return Newer(tag, c2.Version, why);
+            if (c2.Version != c2.LatestVersion())
+                return OtherVersion(tag, c2.Version, c2.LatestVersion(), why);
             c2.Validate(warnings);
             OZ_ConfigLoader<OZL_PointTypes>.Save(OZL_Const.POINT_TYPES, tag, c2, true);
             return cfg.Replace(tag, c2, by);
@@ -60,8 +61,8 @@ class OZL_CfgFile
             OZL_Rules c4 = new OZL_Rules();
             if (!JsonFileLoader<OZL_Rules>.LoadFile(path, c4, err))
                 return Unreadable(tag, err, why);
-            if (c4.Version > c4.LatestVersion())
-                return Newer(tag, c4.Version, why);
+            if (c4.Version != c4.LatestVersion())
+                return OtherVersion(tag, c4.Version, c4.LatestVersion(), why);
             c4.Validate(warnings);
             OZ_ConfigLoader<OZL_Rules>.Save(OZL_Const.RULES, tag, c4, true);
             return cfg.Replace(tag, c4, by);
@@ -71,44 +72,22 @@ class OZL_CfgFile
             OZL_TreeConfig c5 = new OZL_TreeConfig();
             if (!JsonFileLoader<OZL_TreeConfig>.LoadFile(path, c5, err))
                 return Unreadable(tag, err, why);
-            if (c5.Version > c5.LatestVersion())
-                return Newer(tag, c5.Version, why);
+            if (c5.Version != c5.LatestVersion())
+                return OtherVersion(tag, c5.Version, c5.LatestVersion(), why);
             c5.Validate(warnings);
             OZ_ConfigLoader<OZL_TreeConfig>.Save(OZL_Const.TREE, tag, c5, true);
             return cfg.Replace(tag, c5, by);
-        }
-        if (tag == OZL_Config.TAG_DATA_ITEMS)
-        {
-            OZL_DataItems c6 = new OZL_DataItems();
-            if (!JsonFileLoader<OZL_DataItems>.LoadFile(path, c6, err))
-                return Unreadable(tag, err, why);
-            if (c6.Version > c6.LatestVersion())
-                return Newer(tag, c6.Version, why);
-            c6.Validate(warnings);
-            OZ_ConfigLoader<OZL_DataItems>.Save(OZL_Const.DATA_ITEMS, tag, c6, true);
-            return cfg.Replace(tag, c6, by);
         }
         if (tag == OZL_Config.TAG_MODULES)
         {
             OZL_Modules c7 = new OZL_Modules();
             if (!JsonFileLoader<OZL_Modules>.LoadFile(path, c7, err))
                 return Unreadable(tag, err, why);
-            if (c7.Version > c7.LatestVersion())
-                return Newer(tag, c7.Version, why);
+            if (c7.Version != c7.LatestVersion())
+                return OtherVersion(tag, c7.Version, c7.LatestVersion(), why);
             c7.Validate(warnings);
             OZ_ConfigLoader<OZL_Modules>.Save(OZL_Const.MODULES, tag, c7, true);
             return cfg.Replace(tag, c7, by);
-        }
-        if (tag == OZL_Config.TAG_SAMPLE_TYPES)
-        {
-            OZL_SampleTypes c8 = new OZL_SampleTypes();
-            if (!JsonFileLoader<OZL_SampleTypes>.LoadFile(path, c8, err))
-                return Unreadable(tag, err, why);
-            if (c8.Version > c8.LatestVersion())
-                return Newer(tag, c8.Version, why);
-            c8.Validate(warnings);
-            OZ_ConfigLoader<OZL_SampleTypes>.Save(OZL_Const.SAMPLE_TYPES, tag, c8, true);
-            return cfg.Replace(tag, c8, by);
         }
         if (tag == OZL_Config.TAG_STATICS)
         {
@@ -129,6 +108,13 @@ class OZL_CfgFile
     private static bool Unreadable(string tag, string err, out string why)
     {
         why = "unreadable: " + err;
+        OZL_Log.Warn("config " + tag + " from the bridge rejected: " + why);
+        return false;
+    }
+
+    private static bool OtherVersion(string tag, int version, int latest, out string why)
+    {
+        why = "version " + version.ToString() + ", this build reads " + latest.ToString();
         OZL_Log.Warn("config " + tag + " from the bridge rejected: " + why);
         return false;
     }

@@ -9,11 +9,8 @@
 
 class OZL_PointName
 {
-    string Id       = "";
-    string Name     = "";
-    string Category = "";
-    string Kind     = "";
-    int    Tier     = 1;
+    string Id   = "";
+    string Name = "";
 }
 
 // Матеріал, якого коштує вузол: клас, ЙОГО ІГРОВА НАЗВА (сервер питає

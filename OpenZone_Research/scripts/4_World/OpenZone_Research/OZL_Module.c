@@ -61,9 +61,9 @@ class OZL_Module : CF_ModuleWorld
         m_PollTimer = new Timer(CALL_CATEGORY_SYSTEM);
         m_PollTimer.Run(OZL_Tree.POLL_SEC, this, "OZL_PollProjects", NULL, true);
 
-        // Імена предметів з JSON їдуть клієнтові додатками пакета ядра:
+        // Класи терміналів їдуть клієнтові додатками пакета ядра:
         // ядро кличе цей інвокер на кожну відправку пакета.
-        OZ_SyncExtras.OnFill().Insert(OZL_NamesFill);
+        OZ_SyncExtras.OnFill().Insert(OZL_TerminalsFill);
 
         // РЯДОК ГОТОВНОСТІ -- ТІКОМ ПІЗНІШЕ, і це не косметика. Порядок
         // CF-модулів не гарантований: на першому буті цей модуль відпрацював
@@ -100,9 +100,9 @@ class OZL_Module : CF_ModuleWorld
         OZL_Log.Info("owner '" + owner + "' reset: " + n.ToString() + " station(s) stopped");
     }
     // Кличе інвокер OZ_SyncExtras -- метод мусить бути видимим (не private).
-    void OZL_NamesFill(OZ_SyncPayload p)
+    void OZL_TerminalsFill(OZ_SyncPayload p)
     {
-        OZL_Config.FillNames(p);
+        OZL_Config.FillTerminals(p);
     }
 
     override void OnMissionFinish(Class sender, CF_EventArgs args)
@@ -116,7 +116,7 @@ class OZL_Module : CF_ModuleWorld
         OZL_Bridge.Get().Stop();
 
         // Дзеркало підписки: інвокер ядра статичний і переживе місію.
-        OZ_SyncExtras.OnFill().Remove(OZL_NamesFill);
+        OZ_SyncExtras.OnFill().Remove(OZL_TerminalsFill);
         OZL_Events.OnOwnerReset.Remove(OZL_OwnerReset);
     }
 

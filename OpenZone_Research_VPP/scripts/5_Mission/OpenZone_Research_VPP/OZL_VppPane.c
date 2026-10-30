@@ -55,9 +55,7 @@ modded class OZ_VppAdminMenu
         m_ResCfgNames.Insert(OZL_Config.TAG_OWNERS);
         m_ResCfgNames.Insert(OZL_Config.TAG_RULES);
         m_ResCfgNames.Insert(OZL_Config.TAG_TREE);
-        m_ResCfgNames.Insert(OZL_Config.TAG_DATA_ITEMS);
         m_ResCfgNames.Insert(OZL_Config.TAG_MODULES);
-        m_ResCfgNames.Insert(OZL_Config.TAG_SAMPLE_TYPES);
         m_ResCfgNames.Insert(OZL_Config.TAG_STATICS);
         RepaintConfigs();
     }

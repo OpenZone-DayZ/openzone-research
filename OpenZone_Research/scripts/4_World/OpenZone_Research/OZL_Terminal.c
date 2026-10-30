@@ -1,15 +1,14 @@
 // Термінал: одна умова на три дії й серверне виконання здачі та опознання.
 //
 // Три дії на одній цілі й одній клавіші розходяться УМОВОЮ, а не порядком
-// реєстрації: з носієм або даними в руках коротке F -- опознати, утримання
-// -- здати; з порожніми руками F -- відкрити дерево. Умова на обох боках
-// структурна (клас цілі, клас предмета в руках); чи термінал свій, чи носій
-// повний, чи дані описані -- судить сервер при виконанні й відповідає
-// звісткою ключем рядка.
+// реєстрації: з носієм у руках коротке F -- опознати, утримання -- здати; з
+// порожніми руками F -- відкрити дерево. Умова на обох боках структурна (клас
+// цілі, клас предмета в руках); чи термінал свій і чи носій повний -- судить
+// сервер при виконанні й відповідає звісткою ключем рядка.
 //
-// Здати можна БУДЬ-ЯКИЙ носій, і це навмисно (ZP §5c): бали йдуть у пул того,
-// ХТО ЗДАЄ. Дефіцит створює гейт на виробництві, а не заборона на здачу --
-// інакше трофейний носій був би сміттям.
+// Здати можна БУДЬ-ЯКИЙ носій, і це навмисно: бали йдуть у пул того, ХТО
+// ЗДАЄ. Дефіцит створює гейт на виробництві, а не заборона на здачу --
+// інакше трофейний носій був би сміттям. Тип балів -- лінія класу носія.
 
 class OZL_Terminal
 {
@@ -34,17 +33,12 @@ class OZL_Terminal
         return item && GetGame().IsKindOf(item.GetType(), "OZL_Carrier_Base");
     }
 
-    static bool IsData(ItemBase item)
-    {
-        return item && GetGame().IsKindOf(item.GetType(), "OZL_Data_Base");
-    }
-
-    // Те, що можна здати: носій або дані, не зруйноване.
+    // Те, що можна здати: носій, не зруйнований.
     static bool IsDepositable(ItemBase item)
     {
         if (!item || item.IsRuined())
             return false;
-        return IsCarrier(item) || IsData(item);
+        return IsCarrier(item);
     }
 
     // ---------- здача ----------
@@ -73,75 +67,34 @@ class OZL_Terminal
             uid = who.GetIdentity().GetPlainId();
 
         OZL_PointTypes pts = OZL_Config.Get().PointTypes();
-        array<string> types   = new array<string>();
-        array<int>    amounts = new array<int>();
-
-        if (IsCarrier(item))
+        string ptId = OZL_Lines.LineOf(item.GetType());
+        int amount;
+        OZL_Carrier_Base car = OZL_Carrier_Base.Cast(item);
+        if (!car || !car.OZL_Read(amount))
         {
-            string ptId;
-            int amount;
-            if (!OZL_CarrierState.Parse(OZL_Carrier_Base.StateOf(item), ptId, amount))
-            {
-                why = "STR_OZL_ERR_CARRIER_EMPTY";
-                return false;
-            }
-            if (!pts.Find(ptId))
-            {
-                why = "STR_OZL_ERR_UNKNOWN_TYPE";
-                return false;
-            }
-            types.Insert(ptId);
-            amounts.Insert(amount);
+            why = "STR_OZL_ERR_CARRIER_EMPTY";
+            return false;
         }
-        else
+        if (!pts.Find(ptId))
         {
-            OZL_DataDef def = OZL_Config.Get().DataItems().Find(item.GetType());
-            if (!def || !def.Enabled)
-            {
-                why = "STR_OZL_ERR_DATA_UNKNOWN";
-                return false;
-            }
-            for (int r = 0; r < def.Points.Count(); r++)
-            {
-                OZL_DataReward rw = def.Points[r];
-                if (!rw || rw.Type == "" || rw.Amount <= 0)
-                    continue;
-                if (!pts.Find(rw.Type))
-                {
-                    OZL_Log.Warn("deposit: data '" + item.GetType() + "' promises point type '" + rw.Type + "', which PointTypes does not know, skipped");
-                    continue;
-                }
-                types.Insert(rw.Type);
-                amounts.Insert(rw.Amount);
-            }
-            if (types.Count() == 0)
-            {
-                why = "STR_OZL_ERR_DATA_UNKNOWN";
-                return false;
-            }
+            why = "STR_OZL_ERR_UNKNOWN_TYPE";
+            return false;
         }
 
         string itemType = item.GetType();
         GetGame().ObjectDelete(item);
 
-        string granted = "";
-        for (int i = 0; i < types.Count(); i++)
-        {
-            string gwhy;
-            OZL_Points.Grant(owner, types[i], amounts[i], gwhy);
-            if (granted != "")
-                granted += ", ";
-            granted += pts.NameOf(types[i]) + " +" + amounts[i].ToString();
-        }
-        line = granted;
+        string gwhy;
+        OZL_Points.Grant(owner, ptId, amount, gwhy);
+        line = pts.NameOf(ptId) + " +" + amount.ToString();
         why = "STR_OZL_MSG_DEPOSITED";
-        OZL_Log.Dbg("deposit: " + uid + " " + itemType + " -> " + owner + ": " + granted);
+        OZL_Log.Dbg("deposit: " + uid + " " + itemType + " -> " + owner + ": " + line);
         return true;
     }
 
     // ---------- опознання ----------
 
-    // Сервер. Людський рядок про стан носія: тип балів словами, тир, кількість.
+    // Сервер. Людський рядок про носій: лінія словами й кількість балів.
     static bool Identify(PlayerBase who, Object obj, ItemBase item, out string why, out string line)
     {
         why = "";
@@ -157,24 +110,20 @@ class OZL_Terminal
             why = "STR_OZL_ERR_NOT_YOUR_TERMINAL";
             return false;
         }
-        string ptId;
         int amount;
-        if (!OZL_CarrierState.Parse(OZL_Carrier_Base.StateOf(item), ptId, amount))
+        OZL_Carrier_Base car = OZL_Carrier_Base.Cast(item);
+        if (!car || !car.OZL_Read(amount))
         {
             why = "STR_OZL_ERR_CARRIER_EMPTY";
             return false;
         }
-        OZL_PointTypes pts = OZL_Config.Get().PointTypes();
-        OZL_PointType pt = pts.Find(ptId);
+        OZL_PointType pt = OZL_Config.Get().PointTypes().Find(OZL_Lines.LineOf(item.GetType()));
         if (!pt)
         {
             why = "STR_OZL_ERR_UNKNOWN_TYPE";
             return false;
         }
-        line = item.GetDisplayName() + ": " + pt.Name;
-        line += " (" + OZL_PointTypes.DimensionName(pts.Categories, pt.Category);
-        line += ", " + OZL_PointTypes.DimensionName(pts.Kinds, pt.Kind);
-        line += ", T" + pt.Tier.ToString() + ") +" + amount.ToString();
+        line = item.GetDisplayName() + ": " + pt.Name + " +" + amount.ToString();
         why = "STR_OZL_MSG_IDENTIFIED";
         return true;
     }

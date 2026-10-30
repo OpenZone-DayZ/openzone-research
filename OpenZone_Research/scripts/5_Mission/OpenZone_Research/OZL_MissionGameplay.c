@@ -1,7 +1,7 @@
 // Клієнтська точка входу мода досліджень.
 //
-// Слухає пакет синхронізації ядра: у ньому їдуть імена предметів з JSON
-// адміністратора (OZL_Names). Меню дерева й відповіді служби -- з планом T9.
+// Слухає пакет синхронізації ядра: у ньому їдуть класи терміналів
+// (OZL_ClientConfig). Меню дерева й відповіді служби -- теж тут.
 //
 // На виділеному сервері MissionGameplay не створюється взагалі (там
 // MissionServer), тож цей код туди не потрапляє.
@@ -26,7 +26,7 @@ modded class MissionGameplay
         OZ_Show.OnShow.Insert(OZL_Show);
         OZ_ClientState.ServiceWatch().Insert(OZL_SvcRes);
         if (OZ_ClientState.Ready())
-            OZL_ClientNames.Apply();
+            OZL_ClientTerminals.Apply();
     }
 
     void OZL_Notice(string op, bool ok, string why)
@@ -60,7 +60,7 @@ modded class MissionGameplay
     }
     void OZL_Sync(OZ_SyncPayload p)
     {
-        OZL_ClientNames.Apply();
+        OZL_ClientTerminals.Apply();
     }
 
     override UIScriptedMenu CreateScriptedMenu(int id)

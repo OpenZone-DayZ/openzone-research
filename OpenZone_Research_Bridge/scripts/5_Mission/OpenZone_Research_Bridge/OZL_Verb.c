@@ -3,21 +3,25 @@
 // that cannot be held, the faction pool, the owner the core reports.
 //
 //   world_exec verb=oz_research args={"op":"owner"}
-//   world_exec verb=oz_research args={"op":"put","item":"Apple","target":"OZL_SampleFridge"}
-//   world_exec verb=oz_research args={"op":"put","item":"OZL_Sample_01","content":"Apple","purity":"0.8","target":"OZL_Microscope"}
-//   world_exec verb=oz_research args={"op":"fill","item":"Rag","target":"OZL_SampleFridge"}
-//   world_exec verb=oz_research args={"op":"take","item":"Rag","target":"OZL_SampleFridge"}
-//   world_exec verb=oz_research args={"op":"station","target":"OZL_SampleFridge"}
-//   world_exec verb=oz_research args={"op":"points","owner":"mercenary"}
-//   world_exec verb=oz_research args={"op":"grant","owner":"mercenary","type":"bio","amount":"5"}
-//   world_exec verb=oz_research args={"op":"reset","owner":"mercenary"}
+//   world_exec verb=oz_research args={"op":"put","item":"Rag","target":"OZL_Bnd_Pack_Khabar"}
+//   world_exec verb=oz_research args={"op":"put","item":"OZL_Sample_Khabar","points":"9","purity":"70","target":"OZL_Bnd_Proc_Khabar"}
+//   world_exec verb=oz_research args={"op":"cargo","target":"OZL_Bnd_Proc_Khabar"}
+//   world_exec verb=oz_research args={"op":"roll","target":"OZL_Dty_Pack_Ball","n":"1000"}
+//   world_exec verb=oz_research args={"op":"payload_selftest"}
+//   world_exec verb=oz_research args={"op":"fill","item":"Rag","target":"OZL_Bnd_Pack_Khabar"}
+//   world_exec verb=oz_research args={"op":"take","item":"Rag","target":"OZL_Bnd_Pack_Khabar"}
+//   world_exec verb=oz_research args={"op":"station","target":"OZL_Bnd_Pack_Khabar"}
+//   world_exec verb=oz_research args={"op":"give","item":"OZL_Carrier_Khabar","points":"9"}
+//   world_exec verb=oz_research args={"op":"points","owner":"bandit"}
+//   world_exec verb=oz_research args={"op":"grant","owner":"bandit","type":"khabar","amount":"5"}
+//   world_exec verb=oz_research args={"op":"reset","owner":"bandit"}
 //   world_exec verb=oz_research args={"op":"reload"}
 //   world_exec verb=oz_research args={"op":"bridge"}
-//   world_exec verb=oz_research args={"op":"admin","cmd":"grant:loner:bio_field_t1:5"}
+//   world_exec verb=oz_research args={"op":"admin","cmd":"grant:neutral:khabar:5"}
 //   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
 //   world_exec verb=oz_research args={"op":"treeui"}                     (opens the tree SCREEN on the connected client)
 //   world_exec verb=oz_research args={"op":"treeui","owner":"duty"}      (…as that faction: stand only, see OZL_PretendOrg)
-//   world_exec verb=oz_research args={"op":"research","node":"pb_osnovy","as":"post"}
+//   world_exec verb=oz_research args={"op":"research","node":"ts_bnd_1","as":"post"}
 //
 // `target` names a station class; the nearest one to the player within
 // `radius` (default 30 m) is taken. Items are CREATED in the station's cargo,
@@ -117,13 +121,22 @@ modded class DZMCP_BridgeCore
                 detail = "no room for " + item + " in the cargo of " + st.GetType();
                 return false;
             }
-            string content = OZL_Arg(args, "content", "");
-            float purity = OZL_Arg(args, "purity", "1").ToFloat();
-            OZL_Sample_Base.ApplyFields(created, content, purity);
-            OZL_Carrier_Base.ApplyState(created, content);
+            int putPoints = OZL_Arg(args, "points", "0").ToInt();
+            int putPct = OZL_Arg(args, "purity", "70").ToInt();
+            string putPay = "";
+            if (OZL_Lines.IsSample(item))
+                putPay = OZL_Payload.EncodeSample(putPoints, putPct);
+            else if (OZL_Lines.IsCarrier(item))
+                putPay = OZL_Payload.EncodeCarrier(putPoints);
+            OZL_Sample_Base putS = OZL_Sample_Base.Cast(created);
+            if (putS)
+                putS.OZL_SetPayload(putPay);
+            OZL_Carrier_Base putC = OZL_Carrier_Base.Cast(created);
+            if (putC)
+                putC.OZL_SetPayload(putPay);
             detail = "created " + item + " in " + st.GetType() + " cargo";
-            if (content != "")
-                detail += " content=" + content + " purity=" + purity.ToString();
+            if (putPay != "")
+                detail += " payload=" + putPay;
             return true;
         }
 
@@ -229,8 +242,8 @@ modded class DZMCP_BridgeCore
         }
         if (op == "give")
         {
-            // Create an item in the player's hands, with a sample content or a
-            // carrier state: what a deposit or an identify test needs held.
+            // Create an item in the player's hands, with the payload of a sample
+            // or a carrier: what a deposit or an identify test needs held.
             PlayerBase pg = OZL_FirstPlayer();
             if (!pg || !pg.GetHumanInventory())
             {
@@ -249,13 +262,22 @@ modded class DZMCP_BridgeCore
                 detail = "the hands are not free for " + giveCls;
                 return false;
             }
-            string giveContent = OZL_Arg(args, "content", "");
-            float givePurity = OZL_Arg(args, "purity", "1").ToFloat();
-            OZL_Sample_Base.ApplyFields(held, giveContent, givePurity);
-            OZL_Carrier_Base.ApplyState(held, giveContent);
+            int givePoints = OZL_Arg(args, "points", "0").ToInt();
+            int givePct = OZL_Arg(args, "purity", "70").ToInt();
+            string givePay = "";
+            if (OZL_Lines.IsSample(giveCls))
+                givePay = OZL_Payload.EncodeSample(givePoints, givePct);
+            else if (OZL_Lines.IsCarrier(giveCls))
+                givePay = OZL_Payload.EncodeCarrier(givePoints);
+            OZL_Sample_Base giveS = OZL_Sample_Base.Cast(held);
+            if (giveS)
+                giveS.OZL_SetPayload(givePay);
+            OZL_Carrier_Base giveC = OZL_Carrier_Base.Cast(held);
+            if (giveC)
+                giveC.OZL_SetPayload(givePay);
             detail = "created " + giveCls + " in hands";
-            if (giveContent != "")
-                detail += " content=" + giveContent;
+            if (givePay != "")
+                detail += " payload=" + givePay;
             return true;
         }
 
@@ -361,6 +383,59 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
+        if (op == "cargo")
+        {
+            OZL_Station stc = OZL_FindStation(args, detail);
+            if (!stc)
+                return false;
+            array<EntityAI> cinv = new array<EntityAI>();
+            stc.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, cinv);
+            detail = stc.GetType() + " cargo:";
+            int cpts;
+            int cpct;
+            for (int ci = 0; ci < cinv.Count(); ci++)
+            {
+                EntityAI ce = cinv[ci];
+                if (!ce || ce == stc)
+                    continue;
+                detail += " " + ce.GetType();
+                OZL_Sample_Base cs = OZL_Sample_Base.Cast(ce);
+                if (cs && cs.OZL_Read(cpts, cpct))
+                    detail += "[points=" + cpts.ToString() + " purity=" + cpct.ToString() + "]";
+                OZL_Carrier_Base cc = OZL_Carrier_Base.Cast(ce);
+                if (cc && cc.OZL_Read(cpts))
+                    detail += "[points=" + cpts.ToString() + "]";
+            }
+            return true;
+        }
+
+        if (op == "roll")
+        {
+            OZL_Station str = OZL_FindStation(args, detail);
+            if (!str)
+                return false;
+            int rn = OZL_Arg(args, "n", "1000").ToInt();
+            float rp;
+            float rd;
+            OZL_Gear.ModuleBonuses(str, rp, rd);
+            OZL_Rule rr = new OZL_Rule();
+            OZL_RuleOutput ro = new OZL_RuleOutput();
+            ro.Classname = "Rag";
+            rr.Outputs.Insert(ro);
+            int rdoubled = 0;
+            for (int ri = 0; ri < rn; ri++)
+            {
+                array<string> ritems = new array<string>();
+                array<string> rpays = new array<string>();
+                OZL_RuleEngine.ResolveResult(rr, 1.0, rd, 0, 70, ritems, rpays);
+                if (ritems.Count() == 2)
+                    rdoubled++;
+            }
+            detail = str.GetType() + ": purity bonus " + rp.ToString() + ", double chance " + rd.ToString();
+            detail += ", doubled " + rdoubled.ToString() + "/" + rn.ToString();
+            return true;
+        }
+
         if (op == "payload_selftest")
         {
             array<string> pfails = new array<string>();
@@ -403,7 +478,7 @@ modded class DZMCP_BridgeCore
             return pfails.Count() == 0;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research, admin, bridge, payload_selftest)";
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, cargo, roll, points, grant, reset, reload, tree, research, admin, bridge, payload_selftest)";
         return false;
     }
 
@@ -423,7 +498,7 @@ modded class DZMCP_BridgeCore
 
         array<EntityAI> cargo = new array<EntityAI>();
         st.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, cargo);
-        // Compact: each distinct class[:content@purity] once, with a count.
+        // Compact: each distinct class[:payload] once, with a count.
         array<string> keys   = new array<string>();
         array<int>    counts = new array<int>();
         int total = 0;
@@ -434,12 +509,15 @@ modded class DZMCP_BridgeCore
                 continue;
             total++;
             string key = e.GetType();
-            string content = OZL_Sample_Base.ContentOf(e);
-            if (content != "")
-                key += ":" + content + "@" + OZL_Sample_Base.PurityOf(e).ToString();
-            string carrier = OZL_Carrier_Base.StateOf(e);
-            if (carrier != "")
-                key += ":" + carrier;
+            string dpay = "";
+            OZL_Sample_Base ds = OZL_Sample_Base.Cast(e);
+            if (ds)
+                dpay = ds.OZL_GetPayload();
+            OZL_Carrier_Base dc = OZL_Carrier_Base.Cast(e);
+            if (dc)
+                dpay = dc.OZL_GetPayload();
+            if (dpay != "")
+                key += ":" + dpay;
             int k = keys.Find(key);
             if (k > -1)
                 counts[k] = counts[k] + 1;

@@ -1,4 +1,4 @@
-// Живі конфіги мода: один синглтон, дев'ять файлів, один порядок читання.
+// Живі конфіги мода: один синглтон, сім файлів, один порядок читання.
 //
 // Кожен файл -- клас на OZ_ConfigBase, читається загальним завантажувачем
 // ядра (OZ_ConfigLoader: бекап при записі, карантин битого файла, старт на
@@ -7,12 +7,12 @@
 // застосувач, а той -- ті самі перевірки, що й завантажувач. Своїх операцій
 // «upsert/delete» у мода немає: правити поля -- справа ядра.
 //
-// ПОРЯДОК ЗНАЧУЩИЙ: правила, дерево й заготовки перевіряються ПРОТИ типів
-// балів і проти гри (класи предметів), тож Check() іде після того, як усе
-// прочитано, і повторюється після кожної правки.
+// ПОРЯДОК ЗНАЧУЩИЙ: правила, дерево й модулі перевіряються ПРОТИ типів
+// балів і проти гри (класи предметів, лінії в config.cpp), тож Check() іде
+// після того, як усе прочитано, і повторюється після кожної правки.
 
 // Застосувач на кожен файл: розібрати в НОВИЙ об'єкт, перевірити, зберегти
-// з бекапом, підмінити живий. Дев'ять однакових класів, а не один
+// з бекапом, підмінити живий. Сім однакових класів, а не один
 // узагальнений: `new T()` у шаблоні Enforce не компілюється (Bad type 'T',
 // зміряно 2026-09-20), тож узагальнити можна лише те, що не створює.
 // Спільне -- відмова з причиною в лог -- у OZL_Config.Rejected.
@@ -40,6 +40,8 @@ class OZL_PointTypesApplier : OZ_AdminCfgApplier
         string err;
         if (!JsonFileLoader<OZL_PointTypes>.LoadData(json, c, err))
             return OZL_Config.Rejected(OZL_Config.TAG_POINT_TYPES, err);
+        if (OZL_Config.Stale(OZL_Config.TAG_POINT_TYPES, c))
+            return false;
         int warnings;
         c.Validate(warnings);
         OZ_ConfigLoader<OZL_PointTypes>.Save(OZL_Const.POINT_TYPES, OZL_Config.TAG_POINT_TYPES, c, true);
@@ -70,6 +72,8 @@ class OZL_RulesApplier : OZ_AdminCfgApplier
         string err;
         if (!JsonFileLoader<OZL_Rules>.LoadData(json, c, err))
             return OZL_Config.Rejected(OZL_Config.TAG_RULES, err);
+        if (OZL_Config.Stale(OZL_Config.TAG_RULES, c))
+            return false;
         int warnings;
         c.Validate(warnings);
         OZ_ConfigLoader<OZL_Rules>.Save(OZL_Const.RULES, OZL_Config.TAG_RULES, c, true);
@@ -85,25 +89,12 @@ class OZL_TreeApplier : OZ_AdminCfgApplier
         string err;
         if (!JsonFileLoader<OZL_TreeConfig>.LoadData(json, c, err))
             return OZL_Config.Rejected(OZL_Config.TAG_TREE, err);
+        if (OZL_Config.Stale(OZL_Config.TAG_TREE, c))
+            return false;
         int warnings;
         c.Validate(warnings);
         OZ_ConfigLoader<OZL_TreeConfig>.Save(OZL_Const.TREE, OZL_Config.TAG_TREE, c, true);
         return OZL_Config.Get().Replace(OZL_Config.TAG_TREE, c);
-    }
-}
-
-class OZL_DataItemsApplier : OZ_AdminCfgApplier
-{
-    override bool Apply(string json)
-    {
-        OZL_DataItems c = new OZL_DataItems();
-        string err;
-        if (!JsonFileLoader<OZL_DataItems>.LoadData(json, c, err))
-            return OZL_Config.Rejected(OZL_Config.TAG_DATA_ITEMS, err);
-        int warnings;
-        c.Validate(warnings);
-        OZ_ConfigLoader<OZL_DataItems>.Save(OZL_Const.DATA_ITEMS, OZL_Config.TAG_DATA_ITEMS, c, true);
-        return OZL_Config.Get().Replace(OZL_Config.TAG_DATA_ITEMS, c);
     }
 }
 
@@ -115,25 +106,12 @@ class OZL_ModulesApplier : OZ_AdminCfgApplier
         string err;
         if (!JsonFileLoader<OZL_Modules>.LoadData(json, c, err))
             return OZL_Config.Rejected(OZL_Config.TAG_MODULES, err);
+        if (OZL_Config.Stale(OZL_Config.TAG_MODULES, c))
+            return false;
         int warnings;
         c.Validate(warnings);
         OZ_ConfigLoader<OZL_Modules>.Save(OZL_Const.MODULES, OZL_Config.TAG_MODULES, c, true);
         return OZL_Config.Get().Replace(OZL_Config.TAG_MODULES, c);
-    }
-}
-
-class OZL_SampleTypesApplier : OZ_AdminCfgApplier
-{
-    override bool Apply(string json)
-    {
-        OZL_SampleTypes c = new OZL_SampleTypes();
-        string err;
-        if (!JsonFileLoader<OZL_SampleTypes>.LoadData(json, c, err))
-            return OZL_Config.Rejected(OZL_Config.TAG_SAMPLE_TYPES, err);
-        int warnings;
-        c.Validate(warnings);
-        OZ_ConfigLoader<OZL_SampleTypes>.Save(OZL_Const.SAMPLE_TYPES, OZL_Config.TAG_SAMPLE_TYPES, c, true);
-        return OZL_Config.Get().Replace(OZL_Config.TAG_SAMPLE_TYPES, c);
     }
 }
 
@@ -159,9 +137,7 @@ class OZL_Config
     static const string TAG_OWNERS       = "ResearchOwners";
     static const string TAG_RULES        = "ResearchRules";
     static const string TAG_TREE         = "ResearchTree";
-    static const string TAG_DATA_ITEMS   = "ResearchDataItems";
     static const string TAG_MODULES      = "ResearchModules";
-    static const string TAG_SAMPLE_TYPES = "ResearchSampleTypes";
     static const string TAG_STATICS      = "ResearchStatics";
 
     private static ref OZL_Config s_Inst;
@@ -178,9 +154,7 @@ class OZL_Config
     private ref OZL_Owners        m_Owners;
     private ref OZL_Rules         m_Rules;
     private ref OZL_TreeConfig    m_Tree;
-    private ref OZL_DataItems     m_DataItems;
     private ref OZL_Modules       m_Modules;
-    private ref OZL_SampleTypes   m_SampleTypes;
     private ref OZL_StaticsConfig m_Statics;
 
     // Зростає на кожну правку: клієнтові, що тримає дерево, є з чим звірити.
@@ -191,9 +165,7 @@ class OZL_Config
     OZL_Owners        Owners()      { return m_Owners; }
     OZL_Rules         Rules()       { return m_Rules; }
     OZL_TreeConfig    Tree()        { return m_Tree; }
-    OZL_DataItems     DataItems()   { return m_DataItems; }
     OZL_Modules       Modules()     { return m_Modules; }
-    OZL_SampleTypes   SampleTypes() { return m_SampleTypes; }
     OZL_StaticsConfig Statics()     { return m_Statics; }
     int               Revision()    { return m_Revision; }
 
@@ -208,6 +180,16 @@ class OZL_Config
     {
         OZL_Log.Warn("config " + tag + " rejected: " + err);
         return false;
+    }
+
+    // Правка зі старою версією файла (редактор, що не знає ліній) не приймається:
+    // завантажувач однаково відправив би такий файл у карантин при наступному старті.
+    static bool Stale(string tag, OZ_ConfigBase c)
+    {
+        if (c.Version == c.LatestVersion())
+            return false;
+        Rejected(tag, "version " + c.Version.ToString() + ", this build reads " + c.LatestVersion().ToString());
+        return true;
     }
 
     static void ServerLoad()
@@ -243,24 +225,15 @@ class OZL_Config
         OZ_ConfigLoader<OZL_Rules>.Load(OZL_Const.RULES, TAG_RULES, rules);
         m_Rules = rules.Copy();
 
-        OZL_DataItems data = new OZL_DataItems();
-        OZ_ConfigLoader<OZL_DataItems>.Load(OZL_Const.DATA_ITEMS, TAG_DATA_ITEMS, data);
-        m_DataItems = data.Copy();
-
         OZL_Modules modules = new OZL_Modules();
         OZ_ConfigLoader<OZL_Modules>.Load(OZL_Const.MODULES, TAG_MODULES, modules);
         m_Modules = modules.Copy();
-
-        OZL_SampleTypes samples = new OZL_SampleTypes();
-        OZ_ConfigLoader<OZL_SampleTypes>.Load(OZL_Const.SAMPLE_TYPES, TAG_SAMPLE_TYPES, samples);
-        m_SampleTypes = samples.Copy();
 
         OZL_StaticsConfig statics = new OZL_StaticsConfig();
         OZ_ConfigLoader<OZL_StaticsConfig>.Load(OZL_Const.STATICS, TAG_STATICS, statics);
         m_Statics = statics.Copy();
 
         CheckAll();
-        RefreshNames();
         m_Revision++;
     }
 
@@ -273,11 +246,7 @@ class OZL_Config
         m_Problems += n;
         m_Tree.Check(m_PointTypes, n);
         m_Problems += n;
-        m_DataItems.Check(m_PointTypes, n);
-        m_Problems += n;
         m_Modules.Check(n);
-        m_Problems += n;
-        m_SampleTypes.Check(n);
         m_Problems += n;
     }
 
@@ -296,12 +265,8 @@ class OZL_Config
             m_Rules = OZL_Rules.Cast(cfg).Copy();
         else if (tag == TAG_TREE)
             m_Tree = OZL_TreeConfig.Cast(cfg).Copy();
-        else if (tag == TAG_DATA_ITEMS)
-            m_DataItems = OZL_DataItems.Cast(cfg).Copy();
         else if (tag == TAG_MODULES)
             m_Modules = OZL_Modules.Cast(cfg).Copy();
-        else if (tag == TAG_SAMPLE_TYPES)
-            m_SampleTypes = OZL_SampleTypes.Cast(cfg).Copy();
         else if (tag == TAG_STATICS)
             m_Statics = OZL_StaticsConfig.Cast(cfg).Copy();
         else
@@ -311,11 +276,10 @@ class OZL_Config
         }
 
         CheckAll();
-        RefreshNames();
         m_Revision++;
         OZL_Log.Info("config " + tag + " replaced, revision " + m_Revision.ToString());
 
-        // Імена предметів у клієнтів беруться з пакета синхронізації ядра;
+        // Класи терміналів у клієнтів беруться з пакета синхронізації ядра;
         // після правки той пакет треба надіслати знову всім, хто в грі.
         OZ_SyncSender.SendAll("research configs edited");
 
@@ -324,55 +288,12 @@ class OZL_Config
         return true;
     }
 
-    // Серверна дорога наповнення довідника імен (OZL_Names): з живих конфігів,
-    // після кожного читання й кожної правки.
-    private void RefreshNames()
-    {
-        OZL_Names.Clear();
-        int i;
-        for (i = 0; i < m_SampleTypes.Items.Count(); i++)
-        {
-            OZL_SampleTypeDef s = m_SampleTypes.Items[i];
-            if (s && s.Enabled)
-                OZL_Names.Set(s.Id, s.Name, s.Description);
-        }
-        for (i = 0; i < m_DataItems.Items.Count(); i++)
-        {
-            OZL_DataDef d = m_DataItems.Items[i];
-            if (d && d.Enabled)
-                OZL_Names.Set(d.Id, d.Name, d.Description);
-        }
-    }
-
-    // Імена -- у пакет синхронізації ядра, по додатку на предмет. Кличе
-    // інвокер OZ_SyncExtras через OZL_Module на кожну відправку пакета.
-    static void FillNames(OZ_SyncPayload p)
+    // Класи терміналів -- у пакет синхронізації ядра, порціями, коротшими за
+    // межу рядка рушія. Кличе інвокер OZ_SyncExtras через OZL_Module.
+    static void FillTerminals(OZ_SyncPayload p)
     {
         OZL_Config cfg = Get();
         int i;
-        int n = 0;
-        for (i = 0; i < cfg.m_SampleTypes.Items.Count(); i++)
-        {
-            OZL_SampleTypeDef s = cfg.m_SampleTypes.Items[i];
-            if (!s || !s.Enabled)
-                continue;
-            OZL_Names.PutEntry(p, OZL_Names.SYNC_SAMPLE + n.ToString(), s.Id, s.Name, s.Description);
-            n++;
-        }
-        OZ_SyncExtras.Put(p, OZL_Names.SYNC_SAMPLES, n.ToString());
-
-        n = 0;
-        for (i = 0; i < cfg.m_DataItems.Items.Count(); i++)
-        {
-            OZL_DataDef d = cfg.m_DataItems.Items[i];
-            if (!d || !d.Enabled)
-                continue;
-            OZL_Names.PutEntry(p, OZL_Names.SYNC_DATA + n.ToString(), d.Id, d.Name, d.Description);
-            n++;
-        }
-        OZ_SyncExtras.Put(p, OZL_Names.SYNC_DATA_N, n.ToString());
-
-        // Класи терміналів -- порціями, коротшими за межу рядка рушія.
         array<string> terms;
         cfg.m_Owners.TerminalUnion(terms);
         string chunk = "";
@@ -398,7 +319,7 @@ class OZL_Config
     }
 
     // Реєстрація в редакторі ядра -- по рядку на файл, після першого читання.
-    // Дев'ять тегів у порядку файлів -- для листа boot і для reload.
+    // Сім тегів у порядку файлів -- для листа boot і для reload.
     static void Tags(array<string> outTags)
     {
         outTags.Insert(TAG_SETTINGS);
@@ -406,9 +327,7 @@ class OZL_Config
         outTags.Insert(TAG_OWNERS);
         outTags.Insert(TAG_RULES);
         outTags.Insert(TAG_TREE);
-        outTags.Insert(TAG_DATA_ITEMS);
         outTags.Insert(TAG_MODULES);
-        outTags.Insert(TAG_SAMPLE_TYPES);
         outTags.Insert(TAG_STATICS);
     }
     static void RegisterEditors()
@@ -418,9 +337,7 @@ class OZL_Config
         OZ_AdminCfg.Register(TAG_OWNERS, OZL_Const.OWNERS, new OZL_OwnersApplier(), "research");
         OZ_AdminCfg.Register(TAG_RULES, OZL_Const.RULES, new OZL_RulesApplier(), "research");
         OZ_AdminCfg.Register(TAG_TREE, OZL_Const.TREE, new OZL_TreeApplier(), "research");
-        OZ_AdminCfg.Register(TAG_DATA_ITEMS, OZL_Const.DATA_ITEMS, new OZL_DataItemsApplier(), "research");
         OZ_AdminCfg.Register(TAG_MODULES, OZL_Const.MODULES, new OZL_ModulesApplier(), "research");
-        OZ_AdminCfg.Register(TAG_SAMPLE_TYPES, OZL_Const.SAMPLE_TYPES, new OZL_SampleTypesApplier(), "research");
         OZ_AdminCfg.Register(TAG_STATICS, OZL_Const.STATICS, new OZL_StaticsApplier(), "research");
     }
 
@@ -431,9 +348,7 @@ class OZL_Config
         s += " pointTypes=" + m_PointTypes.PointTypes.Count().ToString();
         s += " rules=" + m_Rules.Count().ToString();
         s += " nodes=" + m_Tree.NodeCount().ToString();
-        s += " dataItems=" + m_DataItems.Items.Count().ToString();
         s += " modules=" + m_Modules.Modules.Count().ToString();
-        s += " sampleTypes=" + m_SampleTypes.Items.Count().ToString();
         s += " statics=" + m_Statics.Entries.Count().ToString();
         s += " problems=" + m_Problems.ToString();
         return s;

@@ -1,17 +1,17 @@
 // Правила переробки: OZ_Research_Rules.json -- дані, без логіки станції.
 //
-// Правило каже: на ЯКОМУ приладі, з ЯКОГО входу (клас, кількість, вміст
-// зразка), за ЯКИЙ час і з ЯКОЮ базовою чистотою виходять ЯКІ предмети; що
-// при цьому витрачається; хто має право (вузол дерева, фракції, одяг,
-// інструменти в слотах). Групи -- це колишні файли теки ProcessingRules ZP:
-// один файл, атомарний бекап ядра, одна реєстрація в редакторі.
+// Правило каже: на ЯКОМУ приладі, з ЯКОГО входу (клас, кількість), за ЯКИЙ
+// час і з ЯКОЮ вихідною чистотою виходять ЯКІ предмети; що при цьому
+// витрачається; хто має право (вузол дерева, фракції, одяг, інструменти в
+// слотах). Групи -- один файл, атомарний бекап ядра, одна реєстрація в
+// редакторі.
+// Вміст проб і носіїв -- рядок у предметі (OZL_Payload), не поле правила.
 
 class OZL_RuleInput
 {
     string Classname           = "";
     int    Quantity            = 1;
     bool   ConsumeInput        = true;
-    string Content             = "";
     bool   RequireFullQuantity = false;
 
     OZL_RuleInput Copy()
@@ -20,7 +20,6 @@ class OZL_RuleInput
         c.Classname           = Classname;
         c.Quantity            = Quantity;
         c.ConsumeInput        = ConsumeInput;
-        c.Content             = Content;
         c.RequireFullQuantity = RequireFullQuantity;
         return c;
     }
@@ -31,7 +30,8 @@ class OZL_RuleOutput
     string Classname = "";
     int    Quantity  = 1;
     float  Chance    = 1.0;
-    string Content   = "";
+    // Лише для проби: скільки балів вона несе (рідкість сировини).
+    int    Points    = 0;
 
     OZL_RuleOutput Copy()
     {
@@ -39,7 +39,7 @@ class OZL_RuleOutput
         c.Classname = Classname;
         c.Quantity  = Quantity;
         c.Chance    = Chance;
-        c.Content   = Content;
+        c.Points    = Points;
         return c;
     }
 }
@@ -48,14 +48,12 @@ class OZL_RuleConsumable
 {
     string Classname = "";
     int    Quantity  = 1;
-    string Content   = "";
 
     OZL_RuleConsumable Copy()
     {
         OZL_RuleConsumable c = new OZL_RuleConsumable();
         c.Classname = Classname;
         c.Quantity  = Quantity;
-        c.Content   = Content;
         return c;
     }
 }
@@ -67,8 +65,8 @@ class OZL_Rule
     // Клас приладу; суфікс "|1" -- рівно цей клас.
     string Device  = "";
     ref OZL_RuleInput InputItem;
-    float  BasePurityMin = 0.5;
-    float  BasePurityMax = 0.5;
+    // Вихідна чистота проби пакувальника; модулі лінії додають своє.
+    float  Purity        = 0.7;
     float  TimeSec       = 10;
     ref array<ref OZL_RuleConsumable> Consumables;
     ref array<ref OZL_RuleOutput>     Outputs;
@@ -97,8 +95,7 @@ class OZL_Rule
         c.Device        = Device;
         if (InputItem)
             c.InputItem = InputItem.Copy();
-        c.BasePurityMin = BasePurityMin;
-        c.BasePurityMax = BasePurityMax;
+        c.Purity        = Purity;
         c.TimeSec       = TimeSec;
         c.RequiredNode  = RequiredNode;
         c.Notes         = Notes;
@@ -161,7 +158,13 @@ class OZL_Rules : OZ_ConfigBase
 
     override int LatestVersion()
     {
-        return 1;
+        return 2;
+    }
+
+    // Версія 1 мала мітки вмісту й тири: переносити нічого, файл -- у карантин.
+    override bool Migrate(int from)
+    {
+        return false;
     }
 
     // Порожньо: правила посилаються на класи предметів, а порожній файл --
@@ -181,8 +184,8 @@ class OZL_Rules : OZ_ConfigBase
     }
 
     // Структурні перевірки: групи з Id, правила з Id, без дублів. Усе, що
-    // потребує гри (класи, типи балів), робить Check() після завантаження
-    // всіх конфігів.
+    // потребує гри (класи, лінії, типи балів), робить Check() після
+    // завантаження всіх конфігів.
     override void Validate(out int warnings)
     {
         warnings = 0;
@@ -231,6 +234,14 @@ class OZL_Rules : OZ_ConfigBase
                 if (!rule.Enabled)
                     continue;
                 string why = Problem(rule, pointTypes);
+                if (why == "" && pointTypes && rule.Outputs.Count() == 1 && OZL_Lines.IsCarrier(rule.Outputs[0].Classname))
+                {
+                    // Не вимикаємо: правило вірне, бракує типу балів -- носій
+                    // вийде, але термінал його не прийме.
+                    string carrierLine = OZL_Lines.LineOf(rule.Outputs[0].Classname);
+                    if (!pointTypes.Find(carrierLine))
+                        OZL_Log.Warn("Rules: '" + rule.Id + "': line '" + carrierLine + "' has no point type, its carriers cannot be deposited");
+                }
                 if (why == "")
                     continue;
                 OZL_Log.Warn("Rules: '" + rule.Id + "' disabled: " + why);
@@ -246,10 +257,8 @@ class OZL_Rules : OZ_ConfigBase
             return "TimeSec below the minimum of " + MIN_TIME_SEC.ToString() + " s";
         if (r.TimeSec > 604800)
             return "TimeSec above 7 days";
-        if (r.BasePurityMin < 0 || r.BasePurityMin > 2 || r.BasePurityMax < 0 || r.BasePurityMax > 2)
-            return "BasePurity outside 0..2";
-        if (r.BasePurityMax < r.BasePurityMin)
-            return "BasePurityMax below BasePurityMin";
+        if (r.Purity < 0 || r.Purity > 1)
+            return "Purity outside 0..1";
         if (r.Device == "" || !OZL_Match.ClassExists(OZL_Match.StripExact(r.Device)))
             return "unknown Device '" + r.Device + "'";
         if (!r.InputItem || r.InputItem.Classname == "")
@@ -262,10 +271,6 @@ class OZL_Rules : OZ_ConfigBase
             return "ConsumeInput=false would make an endless conveyor";
         if (GetGame().ConfigIsExisting("CfgMagazines " + OZL_Match.StripExact(r.InputItem.Classname)))
             return "an input from CfgMagazines is not supported";
-
-        string err = ContentProblem("InputItem", r.InputItem.Classname, r.InputItem.Content, pointTypes);
-        if (err != "")
-            return err;
 
         int i;
         for (i = 0; i < r.RequiredTools.Count(); i++)
@@ -287,9 +292,8 @@ class OZL_Rules : OZ_ConfigBase
                 return "Consumable.Quantity outside 1..100";
             if (GetGame().ConfigIsExisting("CfgMagazines " + OZL_Match.StripExact(c.Classname)))
                 return "a consumable from CfgMagazines is not supported";
-            err = ContentProblem("Consumable", c.Classname, c.Content, pointTypes);
-            if (err != "")
-                return err;
+            if (OZL_Lines.IsSample(c.Classname) || OZL_Lines.IsCarrier(c.Classname))
+                return "a sample or a carrier cannot be a consumable";
         }
         for (i = 0; i < r.Outputs.Count(); i++)
         {
@@ -300,50 +304,45 @@ class OZL_Rules : OZ_ConfigBase
                 return "Output.Chance outside 0..1";
             if (o.Quantity < 1 || o.Quantity > 100)
                 return "Output.Quantity outside 1..100";
-            err = ContentProblem("Output", o.Classname, o.Content, pointTypes);
-            if (err != "")
-                return err;
-            if (IsSampleClass(o.Classname) && o.Content == "")
-                return "output '" + o.Classname + "' has no Content: no rule could ever take that sample";
         }
-        return "";
+        return LineProblem(r);
     }
 
-    static bool IsSampleClass(string configured)
+    // Лінії: проба -- лише з пакувальника своєї лінії й лише в аналізатор своєї
+    // лінії; носій -- лише з аналізу проби тієї ж лінії, і рівно один.
+    static string LineProblem(OZL_Rule r)
     {
-        return GetGame().IsKindOf(OZL_Match.StripExact(configured), "OZL_Sample_Base");
-    }
-
-    static bool IsCarrierClass(string configured)
-    {
-        return GetGame().IsKindOf(OZL_Match.StripExact(configured), "OZL_Carrier_Base");
-    }
-
-    // Вміст мають лише зразки (рядок-ярлик) і носії (стан «<тип балів>:<n>»).
-    static string ContentProblem(string where, string classname, string content, OZL_PointTypes pointTypes)
-    {
-        bool carrier = IsCarrierClass(classname);
-        if (content == "")
+        string dev = OZL_Match.StripExact(r.Device);
+        string input = OZL_Match.StripExact(r.InputItem.Classname);
+        if (OZL_Lines.IsSample(input))
         {
-            if (carrier)
-                return where + ": carrier '" + classname + "' needs Content of the form <point type>:<amount>";
+            if (!OZL_Lines.IsAnalyzer(dev) || !OZL_Lines.SameLine(dev, input))
+                return "sample '" + input + "' goes into '" + dev + "', which is not an analyzer of its line";
+            if (r.InputItem.Quantity != 1)
+                return "an analysis takes exactly one sample";
+            if (r.Outputs.Count() != 1 || !OZL_Lines.IsCarrier(r.Outputs[0].Classname) || !OZL_Lines.SameLine(r.Outputs[0].Classname, input))
+                return "an analysis gives exactly one carrier of the sample's line";
+            if (r.Outputs[0].Points != 0)
+                return "Points on an analysis output: a carrier takes the points of its sample";
             return "";
         }
-        if (!IsSampleClass(classname) && !carrier)
-            return where + ": Content given for '" + classname + "', but only samples and carriers carry content";
-        if (content.Length() > 64)
-            return where + ": Content longer than 64 characters";
-        string trimmed = content.Trim();
-        if (trimmed != content)
-            return where + ": Content '" + content + "' has leading or trailing spaces";
-        if (carrier)
+        for (int k = 0; k < r.Outputs.Count(); k++)
         {
-            string ptId;
-            int amount;
-            if (!OZL_CarrierState.Parse(content, ptId, amount))
-                return where + ": carrier state '" + content + "' must be <point type>:<1.." + OZL_CarrierState.MAX_AMOUNT.ToString() + ">";
-            if (pointTypes && !pointTypes.Find(ptId))
-                return where + ": carrier promises point type '" + ptId + "', which PointTypes does not know";
+            OZL_RuleOutput o = r.Outputs[k];
+            string cls = OZL_Match.StripExact(o.Classname);
+            if (OZL_Lines.IsCarrier(cls))
+                return "carrier '" + cls + "' comes out of something other than the analysis of a sample";
+            if (OZL_Lines.IsSample(cls))
+            {
+                if (!OZL_Lines.IsPacker(dev) || !OZL_Lines.SameLine(dev, cls))
+                    return "sample '" + cls + "' comes out of '" + dev + "', which is not a packer of its line";
+                if (o.Points < 1 || o.Points > OZL_Payload.MAX_POINTS)
+                    return "sample output '" + cls + "' needs Points 1.." + OZL_Payload.MAX_POINTS.ToString();
+            }
+            else if (o.Points != 0)
+            {
+                return "Points given for '" + cls + "', which is not a sample";
+            }
         }
         return "";
     }
@@ -380,35 +379,5 @@ class OZL_Rules : OZ_ConfigBase
                 c.Groups.Insert(Groups[g].Copy());
         }
         return c;
-    }
-}
-
-// Стан носія балів -- один рядок «<тип балів>:<кількість>», прихований до
-// опознання. У 3_Game, бо його читають і правила (перевірка), і предмет.
-class OZL_CarrierState
-{
-    // Тисяча, як у ZP: носій на більше -- не результат переробки, а помилка правила.
-    static const int MAX_AMOUNT = 1000;
-
-    static bool Parse(string state, out string pointType, out int amount)
-    {
-        pointType = "";
-        amount = 0;
-        int sep = state.IndexOf(":");
-        if (sep < 1 || sep >= state.Length() - 1)
-            return false;
-        pointType = state.Substring(0, sep);
-        string tail = state.Substring(sep + 1, state.Length() - sep - 1);
-        amount = tail.ToInt();
-        if (amount < 1 || amount > MAX_AMOUNT)
-            return false;
-        // ToInt мовчки дає 0 на сміття; «0» уже відкинуто вище, а «12abc»
-        // мусить відкинутись тут: назад число має друкуватись тим самим рядком.
-        return amount.ToString() == tail;
-    }
-
-    static string Make(string pointType, int amount)
-    {
-        return pointType + ":" + amount.ToString();
     }
 }

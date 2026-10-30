@@ -1,54 +1,45 @@
 // Правила переробки на живих предметах: підбір правила по карго приладу,
-// план входу й витратних матеріалів, якість входу, чистота виходу,
-// розігрування виходів.
+// план входу й витратних матеріалів, чистота й бали циклу, розігрування
+// виходів.
 //
-// Контракт атомарності, як у ZP: СПОЧАТКУ весь план (вхід + витратні) без
-// змін, ПОТІМ усі списання. Бали прилад не нараховує -- він виробляє носій,
-// бали дає термінал. InputItem.ConsumeInput лишився в конфігу з ZP і тут
-// не читається: вхід фонової станції списується завжди, це і є антифарм.
+// Контракт атомарності: СПОЧАТКУ весь план (вхід + витратні) без змін, ПОТІМ
+// усі списання. Бали прилад не нараховує -- він виробляє носій, бали дає
+// термінал. InputItem.ConsumeInput лишився в конфігу й тут не читається: вхід
+// фонової станції списується завжди, це і є антифарм.
 
 class OZL_RuleEngine
 {
-    // Налаштований вхід «клас + вміст»: порожній вміст -- будь-який зразок
-    // цього класу.
-    static bool MatchInput(string actualType, string actualContent, string cfgClass, string cfgContent)
+    static bool MatchInput(string actualType, string cfgClass)
     {
-        if (!OZL_Match.MatchClass(actualType, cfgClass))
-            return false;
-        if (cfgContent == "")
-            return true;
-        return actualContent == cfgContent;
+        return OZL_Match.MatchClass(actualType, cfgClass);
     }
 
     // Правило для ручного запуску: гравець є, власник -- його, RequiredWorn
     // перевіряється на ньому.
     static OZL_Rule FindStartable(EntityAI device, PlayerBase player, string owner, out string why)
     {
-        return FindCore(device, player, owner, null, null, why);
+        return FindCore(device, player, owner, null, why);
     }
 
     // Правило для автопродовження: гравця немає, власник заморожений при
-    // старті, RequiredWorn пропускається (нема на кому перевіряти). Пари
-    // «клас + вміст», щойно вироблені цим приладом, виключаються -- інакше
-    // правило, чий вхід збігається з чиїмось виходом на тому ж приладі,
-    // з'їло б власний результат за секунду після виробництва.
-    static OZL_Rule FindAutoContinue(EntityAI device, string owner, array<string> exclClasses, array<string> exclContents, out string why)
+    // старті, RequiredWorn пропускається (нема на кому перевіряти). Класи,
+    // щойно вироблені цим приладом, виключаються -- інакше правило, чий вхід
+    // збігається з чиїмось виходом на тому ж приладі, з'їло б власний
+    // результат за секунду після виробництва.
+    static OZL_Rule FindAutoContinue(EntityAI device, string owner, array<string> exclClasses, out string why)
     {
-        return FindCore(device, null, owner, exclClasses, exclContents, why);
+        return FindCore(device, null, owner, exclClasses, why);
     }
 
     // Питання те саме, що ставить план карго: «чи взяло б це правило те, що
     // ми щойно виробили?» -- тому й запитуємо тією самою функцією.
-    private static bool IsExcluded(OZL_Rule r, array<string> exclClasses, array<string> exclContents)
+    private static bool IsExcluded(OZL_Rule r, array<string> exclClasses)
     {
         if (!exclClasses)
             return false;
         for (int i = 0; i < exclClasses.Count(); i++)
         {
-            string produced = "";
-            if (exclContents && i < exclContents.Count())
-                produced = exclContents[i];
-            if (MatchInput(exclClasses[i], produced, r.InputItem.Classname, r.InputItem.Content))
+            if (MatchInput(exclClasses[i], r.InputItem.Classname))
                 return true;
         }
         return false;
@@ -58,7 +49,7 @@ class OZL_RuleEngine
     // чий повний план збирається по карго. Порядок у файлі -- пріоритет
     // адміна. Причина відмови -- ключ рядка (остання своя), подробиці -- в
     // лог рівня dbg: гравцеві не треба знати id чужих правил.
-    private static OZL_Rule FindCore(EntityAI device, PlayerBase player, string owner, array<string> exclClasses, array<string> exclContents, out string why)
+    private static OZL_Rule FindCore(EntityAI device, PlayerBase player, string owner, array<string> exclClasses, out string why)
     {
         why = "STR_OZL_ERR_NO_RULE";
         OZL_FactionState st = OZL_State.Get(owner);
@@ -77,7 +68,7 @@ class OZL_RuleEngine
                     continue;
                 if (!OZL_Match.MatchClass(type, r.Device))
                     continue;
-                if (IsExcluded(r, exclClasses, exclContents))
+                if (IsExcluded(r, exclClasses))
                     continue;
                 // Фракційний відсів -- першим і мовчки: чуже правило для
                 // цього власника не існує.
@@ -211,7 +202,7 @@ class OZL_RuleEngine
             return false;
         if (IsDeviceAttachment(device, ib))
             return false;
-        // Зруйноване не береться: дало б чистоту нуль і мовчки з'їло б цикл.
+        // Зруйноване не береться: мовчки з'їло б цикл.
         if (ib.IsRuined())
             return false;
         return true;
@@ -219,9 +210,8 @@ class OZL_RuleEngine
 
     // Єдиний план (вхід + витратні матеріали) по карго приладу, без списань.
     // inputAmounts -- паралельний масив: скільки з кожного запису належить
-    // ВХОДУ. Без цього чистота рахувалась би по всьому з'їденому, і двадцять
-    // ганчірок-витратників поруч із одним зразком вимкнули б механіку
-    // чистоти. Один предмет може служити обом ролям, тож плани не розділити.
+    // ВХОДУ. Без нього пробу аналізу не відрізнити від витратника того ж
+    // класу. Один предмет може служити обом ролям, тож плани не розділити.
     static bool BuildCargoPlan(EntityAI device, OZL_Rule rule, array<ItemBase> planItems, array<int> planAmounts, array<int> inputAmounts, out string why)
     {
         why = "";
@@ -236,7 +226,10 @@ class OZL_RuleEngine
             ItemBase ib = ItemBase.Cast(cargo[c]);
             if (!Usable(device, ib))
                 continue;
-            if (!MatchInput(ib.GetType(), OZL_Sample_Base.ContentOf(ib), rule.InputItem.Classname, rule.InputItem.Content))
+            if (!MatchInput(ib.GetType(), rule.InputItem.Classname))
+                continue;
+            // Проба без чинного рядка -- порожня: аналізатор її не бере.
+            if (OZL_Lines.IsSample(ib.GetType()) && !OZL_Sample_Base.HasPayload(ib))
                 continue;
             if (rule.InputItem.RequireFullQuantity && !IsFullQuantity(ib))
                 continue;
@@ -283,7 +276,7 @@ class OZL_RuleEngine
                 ItemBase ib2 = ItemBase.Cast(cargo[c2]);
                 if (!Usable(device, ib2))
                     continue;
-                if (!MatchInput(ib2.GetType(), OZL_Sample_Base.ContentOf(ib2), con.Classname, con.Content))
+                if (!MatchInput(ib2.GetType(), con.Classname))
                     continue;
                 if (IsNestedConflict(ib2, planItems))
                     continue;
@@ -331,72 +324,30 @@ class OZL_RuleEngine
         }
     }
 
-    // ---------- чистота ----------
+    // ---------- чистота й бали ----------
     //
-    // ЯКІСТЬ ВХОДУ -- наскільки добрий матеріал з'їла станція: для сировини
-    // стан предмета, для зразка його власна чистота. ЧИСТОТА ВИХОДУ -- те, що
-    // записується у вироблений зразок: кидок бази × якість входу + бонуси
-    // модулів, без стелі. Обидва рахуються при старті, поки з'їдені предмети
-    // ще існують. Партія усереднюється по вхідних предметах.
+    // Пакувальник: чистота проби -- Purity правила плюс модулі лінії (OZL_Gear),
+    // бали -- Points виходу. Аналізатор: чистота проби -- шанс, її бали
+    // переходять у носій. Знімок -- при старті, поки з'їдені предмети ще існують.
 
-    static float PlanQuality(array<ItemBase> planItems, array<int> inputAmounts)
+    static bool PlanSample(array<ItemBase> planItems, array<int> inputAmounts, out int points, out int purityPct)
     {
-        float sum = 0;
-        int n = 0;
-        for (int i = 0; i < planItems.Count(); i++)
-        {
-            ItemBase ib = planItems[i];
-            if (!ib)
-                continue;
-            int amt = 0;
-            if (i < inputAmounts.Count())
-                amt = inputAmounts[i];
-            if (amt < 1)
-                continue;
-            float q;
-            OZL_Sample_Base smp = OZL_Sample_Base.Cast(ib);
-            if (smp)
-                q = smp.OZL_Purity();
-            else
-                q = ib.GetHealth01();
-            sum += q * amt;
-            n += amt;
-        }
-        if (n == 0)
-            return 0;
-        return sum / n;
-    }
-
-    // Чи ніс вхід власну чистоту (серед з'їденого був зразок): саме це
-    // вирішує, чи множиться шанс. Пакувальник чистоту виробляє, аналіз її
-    // витрачає, подвійного множення в ланцюжку не виникає.
-    static bool PlanHasSample(array<ItemBase> planItems, array<int> inputAmounts)
-    {
+        points = 0;
+        purityPct = 0;
         for (int i = 0; i < planItems.Count(); i++)
         {
             if (i >= inputAmounts.Count() || inputAmounts[i] < 1)
                 continue;
-            if (OZL_Sample_Base.Cast(planItems[i]))
+            OZL_Sample_Base smp = OZL_Sample_Base.Cast(planItems[i]);
+            if (smp && smp.OZL_Read(points, purityPct))
                 return true;
         }
         return false;
     }
 
-    // Кидок бази між Min і Max -- рівно один раз, при старті циклу.
-    static float ComputeOutPurity(OZL_Rule rule, EntityAI device, float quality)
-    {
-        float baseP = rule.BasePurityMin;
-        if (rule.BasePurityMax > rule.BasePurityMin)
-            baseP = Math.RandomFloatInclusive(rule.BasePurityMin, rule.BasePurityMax);
-        float p = baseP * quality + OZL_Gear.DeviceModuleBonus(device);
-        if (p < 0)
-            p = 0;
-        return p;
-    }
-
-    // Розігрування виходів наприкінці циклу -- рівно один раз. Обмежена лише
-    // підсумкова ймовірність, а не чистота: у цьому сенс вкладення в модулі.
-    static void ResolveResult(OZL_Rule rule, float chanceMul, array<string> outItems, array<string> outContents)
+    // Розігрування виходів наприкінці циклу -- рівно один раз; подвійний вихід --
+    // ще один кидок після них.
+    static void ResolveResult(OZL_Rule rule, float chanceMul, float doubleChance, int carrierPoints, int purityPct, array<string> outItems, array<string> outPayloads)
     {
         for (int o = 0; o < rule.Outputs.Count(); o++)
         {
@@ -408,25 +359,48 @@ class OZL_RuleEngine
                 chance = 1.0;
             if (Math.RandomFloat01() > chance)
                 continue;
+            string payload = PayloadFor(def, carrierPoints, purityPct);
             for (int i = 0; i < def.Quantity; i++)
             {
                 outItems.Insert(def.Classname);
-                outContents.Insert(def.Content);
+                outPayloads.Insert(payload);
             }
         }
+        if (outItems.Count() == 0 || doubleChance <= 0)
+            return;
+        if (Math.RandomFloat01() >= doubleChance)
+            return;
+        int n = outItems.Count();
+        for (int d = 0; d < n; d++)
+        {
+            outItems.Insert(outItems[d]);
+            outPayloads.Insert(outPayloads[d]);
+        }
+    }
+
+    static string PayloadFor(OZL_RuleOutput def, int carrierPoints, int purityPct)
+    {
+        if (OZL_Lines.IsSample(def.Classname))
+            return OZL_Payload.EncodeSample(def.Points, purityPct);
+        if (OZL_Lines.IsCarrier(def.Classname))
+            return OZL_Payload.EncodeCarrier(carrierPoints);
+        return "";
     }
 
     // Один предмет у карго приладу. На підлогу не скидаємо: те, чому не
     // знайшлося місця, лишається записом у станції й матеріалізується, коли
-    // є куди. Повертає сутність: на щойно створеному зразку треба проставити
-    // вміст.
-    static EntityAI SpawnOneToCargo(EntityAI device, string classname, string content, float purity)
+    // є куди. Повертає сутність.
+    static EntityAI SpawnOneToCargo(EntityAI device, string classname, string payload)
     {
         EntityAI created = device.GetInventory().CreateInInventory(classname);
         if (!created)
             return null;
-        OZL_Sample_Base.ApplyFields(created, content, purity);
-        OZL_Carrier_Base.ApplyState(created, content);
+        OZL_Sample_Base smp = OZL_Sample_Base.Cast(created);
+        if (smp)
+            smp.OZL_SetPayload(payload);
+        OZL_Carrier_Base car = OZL_Carrier_Base.Cast(created);
+        if (car)
+            car.OZL_SetPayload(payload);
         return created;
     }
 }

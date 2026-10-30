@@ -277,67 +277,8 @@ class OZL_TreeMenu : UIScriptedMenu
         return null;
     }
 
-    // Коротка назва типу балів: "Біологія Т1" -- категорія й тир із
-    // відповіді. Повне ім'я ("Польове дослідження біології 1 тиру")
-    // адміністратор пише для картки, а в комірку вузла й у колонку балів воно
-    // не влазить -- і саме воно обрізалося на старому екрані.
-    private string ShortPointName(string type)
-    {
-        if (m_View)
-        {
-            for (int i = 0; i < m_View.Names.Count(); i++)
-            {
-                OZL_PointName n = m_View.Names[i];
-                if (n && n.Id == type)
-                {
-                    string s = n.Category;
-                    if (s == "")
-                        s = n.Name;
-                    if (s == "")
-                        s = n.Id;
-                    // Вид і тир дописуються цілим словом. ЧОМУ НЕ ПЕРША
-                    // ЛІТЕРА: Substring у Enforce ріже БАЙТИ, і кирилична
-                    // літера (два байти UTF-8) розпадається навпіл --
-                    // рядок після такого обрізка не малюється взагалі
-                    // (стенд 2026-09-20: замість "Біологія п1" лишалося
-                    // саме "Біологія").
-                    if (n.Kind != "")
-                        s += ", " + n.Kind;
-                    if (n.Tier > 0)
-                        s += " " + n.Tier.ToString();
-                    return s;
-                }
-            }
-        }
-        return type;
-    }
-
-    // Те саме для комірки вузла, де на весь рядок ціни лишається близько
-    // 136 одиниць: категорія і тир, без виду. Вид -- єдине, що тут
-    // відрізається, і він є повністю в картці праворуч.
-    private string TinyPointName(string type)
-    {
-        if (m_View)
-        {
-            for (int i = 0; i < m_View.Names.Count(); i++)
-            {
-                OZL_PointName n = m_View.Names[i];
-                if (n && n.Id == type)
-                {
-                    string s = n.Category;
-                    if (s == "")
-                        s = n.Name;
-                    if (s == "")
-                        s = n.Id;
-                    if (n.Tier > 0)
-                        s += " " + n.Tier.ToString();
-                    return s;
-                }
-            }
-        }
-        return type;
-    }
-
+    // Назва типу балів -- назва лінії ("Хабар"): тирів і родів більше немає,
+    // тож одна коротка назва годиться і для колонки балів, і для комірки вузла.
     private string PointName(string type)
     {
         if (m_View)
@@ -561,7 +502,7 @@ class OZL_TreeMenu : UIScriptedMenu
                 continue;
             TextWidget name = TextWidget.Cast(row.FindAnyWidget("PointName"));
             if (name)
-                name.SetText(ShortPointName(types[i]));
+                name.SetText(PointName(types[i]));
             TextWidget have = TextWidget.Cast(row.FindAnyWidget("PointHave"));
             if (have)
             {
@@ -766,7 +707,7 @@ class OZL_TreeMenu : UIScriptedMenu
             if (!kv)
                 continue;
             if (s == "")
-                s = kv.Value.ToString() + " " + TinyPointName(kv.Key);
+                s = kv.Value.ToString() + " " + PointName(kv.Key);
             else
                 rest++;
         }

@@ -18,9 +18,7 @@ class OZL_Const
     static const string OWNERS       = "$profile:OpenZone\\OZ_Research_Owners.json";
     static const string RULES        = "$profile:OpenZone\\OZ_Research_Rules.json";
     static const string TREE         = "$profile:OpenZone\\OZ_Research_Tree.json";
-    static const string DATA_ITEMS   = "$profile:OpenZone\\OZ_Research_DataItems.json";
     static const string MODULES      = "$profile:OpenZone\\OZ_Research_Modules.json";
-    static const string SAMPLE_TYPES = "$profile:OpenZone\\OZ_Research_SampleTypes.json";
     static const string STATICS      = "$profile:OpenZone\\OZ_Research_Statics.json";
     static const string STATICS_STATE = "$profile:OpenZone\\OZ_Research_Statics_State.json";
 

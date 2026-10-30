@@ -214,7 +214,7 @@ class OZL_Tree
                 ItemBase ib = ItemBase.Cast(cargo[c]);
                 if (!ib || ib == holder || ib.IsRuined())
                     continue;
-                if (!OZL_RuleEngine.MatchInput(ib.GetType(), OZL_Sample_Base.ContentOf(ib), ic.Classname, ic.Content))
+                if (!OZL_RuleEngine.MatchInput(ib.GetType(), ic.Classname))
                     continue;
                 int already = 0;
                 int idx = planItems.Find(ib);
@@ -387,11 +387,8 @@ class OZL_Tree
                 have = st.PointsOf(pt.Id);
             v.Pool.Insert(new OZL_KV(pt.Id, have));
             OZL_PointName pn = new OZL_PointName();
-            pn.Id       = pt.Id;
-            pn.Name     = pt.Name;
-            pn.Category = OZL_PointTypes.DimensionName(pts.Categories, pt.Category);
-            pn.Kind     = OZL_PointTypes.DimensionName(pts.Kinds, pt.Kind);
-            pn.Tier     = pt.Tier;
+            pn.Id   = pt.Id;
+            pn.Name = pt.Name;
             v.Names.Insert(pn);
         }
 
@@ -452,8 +449,6 @@ class OZL_Tree
                     OZL_ItemView iv = new OZL_ItemView();
                     iv.Cls   = ic.Classname;
                     iv.Name  = ItemName(ic.Classname);
-                    if (ic.Content != "")
-                        iv.Name += " [" + ic.Content + "]";
                     iv.Qty   = ic.Quantity;
                     nv.Items.Insert(iv);
                 }

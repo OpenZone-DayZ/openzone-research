@@ -30,20 +30,21 @@ class OZL_Station : ItemBase
     protected string m_OZL_StarterOwner;   // власник на момент старту: гейти автоциклу, сброс
 
     // Те, чому не знайшлося місця в карго: запис у станції, а не річ у світі.
-    // Три паралельні масиви -- пишуться, читаються й скорочуються разом.
+    // Два паралельні масиви -- класи й рядки предметів (OZL_Payload).
     protected ref array<string> m_OZL_PendingItems;
-    protected ref array<string> m_OZL_PendingContents;
-    protected ref array<float>  m_OZL_PendingPurities;
+    protected ref array<string> m_OZL_PendingPayloads;
 
-    // Заморожені при старті: що записати у вироблений зразок і на що
-    // помножити шанс (1.0, якщо вхід не ніс чистоти).
+    // Заморожені при старті. Пакувальник: чистота проб циклу й шанс подвійного
+    // виходу від модулів. Аналізатор: множник шансу (чистота проби) і бали, що
+    // перейдуть у носій.
     protected float m_OZL_CyclePurity;
     protected float m_OZL_ChanceMul;
+    protected float m_OZL_DoubleChance;
+    protected int   m_OZL_CyclePoints;
 
     // Вироблене останнім циклом -- щоб автопродовження не взяло власний
     // вихід за сировину.
     protected ref array<string> m_OZL_ExcludeCls;
-    protected ref array<string> m_OZL_ExcludeCnt;
 
     protected ref Timer m_OZL_Timer;
 
@@ -60,8 +61,7 @@ class OZL_Station : ItemBase
         // Реєстрація лише в конструкторі -- пізніша мовчки не працює.
         RegisterNetSyncVariableInt("m_OZL_State", 0, 2);
         m_OZL_PendingItems    = new array<string>();
-        m_OZL_PendingContents = new array<string>();
-        m_OZL_PendingPurities = new array<float>();
+        m_OZL_PendingPayloads = new array<string>();
         m_OZL_ChanceMul = 1.0;
     }
 
@@ -203,19 +203,14 @@ class OZL_Station : ItemBase
         return m_OZL_PendingItems.Count() > 0;
     }
 
-    // Чужий інструмент у цей прилад не вставляється: пари «інструмент --
-    // прилад» живуть у конфігу модулів. Перекриваємо саме шлях ручної
-    // вставки, а не CanLoadAttachment: останній рушій кличе при завантаженні
-    // зі сховища, і відмова там позбавила б прилад інструмента після кожного
-    // рестарту. Без прочитаного конфігу (клієнт, ранній бут) -- дозвіл: судить
-    // сервер.
+    // Модуль ставиться лише на пакувальник своєї лінії (OZL_Modules.AllowedOn):
+    // відповідь -- з config.cpp, однакова на сервері й клієнті. Перекриваємо саме
+    // ручну вставку, а не CanLoadAttachment: той рушій кличе при завантаженні
+    // зі сховища, і відмова там позбавила б прилад модуля після рестарту.
     override bool CanReceiveAttachment(EntityAI attachment, int slotId)
     {
-        if (attachment && OZL_Config.Get().Revision() > 0)
-        {
-            if (!OZL_Config.Get().Modules().AllowedOn(attachment.GetType(), GetType()))
-                return false;
-        }
+        if (attachment && !OZL_Modules.AllowedOn(attachment.GetType(), GetType()))
+            return false;
         return super.CanReceiveAttachment(attachment, slotId);
     }
 
@@ -356,12 +351,26 @@ class OZL_Station : ItemBase
             return false;
         }
 
-        // Чистоту знімаємо ДО списання: після нього предметів уже немає.
-        float quality = OZL_RuleEngine.PlanQuality(planItems, planInputs);
-        m_OZL_CyclePurity = OZL_RuleEngine.ComputeOutPurity(rule, this, quality);
-        m_OZL_ChanceMul = 1.0;
-        if (OZL_RuleEngine.PlanHasSample(planItems, planInputs))
-            m_OZL_ChanceMul = quality;
+        // Знімок до списання: після нього предметів уже немає.
+        m_OZL_CyclePurity  = rule.Purity;
+        m_OZL_ChanceMul    = 1.0;
+        m_OZL_DoubleChance = 0;
+        m_OZL_CyclePoints  = 0;
+        int samplePct;
+        if (OZL_RuleEngine.PlanSample(planItems, planInputs, m_OZL_CyclePoints, samplePct))
+        {
+            // Аналіз: чистота проби -- шанс, її бали перейдуть у носій.
+            m_OZL_ChanceMul = samplePct / 100.0;
+        }
+        else
+        {
+            // Пакування: модулі лінії додають чистоти й шансу подвійного виходу.
+            float bonusPurity;
+            float bonusDouble;
+            OZL_Gear.ModuleBonuses(this, bonusPurity, bonusDouble);
+            m_OZL_CyclePurity += bonusPurity;
+            m_OZL_DoubleChance = bonusDouble;
+        }
         OZL_RuleEngine.ConsumePlan(planItems, planAmounts);
 
         // ЦІЛІ СЕКУНДИ, І ЛИШЕ ЦІЛІ. Календарні секунди -- число близько
@@ -380,8 +389,9 @@ class OZL_Station : ItemBase
 
         string line = "station " + GetType() + " started rule '" + rule.Id + "'";
         line += " owner=" + owner + " by=" + uid;
-        line += " quality=" + quality.ToString() + " purity=" + m_OZL_CyclePurity.ToString();
-        line += " chanceMul=" + m_OZL_ChanceMul.ToString() + " time=" + timeSec.ToString() + "s";
+        line += " purity=" + m_OZL_CyclePurity.ToString() + " points=" + m_OZL_CyclePoints.ToString();
+        line += " chanceMul=" + m_OZL_ChanceMul.ToString() + " double=" + m_OZL_DoubleChance.ToString();
+        line += " time=" + timeSec.ToString() + "s";
         line += " end=" + m_OZL_EndSec.ToString() + " now=" + OZL_Clock.NowSec().ToString();
         OZL_Log.Dbg(line);
         return true;
@@ -414,30 +424,25 @@ class OZL_Station : ItemBase
 
         // Цикл закінчується: кидки шансу один раз, вихід одразу в карго.
         array<string> items    = new array<string>();
-        array<string> contents = new array<string>();
-        OZL_RuleEngine.ResolveResult(rule, m_OZL_ChanceMul, items, contents);
+        array<string> payloads = new array<string>();
+        OZL_RuleEngine.ResolveResult(rule, m_OZL_ChanceMul, m_OZL_DoubleChance, m_OZL_CyclePoints, OZL_Payload.PurityPct(m_OZL_CyclePurity), items, payloads);
 
         array<string> producedCls = new array<string>();
-        array<string> producedCnt = new array<string>();
         int placed = 0;
         while (items.Count() > 0)
         {
-            string cls = items[0];
-            string cnt = contents[0];
-            if (!OZL_RuleEngine.SpawnOneToCargo(this, cls, cnt, m_OZL_CyclePurity))
+            if (!OZL_RuleEngine.SpawnOneToCargo(this, items[0], payloads[0]))
                 break;
-            producedCls.Insert(cls);
-            producedCnt.Insert(cnt);
+            producedCls.Insert(items[0]);
             items.RemoveOrdered(0);
-            contents.RemoveOrdered(0);
+            payloads.RemoveOrdered(0);
             placed++;
         }
         int stuck = items.Count();
         for (int s = 0; s < stuck; s++)
         {
             m_OZL_PendingItems.Insert(items[s]);
-            m_OZL_PendingContents.Insert(contents[s]);
-            m_OZL_PendingPurities.Insert(m_OZL_CyclePurity);
+            m_OZL_PendingPayloads.Insert(payloads[s]);
         }
 
         string line = "station " + GetType() + " cycle '" + rule.Id + "' done:";
@@ -448,7 +453,6 @@ class OZL_Station : ItemBase
         // Виключення -- до перевірки на застрягання: інакше конвеєр,
         // відновлений забором, узяв би власний вихід за сировину.
         m_OZL_ExcludeCls = producedCls;
-        m_OZL_ExcludeCnt = producedCnt;
 
         if (stuck > 0)
         {
@@ -478,18 +482,16 @@ class OZL_Station : ItemBase
             owner = OZL_Owner.Fallback();
 
         string why;
-        OZL_Rule next = OZL_RuleEngine.FindAutoContinue(this, owner, m_OZL_ExcludeCls, m_OZL_ExcludeCnt, why);
+        OZL_Rule next = OZL_RuleEngine.FindAutoContinue(this, owner, m_OZL_ExcludeCls, why);
         if (!next)
         {
             OZL_Log.Dbg("station " + GetType() + ": the line stops, " + why);
             m_OZL_ExcludeCls = null;
-            m_OZL_ExcludeCnt = null;
             return;
         }
         if (!OZL_Begin(next, owner, m_OZL_StarterUid, why))
         {
             m_OZL_ExcludeCls = null;
-            m_OZL_ExcludeCnt = null;
         }
     }
 
@@ -497,15 +499,10 @@ class OZL_Station : ItemBase
 
     protected void OZL_AlignPending()
     {
-        while (m_OZL_PendingContents.Count() < m_OZL_PendingItems.Count())
+        while (m_OZL_PendingPayloads.Count() < m_OZL_PendingItems.Count())
         {
-            OZL_Log.Warn("station " + GetType() + ": pending contents shorter than pending items, padded");
-            m_OZL_PendingContents.Insert("");
-        }
-        while (m_OZL_PendingPurities.Count() < m_OZL_PendingItems.Count())
-        {
-            OZL_Log.Warn("station " + GetType() + ": pending purities shorter than pending items, padded");
-            m_OZL_PendingPurities.Insert(0);
+            OZL_Log.Warn("station " + GetType() + ": pending payloads shorter than pending items, padded");
+            m_OZL_PendingPayloads.Insert("");
         }
     }
 
@@ -547,15 +544,11 @@ class OZL_Station : ItemBase
                 dropped++;
                 continue;
             }
-            if (!OZL_RuleEngine.SpawnOneToCargo(this, cls, m_OZL_PendingContents[0], m_OZL_PendingPurities[0]))
+            if (!OZL_RuleEngine.SpawnOneToCargo(this, cls, m_OZL_PendingPayloads[0]))
                 break;
             if (!m_OZL_ExcludeCls)
-            {
                 m_OZL_ExcludeCls = new array<string>();
-                m_OZL_ExcludeCnt = new array<string>();
-            }
             m_OZL_ExcludeCls.Insert(cls);
-            m_OZL_ExcludeCnt.Insert(m_OZL_PendingContents[0]);
             OZL_DropPending();
             handed++;
         }
@@ -585,8 +578,7 @@ class OZL_Station : ItemBase
     protected void OZL_DropPending()
     {
         m_OZL_PendingItems.RemoveOrdered(0);
-        m_OZL_PendingContents.RemoveOrdered(0);
-        m_OZL_PendingPurities.RemoveOrdered(0);
+        m_OZL_PendingPayloads.RemoveOrdered(0);
     }
 
     // ---------- скасування ----------
@@ -608,10 +600,11 @@ class OZL_Station : ItemBase
         m_OZL_StarterUid   = "";
         m_OZL_StarterOwner = "";
         m_OZL_PendingItems.Clear();
-        m_OZL_PendingContents.Clear();
-        m_OZL_PendingPurities.Clear();
-        m_OZL_CyclePurity = 0;
-        m_OZL_ChanceMul   = 1.0;
+        m_OZL_PendingPayloads.Clear();
+        m_OZL_CyclePurity  = 0;
+        m_OZL_ChanceMul    = 1.0;
+        m_OZL_DoubleChance = 0;
+        m_OZL_CyclePoints  = 0;
     }
 
     // Адмінське скасування: і ГОТОВО теж -- інакше незабраний результат було
@@ -644,12 +637,13 @@ class OZL_Station : ItemBase
         return n;
     }
 
-    // ---------- сховище (CF, storageVersion 1 у CfgMods) ----------
+    // ---------- сховище (CF, storageVersion 2 у CfgMods) ----------
     //
-    // Потік v1: стан, правило, дедлайн, стартер, власник, кількість
-    // незакладених, їхні класи, вмісти, чистоти, чистота циклу, множник
-    // шансу. Записи CF позиційні: будь-яка наступна версія лише дописує в
-    // кінець і гейтить читання за ctx.GetVersion().
+    // Потік v2: стан, правило, дедлайн, стартер, власник, кількість
+    // незакладених, їхні класи й рядки, чистота циклу, множник шансу, шанс
+    // подвійного виходу, бали циклу. Потік v1 (до ліній) не читається: станція
+    // стає вільною. Записи CF позиційні: наступна версія лише дописує в кінець
+    // і гейтить читання за ctx.GetVersion().
 
     override void CF_OnStoreSave(CF_ModStorageMap storage)
     {
@@ -669,11 +663,11 @@ class OZL_Station : ItemBase
         for (i = 0; i < count; i++)
             ctx.Write(m_OZL_PendingItems[i]);
         for (i = 0; i < count; i++)
-            ctx.Write(m_OZL_PendingContents[i]);
-        for (i = 0; i < count; i++)
-            ctx.Write(m_OZL_PendingPurities[i]);
+            ctx.Write(m_OZL_PendingPayloads[i]);
         ctx.Write(m_OZL_CyclePurity);
         ctx.Write(m_OZL_ChanceMul);
+        ctx.Write(m_OZL_DoubleChance);
+        ctx.Write(m_OZL_CyclePoints);
     }
 
     override bool CF_OnStoreLoad(CF_ModStorageMap storage)
@@ -686,9 +680,9 @@ class OZL_Station : ItemBase
 
         // Потік чужої версії: у простій, предмети цілі, попередження в лог.
         // Читати його наосліп означало б з'їсти записи сусідніх модів.
-        if (ctx.GetVersion() != 1)
+        if (ctx.GetVersion() != 2)
         {
-            OZL_Log.Warn("station " + GetType() + ": stream v" + ctx.GetVersion().ToString() + " is not v1, state reset to idle");
+            OZL_Log.Warn("station " + GetType() + ": stream v" + ctx.GetVersion().ToString() + " is not v2, state reset to idle");
             OZL_ClearState();
             return true;
         }
@@ -737,8 +731,7 @@ class OZL_Station : ItemBase
         if (count < 0 || count > 1000)
             return false;
         m_OZL_PendingItems.Clear();
-        m_OZL_PendingContents.Clear();
-        m_OZL_PendingPurities.Clear();
+        m_OZL_PendingPayloads.Clear();
         int i;
         string s;
         for (i = 0; i < count; i++)
@@ -751,18 +744,15 @@ class OZL_Station : ItemBase
         {
             if (!ctx.Read(s))
                 return false;
-            m_OZL_PendingContents.Insert(s);
-        }
-        float f;
-        for (i = 0; i < count; i++)
-        {
-            if (!ctx.Read(f))
-                return false;
-            m_OZL_PendingPurities.Insert(f);
+            m_OZL_PendingPayloads.Insert(s);
         }
         if (!ctx.Read(m_OZL_CyclePurity))
             return false;
         if (!ctx.Read(m_OZL_ChanceMul))
+            return false;
+        if (!ctx.Read(m_OZL_DoubleChance))
+            return false;
+        if (!ctx.Read(m_OZL_CyclePoints))
             return false;
         return true;
     }

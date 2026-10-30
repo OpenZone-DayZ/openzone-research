@@ -55,7 +55,7 @@ class CfgMods
         // The class NAME above is the CF ModStorage key of every station,
         // sample and carrier; renaming it after release orphans their state.
         // storageVersion must be above 0 or ModStorage does nothing at all.
-        storageVersion = 1;
+        storageVersion = 2;
 
         dependencies[] = {"Game", "World", "Mission"};
 

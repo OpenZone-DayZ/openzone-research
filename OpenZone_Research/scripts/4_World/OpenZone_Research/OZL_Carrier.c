@@ -1,53 +1,26 @@
-// Носій балів: один предмет на супертип, значення сховане до опознання.
-//
-// Видно лише супертип (наукові, бойові, сталкерські -- клас і колір), а тип
-// балів і кількість -- рядок стану «<тип>:<n>», який читає термінал. Нічого не
-// синхронізується: клієнтові нема що знати до здачі. Стеки й поділ заборонені
-// з тієї ж причини, що в зразка.
+// Носій балів: результат аналізу, один на лінію (config.cpp, ozlLine). Тип
+// балів -- лінія класу, кількість -- у рядку m_OZL_Payload (OZL_Payload), який
+// читає термінал. Нічого не синхронізується; стеки й поділ заборонені з тієї ж
+// причини, що в проби.
 
 class OZL_Carrier_Base : ItemBase
 {
-    protected string m_OZL_State;
+    protected string m_OZL_Payload;
 
-    static string StateOf(EntityAI e)
+    void OZL_SetPayload(string payload)
     {
-        OZL_Carrier_Base c = OZL_Carrier_Base.Cast(e);
-        if (!c)
-            return "";
-        return c.OZL_State();
+        m_OZL_Payload = payload;
+        OZL_Log.Dbg("carrier " + GetType() + ": payload '" + m_OZL_Payload + "'");
     }
 
-    static void ApplyState(EntityAI created, string state)
+    string OZL_GetPayload()
     {
-        if (state == "")
-            return;
-        OZL_Carrier_Base c = OZL_Carrier_Base.Cast(created);
-        if (!c)
-            return;
-        c.OZL_SetState(state);
+        return m_OZL_Payload;
     }
 
-    void OZL_SetState(string state)
+    bool OZL_Read(out int points)
     {
-        m_OZL_State = state;
-        OZL_Log.Dbg("carrier " + GetType() + ": state='" + m_OZL_State + "'");
-    }
-
-    string OZL_State()
-    {
-        return m_OZL_State;
-    }
-
-    // Супертип -- за класом, не за станом: він видимий, стан -- ні.
-    static string SupertypeOf(string classname)
-    {
-        if (GetGame().IsKindOf(classname, "OZL_Carrier_Science"))
-            return "science";
-        if (GetGame().IsKindOf(classname, "OZL_Carrier_Combat"))
-            return "combat";
-        if (GetGame().IsKindOf(classname, "OZL_Carrier_Stalker"))
-            return "stalker";
-        return "";
+        return OZL_Payload.DecodeCarrier(m_OZL_Payload, points);
     }
 
     override void InitItemVariables()
@@ -78,7 +51,7 @@ class OZL_Carrier_Base : ItemBase
         auto ctx = storage["OpenZone_Research"];
         if (!ctx)
             return;
-        ctx.Write(m_OZL_State);
+        ctx.Write(m_OZL_Payload);
     }
 
     override bool CF_OnStoreLoad(CF_ModStorageMap storage)
@@ -88,9 +61,9 @@ class OZL_Carrier_Base : ItemBase
         auto ctx = storage["OpenZone_Research"];
         if (!ctx)
             return true;
-        if (!ctx.Read(m_OZL_State))
+        if (!ctx.Read(m_OZL_Payload))
         {
-            m_OZL_State = "";
+            m_OZL_Payload = "";
             return false;
         }
         return true;
