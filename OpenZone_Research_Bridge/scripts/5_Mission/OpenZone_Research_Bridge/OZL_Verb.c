@@ -361,7 +361,49 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research, admin, bridge)";
+        if (op == "payload_selftest")
+        {
+            array<string> pfails = new array<string>();
+            int ppts;
+            int ppct;
+            if (OZL_Payload.EncodeSample(9, 70) != "01000946")
+                pfails.Insert("encode sample 9/70");
+            if (!OZL_Payload.DecodeSample("01000946", ppts, ppct) || ppts != 9 || ppct != 70)
+                pfails.Insert("decode sample 9/70");
+            if (OZL_Payload.EncodeSample(1000, 200) != "0103E8C8")
+                pfails.Insert("encode sample 1000/200");
+            if (!OZL_Payload.DecodeSample("0103E8C8", ppts, ppct) || ppts != 1000 || ppct != 200)
+                pfails.Insert("decode sample 1000/200");
+            if (OZL_Payload.EncodeCarrier(9) != "010009")
+                pfails.Insert("encode carrier 9");
+            if (!OZL_Payload.DecodeCarrier("010009", ppts) || ppts != 9)
+                pfails.Insert("decode carrier 9");
+            if (OZL_Payload.DecodeSample("", ppts, ppct))
+                pfails.Insert("empty sample accepted");
+            if (OZL_Payload.DecodeSample("02000946", ppts, ppct))
+                pfails.Insert("foreign version accepted");
+            if (OZL_Payload.DecodeSample("0100094", ppts, ppct))
+                pfails.Insert("short sample accepted");
+            if (OZL_Payload.DecodeSample("01000046", ppts, ppct))
+                pfails.Insert("zero points accepted");
+            if (OZL_Payload.DecodeSample("0103E9C8", ppts, ppct))
+                pfails.Insert("1001 points accepted");
+            if (OZL_Payload.DecodeSample("0100094G", ppts, ppct))
+                pfails.Insert("bad digit accepted");
+            if (OZL_Payload.DecodeSample("0103e8c8", ppts, ppct))
+                pfails.Insert("lower case accepted");
+            if (OZL_Payload.DecodeCarrier("01000946", ppts))
+                pfails.Insert("sample read as carrier");
+            if (OZL_Payload.PurityPct(0.7) != 70 || OZL_Payload.PurityPct(1.3) != 130 || OZL_Payload.PurityPct(2.5) != 200 || OZL_Payload.PurityPct(-1) != 0)
+                pfails.Insert("purity percent");
+            int ptotal = 15;
+            detail = "payload selftest: " + (ptotal - pfails.Count()).ToString() + "/" + ptotal.ToString() + " ok";
+            for (int pf = 0; pf < pfails.Count(); pf++)
+                detail += "; FAIL " + pfails[pf];
+            return pfails.Count() == 0;
+        }
+
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, points, grant, reset, reload, tree, research, admin, bridge, payload_selftest)";
         return false;
     }
 
