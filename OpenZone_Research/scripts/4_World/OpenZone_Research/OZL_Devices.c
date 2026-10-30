@@ -1,40 +1,12 @@
 // Класи приладів: порожні двійники config-класів.
 //
 // Кожен клас потрібен окремо, порожній чи ні: рушій шукає скрипт-клас,
-// піднімаючись config-ієрархією, а config-предок OZL_StaticDevice_Base
-// скрипт-двійника не має -- без цих оголошень прилад мовчки став би
-// звичайним ItemBase, без карго-логіки й дій. Уся поведінка живе в
-// OZL_Station/OZL_StaticStation, різниця між приладами -- у конфігах:
-// модель у config.cpp, належність фракції в Owners, правила в Rules.
-// Список згенеровано з config.cpp; змінюючи класи там, змініть і тут.
-
-// ---- переносні ----
-
-class OZL_PetriDishKit : OZL_Station
-{
-}
-
-class OZL_FieldCase : OZL_Station
-{
-}
-
-// ---- стаціонарні ----
-
-class OZL_Microscope : OZL_StaticStation
-{
-}
-
-class OZL_LabComputer : OZL_StaticStation
-{
-}
-
-class OZL_ChemBench : OZL_StaticStation
-{
-}
-
-class OZL_ServerRack : OZL_StaticStation
-{
-}
+// піднімаючись config-ієрархією, а config-предки (OZL_StaticDevice_Base і
+// бази пакувальника, аналізатора й термінала) скрипт-двійників не мають --
+// без цих оголошень прилад мовчки став би звичайним ItemBase, без
+// карго-логіки й дій. Уся поведінка живе в OZL_StaticStation, різниця між
+// приладами -- у конфігах: модель і лінія в config.cpp, належність фракції в
+// Owners, правила в Rules. Змінюючи класи в config.cpp, змініть і тут.
 
 class OZL_Eco_Pack_Bio : OZL_StaticStation
 {
@@ -60,8 +32,6 @@ class OZL_Eco_Proc_Electro : OZL_StaticStation
 {
 }
 
-// Термінали Вчених, Чистого неба й Обов'язку додано в config.cpp пізніше (23-25.10) без двійників тут --
-// були звичайним ItemBase, без вигляду «робота» (знайдено 30.10 за відгуком на стенді, M38).
 class OZL_Eco_Terminal : OZL_StaticStation
 {
 }
@@ -191,9 +161,5 @@ class OZL_Sop_Proc_Prot : OZL_StaticStation
 }
 
 class OZL_Sop_Terminal : OZL_StaticStation
-{
-}
-
-class OZL_SampleFridge : OZL_StaticStation
 {
 }
