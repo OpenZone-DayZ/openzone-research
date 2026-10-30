@@ -19,9 +19,9 @@ mods = ["OpenZone_Research", "OpenZone_Research_VPP", "OpenZone_Research_Bridge"
 # repository; descriptions stay here (ui/<Mod>/).
 tokens = "../openzone-core/ui/tokens.json"
 # The station models (OpenZone_Research/models/<obj>). The build root is not in
-# git: openzone-research-models/tools/install_into_mod.py writes the MLODs into it
-# with the mod's paths, and asset_build binarizes them from it into the mod. The
-# committed copy of the MLODs and their generators is source/models/. The root also links dz -> the unpacked game, as binarize needs it.
+# git: the generators in source/models write their MLODs into it with the mod's
+# paths, and asset_build binarizes them from it into the mod. The root also links
+# dz -> the unpacked game, as binarize needs it.
 project_root = "build/model-root"
 
 [expect]

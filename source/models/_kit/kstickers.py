@@ -16,7 +16,9 @@ import math
 
 from PIL import Image, ImageDraw, ImageFont
 
-FONTS = "C:/Windows/Fonts/"
+import ksettings
+
+FONTS = ksettings.FONTS
 BLACK, WHITE = (22, 22, 22), (238, 236, 226)
 GREEN, LEAF, CREAM = (60, 170, 60), (46, 128, 40), (232, 226, 204)
 

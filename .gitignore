@@ -4,10 +4,15 @@ keys/*.biprivatekey
 
 # build output
 build/out/
-# MLOD sources of the models, written by openzone-research-models/tools/install_into_mod.py;
+# MLOD sources of the models, written by the generators in source/models;
 # the folder itself stays, dayz-mcp refuses a profile whose project_root is missing
 build/model-root/*
 !build/model-root/.gitkeep
+# the generators' machine paths, work files and vanilla texture cache
+source/models/settings.local.json
+source/models/*/work/
+source/models/**/__pycache__/
+build/vanilla_png/
 # every built mod folder, the file-patching junction inside it included
 @OpenZone_*/
 *.pbo

@@ -21,8 +21,9 @@ import bpy
 import numpy as np
 
 import kmats
+import ksettings
 
-IMAGE_TO_PAA = r"E:\SteamLibrary\steamapps\common\DayZ Tools\Bin\ImageToPAA\ImageToPAA.exe"
+IMAGE_TO_PAA = ksettings.IMAGE_TO_PAA
 
 MATS = {}
 

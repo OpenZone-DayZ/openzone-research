@@ -206,12 +206,12 @@ def panel_material(png, glow=0.0, gloss=0.75):
 def our_model(obj, name, origin):
     """Our finished model (a module in a machine slot) in the preview: the near LOD of its MLOD
     from build/model-root (p3d -> Blender: the inverse of kexport.conv) with its baked textures
-    (assets/<obj>/work/game_textures). The slot proxy places the module the same way: the model
+    (source/models/<obj>/work/game_textures). The slot proxy places the module the same way: the model
     origin at the proxy point, without rotation. None - no model or textures."""
     import p3d
-    repo = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-    fn = os.path.join(repo, "build", "model-root", "OpenZone_ResearchModels", obj, name + ".p3d")
-    tex = os.path.join(repo, "assets", obj, "work", "game_textures")
+    repo = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
+    fn = os.path.join(repo, "build", "model-root", "OpenZone_Research", "models", obj, name + ".p3d")
+    tex = os.path.join(repo, "source", "models", obj, "work", "game_textures")
     if not (os.path.exists(fn) and os.path.exists(os.path.join(tex, name + "_co.png"))):
         print("our_model: no MLOD or textures for", obj)
         return None
@@ -308,7 +308,8 @@ def vanilla_png(rel):
     import kbake
     import kexport
     src = os.path.join(kexport.VANILLA_DZ, rel + ".paa")
-    cache = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "build", "vanilla_png"))
+    cache = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..",
+                                          "build", "vanilla_png"))
     dst = os.path.join(cache, rel.replace("\\", "_") + ".png")
     if not os.path.exists(dst):
         if not os.path.exists(src):

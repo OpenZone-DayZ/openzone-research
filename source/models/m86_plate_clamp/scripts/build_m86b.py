@@ -1,14 +1,13 @@
 """M86 - plate clamp, variant B: a welded angle plate with two F-clamps. A Protection line module (a
 2x2 item, the module_N place of the packers M25, M29, M34). Variant A (build_m86.py) stands in the
-mod as the class OZL_Tool_PlateClamp; this one lives only in the test addon: the model
-OpenZone_ResearchModels\\m86_plate_clamp_b\\ozr_plate_clamp_b.p3d, class OZR_Test_M86_B (a child of
-OZL_Tool_PlateClamp). If B is chosen, it is to be put into the mod in place of A (the generator
+mod as the class OZL_Tool_PlateClamp; this one is in no class of the mod (it builds into
+models\\m86_plate_clamp_b). If B is chosen, it is to be put into the mod in place of A (the generator
 lives in the folder of A and takes m86_common.py and the decals from there).
 
     blender --background --python build_m86b.py -- [--geo] [--look] [--stats] [--skip-bake] [--no-paa] [--preview]
 
 Run make_decals.py (system Python) before the first build: chalk, bullet marks, cast digits, the
-stamp. Renders, atlas and PNGs go to assets/m86_plate_clamp_b/work (not next to A: the model
+stamp. Renders, atlas and PNGs go to source/models/m86_plate_clamp_b/work (not next to A: the model
 gallery goes by folders).
 
 Idea: a welding angle plate with two F-clamps - a steel 90 degree angle, clamps with wooden handles
@@ -270,7 +269,7 @@ M = kmodel.Model(__file__, OBJ, NAME, REGIONS, KINDS, LOD_SPECS, atlas=1024, loo
                  bones=tuple(b for k in range(len(CLAMPS)) for b in ((SEL_ARM[k], ""), (SEL_SCR[k], SEL_ARM[k]))),
                  animations=tuple(ANIMS), sources={"ozl_work": dict(animPeriod=1.5)})
 # renders, atlas and PNGs - in the variant's own folder (the generator is in folder A)
-M.work = os.path.join(M.repo, "assets", OBJ, "work")
+M.work = os.path.join(M.repo, "source", "models", OBJ, "work")
 M.game_tex = os.path.join(M.work, "game_textures")
 M.renders = os.path.join(M.work, "renders")
 if M.look_preview:

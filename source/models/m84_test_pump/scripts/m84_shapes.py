@@ -1,4 +1,4 @@
-"""M84's own shapes: the kit (assets/_kit) is shared by all models and is not changed, so everything
+"""M84's own shapes: the kit (source/models/_kit) is shared by all models and is not changed, so everything
 missing from kgeo lives here, in the generator folder.
 
 - solids of revolution (lathe), a torus (the flywheel rim), a single-face circle - from the former

@@ -39,7 +39,8 @@ import kuv
 import p3d
 
 ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-MOD = "OpenZone_ResearchModels"
+MOD = "OpenZone_Research"
+MODELS = MOD + "\\models"
 
 
 class Model:
@@ -77,11 +78,11 @@ class Model:
         self.work = os.path.join(self.asset, "work")
         self.game_tex = os.path.join(self.work, "game_textures")
         self.renders = os.path.join(self.work, "renders")
-        self.repo = os.path.normpath(os.path.join(self.asset, "..", ".."))
+        self.repo = os.path.normpath(os.path.join(self.asset, "..", "..", ".."))
         self.obj, self.name = obj, name
-        self.pbo_dir = os.path.join(self.repo, MOD, obj)
+        self.pbo_dir = os.path.join(self.repo, MOD, "models", obj)
         self.model_root = os.path.join(self.repo, "build", "model-root")
-        self.prefix = MOD + "\\" + obj + "\\data"
+        self.prefix = MODELS + "\\" + obj + "\\data"
         self.regions, self.kinds, self.lod_specs, self.atlas = regions, kinds, lod_specs, atlas
         self.glass = glass                # kexport.glass_ca parameters, or None - no glass
         self.rvmat = rvmat
@@ -195,7 +196,7 @@ class Model:
         for nm, q in (("boundingbox_min", bmin), ("boundingbox_max", bmax)):
             mlod = add_raw_point(mlod, nm, q)
         vis.append(mlod)
-        src = kx.prepare_model_root(self.model_root, MOD + "\\" + self.obj, self.pbo_dir)
+        src = kx.prepare_model_root(self.model_root, MODELS + "\\" + self.obj, self.pbo_dir)
         kx.write_p3d(os.path.join(src, self.name + ".p3d"), vis)
         # Proxy placeholders: the proxy path is relative to the models root (the same root as
         # binarize uses); vanilla proxies (\dz\...) need no placeholders - their models are in the
@@ -242,7 +243,7 @@ class Model:
                 print("vanilla_boxes: %s" % json.dumps(kv._BOX))
             # Renders on the remote machine (--bake-render) need the modules in slots (their MLODs
             # and textures come from the project) and the vanilla textures of parts - PNGs in the
-            # build/vanilla_png cache next to the kit.
+            # build/vanilla_png cache of the repository.
             vpng = [krender.vanilla_png(os.path.splitext(t[3:] if t.lower().startswith("dz\\") else t)[0])
                     for t, _ in self.vsections.values()]
             # the --look preview on the remote machine also needs the vanilla swatches of look_compare
@@ -376,7 +377,7 @@ class Model:
         return names
 
     def write_install_info(self, parts):
-        """install.json next to model.cfg: the "off" textures and rvmats of the hiddenSelections
+        """install.json in the work folder: the "off" textures and rvmats of the hiddenSelections
         selections (a selection on a part with its own texture gets that one, otherwise the atlas),
         the animPeriod of the sources and the frames of parts with their own texture - for
         installing the model into the mod."""
@@ -392,7 +393,8 @@ class Model:
                                       frames=[self.prefix + "\\%s_%s_f%d_co.paa" % (self.name, sec, i)
                                               for i in range(len(pd["frames"]))])
                             for sec, pd in self.panels.items()})
-        with open(os.path.join(self.pbo_dir, "install.json"), "w", encoding="utf-8", newline="\n") as fh:
+        os.makedirs(self.work, exist_ok=True)
+        with open(os.path.join(self.work, "install.json"), "w", encoding="utf-8", newline="\n") as fh:
             json.dump(info, fh, ensure_ascii=False, indent=1)
 
     def panel_mats(self, on):

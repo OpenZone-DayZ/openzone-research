@@ -10,16 +10,15 @@ import math
 import os
 import shutil
 import struct
-import sys
 
 import bmesh
 import bpy
 import numpy as np
 
-sys.path.insert(0, r"C:\Users\Crystal\.claude\skills\dayz-modding\scripts")
-import p3d  # noqa: E402
+import ksettings
+import p3d
 
-VANILLA_DZ = r"D:\modding\PDrive\dz"
+VANILLA_DZ = ksettings.VANILLA_DZ
 PEN = r"dz\data\data\penetration"
 
 

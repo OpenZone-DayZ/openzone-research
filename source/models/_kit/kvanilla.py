@@ -23,7 +23,9 @@ import math
 import os
 import struct
 
-P_ROOT = os.environ.get("OZ_PDRIVE", "P:\\")
+import ksettings
+
+P_ROOT = ksettings.PDRIVE
 
 # short name -> p3d path from P:\ without the extension (the items that can be proxied)
 ITEMS = {
