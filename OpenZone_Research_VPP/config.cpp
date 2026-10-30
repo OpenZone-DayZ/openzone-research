@@ -33,8 +33,8 @@ class CfgMods
     {
         dir        = "OpenZone_Research_VPP";
         name       = "OpenZone Research for VPP Admin Tools";
-        credits    = "Zone Protocol";
-        author     = "Zone Protocol";
+        credits    = "OpenZone";
+        author     = "OpenZone";
         version    = "0.1.0";
         type       = "mod";
 

@@ -28,7 +28,7 @@ class CfgMods
     {
         dir = "OpenZone_Research_Bridge";
         name = "OpenZone Research Bridge";
-        author = "Zone Protocol";
+        author = "OpenZone";
         version = "0.1.0";
         type = "mod";
 

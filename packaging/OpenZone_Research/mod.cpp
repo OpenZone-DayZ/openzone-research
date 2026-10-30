@@ -5,7 +5,7 @@
 // purpose: a wrong path draws a blank and says nothing.
 
 name        = "OpenZone Research";
-author      = "Zone Protocol";
+author      = "OpenZone";
 authorID    = "";
 version     = "0.1";
 

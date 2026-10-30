@@ -47,8 +47,8 @@ class CfgMods
     {
         dir        = "OpenZone_Research";
         name       = "OpenZone Research";
-        credits    = "Zone Protocol";
-        author     = "Zone Protocol";
+        credits    = "OpenZone";
+        author     = "OpenZone";
         version    = "0.1.0";
         type       = "mod";
 
