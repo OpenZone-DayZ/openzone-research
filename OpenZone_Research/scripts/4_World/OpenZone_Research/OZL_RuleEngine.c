@@ -47,11 +47,15 @@ class OZL_RuleEngine
 
     // Перше правило цього приладу в порядку конфігу, дозволене власникові,
     // чий повний план збирається по карго. Порядок у файлі -- пріоритет
-    // адміна. Причина відмови -- ключ рядка (остання своя), подробиці -- в
-    // лог рівня dbg: гравцеві не треба знати id чужих правил.
+    // адміна. Причина відмови -- ключ рядка, подробиці -- в лог рівня dbg:
+    // гравцеві не треба знати id чужих правил. Причина правила, чий вхід у
+    // карго є (вузол, одяг, інструмент), важливіша за «немає входу» решти:
+    // інакше кляп замість ганчірки показував «бракує інструмента» від
+    // сусіднього правила з бинтом (стенд, 2026-10-30).
     private static OZL_Rule FindCore(EntityAI device, PlayerBase player, string owner, array<string> exclClasses, out string why)
     {
         why = "STR_OZL_ERR_NO_RULE";
+        bool inputSeen = false;
         OZL_FactionState st = OZL_State.Get(owner);
         OZL_Rules rules = OZL_Config.Get().Rules();
         string type = device.GetType();
@@ -75,6 +79,18 @@ class OZL_RuleEngine
                 if (r.RequiredFactions.Count() > 0 && r.RequiredFactions.Find(owner) < 0)
                     continue;
 
+                array<ItemBase> planItems   = new array<ItemBase>();
+                array<int>      planAmounts = new array<int>();
+                array<int>      planInputs  = new array<int>();
+                string planWhy;
+                if (!BuildCargoPlan(device, r, planItems, planAmounts, planInputs, planWhy))
+                {
+                    if (!inputSeen)
+                        why = "STR_OZL_ERR_NEED_INPUT";
+                    OZL_Log.Dbg("rule '" + r.Id + "' on " + type + ": " + planWhy);
+                    continue;
+                }
+
                 if (r.RequiredNode != "")
                 {
                     bool done = false;
@@ -83,6 +99,7 @@ class OZL_RuleEngine
                     if (!done)
                     {
                         why = "STR_OZL_ERR_NEED_NODE";
+                        inputSeen = true;
                         OZL_Log.Dbg("rule '" + r.Id + "' on " + type + ": owner '" + owner + "' lacks node '" + r.RequiredNode + "'");
                         continue;
                     }
@@ -92,24 +109,18 @@ class OZL_RuleEngine
                 if (player && !OZL_Gear.WearsAll(player, r.RequiredWorn, missing))
                 {
                     why = "STR_OZL_ERR_NEED_WORN";
+                    inputSeen = true;
                     OZL_Log.Dbg("rule '" + r.Id + "' on " + type + ": player wears no '" + missing + "'");
                     continue;
                 }
                 if (!OZL_Gear.DeviceHasTools(device, r.RequiredTools, missing))
                 {
                     why = "STR_OZL_ERR_NEED_TOOL";
+                    inputSeen = true;
                     OZL_Log.Dbg("rule '" + r.Id + "' on " + type + ": device has no tool '" + missing + "'");
                     continue;
                 }
-
-                array<ItemBase> planItems   = new array<ItemBase>();
-                array<int>      planAmounts = new array<int>();
-                array<int>      planInputs  = new array<int>();
-                string planWhy;
-                if (BuildCargoPlan(device, r, planItems, planAmounts, planInputs, planWhy))
-                    return r;
-                why = "STR_OZL_ERR_NEED_INPUT";
-                OZL_Log.Dbg("rule '" + r.Id + "' on " + type + ": " + planWhy);
+                return r;
             }
         }
         return null;
