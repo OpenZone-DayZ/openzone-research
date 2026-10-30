@@ -47,6 +47,9 @@ class OZL_Station : ItemBase
 
     protected ref Timer m_OZL_Timer;
 
+    // Вигляд «робота» на клієнті (OZL_WorkFx.c): луп, поки стан RUNNING.
+    protected ref OZL_WorkFx m_OZL_WorkFx;
+
     // Усі живі станції, не лише статики: сброс фракції має зупиняти й
     // переносні, інакше запущена до сбросу станція доробить і заллє носій у
     // щойно обнулений пул.
@@ -65,10 +68,13 @@ class OZL_Station : ItemBase
     void ~OZL_Station()
     {
         OZL_StopTimer();
+        if (m_OZL_WorkFx)
+            m_OZL_WorkFx.Stop();
         if (GetGame())
         {
             GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(OZL_ResumeAfterLoad);
             GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(OZL_TryAutoContinue);
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(OZL_UpdateWorkFx);
         }
     }
 
@@ -85,11 +91,76 @@ class OZL_Station : ItemBase
             // першого запуску.
             SetSynchDirty();
         }
+        else
+        {
+            // Стан може не змінитися ніколи (тестовий клас із ozlWorkFxAlways), а
+            // OnVariablesSynchronized -- не прийти: перевірка після ініціалізації.
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(OZL_UpdateWorkFx, 500, false);
+        }
+    }
+
+    override void OnVariablesSynchronized()
+    {
+        super.OnVariablesSynchronized();
+        OZL_UpdateWorkFx();
+    }
+
+    // Клієнт: луп вигляду «робота», поки станція працює (class OZL_Work у
+    // config.cpp класу, OZL_WorkFx.c), разом із модулями в слотах. Сервер не
+    // робить нічого -- косметика.
+    bool OZL_WorkFxOn()
+    {
+        return m_OZL_State == STATE_RUNNING || ConfigGetBool("ozlWorkFxAlways");
+    }
+
+    void OZL_UpdateWorkFx()
+    {
+        if (!GetGame() || GetGame().IsDedicatedServer())
+            return;
+        bool on = OZL_WorkFxOn();
+        for (int i = 1; i <= 3; i++)
+        {
+            int slot = InventorySlots.GetSlotIdFromString("OZL_Tool" + i.ToString());
+            OZL_Tool_Base tool = OZL_Tool_Base.Cast(GetInventory().FindAttachment(slot));
+            if (tool)
+                tool.OZL_SetWorking(on);
+        }
+        if (on && !m_OZL_WorkFx)
+        {
+            if (!OZL_WorkFx.Has(this))
+                return;
+            m_OZL_WorkFx = new OZL_WorkFx(this);
+        }
+        if (!m_OZL_WorkFx)
+            return;
+        if (on)
+            m_OZL_WorkFx.Start();
+        else
+            m_OZL_WorkFx.Stop();
+    }
+
+    // Модуль, вставлений у працюючу станцію, одразу «працює» з нею; вийнятий -- гасне.
+    override void EEItemAttached(EntityAI item, string slot_name)
+    {
+        super.EEItemAttached(item, slot_name);
+        OZL_Tool_Base tool = OZL_Tool_Base.Cast(item);
+        if (tool && GetGame() && !GetGame().IsDedicatedServer())
+            tool.OZL_SetWorking(OZL_WorkFxOn());
+    }
+
+    override void EEItemDetached(EntityAI item, string slot_name)
+    {
+        super.EEItemDetached(item, slot_name);
+        OZL_Tool_Base tool = OZL_Tool_Base.Cast(item);
+        if (tool && GetGame() && !GetGame().IsDedicatedServer())
+            tool.OZL_SetWorking(false);
     }
 
     override void EEDelete(EntityAI parent)
     {
         OZL_StopTimer();
+        if (m_OZL_WorkFx)
+            m_OZL_WorkFx.Stop();
         int idx = s_All.Find(this);
         if (idx > -1)
             s_All.Remove(idx);

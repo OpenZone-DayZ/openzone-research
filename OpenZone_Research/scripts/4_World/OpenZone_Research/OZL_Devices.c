@@ -60,6 +60,12 @@ class OZL_Eco_Proc_Electro : OZL_StaticStation
 {
 }
 
+// Термінали Вчених, Чистого неба й Обов'язку додано в config.cpp пізніше (23-25.10) без двійників тут --
+// були звичайним ItemBase, без вигляду «робота» (знайдено 30.10 за відгуком на стенді, M38).
+class OZL_Eco_Terminal : OZL_StaticStation
+{
+}
+
 class OZL_Sky_Pack_Bio : OZL_StaticStation
 {
 }
@@ -81,6 +87,10 @@ class OZL_Sky_Pack_Electro : OZL_StaticStation
 }
 
 class OZL_Sky_Proc_Electro : OZL_StaticStation
+{
+}
+
+class OZL_Sky_Terminal : OZL_StaticStation
 {
 }
 
@@ -137,6 +147,10 @@ class OZL_Dty_Pack_Prot : OZL_StaticStation
 }
 
 class OZL_Dty_Proc_Prot : OZL_StaticStation
+{
+}
+
+class OZL_Dty_Terminal : OZL_StaticStation
 {
 }
 
