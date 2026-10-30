@@ -2,7 +2,7 @@
 // requires the research mod, the OpenZone VPP tab and VPPAdminTools, all hard.
 
 name        = "OpenZone Research for VPP Admin Tools";
-author      = "Zone Protocol";
+author      = "OpenZone";
 authorID    = "";
 version     = "0.1";
 
