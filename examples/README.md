@@ -1,24 +1,23 @@
 # examples
 
-Starter packs of configuration for `$profile:OpenZone\`. Copy the nine
+Starter packs of configuration for `$profile:OpenZone\`. Copy the six
 `OZ_Research_*.json` files of a pack into the server's profile folder; the mod
-creates any missing file with defaults on its first start.
+creates the settings file, and any other missing file, with defaults on its first start.
 
-- `zone-protocol/` -- the seven-faction pack of the [UA] STALKER: Zone Protocol
-  server, converted from the `ZP_Research` examples by
-  `scripts/convert-zp-examples.py`. Its owners are the core's faction ids; the
-  branches and rules of `clearsky` and `sop` keep those ids and stay dormant
-  until such factions exist in the core's registry.
+- `full/` -- seven factions (ecolog, clearsky, bandit, neutral, duty, freedom, sop),
+  each with its own packers, analyzers and terminal. 1039 packer rules turn raw items
+  into the samples of their line, worth 1, 5 or 25 points for common, rare and legendary
+  input; 16 analyzer rules turn samples into carriers. The tree costs line points: a node
+  of the first row costs 4-6, of the fifth 205-450.
+- `test-stand/` -- the stand pack: all 39 stations placed in rows on the stand, each
+  packer with two rules on vanilla items (a plain one worth 1 point, and one showing the
+  options: 25 points, the line's first module required, purity 0.5), every analyzer with
+  its rule, ten seconds a cycle, two cheap nodes per faction. This is what the `dayz` MCP
+  stand of this repository runs.
 
-The tree background textures the pack refers to
+Both packs use the faction `sop`, which is not among the factions mod's defaults: add it
+to `OZ_Factions.json`. A player outside an organisation belongs to the base faction
+`stalker`, and neither pack lists devices for it.
+
+The tree background textures the packs refer to
 (`OpenZone_Research/gui/textures/tree/*.paa`) ship inside the mod.
-
-- `test-stand/` -- the stand pack: vanilla inputs only, so every rule is live on a
-  server without the modpack; a few static stations placed for the test stand.
-  This is what the `dayz` MCP stand of this repository runs.
-  Completed by hand after conversion: every faction of the core's registry
-  has an owner entry, the five ZP factions with their own device sets and the
-  other four (neutral, mercenary, military, monolith) and loner with the generic lab
-  (microscope, lab computer, sample fridge), so a test account of any faction
-  can run the `pb_*` chain and research the `pb_nauka` branch; the four static entries with a class that does
-  not exist or a duplicate position are gone.

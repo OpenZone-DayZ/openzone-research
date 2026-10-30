@@ -1,41 +1,131 @@
 {
-    "Version": 1,
+    "Version": 2,
     "Modules": [
         {
             "Classname": "OZL_Tool_Optics",
-            "PurityBonus": 0.20000000298023224,
-            "Devices": [
-                "OZL_Microscope",
-                "OZL_Eco_Pack_Bio",
-                "OZL_Eco_Pack_Anom",
-                "OZL_Eco_Pack_Electro"
-            ],
-            "Notes": "оптика: рівніший зріз, менше сміття в пробі"
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Біологія»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
         },
         {
             "Classname": "OZL_Tool_Centrifuge",
-            "PurityBonus": 0.30000001192092896,
-            "Devices": [
-                "OZL_SampleFridge",
-                "OZL_Eco_Pack_Bio",
-                "OZL_Eco_Pack_Anom",
-                "OZL_Eco_Pack_Electro",
-                "OZL_Sky_Pack_Bio",
-                "OZL_Sky_Pack_Anom",
-                "OZL_Sky_Pack_Electro"
-            ],
-            "Notes": "центрифуга: відділяє фракції"
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Біологія»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
         },
         {
             "Classname": "OZL_Tool_Reagents",
-            "PurityBonus": 0.25,
-            "Devices": [
-                "OZL_ChemBench",
-                "OZL_Sky_Pack_Bio",
-                "OZL_Sky_Pack_Anom",
-                "OZL_Sky_Pack_Electro"
-            ],
-            "Notes": "реагенти: стабілізують матеріал"
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Біологія»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_AnomProbe",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Аномалії»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_Radiometer",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Аномалії»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_LeadShield",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Аномалії»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_Oscilloscope",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Електроніка»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_SolderStation",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Електроніка»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_Programmer",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Електроніка»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_Dosimeter",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Хабар»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_JewelerLoupe",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Хабар»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_LeadCapsule",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Хабар»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_PdaReader",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Стежки»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_RadioScanner",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Стежки»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_MapBoard",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Стежки»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_BarrelVise",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Балістика»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_Borescope",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Балістика»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_GaugeSet",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Балістика»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_Compressor",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Захист»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_GasAnalyzer",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Захист»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
+        },
+        {
+            "Classname": "OZL_Tool_PlateClamp",
+            "PurityBonus": 0.1,
+            "DoubleChance": 0.1,
+            "Notes": "модуль лінії «Захист»: +0,1 до чистоти проби й +10 % шансу подвійного виходу"
         }
     ]
 }

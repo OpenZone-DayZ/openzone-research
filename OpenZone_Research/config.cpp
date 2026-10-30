@@ -2691,7 +2691,7 @@ class CfgVehicles
     };
 
 
-    // ---- Нейтрали (loner) ----
+    // ---- Нейтрали (neutral) ----
 
     // Пакувальник хабару Нейтралів: вогнетривкий сейф бармена (0.76 x 1.40 x 0.43, модулі на даху)
     class OZL_Lnr_Pack_Khabar : OZL_Packer_Base

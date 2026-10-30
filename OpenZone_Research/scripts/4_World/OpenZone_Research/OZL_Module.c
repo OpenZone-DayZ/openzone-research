@@ -121,8 +121,8 @@ class OZL_Module : CF_ModuleWorld
     }
 
     // РЯДОК ЗБИРАЄМО ПООПЕРАТОРНО, а не одним ланцюжком «+»: компілятор
-    // Enforce має межу складності виразу й падає з «Formula too complex» --
-    // у ZP_Research це знайшли на восьмому доданку.
+    // Enforce має межу складності виразу й падає з «Formula too complex»
+    // уже на восьмому доданку.
     static string ReadyLine()
     {
         string s = "research loaded: " + OZL_Config.Get().Counters();

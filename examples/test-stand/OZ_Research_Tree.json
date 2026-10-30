@@ -1,305 +1,58 @@
 {
-    "Version": 1,
+    "Version": 2,
     "Branches": [
         {
-            "Id": "pb_nauka",
-            "Name": "Наукова програма Зони",
+            "Id": "ts_eco",
+            "Name": "Стенд: Вчених",
             "Icon": "",
             "SortOrder": 1,
             "Owners": [
-                "ecolog",
-                "loner",
-                "neutral",
-                "mercenary",
-                "military",
-                "monolith"
+                "ecolog"
             ],
             "Nodes": [
                 {
-                    "Id": "pb_osnovy",
-                    "Name": "Польові основи",
-                    "Description": "Методики збору, маркування та зберігання зразків у полі. Корінь програми.",
-                    "Icon": "set:dayz_gui image:gear",
+                    "Id": "ts_eco_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
                     "Tier": 1,
                     "Parents": [],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_field_t1",
+                            "Type": "bio",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "ts_eco_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 2,
+                    "Parents": [
+                        "ts_eco_1"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "anomaly",
                             "Amount": 5
                         }
                     ],
                     "ItemCost": [],
                     "ResearchTimeSec": 0,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_bio_zbir",
-                    "Name": "Відбір біозразків",
-                    "Description": "Правильний забір тканин мутантів без псування матеріалу.",
-                    "Icon": "set:dayz_gui image:iconBacteria",
-                    "Tier": 2,
-                    "Parents": [
-                        "pb_osnovy"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "bio_field_t1",
-                            "Amount": 8
-                        }
-                    ],
-                    "ItemCost": [
-                        {
-                            "Classname": "Paper",
-                            "Quantity": 2,
-                            "Content": ""
-                        }
-                    ],
-                    "ResearchTimeSec": 0,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_ano_detekt",
-                    "Name": "Детекція аномалій",
-                    "Description": "Калібрування детекторів під поля Зони.",
-                    "Icon": "set:dayz_gui image:icon_refresh",
-                    "Tier": 2,
-                    "Parents": [
-                        "pb_osnovy"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "anomaly_field_t1",
-                            "Amount": 8
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 0,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_teh_elektro",
-                    "Name": "Польова електроніка",
-                    "Description": "Ремонт і калібрування наукових приладів у польових умовах.",
-                    "Icon": "set:dayz_gui image:icon_hammer",
-                    "Tier": 2,
-                    "Parents": [
-                        "pb_osnovy"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "electronics_field_t1",
-                            "Amount": 8
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 0,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_bio_anatom",
-                    "Name": "Анатомія мутантів",
-                    "Description": "Систематизація будови тканин. Глибша переробка органів.",
-                    "Icon": "set:dayz_gui image:iconSkull",
-                    "Tier": 3,
-                    "Parents": [
-                        "pb_bio_zbir"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "bio_field_t2",
-                            "Amount": 10
-                        },
-                        {
-                            "Type": "bio_lab_t1",
-                            "Amount": 4
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 60,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_ano_artefakt",
-                    "Name": "Природа артефактів",
-                    "Description": "Класифікація артефактів за типом породжуючої аномалії.",
-                    "Icon": "set:dayz_gui image:iconSkull",
-                    "Tier": 3,
-                    "Parents": [
-                        "pb_ano_detekt"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "anomaly_field_t2",
-                            "Amount": 12
-                        },
-                        {
-                            "Type": "anomaly_lab_t1",
-                            "Amount": 5
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 45,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_teh_dani",
-                    "Name": "Обробка даних",
-                    "Description": "Серверне зберігання й аналіз накопичених вимірів.",
-                    "Icon": "set:dayz_gui image:gear",
-                    "Tier": 3,
-                    "Parents": [
-                        "pb_teh_elektro"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 10
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 60,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_bio_mutagen",
-                    "Name": "Мутагени",
-                    "Description": "Виділення активних сполук із тканин. Верхівка біологічного напрямку.",
-                    "Icon": "set:dayz_gui image:iconPill",
-                    "Tier": 4,
-                    "Parents": [
-                        "pb_bio_anatom"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "bio_lab_t2",
-                            "Amount": 15
-                        },
-                        {
-                            "Type": "bio_lab_t3",
-                            "Amount": 2
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 120,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_ano_stabil",
-                    "Name": "Стабілізація",
-                    "Description": "Безпечне транспортування нестабільних артефактів.",
-                    "Icon": "set:dayz_gui image:iconPill",
-                    "Tier": 4,
-                    "Parents": [
-                        "pb_ano_artefakt"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "anomaly_lab_t2",
-                            "Amount": 14
-                        },
-                        {
-                            "Type": "anomaly_lab_t3",
-                            "Amount": 2
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 90,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_hrest_biolab",
-                    "Name": "Біохімлабораторія",
-                    "Description": "Перехресний вузол: потрібні І анатомія, І обробка даних.",
-                    "Icon": "set:dayz_gui image:iconBacteria",
-                    "Tier": 4,
-                    "Parents": [
-                        "pb_bio_anatom",
-                        "pb_teh_dani"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "bio_lab_t2",
-                            "Amount": 20
-                        },
-                        {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 6
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 180,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_hrest_skaner",
-                    "Name": "Універсальний сканер",
-                    "Description": "Перехресний вузол з режимом ANY: досить будь-якого з двох напрямків.",
-                    "Icon": "set:dayz_gui image:icon_refresh",
-                    "Tier": 4,
-                    "Parents": [
-                        "pb_ano_artefakt",
-                        "pb_teh_dani"
-                    ],
-                    "ParentsMode": "any",
-                    "Cost": [
-                        {
-                            "Type": "anomaly_lab_t2",
-                            "Amount": 12
-                        },
-                        {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 8
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 60,
-                    "RequiredFactions": []
-                },
-                {
-                    "Id": "pb_final_protokol",
-                    "Name": "Протокол Зони",
-                    "Description": "Фінальна мета фракційної програми досліджень.",
-                    "Icon": "set:dayz_gui image:iconSkull",
-                    "Tier": 5,
-                    "Parents": [
-                        "pb_hrest_biolab",
-                        "pb_hrest_skaner",
-                        "pb_bio_mutagen"
-                    ],
-                    "ParentsMode": "all",
-                    "Cost": [
-                        {
-                            "Type": "bio_lab_t3",
-                            "Amount": 6
-                        },
-                        {
-                            "Type": "anomaly_lab_t3",
-                            "Amount": 6
-                        },
-                        {
-                            "Type": "electronics_lab_t3",
-                            "Amount": 6
-                        }
-                    ],
-                    "ItemCost": [],
-                    "ResearchTimeSec": 300,
                     "RequiredFactions": []
                 }
             ]
         },
         {
-            "Id": "pb_nebo",
-            "Name": "Метеорологія Чистого неба",
+            "Id": "ts_sky",
+            "Name": "Стенд: Чистого неба",
             "Icon": "",
             "SortOrder": 2,
             "Owners": [
@@ -307,17 +60,17 @@
             ],
             "Nodes": [
                 {
-                    "Id": "pb_nebo_sposter",
-                    "Name": "Метеоспостереження",
-                    "Description": "Спостереження за фронтами викидів.",
+                    "Id": "ts_sky_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
                     "Icon": "",
                     "Tier": 1,
                     "Parents": [],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_field_t1",
-                            "Amount": 3
+                            "Type": "bio",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -325,54 +78,48 @@
                     "RequiredFactions": []
                 },
                 {
-                    "Id": "pb_nebo_ukryttia",
-                    "Name": "Укриття від викиду",
-                    "Description": "Розрахунок стійкості укриттів.",
+                    "Id": "ts_sky_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
                     "Icon": "",
                     "Tier": 2,
                     "Parents": [
-                        "pb_nebo_sposter"
+                        "ts_sky_1"
                     ],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_field_t1",
+                            "Type": "anomaly",
                             "Amount": 5
                         }
                     ],
-                    "ItemCost": [
-                        {
-                            "Classname": "Rag",
-                            "Quantity": 3,
-                            "Content": ""
-                        }
-                    ],
+                    "ItemCost": [],
                     "ResearchTimeSec": 0,
                     "RequiredFactions": []
                 }
             ]
         },
         {
-            "Id": "pb_varta",
-            "Name": "Бойові розробки Долгу",
+            "Id": "ts_bnd",
+            "Name": "Стенд: Бандитів",
             "Icon": "",
             "SortOrder": 3,
             "Owners": [
-                "duty"
+                "bandit"
             ],
             "Nodes": [
                 {
-                    "Id": "pb_varta_osnovy",
-                    "Name": "Основи спорядження",
-                    "Description": "Догляд і підгонка спорядження.",
+                    "Id": "ts_bnd_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
                     "Icon": "",
                     "Tier": 1,
                     "Parents": [],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_field_t1",
-                            "Amount": 3
+                            "Type": "khabar",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -380,18 +127,214 @@
                     "RequiredFactions": []
                 },
                 {
-                    "Id": "pb_varta_bronia",
-                    "Name": "Бронювання",
-                    "Description": "Підсилення бронезахисту групи.",
+                    "Id": "ts_bnd_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
                     "Icon": "",
                     "Tier": 2,
                     "Parents": [
-                        "pb_varta_osnovy"
+                        "ts_bnd_1"
                     ],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_field_t1",
+                            "Type": "trails",
+                            "Amount": 5
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "ts_lnr",
+            "Name": "Стенд: Нейтралів",
+            "Icon": "",
+            "SortOrder": 4,
+            "Owners": [
+                "neutral"
+            ],
+            "Nodes": [
+                {
+                    "Id": "ts_lnr_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "khabar",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "ts_lnr_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 2,
+                    "Parents": [
+                        "ts_lnr_1"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "trails",
+                            "Amount": 5
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "ts_dty",
+            "Name": "Стенд: Долгу",
+            "Icon": "",
+            "SortOrder": 5,
+            "Owners": [
+                "duty"
+            ],
+            "Nodes": [
+                {
+                    "Id": "ts_dty_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "ts_dty_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 2,
+                    "Parents": [
+                        "ts_dty_1"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection",
+                            "Amount": 5
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "ts_frd",
+            "Name": "Стенд: Волі",
+            "Icon": "",
+            "SortOrder": 6,
+            "Owners": [
+                "freedom"
+            ],
+            "Nodes": [
+                {
+                    "Id": "ts_frd_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "ts_frd_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 2,
+                    "Parents": [
+                        "ts_frd_1"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection",
+                            "Amount": 5
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                }
+            ]
+        },
+        {
+            "Id": "ts_sop",
+            "Name": "Стенд: СОП",
+            "Icon": "",
+            "SortOrder": 7,
+            "Owners": [
+                "sop"
+            ],
+            "Nodes": [
+                {
+                    "Id": "ts_sop_1",
+                    "Name": "Перший крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 1,
+                    "Parents": [],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "ballistics",
+                            "Amount": 2
+                        }
+                    ],
+                    "ItemCost": [],
+                    "ResearchTimeSec": 0,
+                    "RequiredFactions": []
+                },
+                {
+                    "Id": "ts_sop_2",
+                    "Name": "Другий крок",
+                    "Description": "Стенд: вузол для перевірки витрати балів.",
+                    "Icon": "",
+                    "Tier": 2,
+                    "Parents": [
+                        "ts_sop_1"
+                    ],
+                    "ParentsMode": "all",
+                    "Cost": [
+                        {
+                            "Type": "protection",
                             "Amount": 5
                         }
                     ],

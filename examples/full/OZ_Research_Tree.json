@@ -1,5 +1,5 @@
 {
-    "Version": 1,
+    "Version": 2,
     "Branches": [
         {
             "Id": "bnd_poniattia",
@@ -13,19 +13,19 @@
                 {
                     "Id": "bnd_poniattia",
                     "Name": "Поняття братви",
-                    "Description": "Корінь: хто кому платить за хабар і хто ходить стежками. Відкриває пакувальники й аналізатори 1 тиру обох ліній.",
+                    "Description": "Корінь: хто кому платить за хабар і хто ходить стежками. Відкриває пакувальники й аналізатори звичайної сировини обох ліній.",
                     "Icon": "set:dayz_gui image:gear",
                     "Tier": 1,
                     "Parents": [],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t1",
-                            "Amount": 4
+                            "Type": "khabar",
+                            "Amount": 2
                         },
                         {
-                            "Type": "trails_lab_t1",
-                            "Amount": 4
+                            "Type": "trails",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -35,7 +35,7 @@
                 {
                     "Id": "bnd_skupka",
                     "Name": "Скупка хабару",
-                    "Description": "Своя скупка з нормальними вагами: рідкісні артефакти вже не йдуть за безцінь. RequiredNode для пакування хабару 2 тиру.",
+                    "Description": "Своя скупка з нормальними вагами: рідкісні артефакти вже не йдуть за безцінь. RequiredNode для пакування хабару рідкісної сировини.",
                     "Icon": "set:dayz_gui image:icon_refresh",
                     "Tier": 2,
                     "Parents": [
@@ -44,8 +44,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t1",
-                            "Amount": 10
+                            "Type": "khabar",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -55,7 +55,7 @@
                 {
                     "Id": "bnd_navodka",
                     "Name": "Навідка",
-                    "Description": "Хто куди ходить і що несе: маркери, зламані КПК, карти. RequiredNode для пакування стежок 2 тиру.",
+                    "Description": "Хто куди ходить і що несе: маркери, зламані КПК, карти. RequiredNode для пакування стежок рідкісної сировини.",
                     "Icon": "set:dayz_gui image:icon_hammer",
                     "Tier": 2,
                     "Parents": [
@@ -64,8 +64,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t1",
-                            "Amount": 10
+                            "Type": "trails",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -75,7 +75,7 @@
                 {
                     "Id": "bnd_kontrabanda",
                     "Name": "Контрабандні канали",
-                    "Description": "Легендарний хабар за Периметр. Перехресна вартість — наукові anomaly_lab_t1: без довідки Вчених «Компас» не продати. RequiredNode для пакування хабару 3 тиру.",
+                    "Description": "Легендарний хабар за Периметр. Перехресна вартість — бали «Аномалії»: без довідки Вчених «Компас» не продати. RequiredNode для пакування хабару легендарної сировини.",
                     "Icon": "set:dayz_gui image:iconSkull",
                     "Tier": 3,
                     "Parents": [
@@ -84,8 +84,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 10
+                            "Type": "khabar",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -95,7 +95,7 @@
                 {
                     "Id": "bnd_reket",
                     "Name": "Рекет на стежках",
-                    "Description": "Контроль проходів: чипи детекторів, карти доступу, планшети. RequiredNode для пакування стежок 3 тиру.",
+                    "Description": "Контроль проходів: чипи детекторів, карти доступу, планшети. RequiredNode для пакування стежок легендарної сировини.",
                     "Icon": "set:dayz_gui image:iconSkull",
                     "Tier": 3,
                     "Parents": [
@@ -104,8 +104,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t2",
-                            "Amount": 8
+                            "Type": "trails",
+                            "Amount": 20
                         }
                     ],
                     "ItemCost": [],
@@ -115,7 +115,7 @@
                 {
                     "Id": "bnd_oblava",
                     "Name": "Облава на схрони",
-                    "Description": "Скупка плюс навідка: знаємо, де схрон, і знаємо, що в ньому. Перехресна — бойові ballistics_lab_t1 (зброя для облави).",
+                    "Description": "Скупка плюс навідка: знаємо, де схрон, і знаємо, що в ньому. Перехресна — бали «Балістика» (зброя для облави).",
                     "Icon": "set:dayz_gui image:iconBacteria",
                     "Tier": 3,
                     "Parents": [
@@ -125,16 +125,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 6
+                            "Type": "khabar",
+                            "Amount": 15
                         },
                         {
-                            "Type": "trails_lab_t2",
-                            "Amount": 4
+                            "Type": "trails",
+                            "Amount": 10
                         },
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 2
+                            "Type": "ballistics",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [],
@@ -144,7 +144,7 @@
                 {
                     "Id": "bnd_chornyi_rynok",
                     "Name": "Чорний ринок",
-                    "Description": "Глибина лінії хабару: власні ціни на артефакти 3 тиру.",
+                    "Description": "Глибина лінії хабару: власні ціни на артефакти легендарної сировини.",
                     "Icon": "set:dayz_gui image:iconPill",
                     "Tier": 4,
                     "Parents": [
@@ -153,16 +153,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t3",
-                            "Amount": 4
+                            "Type": "khabar",
+                            "Amount": 115
                         },
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 6
-                        },
-                        {
-                            "Type": "anomaly_lab_t1",
-                            "Amount": 3
+                            "Type": "anomaly",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [],
@@ -172,7 +168,7 @@
                 {
                     "Id": "bnd_avtorytet",
                     "Name": "Авторитет",
-                    "Description": "Капстоун: братва тримає і ринок, і стежки. Перехресна — бойові protection_lab_t2 (броня для охорони каналу).",
+                    "Description": "Капстоун: братва тримає і ринок, і стежки. Перехресна — бали «Захист» (броня для охорони каналу).",
                     "Icon": "set:dayz_gui image:iconSkull",
                     "Tier": 5,
                     "Parents": [
@@ -183,16 +179,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t3",
-                            "Amount": 6
+                            "Type": "khabar",
+                            "Amount": 150
                         },
                         {
-                            "Type": "trails_lab_t3",
-                            "Amount": 4
+                            "Type": "trails",
+                            "Amount": 100
                         },
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 2
+                            "Type": "protection",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],
@@ -220,12 +216,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 4
+                            "Type": "ballistics",
+                            "Amount": 2
                         },
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 4
+                            "Type": "protection",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -244,8 +240,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 10
+                            "Type": "ballistics",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -264,8 +260,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 10
+                            "Type": "protection",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -284,8 +280,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 10
+                            "Type": "ballistics",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -304,8 +300,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 8
+                            "Type": "protection",
+                            "Amount": 20
                         }
                     ],
                     "ItemCost": [],
@@ -324,23 +320,18 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 6
+                            "Type": "ballistics",
+                            "Amount": 90
                         },
                         {
-                            "Type": "ballistics_lab_t3",
-                            "Amount": 3
-                        },
-                        {
-                            "Type": "trails_lab_t1",
-                            "Amount": 3
+                            "Type": "trails",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [
                         {
                             "Classname": "Paper",
-                            "Quantity": 2,
-                            "Content": ""
+                            "Quantity": 2
                         }
                     ],
                     "ResearchTimeSec": 90,
@@ -359,16 +350,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t3",
-                            "Amount": 4
+                            "Type": "ballistics",
+                            "Amount": 100
                         },
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 4
+                            "Type": "protection",
+                            "Amount": 10
                         },
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 4
+                            "Type": "electronics",
+                            "Amount": 10
                         }
                     ],
                     "ItemCost": [],
@@ -388,16 +379,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t3",
-                            "Amount": 6
+                            "Type": "ballistics",
+                            "Amount": 150
                         },
                         {
-                            "Type": "protection_lab_t3",
-                            "Amount": 4
+                            "Type": "protection",
+                            "Amount": 100
                         },
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 2
+                            "Type": "khabar",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],
@@ -425,16 +416,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t1",
-                            "Amount": 5
+                            "Type": "anomaly",
+                            "Amount": 2
                         },
                         {
-                            "Type": "bio_lab_t1",
-                            "Amount": 4
+                            "Type": "bio",
+                            "Amount": 2
                         },
                         {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 4
+                            "Type": "electronics",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -453,8 +444,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t1",
-                            "Amount": 10
+                            "Type": "anomaly",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -473,15 +464,14 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t1",
-                            "Amount": 10
+                            "Type": "bio",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [
                         {
                             "Classname": "Paper",
-                            "Quantity": 2,
-                            "Content": ""
+                            "Quantity": 2
                         }
                     ],
                     "ResearchTimeSec": 0,
@@ -499,8 +489,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 10
+                            "Type": "electronics",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -519,8 +509,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t2",
-                            "Amount": 10
+                            "Type": "anomaly",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -539,8 +529,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t2",
-                            "Amount": 10
+                            "Type": "bio",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -559,8 +549,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 8
+                            "Type": "electronics",
+                            "Amount": 20
                         }
                     ],
                     "ItemCost": [],
@@ -579,16 +569,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t2",
-                            "Amount": 8
+                            "Type": "anomaly",
+                            "Amount": 95
                         },
                         {
-                            "Type": "anomaly_lab_t3",
-                            "Amount": 3
-                        },
-                        {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 4
+                            "Type": "khabar",
+                            "Amount": 10
                         }
                     ],
                     "ItemCost": [],
@@ -608,16 +594,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t3",
-                            "Amount": 2
+                            "Type": "anomaly",
+                            "Amount": 50
                         },
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 6
+                            "Type": "electronics",
+                            "Amount": 15
                         },
                         {
-                            "Type": "khabar_lab_t1",
-                            "Amount": 3
+                            "Type": "khabar",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [],
@@ -638,20 +624,20 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t3",
-                            "Amount": 6
+                            "Type": "anomaly",
+                            "Amount": 150
                         },
                         {
-                            "Type": "bio_lab_t3",
-                            "Amount": 4
+                            "Type": "bio",
+                            "Amount": 100
                         },
                         {
-                            "Type": "electronics_lab_t3",
-                            "Amount": 4
+                            "Type": "electronics",
+                            "Amount": 100
                         },
                         {
-                            "Type": "khabar_lab_t3",
-                            "Amount": 2
+                            "Type": "khabar",
+                            "Amount": 50
                         }
                     ],
                     "ItemCost": [],
@@ -679,12 +665,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 4
+                            "Type": "ballistics",
+                            "Amount": 2
                         },
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 4
+                            "Type": "protection",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -703,8 +689,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 10
+                            "Type": "ballistics",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -723,8 +709,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 10
+                            "Type": "protection",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -743,8 +729,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 8
+                            "Type": "ballistics",
+                            "Amount": 20
                         }
                     ],
                     "ItemCost": [],
@@ -763,8 +749,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 10
+                            "Type": "protection",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -783,16 +769,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 6
+                            "Type": "protection",
+                            "Amount": 90
                         },
                         {
-                            "Type": "protection_lab_t3",
-                            "Amount": 3
-                        },
-                        {
-                            "Type": "bio_lab_t1",
-                            "Amount": 3
+                            "Type": "bio",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [],
@@ -812,16 +794,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t3",
-                            "Amount": 4
+                            "Type": "protection",
+                            "Amount": 100
                         },
                         {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 4
+                            "Type": "ballistics",
+                            "Amount": 10
                         },
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 3
+                            "Type": "electronics",
+                            "Amount": 8
                         }
                     ],
                     "ItemCost": [],
@@ -841,16 +823,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t3",
-                            "Amount": 6
+                            "Type": "protection",
+                            "Amount": 150
                         },
                         {
-                            "Type": "ballistics_lab_t3",
-                            "Amount": 4
+                            "Type": "ballistics",
+                            "Amount": 100
                         },
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 2
+                            "Type": "khabar",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],
@@ -865,25 +847,25 @@
             "Icon": "",
             "SortOrder": 4,
             "Owners": [
-                "loner"
+                "neutral"
             ],
             "Nodes": [
                 {
                     "Id": "lnr_shkola",
                     "Name": "Сталкерська школа",
-                    "Description": "Корінь: як ходити Зоною і не загинути, як не продешевити з хабаром. Відкриває лінії 1 тиру.",
+                    "Description": "Корінь: як ходити Зоною і не загинути, як не продешевити з хабаром. Відкриває лінії звичайної сировини.",
                     "Icon": "set:dayz_gui image:gear",
                     "Tier": 1,
                     "Parents": [],
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t1",
-                            "Amount": 4
+                            "Type": "khabar",
+                            "Amount": 2
                         },
                         {
-                            "Type": "trails_lab_t1",
-                            "Amount": 4
+                            "Type": "trails",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -893,7 +875,7 @@
                 {
                     "Id": "lnr_torh",
                     "Name": "Торг із барменом",
-                    "Description": "Знаємо ціну рідкісному хабару. RequiredNode для пакування хабару 2 тиру.",
+                    "Description": "Знаємо ціну рідкісному хабару. RequiredNode для пакування хабару рідкісної сировини.",
                     "Icon": "set:dayz_gui image:icon_refresh",
                     "Tier": 2,
                     "Parents": [
@@ -902,8 +884,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t1",
-                            "Amount": 10
+                            "Type": "khabar",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -913,7 +895,7 @@
                 {
                     "Id": "lnr_stezhky",
                     "Name": "Розвідка стежок",
-                    "Description": "Маркери, карти й чужі КПК складаються в мапу безпечних проходів. RequiredNode для пакування стежок 2 тиру.",
+                    "Description": "Маркери, карти й чужі КПК складаються в мапу безпечних проходів. RequiredNode для пакування стежок рідкісної сировини.",
                     "Icon": "set:dayz_gui image:icon_hammer",
                     "Tier": 2,
                     "Parents": [
@@ -922,8 +904,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t1",
-                            "Amount": 10
+                            "Type": "trails",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -933,7 +915,7 @@
                 {
                     "Id": "lnr_kartohrafiia",
                     "Name": "Картографія Зони",
-                    "Description": "Глибина лінії стежок: чипи детекторів і планшети. Перехресна — наукові electronics_lab_t1 (читачі носіїв від Вчених). RequiredNode для пакування стежок 3 тиру.",
+                    "Description": "Глибина лінії стежок: чипи детекторів і планшети. Перехресна — бали «Електроніка» (читачі носіїв від Вчених). RequiredNode для пакування стежок легендарної сировини.",
                     "Icon": "set:dayz_gui image:iconSkull",
                     "Tier": 3,
                     "Parents": [
@@ -942,15 +924,14 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t2",
-                            "Amount": 10
+                            "Type": "trails",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [
                         {
                             "Classname": "ChernarusMap",
-                            "Quantity": 1,
-                            "Content": ""
+                            "Quantity": 1
                         }
                     ],
                     "ResearchTimeSec": 60,
@@ -959,7 +940,7 @@
                 {
                     "Id": "lnr_ridkisnyi",
                     "Name": "Рідкісний хабар",
-                    "Description": "Легендарні артефакти здаються без посередників. RequiredNode для пакування хабару 3 тиру.",
+                    "Description": "Легендарні артефакти здаються без посередників. RequiredNode для пакування хабару легендарної сировини.",
                     "Icon": "set:dayz_gui image:iconSkull",
                     "Tier": 3,
                     "Parents": [
@@ -968,8 +949,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 8
+                            "Type": "khabar",
+                            "Amount": 20
                         }
                     ],
                     "ItemCost": [],
@@ -989,16 +970,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t2",
-                            "Amount": 6
+                            "Type": "trails",
+                            "Amount": 15
                         },
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 4
+                            "Type": "khabar",
+                            "Amount": 10
                         },
                         {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 3
+                            "Type": "electronics",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [],
@@ -1008,7 +989,7 @@
                 {
                     "Id": "lnr_reid",
                     "Name": "Глибокий рейд",
-                    "Description": "Маршрути на Північ. Перехресна — бойові ballistics_lab_t2 (прикриття від Долгу/Волі).",
+                    "Description": "Маршрути на Північ. Перехресна — бали «Балістика» (прикриття від Долгу/Волі).",
                     "Icon": "set:dayz_gui image:iconPill",
                     "Tier": 4,
                     "Parents": [
@@ -1018,16 +999,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t3",
-                            "Amount": 4
+                            "Type": "trails",
+                            "Amount": 115
                         },
                         {
-                            "Type": "trails_lab_t2",
-                            "Amount": 6
-                        },
-                        {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 2
+                            "Type": "ballistics",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],
@@ -1037,7 +1014,7 @@
                 {
                     "Id": "lnr_lehenda",
                     "Name": "Легенда Зони",
-                    "Description": "Капстоун: знає всі стежки і весь хабар. Перехресна — наукові bio_lab_t2 (антидоти для глибоких рейдів).",
+                    "Description": "Капстоун: знає всі стежки і весь хабар. Перехресна — бали «Біологія» (антидоти для глибоких рейдів).",
                     "Icon": "set:dayz_gui image:iconSkull",
                     "Tier": 5,
                     "Parents": [
@@ -1047,16 +1024,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "trails_lab_t3",
-                            "Amount": 6
+                            "Type": "trails",
+                            "Amount": 150
                         },
                         {
-                            "Type": "khabar_lab_t3",
-                            "Amount": 4
+                            "Type": "khabar",
+                            "Amount": 100
                         },
                         {
-                            "Type": "bio_lab_t2",
-                            "Amount": 2
+                            "Type": "bio",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],
@@ -1084,16 +1061,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t1",
-                            "Amount": 5
+                            "Type": "bio",
+                            "Amount": 2
                         },
                         {
-                            "Type": "anomaly_lab_t1",
-                            "Amount": 4
+                            "Type": "anomaly",
+                            "Amount": 2
                         },
                         {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 4
+                            "Type": "electronics",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -1112,15 +1089,14 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t1",
-                            "Amount": 10
+                            "Type": "bio",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [
                         {
                             "Classname": "Paper",
-                            "Quantity": 2,
-                            "Content": ""
+                            "Quantity": 2
                         }
                     ],
                     "ResearchTimeSec": 0,
@@ -1138,8 +1114,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t1",
-                            "Amount": 10
+                            "Type": "anomaly",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -1158,8 +1134,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "electronics_lab_t1",
-                            "Amount": 10
+                            "Type": "electronics",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -1178,8 +1154,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t2",
-                            "Amount": 12
+                            "Type": "bio",
+                            "Amount": 30
                         }
                     ],
                     "ItemCost": [],
@@ -1198,8 +1174,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "anomaly_lab_t2",
-                            "Amount": 10
+                            "Type": "anomaly",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -1218,8 +1194,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 8
+                            "Type": "electronics",
+                            "Amount": 20
                         }
                     ],
                     "ItemCost": [],
@@ -1238,16 +1214,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t2",
-                            "Amount": 8
+                            "Type": "bio",
+                            "Amount": 95
                         },
                         {
-                            "Type": "bio_lab_t3",
-                            "Amount": 3
-                        },
-                        {
-                            "Type": "trails_lab_t2",
-                            "Amount": 4
+                            "Type": "trails",
+                            "Amount": 10
                         }
                     ],
                     "ItemCost": [],
@@ -1267,16 +1239,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t3",
-                            "Amount": 2
+                            "Type": "bio",
+                            "Amount": 50
                         },
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 6
+                            "Type": "electronics",
+                            "Amount": 15
                         },
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 3
+                            "Type": "protection",
+                            "Amount": 1
                         }
                     ],
                     "ItemCost": [],
@@ -1297,20 +1269,20 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "bio_lab_t3",
-                            "Amount": 8
+                            "Type": "bio",
+                            "Amount": 200
                         },
                         {
-                            "Type": "anomaly_lab_t3",
-                            "Amount": 4
+                            "Type": "anomaly",
+                            "Amount": 100
                         },
                         {
-                            "Type": "electronics_lab_t3",
-                            "Amount": 4
+                            "Type": "electronics",
+                            "Amount": 100
                         },
                         {
-                            "Type": "trails_lab_t3",
-                            "Amount": 2
+                            "Type": "trails",
+                            "Amount": 50
                         }
                     ],
                     "ItemCost": [],
@@ -1338,12 +1310,12 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 5
+                            "Type": "ballistics",
+                            "Amount": 2
                         },
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 5
+                            "Type": "protection",
+                            "Amount": 2
                         }
                     ],
                     "ItemCost": [],
@@ -1362,8 +1334,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t1",
-                            "Amount": 10
+                            "Type": "ballistics",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -1382,8 +1354,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t1",
-                            "Amount": 10
+                            "Type": "protection",
+                            "Amount": 4
                         }
                     ],
                     "ItemCost": [],
@@ -1402,8 +1374,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 10
+                            "Type": "ballistics",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -1422,8 +1394,8 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 10
+                            "Type": "protection",
+                            "Amount": 25
                         }
                     ],
                     "ItemCost": [],
@@ -1443,16 +1415,16 @@
                     "ParentsMode": "any",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t2",
-                            "Amount": 6
+                            "Type": "ballistics",
+                            "Amount": 15
                         },
                         {
-                            "Type": "protection_lab_t2",
-                            "Amount": 6
+                            "Type": "protection",
+                            "Amount": 15
                         },
                         {
-                            "Type": "trails_lab_t2",
-                            "Amount": 2
+                            "Type": "trails",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],
@@ -1472,16 +1444,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t3",
-                            "Amount": 3
+                            "Type": "ballistics",
+                            "Amount": 75
                         },
                         {
-                            "Type": "protection_lab_t3",
-                            "Amount": 3
+                            "Type": "protection",
+                            "Amount": 75
                         },
                         {
-                            "Type": "electronics_lab_t2",
-                            "Amount": 3
+                            "Type": "electronics",
+                            "Amount": 8
                         }
                     ],
                     "ItemCost": [],
@@ -1501,16 +1473,16 @@
                     "ParentsMode": "all",
                     "Cost": [
                         {
-                            "Type": "ballistics_lab_t3",
-                            "Amount": 4
+                            "Type": "ballistics",
+                            "Amount": 100
                         },
                         {
-                            "Type": "protection_lab_t3",
-                            "Amount": 4
+                            "Type": "protection",
+                            "Amount": 100
                         },
                         {
-                            "Type": "khabar_lab_t2",
-                            "Amount": 2
+                            "Type": "khabar",
+                            "Amount": 5
                         }
                     ],
                     "ItemCost": [],

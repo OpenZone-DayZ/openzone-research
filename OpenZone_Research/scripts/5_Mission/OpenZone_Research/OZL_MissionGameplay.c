@@ -40,7 +40,7 @@ modded class MissionGameplay
         if (what != OZL_Const.SHOW_TREE)
             return;
         // Не в цьому кадрі: стек меню в мить дії ще зайнятий (той самий
-        // прийом, що в ZP і в КПК).
+        // прийом, що в КПК).
         GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(OZL_OpenTree, 100, false);
     }
 

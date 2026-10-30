@@ -4,12 +4,10 @@
         {
             "Id": "ecolog",
             "TerminalClasses": [
-                "OZL_LabComputer"
+                "OZL_Eco_Terminal"
             ],
             "DeviceClasses": [
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge",
+                "OZL_Eco_Terminal",
                 "OZL_Eco_Pack_Bio",
                 "OZL_Eco_Proc_Bio",
                 "OZL_Eco_Pack_Anom",
@@ -22,10 +20,10 @@
         {
             "Id": "clearsky",
             "TerminalClasses": [
-                "OZL_ChemBench"
+                "OZL_Sky_Terminal"
             ],
             "DeviceClasses": [
-                "OZL_ChemBench",
+                "OZL_Sky_Terminal",
                 "OZL_Sky_Pack_Bio",
                 "OZL_Sky_Proc_Bio",
                 "OZL_Sky_Pack_Anom",
@@ -38,10 +36,10 @@
         {
             "Id": "duty",
             "TerminalClasses": [
-                "OZL_ServerRack"
+                "OZL_Dty_Terminal"
             ],
             "DeviceClasses": [
-                "OZL_ServerRack",
+                "OZL_Dty_Terminal",
                 "OZL_Dty_Pack_Ball",
                 "OZL_Dty_Proc_Ball",
                 "OZL_Dty_Pack_Prot",
@@ -92,7 +90,7 @@
             "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_bandit.paa"
         },
         {
-            "Id": "loner",
+            "Id": "neutral",
             "TerminalClasses": [
                 "OZL_Lnr_Terminal"
             ],

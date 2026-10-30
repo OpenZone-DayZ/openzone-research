@@ -4,12 +4,10 @@
         {
             "Id": "ecolog",
             "TerminalClasses": [
-                "OZL_LabComputer"
+                "OZL_Eco_Terminal"
             ],
             "DeviceClasses": [
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge",
+                "OZL_Eco_Terminal",
                 "OZL_Eco_Pack_Bio",
                 "OZL_Eco_Proc_Bio",
                 "OZL_Eco_Pack_Anom",
@@ -17,15 +15,15 @@
                 "OZL_Eco_Pack_Electro",
                 "OZL_Eco_Proc_Electro"
             ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_ecolog.paa"
         },
         {
             "Id": "clearsky",
             "TerminalClasses": [
-                "OZL_ChemBench"
+                "OZL_Sky_Terminal"
             ],
             "DeviceClasses": [
-                "OZL_ChemBench",
+                "OZL_Sky_Terminal",
                 "OZL_Sky_Pack_Bio",
                 "OZL_Sky_Proc_Bio",
                 "OZL_Sky_Pack_Anom",
@@ -33,21 +31,21 @@
                 "OZL_Sky_Pack_Electro",
                 "OZL_Sky_Proc_Electro"
             ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_clearsky.paa"
         },
         {
             "Id": "duty",
             "TerminalClasses": [
-                "OZL_ServerRack"
+                "OZL_Dty_Terminal"
             ],
             "DeviceClasses": [
-                "OZL_ServerRack",
+                "OZL_Dty_Terminal",
                 "OZL_Dty_Pack_Ball",
                 "OZL_Dty_Proc_Ball",
                 "OZL_Dty_Pack_Prot",
                 "OZL_Dty_Proc_Prot"
             ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_duty.paa"
         },
         {
             "Id": "freedom",
@@ -61,7 +59,7 @@
                 "OZL_Frd_Pack_Prot",
                 "OZL_Frd_Proc_Prot"
             ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_freedom.paa"
         },
         {
             "Id": "sop",
@@ -75,7 +73,7 @@
                 "OZL_Sop_Pack_Prot",
                 "OZL_Sop_Proc_Prot"
             ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_sop.paa"
         },
         {
             "Id": "bandit",
@@ -89,73 +87,21 @@
                 "OZL_Bnd_Pack_Trail",
                 "OZL_Bnd_Proc_Trail"
             ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_bandit.paa"
         },
         {
-            "Id": "loner",
+            "Id": "neutral",
             "TerminalClasses": [
-                "OZL_Lnr_Terminal",
-                "OZL_LabComputer"
+                "OZL_Lnr_Terminal"
             ],
             "DeviceClasses": [
                 "OZL_Lnr_Terminal",
                 "OZL_Lnr_Pack_Khabar",
                 "OZL_Lnr_Proc_Khabar",
                 "OZL_Lnr_Pack_Trail",
-                "OZL_Lnr_Proc_Trail",
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge"
+                "OZL_Lnr_Proc_Trail"
             ],
-            "TreeBackground": ""
-        },
-        {
-            "Id": "neutral",
-            "TerminalClasses": [
-                "OZL_LabComputer"
-            ],
-            "DeviceClasses": [
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge"
-            ],
-            "TreeBackground": ""
-        },
-        {
-            "Id": "mercenary",
-            "TerminalClasses": [
-                "OZL_LabComputer"
-            ],
-            "DeviceClasses": [
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge"
-            ],
-            "TreeBackground": ""
-        },
-        {
-            "Id": "military",
-            "TerminalClasses": [
-                "OZL_LabComputer"
-            ],
-            "DeviceClasses": [
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge"
-            ],
-            "TreeBackground": ""
-        },
-        {
-            "Id": "monolith",
-            "TerminalClasses": [
-                "OZL_LabComputer"
-            ],
-            "DeviceClasses": [
-                "OZL_Microscope",
-                "OZL_LabComputer",
-                "OZL_SampleFridge"
-            ],
-            "TreeBackground": ""
+            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_loner.paa"
         }
     ]
 }
