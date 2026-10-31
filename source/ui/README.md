@@ -46,7 +46,9 @@ Other paths: `--chrome`, `--node`, `--dayz-tools`, or the environment variables 
 The same input gives the same bytes: Chrome rasterises in software, animations are off, the packer
 breaks ties by position, and a file is rewritten only if its content changed (an `.imageset` that
 differs only by CRLF line endings, as a Windows checkout has it, counts as unchanged). A second run
-changes nothing, and `git status` stays clean.
+changes nothing, and `git status` stays clean. That holds for one Chrome build: a Chrome update can
+move some antialiasing by a few alpha levels, so after updating it a bake may show changed `.paa`
+files. Look at them, and commit them as a change of their own.
 
 What a run writes:
 
