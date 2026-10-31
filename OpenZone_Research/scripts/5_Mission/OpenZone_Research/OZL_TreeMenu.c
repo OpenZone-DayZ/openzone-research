@@ -266,13 +266,22 @@ class OZL_TreeMenu : UIScriptedMenu
         excludes.Insert("menu");
         // HUD ховається, поки екран відкритий (як мокап: лише вікно); кожен
         // крок -- через локальну, без ланцюжка GetMission().GetHud() (скіл §18).
+        // Ідіома ванілі (MapMenu, NoteMenu, RadialQuickbarMenu.OnShow/OnHide):
+        // ShowHudUI ховає ліву й праву частини HUD (стан, витривалість),
+        // ShowQuickbarUI -- панель швидкого доступу. Hud.Show(false) ховав лише
+        // m_HudPanelWidget, і решта лишалася під деревом (знімок sop 13:47).
+        // Пара з OnHide: рушій кличе його на кожному закритті (ESC, кнопка,
+        // смерть, інше меню поверх).
         Mission mission = GetGame().GetMission();
         if (mission)
         {
             mission.AddActiveInputExcludes(excludes);
             Hud hud = mission.GetHud();
             if (hud)
-                hud.Show(false);
+            {
+                hud.ShowHudUI(false);
+                hud.ShowQuickbarUI(false);
+            }
         }
 
         m_ProbeStep  = 1;
@@ -294,7 +303,10 @@ class OZL_TreeMenu : UIScriptedMenu
             mission.RemoveActiveInputExcludes(excludes, true);
             Hud hud = mission.GetHud();
             if (hud)
-                hud.Show(true);
+            {
+                hud.ShowHudUI(true);
+                hud.ShowQuickbarUI(true);
+            }
         }
         UnlockControls();
         if (s_Open == this)
