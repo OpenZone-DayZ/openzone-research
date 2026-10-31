@@ -40,9 +40,10 @@ seven skin files. A later file replaces a same-named entry WHOLE (a font entry r
    завантажується...", an invisible probe frame.
 2. The server answers with the tree and `OZL_TreeView.Skin`, already resolved to one of the seven.
 3. `OZL_TreeSkins.Make(id)` makes the skin; the menu creates `ozl_tree_<skin>.layout` INTO the host.
-   A window whose layout produces no widgets (its task is not done yet) falls back to `neutral`
-   with one `[OpenZone/Research] tree: window '<id>' has no layout yet ...` line; an id the client
-   does not know is an ERROR line and `neutral` too (defence only).
+   A window whose layout file is not there yet (`FileExist` sees files inside a pbo too) or
+   produces no widgets (its task is not done yet) falls back to `neutral` with one
+   `[OpenZone/Research] tree: window '<id>' has no layout yet ...` line; an id the client does not
+   know is an ERROR line and `neutral` too (defence only).
 4. Roles are looked up once (`menu.Role(name)`, cached), `skin.OnShow(menu)` runs, then every
    answer paints: header, branches, pool, tree, registry, card, `skin.OnPaint(menu)`.
 
@@ -55,8 +56,9 @@ Everything in this contract is in **layout units of the 1600x900 window** (the m
 On a screen H pixels high one unit is `H / 1080` pixels. Measured on the stand 2026-10-31 (3840x1600,
 1.48 px per unit; and 1920x1080):
 
-- `SetPos` / `SetSize` from script take **screen pixels** (`SetPos(100)` moved a widget 148 px at
-  1600, 100 px at 1080) — on layout widgets and on widgets made by `CreateWidgets` alike.
+- `SetPos` / `SetSize` from script take **screen pixels** (`SetPos(100)` moved a widget 100 px at
+  1600 rows just as at 1080: 67.5 units there, 100 here) — on layout widgets and on widgets made
+  by `CreateWidgets` alike.
   `GetScreenPos` / `GetScreenSize` return pixels. So the menu converts: `menu.PlaceUnits(w, x, y)`,
   `menu.SizeUnits(w, w, h)`, `menu.UnitsOf(w, out w, out h)` — use them, never raw numbers.
 - Scroll positions (`HScrollToPos`, `GetVScrollPos`) are pixels.
