@@ -122,6 +122,8 @@ Mockup window: ecolog -- «Науковий термінал» (the Scientists' 
 | `STR_OZL_SKIN_ECOLOG_TITLE` | `Дерево досліджень` | `Research tree` | header plate title (`.ehead .title`) |
 | `STR_OZL_SKIN_ECOLOG_POOL` | `Бали` | `Points` | label of the readouts row of the pool (`.readouts .lab`); the mockup turns it 90 degrees, so the skin draws POOL_VERTICAL_IMG instead and keeps this key as a text twin |
 | `STR_OZL_SKIN_ECOLOG_POOL_VERTICAL_IMG` | `set:ozl_ecolog image:pool_vertical_ua` | `set:ozl_ecolog image:pool_vertical_en` | sprite reference: the vertical "Бали" / "Points" label of the readouts row |
+| `STR_OZL_SKIN_ECOLOG_TITLE_IMG` | `set:ozl_ecolog image:title_ua` | `set:ozl_ecolog image:title_en` | sprite reference: the terminal's title «Дерево досліджень» with the mockup's letter tracking, baked (a Metron space is twice the tracking) |
+| `STR_OZL_SKIN_ECOLOG_DEV_IMG` | `set:ozl_ecolog image:dev_ua` | `set:ozl_ecolog image:dev_en` | sprite reference: the device label «Науковий термінал» with the mockup's letter tracking, baked |
 
 ## Skin `clearsky`
 
