@@ -1,10 +1,11 @@
 // Правила переробки: OZ_Research_Rules.json -- дані, без логіки станції.
 //
 // Правило каже: на ЯКОМУ приладі, з ЯКОГО входу (клас, кількість), за ЯКИЙ
-// час і з ЯКОЮ вихідною чистотою виходять ЯКІ предмети; що при цьому
-// витрачається; хто має право (вузол дерева, фракції, одяг, інструменти в
-// слотах). Групи -- один файл, атомарний бекап ядра, одна реєстрація в
-// редакторі.
+// час і (за бажання) з ЯКОЮ власною чистотою виходять ЯКІ предмети; що при
+// цьому витрачається; хто має право (вузол дерева, фракції, одяг, інструменти
+// в слотах). Без власної чистоти проба стартує з BasePurity своєї лінії
+// (OZL_PointType). Групи -- один файл, атомарний бекап ядра, одна реєстрація
+// в редакторі.
 // Вміст проб і носіїв -- рядок у предметі (OZL_Payload), не поле правила.
 
 class OZL_RuleInput
@@ -65,8 +66,10 @@ class OZL_Rule
     // Клас приладу; суфікс "|1" -- рівно цей клас.
     string Device  = "";
     ref OZL_RuleInput InputItem;
-    // Вихідна чистота проби пакувальника; модулі лінії додають своє.
-    float  Purity        = 0.7;
+    // Початкова чистота проби пакувальника. 0..1 -- власна чистота цього
+    // правила; менше нуля (типово -1) -- взяти BasePurity лінії станка
+    // (OZL_Rules.StartPurity). Модулі лінії додають своє зверху.
+    float  Purity        = -1;
     float  TimeSec       = 10;
     ref array<ref OZL_RuleConsumable> Consumables;
     ref array<ref OZL_RuleOutput>     Outputs;
@@ -158,13 +161,32 @@ class OZL_Rules : OZ_ConfigBase
 
     override int LatestVersion()
     {
-        return 2;
+        return 3;
     }
 
     // Версія 1 мала мітки вмісту й тири: переносити нічого, файл -- у карантин.
+    // Версія 2 писала Purity 0,7 у кожне правило: це була типова, тобто
+    // «нічого не вибрано». Тепер типове -- чистота лінії (-1), тож 0,7 стає -1;
+    // будь-яке інше значення -- вибір адміна, чистота самого предмета, і
+    // лишається. Порівняння з допуском: 0,7 у float не точне.
     override bool Migrate(int from)
     {
-        return false;
+        if (from != 2)
+            return false;
+        for (int g = 0; g < Groups.Count(); g++)
+        {
+            OZL_RuleGroup grp = Groups[g];
+            if (!grp || !grp.Rules)
+                continue;
+            for (int r = 0; r < grp.Rules.Count(); r++)
+            {
+                OZL_Rule rule = grp.Rules[r];
+                if (rule && Math.AbsFloat(rule.Purity - OZL_Const.DEFAULT_PURITY) < 0.001)
+                    rule.Purity = -1;
+            }
+        }
+        Version = LatestVersion();
+        return true;
     }
 
     // Порожньо: правила посилаються на класи предметів, а порожній файл --
@@ -181,6 +203,37 @@ class OZL_Rules : OZ_ConfigBase
         if (configured < MIN_TIME_SEC)
             return MIN_TIME_SEC;
         return configured;
+    }
+
+    // Початкова чистота проби цього циклу -- єдине місце, де її беруть.
+    // Власна чистота правила (0..1) перемагає. Менше нуля -- «чистота лінії»:
+    // BasePurity типу балів, чий Id -- лінія станка (ozlLine його класу), а як
+    // такого типу немає -- лінія проби на виході правила; і лише тоді стала
+    // типова. Від'ємне звідси не виходить ніколи: у пробу йде число з 0..1,
+    // модулі станка додаються зверху вже в станції.
+    static float StartPurity(OZL_Rule rule, string deviceType, OZL_PointTypes pointTypes)
+    {
+        if (rule && rule.Purity >= 0)
+            return rule.Purity;
+        if (pointTypes)
+        {
+            float found = pointTypes.BasePurityOf(OZL_Lines.LineOf(deviceType));
+            if (found >= 0)
+                return found;
+            if (rule)
+            {
+                for (int i = 0; i < rule.Outputs.Count(); i++)
+                {
+                    OZL_RuleOutput o = rule.Outputs[i];
+                    if (!o || !OZL_Lines.IsSample(o.Classname))
+                        continue;
+                    found = pointTypes.BasePurityOf(OZL_Lines.LineOf(o.Classname));
+                    if (found >= 0)
+                        return found;
+                }
+            }
+        }
+        return OZL_Const.DEFAULT_PURITY;
     }
 
     // Структурні перевірки: групи з Id, правила з Id, без дублів. Усе, що
@@ -257,8 +310,8 @@ class OZL_Rules : OZ_ConfigBase
             return "TimeSec below the minimum of " + MIN_TIME_SEC.ToString() + " s";
         if (r.TimeSec > 604800)
             return "TimeSec above 7 days";
-        if (r.Purity < 0 || r.Purity > 1)
-            return "Purity outside 0..1";
+        if (r.Purity > 1)
+            return "Purity above 1 (below 0 means the BasePurity of the line)";
         if (r.Device == "" || !OZL_Match.ClassExists(OZL_Match.StripExact(r.Device)))
             return "unknown Device '" + r.Device + "'";
         if (!r.InputItem || r.InputItem.Classname == "")

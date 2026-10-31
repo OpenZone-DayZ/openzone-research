@@ -351,8 +351,9 @@ class OZL_Station : ItemBase
             return false;
         }
 
-        // Знімок до списання: після нього предметів уже немає.
-        m_OZL_CyclePurity  = rule.Purity;
+        // Знімок до списання: після нього предметів уже немає. Чистота -- власна
+        // в правила, а без неї BasePurity лінії цього станка.
+        m_OZL_CyclePurity  = OZL_Rules.StartPurity(rule, GetType(), OZL_Config.Get().PointTypes());
         m_OZL_ChanceMul    = 1.0;
         m_OZL_DoubleChance = 0;
         m_OZL_CyclePoints  = 0;

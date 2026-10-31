@@ -8,6 +8,7 @@
 //   world_exec verb=oz_research args={"op":"cargo","target":"OZL_Bnd_Proc_Khabar"}
 //   world_exec verb=oz_research args={"op":"roll","target":"OZL_Dty_Pack_Ball","n":"1000"}
 //   world_exec verb=oz_research args={"op":"payload_selftest"}
+//   world_exec verb=oz_research args={"op":"purity_selftest"}          (the starting purity of a cycle and the two version-2 migrations, in memory)
 //   world_exec verb=oz_research args={"op":"fill","item":"Rag","target":"OZL_Bnd_Pack_Khabar"}
 //   world_exec verb=oz_research args={"op":"take","item":"Rag","target":"OZL_Bnd_Pack_Khabar"}
 //   world_exec verb=oz_research args={"op":"station","target":"OZL_Bnd_Pack_Khabar"}
@@ -482,6 +483,9 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
+        if (op == "purity_selftest")
+            return OZL_PuritySelftest(detail);
+
         if (op == "payload_selftest")
         {
             array<string> pfails = new array<string>();
@@ -524,8 +528,197 @@ modded class DZMCP_BridgeCore
             return pfails.Count() == 0;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, cargo, roll, points, grant, reset, demo, reload, tree, treeui, research, admin, bridge, payload_selftest)";
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, cargo, roll, points, grant, reset, demo, reload, tree, treeui, research, admin, bridge, payload_selftest, purity_selftest)";
         return false;
+    }
+
+    protected int m_OZL_Checks;
+
+    protected void OZL_ExpectFloat(array<string> fails, string what, float got, float want)
+    {
+        m_OZL_Checks++;
+        if (Math.AbsFloat(got - want) > 0.0001)
+            fails.Insert(what + ": got " + got.ToString() + ", want " + want.ToString());
+    }
+
+    protected void OZL_ExpectTrue(array<string> fails, string what, bool ok)
+    {
+        m_OZL_Checks++;
+        if (!ok)
+            fails.Insert(what);
+    }
+
+    // STAND ONLY. The starting purity of a cycle and the two version-2
+    // migrations, against objects built in memory: the live configs are not
+    // touched (the clamp of Validate does write two WARNING lines, on purpose).
+    // The cases are the contract of OZL_Rules.StartPurity: an own purity wins; a
+    // negative one takes the BasePurity of the station's line, then of the line
+    // of the sample the rule makes, then the named default; nothing negative
+    // comes out.
+    protected bool OZL_PuritySelftest(out string detail)
+    {
+        array<string> fails = new array<string>();
+        m_OZL_Checks = 0;
+
+        OZL_PointTypes pts = new OZL_PointTypes();
+        OZL_PointType bio = new OZL_PointType();
+        bio.Id = "bio";
+        bio.Name = "Bio";
+        bio.BasePurity = 0.5;
+        pts.PointTypes.Insert(bio);
+
+        OZL_PointTypes other = new OZL_PointTypes();
+        OZL_PointType khabar = new OZL_PointType();
+        khabar.Id = "khabar";
+        khabar.Name = "Khabar";
+        khabar.BasePurity = 0.3;
+        other.PointTypes.Insert(khabar);
+
+        OZL_Rule rule = new OZL_Rule();
+        OZL_RuleOutput made = new OZL_RuleOutput();
+        made.Classname = "OZL_Sample_Bio";
+        made.Points = 1;
+        rule.Outputs.Insert(made);
+
+        // The default of a rule made by script is "take the line's".
+        OZL_ExpectFloat(fails, "a new rule has Purity -1", rule.Purity, -1);
+        OZL_ExpectFloat(fails, "the line of the station", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.5);
+        OZL_ExpectFloat(fails, "no line on the station, the line of the sample", OZL_Rules.StartPurity(rule, "Rag", pts), 0.5);
+        OZL_ExpectFloat(fails, "no point type for either line, the named default", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", other), OZL_Const.DEFAULT_PURITY);
+        OZL_ExpectFloat(fails, "no point types at all, the named default", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", null), OZL_Const.DEFAULT_PURITY);
+        rule.Purity = -0.25;
+        OZL_ExpectFloat(fails, "any negative takes the line's", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.5);
+        rule.Purity = 0.9;
+        OZL_ExpectFloat(fails, "an own purity wins", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.9);
+        rule.Purity = 0;
+        OZL_ExpectFloat(fails, "an own zero is a purity, not the line's", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0);
+
+        // A value that never passed Validate must not come out as the line's.
+        rule.Purity = -1;
+        bio.BasePurity = -2;
+        OZL_ExpectFloat(fails, "BasePurity -2 is not taken", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), OZL_Const.DEFAULT_PURITY);
+        bio.BasePurity = 3;
+        OZL_ExpectFloat(fails, "BasePurity 3 is not taken", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), OZL_Const.DEFAULT_PURITY);
+        bio.BasePurity = 0.5;
+
+        // Nothing negative, whatever the rule and the types hold.
+        array<float> sweep = new array<float>();
+        sweep.Insert(-5);
+        sweep.Insert(-1);
+        sweep.Insert(-0.001);
+        sweep.Insert(0);
+        sweep.Insert(0.3);
+        sweep.Insert(1);
+        int negative = 0;
+        for (int s = 0; s < sweep.Count(); s++)
+        {
+            rule.Purity = sweep[s];
+            if (OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts) < 0)
+                negative++;
+            if (OZL_Rules.StartPurity(rule, "Rag", other) < 0)
+                negative++;
+            if (OZL_Rules.StartPurity(rule, "", null) < 0)
+                negative++;
+        }
+        OZL_ExpectTrue(fails, "a negative purity came out " + negative.ToString() + " time(s)", negative == 0);
+
+        // Rules, version 2 -> 3: 0.7 (the old default) becomes -1, the rest stays.
+        OZL_Rules oldRules = new OZL_Rules();
+        oldRules.Version = 2;
+        OZL_RuleGroup oldGroup = new OZL_RuleGroup();
+        oldGroup.Id = "g";
+        oldRules.Groups.Insert(oldGroup);
+        array<float> wasPurity = new array<float>();
+        wasPurity.Insert(0.7);
+        wasPurity.Insert(0.69999);
+        wasPurity.Insert(0.5);
+        wasPurity.Insert(0.9);
+        wasPurity.Insert(0);
+        wasPurity.Insert(0.71);
+        for (int w = 0; w < wasPurity.Count(); w++)
+        {
+            OZL_Rule oldRule = new OZL_Rule();
+            oldRule.Id = "r" + w.ToString();
+            oldRule.Purity = wasPurity[w];
+            oldGroup.Rules.Insert(oldRule);
+        }
+        OZL_ExpectTrue(fails, "rules: Migrate(1) refuses", !oldRules.Migrate(1));
+        OZL_ExpectTrue(fails, "rules: Migrate(2) accepts", oldRules.Migrate(2));
+        OZL_ExpectTrue(fails, "rules: the version is the latest", oldRules.Version == oldRules.LatestVersion());
+        OZL_ExpectFloat(fails, "rules: 0.7 -> -1", oldGroup.Rules[0].Purity, -1);
+        OZL_ExpectFloat(fails, "rules: 0.69999 -> -1", oldGroup.Rules[1].Purity, -1);
+        OZL_ExpectFloat(fails, "rules: 0.5 stays", oldGroup.Rules[2].Purity, 0.5);
+        OZL_ExpectFloat(fails, "rules: 0.9 stays", oldGroup.Rules[3].Purity, 0.9);
+        OZL_ExpectFloat(fails, "rules: 0 stays", oldGroup.Rules[4].Purity, 0);
+        OZL_ExpectFloat(fails, "rules: 0.71 stays", oldGroup.Rules[5].Purity, 0.71);
+
+        // Point types, version 2 -> 3: an unwritten key reads as 0, and becomes 0.7.
+        OZL_PointTypes oldTypes = new OZL_PointTypes();
+        oldTypes.Version = 2;
+        for (int t = 0; t < 2; t++)
+        {
+            OZL_PointType oldType = new OZL_PointType();
+            oldType.Id = "t" + t.ToString();
+            oldType.Name = "T";
+            oldType.BasePurity = 0;
+            oldTypes.PointTypes.Insert(oldType);
+        }
+        OZL_ExpectTrue(fails, "point types: Migrate(1) refuses", !oldTypes.Migrate(1));
+        OZL_ExpectTrue(fails, "point types: Migrate(2) accepts", oldTypes.Migrate(2));
+        OZL_ExpectTrue(fails, "point types: the version is the latest", oldTypes.Version == oldTypes.LatestVersion());
+        OZL_ExpectFloat(fails, "point types: first gets 0.7", oldTypes.PointTypes[0].BasePurity, OZL_Const.DEFAULT_PURITY);
+        OZL_ExpectFloat(fails, "point types: second gets 0.7", oldTypes.PointTypes[1].BasePurity, OZL_Const.DEFAULT_PURITY);
+
+        // Validate clamps into 0..1, one warning per type.
+        OZL_PointTypes wide = new OZL_PointTypes();
+        wide.Version = wide.LatestVersion();
+        array<float> widths = new array<float>();
+        widths.Insert(1.5);
+        widths.Insert(-0.2);
+        widths.Insert(0.4);
+        for (int v = 0; v < widths.Count(); v++)
+        {
+            OZL_PointType wt = new OZL_PointType();
+            wt.Id = "w" + v.ToString();
+            wt.Name = "W";
+            wt.BasePurity = widths[v];
+            wide.PointTypes.Insert(wt);
+        }
+        int clampWarnings;
+        wide.Validate(clampWarnings);
+        OZL_ExpectTrue(fails, "validate: two warnings, got " + clampWarnings.ToString(), clampWarnings == 2);
+        OZL_ExpectFloat(fails, "validate: 1.5 -> 1", wide.PointTypes[0].BasePurity, 1);
+        OZL_ExpectFloat(fails, "validate: -0.2 -> 0", wide.PointTypes[1].BasePurity, 0);
+        OZL_ExpectFloat(fails, "validate: 0.4 stays", wide.PointTypes[2].BasePurity, 0.4);
+
+        // The defaults carry 0.7 on every line.
+        OZL_PointTypes fresh = new OZL_PointTypes();
+        fresh.LoadDefaults();
+        int off = 0;
+        for (int d = 0; d < fresh.PointTypes.Count(); d++)
+        {
+            if (Math.AbsFloat(fresh.PointTypes[d].BasePurity - OZL_Const.DEFAULT_PURITY) > 0.0001)
+                off++;
+        }
+        OZL_ExpectTrue(fails, "defaults: " + off.ToString() + " of " + fresh.PointTypes.Count().ToString() + " line(s) off 0.7", off == 0 && fresh.PointTypes.Count() > 0);
+        OZL_ExpectTrue(fails, "defaults: the version is the latest", fresh.Version == fresh.LatestVersion());
+
+        // Problem(): above 1 is refused as a purity; a negative one is not a purity complaint.
+        OZL_Rule probe = new OZL_Rule();
+        probe.Purity = 1.5;
+        string why = OZL_Rules.Problem(probe, pts);
+        OZL_ExpectTrue(fails, "problem: 1.5 refused as a purity", why.IndexOf("Purity") == 0);
+        probe.Purity = -1;
+        why = OZL_Rules.Problem(probe, pts);
+        OZL_ExpectTrue(fails, "problem: -1 is not a purity complaint", why.IndexOf("Purity") != 0);
+        probe.Purity = 1;
+        why = OZL_Rules.Problem(probe, pts);
+        OZL_ExpectTrue(fails, "problem: 1 is not a purity complaint", why.IndexOf("Purity") != 0);
+
+        detail = "purity selftest: " + (m_OZL_Checks - fails.Count()).ToString() + "/" + m_OZL_Checks.ToString() + " ok";
+        for (int f = 0; f < fails.Count(); f++)
+            detail += "; FAIL " + fails[f];
+        return fails.Count() == 0;
     }
 
     protected int OZL_IndexOf(array<string> list, string value)

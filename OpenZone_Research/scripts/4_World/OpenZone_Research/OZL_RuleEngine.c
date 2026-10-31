@@ -337,8 +337,9 @@ class OZL_RuleEngine
 
     // ---------- чистота й бали ----------
     //
-    // Пакувальник: чистота проби -- Purity правила плюс модулі лінії (OZL_Gear),
-    // бали -- Points виходу. Аналізатор: чистота проби -- шанс, її бали
+    // Пакувальник: чистота проби -- власна Purity правила, а без неї BasePurity
+    // лінії (OZL_Rules.StartPurity), плюс модулі лінії (OZL_Gear), бали --
+    // Points виходу. Аналізатор: чистота проби -- шанс, її бали
     // переходять у носій. Знімок -- при старті, поки з'їдені предмети ще існують.
 
     static bool PlanSample(array<ItemBase> planItems, array<int> inputAmounts, out int points, out int purityPct)
