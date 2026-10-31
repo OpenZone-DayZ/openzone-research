@@ -119,6 +119,13 @@ class OZL_TreeMenu : UIScriptedMenu
     private string m_Branch = "";
     private string m_Node   = "";
     private string m_Hover  = "";
+    // Рядок, що клацається, під мишею (OnRowHover скіна): корінь рядка, вид
+    // ("reg", "branch", "open") і його id.
+    private Widget m_RowHover;
+    private string m_RowKind = "";
+    private string m_RowId   = "";
+    // Попередження про підмінений файл рядка вже було в цьому вікні.
+    private bool   m_RowWarned = false;
 
     // Коли приїхала відповідь: залишок проєкту -- від серверної секунди в ній.
     private float m_ViewAge  = 0;
@@ -798,6 +805,10 @@ class OZL_TreeMenu : UIScriptedMenu
         m_Wraps.Clear();
         m_WrapShown.Clear();
         m_Hover = "";
+        m_RowHover = null;
+        m_RowKind = "";
+        m_RowId = "";
+        m_RowWarned = false;
         m_TipPending = false;
 
         OZL_TreeSkin skin = OZL_TreeSkins.Make(id);
@@ -877,8 +888,8 @@ class OZL_TreeMenu : UIScriptedMenu
             int done = DoneOf(b);
             sub += " · " + Words("STR_OZL_TREE_RESEARCHED") + " " + done.ToString() + " " + Words("STR_OZL_TREE_OF") + " " + TotalOf(b).ToString();
         }
-        SetText("BranchName", name);
-        SetText("BranchSub", sub);
+        SetText("BranchName", m_Skin.DataText(name));
+        SetText("BranchSub", m_Skin.DataText(sub));
     }
 
     private int DoneOf(OZL_BranchView b)
@@ -942,7 +953,7 @@ class OZL_TreeMenu : UIScriptedMenu
             IgnorePointer(row, rowHit);
             TextWidget name = TextWidget.Cast(row.FindAnyWidget("RowName"));
             if (name)
-                name.SetText(b.Name);
+                name.SetText(m_Skin.DataText(b.Name));
             int done = DoneOf(b);
             int total = TotalOf(b);
             TextWidget count = TextWidget.Cast(row.FindAnyWidget("RowCount"));
@@ -1585,15 +1596,17 @@ class OZL_TreeMenu : UIScriptedMenu
         string st = n.Status;
         bool paid = st == "completed" || st == "researching";
 
-        PutText(Role("CardName"), m_Skin.NodeNameText(n.Name), 0);
-        PutText(Role("CardMeta"), MetaOf(n), 0);
+        // Тексти з конфігу -- крізь DataText останнім кроком (шрифт скіна
+        // може не мати якоїсь літери, напр. кириличної І у ванільному Metron).
+        PutText(Role("CardName"), m_Skin.DataText(m_Skin.NodeNameText(n.Name)), 0);
+        PutText(Role("CardMeta"), m_Skin.DataText(MetaOf(n)), 0);
         TextWidget status = TextWidget.Cast(Role("CardStatus"));
         if (status)
         {
-            status.SetText(m_Skin.StatusText(st));
+            status.SetText(m_Skin.CardStatusText(st));
             status.SetColor(m_Skin.StatusColorOf(st));
         }
-        PutText(Role("CardDesc"), n.Desc, 0);
+        PutText(Role("CardDesc"), m_Skin.DataText(n.Desc), 0);
         SetText("CardDescHead", m_Skin.SectionText("STR_OZL_TREE_DESC"));
         SetText("CardCostHead", m_Skin.SectionText("STR_OZL_TREE_COST"));
         SetText("CardItemsHead", m_Skin.SectionText("STR_OZL_TREE_ITEMS"));
@@ -1607,7 +1620,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             OZL_KV kv = n.Cost[i];
             if (kv)
-                CostRow(costs, PointColor(kv.Key), PointName(kv.Key), PoolOf(kv.Key), kv.Value, paid, true);
+                CostRow(costs, PointColor(kv.Key), m_Skin.DataText(PointName(kv.Key)), PoolOf(kv.Key), kv.Value, paid, true);
         }
         Widget items = Role("CardItemList");
         Widget itemsHead = Role("CardItemsHead");
@@ -1619,7 +1632,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             OZL_ItemView iv = n.Items[i];
             if (iv)
-                CostRow(items, m_Skin.Dim, ItemLabel(iv), iv.Have, iv.Qty, paid, iv.Have >= 0);
+                CostRow(items, m_Skin.Dim, m_Skin.DataText(ItemLabel(iv)), iv.Have, iv.Qty, paid, iv.Have >= 0);
         }
 
         PaintTime(n);
@@ -1627,10 +1640,7 @@ class OZL_TreeMenu : UIScriptedMenu
 
         // Кнопка видна завжди; неактивна -- з причиною під нею (спека §5.4).
         bool can = st == "available" && m_View.MaySpend;
-        string label = Words("STR_OZL_TREE_RESEARCH");
-        if (st == "completed")
-            label = Words("STR_OZL_TREE_COMPLETED");
-        SetText("BtnResearchText", label);
+        SetText("BtnResearchText", m_Skin.ButtonText(st, can));
         Widget btn = Role("BtnResearch");
         if (btn)
         {
@@ -1673,15 +1683,18 @@ class OZL_TreeMenu : UIScriptedMenu
     // Стос картки змінився: оновити його, а тоді й прокрутку картки. Сама
     // вона не бачить, що стос виріс (стенд 2026-10-31: довгий опис, CardFlow
     // 819 px у CardScroll 690 px -- смуги нема, колесо не крутить), тож без
-    // цього кінець довгої картки недосяжний.
-    private void RefreshCard()
+    // цього кінець довгої картки недосяжний. Оновлює ЛИШЕ CardFlow і
+    // CardScroll: скін, чий список "Відкриває" чи інший стос стоїть деінде,
+    // оновлює його сам (OnWrapped, OnSelect) і кличе це після.
+    void RefreshCard()
     {
         UpdateRole("CardFlow");
         UpdateRole("CardScroll");
     }
 
     // "тир 2 · після: Назва" / "після всіх: А, невідомо" / "після будь-якого з: ...".
-    private string MetaOf(OZL_NodeView n)
+    // Публічна: скін, що пише мету інакше, бере її тут, а не копіює.
+    string MetaOf(OZL_NodeView n)
     {
         string meta = Words("STR_OZL_TREE_TIER") + " " + n.Tier.ToString();
         int count = n.Parents.Count();
@@ -1843,7 +1856,7 @@ class OZL_TreeMenu : UIScriptedMenu
                     tag = " " + Words("STR_OZL_TREE_OR_TAG");
                 else if (kid.Parents.Count() > 1)
                     tag = " " + Words("STR_OZL_TREE_MORE_TAG");
-                OpenChip(list, kid.Id, kid.Name + tag);
+                OpenChip(list, kid.Id, m_Skin.DataText(kid.Name + tag));
                 count++;
             }
             else if (StubAt(b, index, n.Id))
@@ -1858,7 +1871,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             list.Show(count > 0);
             if (count > 0)
-                FlowLater(list, 6, 4, true);
+                FlowLater(list, m_Skin.OpensGap, m_Skin.OpensPad, true);
         }
     }
 
@@ -2055,7 +2068,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             OZL_NodeView n = NodeOf(m_Hover);
             if (n)
-                SetText("TreeTipText", n.Name + " · " + m_Skin.StatusText(n.Status));
+                SetText("TreeTipText", m_Skin.DataText(n.Name + " · " + m_Skin.StatusText(n.Status)));
         }
         m_NeedLines = true;
     }
@@ -2071,7 +2084,7 @@ class OZL_TreeMenu : UIScriptedMenu
         ImageWidget shape = ImageWidget.Cast(cell.FindAnyWidget("NodeShape"));
         if (!shape)
             return;
-        int slot = m_Skin.ShapeOf(n.Status, n.Id == m_Node);
+        int slot = m_Skin.ShapeOfNode(n, n.Status, n.Id == m_Node);
         if (on)
             slot = m_Skin.ShapeHover;
         if (slot >= 0)
@@ -2129,6 +2142,9 @@ class OZL_TreeMenu : UIScriptedMenu
         // Стос картки оновлюється раз за кадр і лише якщо переклали щось у ній.
         Widget flow = Role("CardFlow");
         bool cardDone = false;
+        // Розкладені цього кадру -- скінові (OnWrapped), коли стос картки
+        // вже оновлено.
+        array<Widget> done = new array<Widget>();
         for (int j = m_Wraps.Count() - 1; j >= 0; j--)
         {
             OZL_TreeWrap job = m_Wraps[j];
@@ -2210,10 +2226,16 @@ class OZL_TreeMenu : UIScriptedMenu
                 m_WrapShown.Remove(job.Box);
             if (flow && Holds(flow, job.Box))
                 cardDone = true;
+            done.Insert(job.Box);
             m_Wraps.RemoveOrdered(j);
         }
         if (cardDone)
             RefreshCard();
+        for (int d = 0; d < done.Count() && m_Skin; d++)
+        {
+            if (done[d])
+                m_Skin.OnWrapped(this, done[d]);
+        }
     }
 
     private void RunBars()
@@ -2626,6 +2648,7 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (w)
         {
+            RowHover(w);
             string id = NodeIdAt(w);
             if (id != "")
                 SetHover(id);
@@ -2639,6 +2662,15 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (w)
         {
+            // Зійшли з рядка не на нього ж -- рядок гасне.
+            if (m_RowHover && (w == m_RowHover || Holds(m_RowHover, w)))
+            {
+                bool stays = false;
+                if (enterW)
+                    stays = enterW == m_RowHover || Holds(m_RowHover, enterW);
+                if (!stays)
+                    RowHover(enterW);
+            }
             string from = NodeIdAt(w);
             if (from != "" && from == m_Hover)
             {
@@ -2654,6 +2686,62 @@ class OZL_TreeMenu : UIScriptedMenu
             }
         }
         return super.OnMouseLeave(w, enterW, x, y);
+    }
+
+    // Рядок, що клацається, під мишею: реєстр (reg:), гілки (branch:), чіп
+    // "Відкриває" (open:). Скінові -- OnRowHover: вихід із попереднього, тоді
+    // вхід у новий. w без мітки (чи null) лише гасить попередній.
+    private void RowHover(Widget w)
+    {
+        string kind = "";
+        string id = TaggedAt(w, "reg:");
+        if (id != "")
+            kind = "reg";
+        if (kind == "")
+        {
+            id = TaggedAt(w, "branch:");
+            if (id != "")
+                kind = "branch";
+        }
+        if (kind == "")
+        {
+            id = TaggedAt(w, "open:");
+            if (id != "")
+                kind = "open";
+        }
+        Widget row = null;
+        if (kind != "")
+            row = RowOf(w, kind);
+        if (row == m_RowHover && kind == m_RowKind && id == m_RowId)
+            return;
+        if (m_RowHover && m_Skin)
+            m_Skin.OnRowHover(this, m_RowHover, m_RowKind, m_RowId, false);
+        m_RowHover = row;
+        m_RowKind  = kind;
+        m_RowId    = id;
+        if (m_RowHover && m_Skin)
+            m_Skin.OnRowHover(this, m_RowHover, m_RowKind, m_RowId, true);
+    }
+
+    // Корінь рядка: предок w, чий батько -- список ролі (Registry,
+    // BranchList, CardOpensList). Поза списком -- сам w.
+    private Widget RowOf(Widget w, string kind)
+    {
+        string role = "CardOpensList";
+        if (kind == "reg")
+            role = "Registry";
+        else if (kind == "branch")
+            role = "BranchList";
+        Widget list = Role(role);
+        Widget cur = w;
+        while (cur && list)
+        {
+            Widget up = cur.GetParent();
+            if (up == list)
+                return cur;
+            cur = up;
+        }
+        return w;
     }
 
     private void HoverButton(bool on)
