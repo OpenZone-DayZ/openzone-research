@@ -13,7 +13,7 @@
 // - вузол: заливку кола за статусом (NodeFill), край під мишею -- txt,
 //   світіння доступного (NodeRing) і пунктир вибраного разом, мітку проєкту,
 //   що блимає; вузол без власного значка -- шестерня мокапа (iconOf);
-// - підписи тирів -- власні написи вікна (CsTier0..11), не рядки меню: на
+// - підписи тирів -- власні рядки вікна (CsTierRow0..39), не рядки меню: на
 //   стенді CreateWidgets рядка тиру віддав чужий файл (плутанина розкладок
 //   R7, SKINS.md); рядки «АБО» і ціни мають однакові віджети, і LabelTick
 //   показує в кожному своє;
@@ -37,22 +37,12 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
 
     // Скільки кадрів чекати, поки текст розкладеться (як LATER_TRIES меню).
     static const int   TRIES = 12;
-    // Чіп «Відкриває» (.opens a): 23 заввишки, 6 між рядами (ширину й крок
-    // ушир ставить меню: текст від 9 + OpensPad 9, OpensGap 6).
-    static const float CHIP_H   = 23;
-    static const float CHIP_GAP = 6;
-    // «»» після назви гілки: від лівого краю назви в панелі гілки, той самий рядок.
-    static const float NAME_X   = 17;
-    static const float NAME_Y   = 34.49;
+    // «»» після назви гілки -- на стільки далі від кінця її тексту (у мокапі
+    // гілка одна й знака нема; решта чисел -- з віджетів розкладки).
     static const float MARK_GAP = 10;
-    // Підпис тиру: напис 44 завширшки з центром на x = 22, його верх -- 7.55
-    // над точкою тиру (база тексту там, де в мокапі).
-    static const float TIER_TOP = -7.55;
-    static const int   TIER_LABELS = 12;
 
     // Кольори мокапа, яких нема в базовому класі (color-mix його CSS).
     int Faint;       // --faint: закритий вузол, нуль у пулі, неактивна кнопка
-    int Soft;        // --soft: мета й опис картки
     int Track;       // --track: доріжки смуг, порожні сегменти
     int EdgeColor;   // --edge: рамки панелей, чіпів, неактивної кнопки
     int Cell;        // --cell: заливка мітки
@@ -109,7 +99,6 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
         Lcd       = ARGB(255,  10,  24,  38);
         FogColor  = ARGB(255,   9,  22,  35);
         Faint     = ARGB(255,  74, 109, 133);
-        Soft      = ARGB(255, 165, 198, 218);
         Track     = ARGB(255,  28,  39,  51);
         EdgeColor = ARGB(255,  36,  66,  92);
         Cell      = ARGB(255,  20,  31,  42);
@@ -257,7 +246,8 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
             icon.Show(true);
         }
 
-        // Мітка проєкту блимає (OnUpdate); решта -- рівна.
+        // Мітка проєкту блимає (OnUpdate); решта -- рівна: альфу мітці вже
+        // повернув SetColor базового класу.
         Widget mark = cell.FindAnyWidget("NodeMark");
         if (mark)
         {
@@ -267,11 +257,9 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
                 if (at < 0)
                     m_Blink.Insert(mark);
             }
-            else
+            else if (at >= 0)
             {
-                if (at >= 0)
-                    m_Blink.Remove(at);
-                mark.SetAlpha(1);
+                m_Blink.Remove(at);
             }
         }
     }
@@ -453,8 +441,10 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
     // Підписи тирів
     // ------------------------------------------------------------------
 
-    // Тири видимих вузлів за зростанням, i-й -- на (22, Top + Row x (i + 1/2)),
-    // як OZL_TreePlan для дерева вниз; написи вікна, а не рядки меню.
+    // Тири видимих вузлів за зростанням; i-й -- рядок вікна CsTierRow<i>
+    // кутом на (0, Top + Row x (i + 1/2)), де OZL_TreePlan ставить тир дерева
+    // вниз (план меню назовні не видно -- прохання в звіті). Де в рядку
+    // напис і скільки рядків -- каже розкладка.
     private void PaintTiers(OZL_TreeMenu menu, OZL_BranchView b)
     {
         array<int> tiers = new array<int>();
@@ -471,30 +461,29 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
                     tiers.Insert(t);
             }
         }
-        for (i = 1; i < tiers.Count(); i++)
+        tiers.Sort();
+        i = 0;
+        Widget row = menu.Role("CsTierRow0");
+        while (row)
         {
-            int v = tiers[i];
-            int j = i - 1;
-            while (j >= 0 && tiers[j] > v)
-            {
-                tiers[j + 1] = tiers[j];
-                j--;
-            }
-            tiers[j + 1] = v;
-        }
-        for (i = 0; i < TIER_LABELS; i++)
-        {
-            TextWidget lab = TextWidget.Cast(menu.Role("CsTier" + i.ToString()));
-            if (!lab)
-                continue;
+            // Рамка в одиницю заввишки інакше ріже напис до смужки в піксель
+            // (скіл gui-layouts) і бере мишу -- як меню зі своїми рядками пулу.
+            row.ClearFlags(WidgetFlags.CLIPCHILDREN);
+            row.SetFlags(WidgetFlags.IGNOREPOINTER);
             bool used = i < tiers.Count();
             if (used)
             {
-                lab.SetText(TierText(tiers[i]));
-                menu.PlaceUnits(lab, 0, Top + Row * (i + 0.5) + TIER_TOP);
+                TextWidget lab = TextWidget.Cast(row.FindAnyWidget("CsTier" + i.ToString()));
+                if (lab)
+                    lab.SetText(TierText(tiers[i]));
+                menu.PlaceUnits(row, 0, Top + Row * (i + 0.5));
             }
-            lab.Show(used);
+            row.Show(used);
+            i++;
+            row = menu.Role("CsTierRow" + i.ToString());
         }
+        if (tiers.Count() > i)
+            OZL_Log.Warn("tree clearsky: " + tiers.Count().ToString() + " tiers, but the window has numerals for " + i.ToString());
     }
 
     // ------------------------------------------------------------------
@@ -560,9 +549,11 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
 
     // «Відкриває» (.opens): меню розкладає чіпи рядом (текст + OpensPad,
     // OpensGap між ними) і тягне ChipHit та ...Line на ширину; ряди воно
-    // ставить упритул, а мокап -- через 6 (flex-wrap gap). Тут -- ряди за
-    // мокапом, права рамка чіпа і висота списку, після меню (OnUpdate іде
-    // після RunFlows) і ще двічі, якщо меню розкладе їх кадром пізніше.
+    // ставить упритул, а мокап -- через той самий gap 6 (flex-wrap). Тут --
+    // ряди за мокапом (OpensGap і вшир, і вгору-вниз; висота ряду -- висота
+    // чіпа з розкладки), права рамка чіпа і висота списку, після меню
+    // (OnUpdate іде після RunFlows) і ще двічі, якщо меню розкладе їх
+    // кадром пізніше.
     private void ChipTick(OZL_TreeMenu menu)
     {
         if (!m_ChipsDirty)
@@ -588,8 +579,17 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
                 t.GetTextSize(tw, th);
                 if (tw <= 0)
                     ready = false;
+                // Ширина -- як у меню (від лівого краю чіпа до кінця тексту
+                // і OpensPad): тоді права рамка сходиться з ...Line, які
+                // меню розтягнуло.
+                float tx;
+                float ty;
+                float ix;
+                float iy;
+                t.GetScreenPos(tx, ty);
+                chip.GetScreenPos(ix, iy);
                 chips.Insert(chip);
-                widths.Insert(OpensPad + tw / px + OpensPad);
+                widths.Insert((tx - ix + tw) / px + OpensPad);
             }
             chip = chip.GetSibling();
         }
@@ -606,40 +606,50 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
         menu.UnitsOf(list, boxW, boxH);
         float x = 0;
         float y = 0;
+        float rowH = 0;
         for (int i = 0; i < chips.Count(); i++)
         {
+            Widget c = chips[i];
             float w = widths[i];
+            float cw;
+            float ch;
+            menu.UnitsOf(c, cw, ch);
             if (x > 0 && x + w > boxW)
             {
                 x = 0;
-                y += CHIP_H + CHIP_GAP;
+                y += rowH + OpensGap;
+                rowH = 0;
             }
-            Widget c = chips[i];
+            if (ch > rowH)
+                rowH = ch;
             menu.PlaceUnits(c, x, y);
-            Resize(menu, c, "ChipHit", w, CHIP_H);
-            Resize(menu, c, "ChipDashLine", w, CHIP_H);
-            Resize(menu, c, "ChipTopLine", w, 1);
-            Resize(menu, c, "ChipBottomLine", w, 1);
             Widget right = c.FindAnyWidget("CsChipRight");
             if (right)
-                menu.PlaceUnits(right, w - 1, 0);
+            {
+                float rw;
+                float rh;
+                menu.UnitsOf(right, rw, rh);
+                menu.PlaceUnits(right, w - rw, 0);
+            }
             x += w + OpensGap;
         }
-        float h = 0;
-        if (chips.Count() > 0)
-            h = y + CHIP_H;
-        menu.HeightUnits(list, h);
+        menu.HeightUnits(list, y + rowH);
         menu.RefreshCard();
     }
 
-    // «»» за назвою гілки, коли гілок більше однієї: місце -- за шириною тексту.
+    // «»» за назвою гілки, коли гілок більше однієї: на рядку назви (шрифт
+    // той самий), MARK_GAP після кінця її тексту. Де назва -- питаємо її
+    // віджет; знак і назва -- діти однієї панелі.
     private void HeadTick(OZL_TreeMenu menu)
     {
         if (!m_HeadDirty)
             return;
         TextWidget name = TextWidget.Cast(menu.Role("BranchName"));
         Widget mark = menu.Role("CsBranchMark");
-        if (!name || !mark)
+        Widget box = null;
+        if (mark)
+            box = mark.GetParent();
+        if (!name || !box)
         {
             m_HeadDirty = false;
             return;
@@ -653,7 +663,14 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
             return;
         }
         m_HeadDirty = false;
-        menu.PlaceUnits(mark, NAME_X + nw / menu.Px() + MARK_GAP, NAME_Y);
+        float nx;
+        float ny;
+        float bx;
+        float by;
+        name.GetScreenPos(nx, ny);
+        box.GetScreenPos(bx, by);
+        float px = menu.Px();
+        menu.PlaceUnits(mark, (nx - bx + nw) / px + MARK_GAP, (ny - by) / px);
         mark.Show(true);
     }
 
@@ -819,13 +836,6 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
         Widget h = menu.Role(head);
         if (r && h)
             r.Show(h.IsVisible());
-    }
-
-    private static void Resize(OZL_TreeMenu menu, Widget root, string name, float width, float height)
-    {
-        Widget w = root.FindAnyWidget(name);
-        if (w)
-            menu.SizeUnits(w, width, height);
     }
 }
 

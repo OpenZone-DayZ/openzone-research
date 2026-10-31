@@ -14,7 +14,6 @@
     "clearsky_track": [0.108, 0.154, 0.199, 1.0],
     "clearsky_cell": [0.079, 0.122, 0.166, 1.0],
     "clearsky_cell_edge": [0.202, 0.257, 0.305, 1.0],
-    "clearsky_pick": [0.082, 0.15, 0.213, 1.0],
     "clearsky_done_bg": [0.113, 0.189, 0.213, 1.0],
     "clearsky_done_edge": [0.292, 0.463, 0.439, 1.0],
     "clearsky_res_edge": [0.259, 0.453, 0.606, 1.0],

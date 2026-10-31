@@ -86,210 +86,1286 @@
                               "name": "CsTiers",
                               "size": "fill",
                               "color": "$none",
-                              "note": "The tier numerals (.tierlab: 13px, dim, letters spread, centred on x = 22): the window's OWN labels, placed by the skin (OnPaint). No TreeTiers role, so the menu creates no tier_label rows -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7).",
+                              "note": "The tier numerals (.tierlab: 13px, dim, letters spread, 44 wide from the map's left edge, centred): the window's OWN rows CsTierRow0..39, not the menu's -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7). The skin (OnPaint) puts row i's corner on (0, the centre of the i-th tier) and shows the rows in use; the numeral's place in the row is the layout's (baseline 4.5 below the corner). A row is a 1-unit frame; the skin lifts its clipping and lets the mouse through it (ClearFlags CLIPCHILDREN, SetFlags IGNOREPOINTER -- what the menu does to its pooled rows): a clipping one shows a pixel slice of its label (skill gui-layouts). 40 rows: a tier is 1..40 (OZL_TreePlan.MAX_TIER); the skin counts the rows and logs a tree that has more tiers.",
                               "children": [
                                 {
-                                  "label": {
-                                    "name": "CsTier0",
+                                  "frame": {
+                                    "name": "CsTierRow0",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier0",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier1",
+                                  "frame": {
+                                    "name": "CsTierRow1",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier1",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier2",
+                                  "frame": {
+                                    "name": "CsTierRow2",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier2",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier3",
+                                  "frame": {
+                                    "name": "CsTierRow3",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier3",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier4",
+                                  "frame": {
+                                    "name": "CsTierRow4",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier4",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier5",
+                                  "frame": {
+                                    "name": "CsTierRow5",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier5",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier6",
+                                  "frame": {
+                                    "name": "CsTierRow6",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier6",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier7",
+                                  "frame": {
+                                    "name": "CsTierRow7",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier7",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier8",
+                                  "frame": {
+                                    "name": "CsTierRow8",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier8",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier9",
+                                  "frame": {
+                                    "name": "CsTierRow9",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier9",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier10",
+                                  "frame": {
+                                    "name": "CsTierRow10",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier10",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "label": {
-                                    "name": "CsTier11",
+                                  "frame": {
+                                    "name": "CsTierRow11",
                                     "at": [
                                       0,
-                                      -7.55
+                                      0
                                     ],
                                     "size": [
                                       44,
-                                      17
+                                      1
                                     ],
-                                    "font": "clearsky_tier",
-                                    "color": "$clearsky_dim",
-                                    "align": "center",
-                                    "hidden": true
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier11",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow12",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier12",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow13",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier13",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow14",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier14",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow15",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier15",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow16",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier16",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow17",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier17",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow18",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier18",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow19",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier19",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow20",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier20",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow21",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier21",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow22",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier22",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow23",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier23",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow24",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier24",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow25",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier25",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow26",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier26",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow27",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier27",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow28",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier28",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow29",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier29",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow30",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier30",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow31",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier31",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow32",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier32",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow33",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier33",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow34",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier34",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow35",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier35",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow36",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier36",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow37",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier37",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow38",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier38",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CsTierRow39",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      44,
+                                      1
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsTier39",
+                                          "at": [
+                                            0,
+                                            -7.55
+                                          ],
+                                          "size": [
+                                            44,
+                                            17
+                                          ],
+                                          "font": "clearsky_tier",
+                                          "color": "$clearsky_dim",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
                                   }
                                 }
                               ]
@@ -1967,7 +3043,7 @@
                                               "label": {
                                                 "name": "CardCostHead",
                                                 "at": [
-                                                  18,
+                                                  25,
                                                   0
                                                 ],
                                                 "size": [
@@ -2012,7 +3088,7 @@
                                               "label": {
                                                 "name": "CardItemsHead",
                                                 "at": [
-                                                  18,
+                                                  25,
                                                   0
                                                 ],
                                                 "size": [
@@ -2062,7 +3138,7 @@
                                               "label": {
                                                 "name": "CardTimeHead",
                                                 "at": [
-                                                  18,
+                                                  25,
                                                   0
                                                 ],
                                                 "size": [
@@ -2405,7 +3481,7 @@
                                               "label": {
                                                 "name": "CardOpensHead",
                                                 "at": [
-                                                  18,
+                                                  25,
                                                   0
                                                 ],
                                                 "size": [
@@ -2749,7 +3825,7 @@
                   ],
                   "size": [
                     2,
-                    872
+                    873
                   ],
                   "color": "$clearsky_casing_hi"
                 }
@@ -2763,7 +3839,7 @@
                   ],
                   "size": [
                     2,
-                    872
+                    873
                   ],
                   "color": "$clearsky_casing_hi"
                 }
@@ -2844,7 +3920,7 @@
                     10
                   ],
                   "color": "$clearsky_casing",
-                  "note": "The casing: a 10-unit frame of --casing, radius 14 (the corners are pictures)."
+                  "note": "The casing: a 10-unit frame of --casing, radius 14 (the corners are pictures, drawn after the bands). The side bands reach one unit under the bottom corners: ending exactly where they start left a pixel row of the outside colour (review 2026-10-31)."
                 }
               },
               {
@@ -2870,7 +3946,7 @@
                   ],
                   "size": [
                     10,
-                    872
+                    873
                   ],
                   "color": "$clearsky_casing"
                 }
@@ -2884,7 +3960,7 @@
                   ],
                   "size": [
                     10,
-                    872
+                    873
                   ],
                   "color": "$clearsky_casing"
                 }

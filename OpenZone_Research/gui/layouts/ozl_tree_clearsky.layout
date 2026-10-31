@@ -93,7 +93,7 @@ FrameWidgetClass TreeWindow {
          "src alpha" 1
          "stretch mode" stretch_w_h
         }
-        // The tier numerals (.tierlab: 13px, dim, letters spread, centred on x = 22): the window's OWN labels, placed by the skin (OnPaint). No TreeTiers role, so the menu creates no tier_label rows -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7).
+        // The tier numerals (.tierlab: 13px, dim, letters spread, 44 wide from the map's left edge, centred): the window's OWN rows CsTierRow0..39, not the menu's -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7). The skin (OnPaint) puts row i's corner on (0, the centre of the i-th tier) and shows the rows in use; the numeral's place in the row is the layout's (baseline 4.5 below the corner). A row is a 1-unit frame; the skin lifts its clipping and lets the mouse through it (ClearFlags CLIPCHILDREN, SetFlags IGNOREPOINTER -- what the menu does to its pooled rows): a clipping one shows a pixel slice of its label (skill gui-layouts). 40 rows: a tier is 1..40 (OZL_TreePlan.MAX_TIER); the skin counts the rows and logs a tree that has more tiers.
         PanelWidgetClass CsTiers {
          visible 1
          ignorepointer 1
@@ -107,221 +107,1205 @@ FrameWidgetClass TreeWindow {
          priority 1
          style rover_sim_colorable
          {
-          TextWidgetClass CsTier0 {
+          FrameWidgetClass CsTierRow0 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 0
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier0 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier1 {
+          FrameWidgetClass CsTierRow1 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 1
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier1 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier2 {
+          FrameWidgetClass CsTierRow2 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 2
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier2 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier3 {
+          FrameWidgetClass CsTierRow3 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 3
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier3 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier4 {
+          FrameWidgetClass CsTierRow4 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 4
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier4 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier5 {
+          FrameWidgetClass CsTierRow5 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 5
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier5 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier6 {
+          FrameWidgetClass CsTierRow6 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 6
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier6 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier7 {
+          FrameWidgetClass CsTierRow7 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 7
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier7 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier8 {
+          FrameWidgetClass CsTierRow8 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 8
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier8 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier9 {
+          FrameWidgetClass CsTierRow9 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 9
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier9 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier10 {
+          FrameWidgetClass CsTierRow10 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 10
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier10 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
-          TextWidgetClass CsTier11 {
+          FrameWidgetClass CsTierRow11 {
            visible 0
-           ignorepointer 1
-           position 0 -7.55
-           size 44 17
+           position 0 0
+           size 44 1
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.373 0.541 0.651 1
            priority 11
-           text ""
-           font "gui/fonts/etelkatextpro22"
-           "exact text" 1
-           "exact text size" 13
-           "text halign" center
-           "text valign" center
+           {
+            TextWidgetClass CsTier11 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow12 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 12
+           {
+            TextWidgetClass CsTier12 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow13 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 13
+           {
+            TextWidgetClass CsTier13 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow14 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 14
+           {
+            TextWidgetClass CsTier14 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow15 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 15
+           {
+            TextWidgetClass CsTier15 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow16 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 16
+           {
+            TextWidgetClass CsTier16 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow17 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 17
+           {
+            TextWidgetClass CsTier17 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow18 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 18
+           {
+            TextWidgetClass CsTier18 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow19 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 19
+           {
+            TextWidgetClass CsTier19 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow20 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 20
+           {
+            TextWidgetClass CsTier20 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow21 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 21
+           {
+            TextWidgetClass CsTier21 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow22 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 22
+           {
+            TextWidgetClass CsTier22 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow23 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 23
+           {
+            TextWidgetClass CsTier23 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow24 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 24
+           {
+            TextWidgetClass CsTier24 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow25 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 25
+           {
+            TextWidgetClass CsTier25 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow26 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 26
+           {
+            TextWidgetClass CsTier26 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow27 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 27
+           {
+            TextWidgetClass CsTier27 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow28 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 28
+           {
+            TextWidgetClass CsTier28 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow29 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 29
+           {
+            TextWidgetClass CsTier29 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow30 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 30
+           {
+            TextWidgetClass CsTier30 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow31 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 31
+           {
+            TextWidgetClass CsTier31 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow32 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 32
+           {
+            TextWidgetClass CsTier32 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow33 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 33
+           {
+            TextWidgetClass CsTier33 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow34 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 34
+           {
+            TextWidgetClass CsTier34 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow35 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 35
+           {
+            TextWidgetClass CsTier35 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow36 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 36
+           {
+            TextWidgetClass CsTier36 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow37 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 37
+           {
+            TextWidgetClass CsTier37 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow38 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 38
+           {
+            TextWidgetClass CsTier38 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          FrameWidgetClass CsTierRow39 {
+           visible 0
+           position 0 0
+           size 44 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 39
+           {
+            TextWidgetClass CsTier39 {
+             visible 1
+             ignorepointer 1
+             position 0 -7.55
+             size 44 17
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.373 0.541 0.651 1
+             priority 0
+             text ""
+             font "gui/fonts/etelkatextpro22"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
          }
         }
@@ -1830,7 +2814,7 @@ FrameWidgetClass TreeWindow {
               TextWidgetClass CardCostHead {
                visible 1
                ignorepointer 1
-               position 18 0
+               position 25 0
                size 320 16
                hexactpos 1
                vexactpos 1
@@ -1894,7 +2878,7 @@ FrameWidgetClass TreeWindow {
               TextWidgetClass CardItemsHead {
                visible 1
                ignorepointer 1
-               position 18 0
+               position 25 0
                size 320 16
                hexactpos 1
                vexactpos 1
@@ -1971,7 +2955,7 @@ FrameWidgetClass TreeWindow {
               TextWidgetClass CardTimeHead {
                visible 1
                ignorepointer 1
-               position 18 0
+               position 25 0
                size 320 16
                hexactpos 1
                vexactpos 1
@@ -2326,7 +3310,7 @@ FrameWidgetClass TreeWindow {
               TextWidgetClass CardOpensHead {
                visible 1
                ignorepointer 1
-               position 18 0
+               position 25 0
                size 320 16
                hexactpos 1
                vexactpos 1
@@ -2649,7 +3633,7 @@ FrameWidgetClass TreeWindow {
      visible 1
      ignorepointer 1
      position 10 14
-     size 2 872
+     size 2 873
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -2662,7 +3646,7 @@ FrameWidgetClass TreeWindow {
      visible 1
      ignorepointer 1
      position 1588 14
-     size 2 872
+     size 2 873
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -2731,7 +3715,7 @@ FrameWidgetClass TreeWindow {
      mode blend
      "src alpha" 1
     }
-    // The casing: a 10-unit frame of --casing, radius 14 (the corners are pictures).
+    // The casing: a 10-unit frame of --casing, radius 14 (the corners are pictures, drawn after the bands). The side bands reach one unit under the bottom corners: ending exactly where they start left a pixel row of the outside colour (review 2026-10-31).
     PanelWidgetClass CsCasingT {
      visible 1
      ignorepointer 1
@@ -2762,7 +3746,7 @@ FrameWidgetClass TreeWindow {
      visible 1
      ignorepointer 1
      position 0 14
-     size 10 872
+     size 10 873
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -2775,7 +3759,7 @@ FrameWidgetClass TreeWindow {
      visible 1
      ignorepointer 1
      position 1590 14
-     size 10 872
+     size 10 873
      hexactpos 1
      vexactpos 1
      hexactsize 1
