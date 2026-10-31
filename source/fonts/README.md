@@ -53,15 +53,16 @@ softer on 1920x1080.
 - The atlas is white; the widget's `color` tints it (dark ink on a paper panel works: measured).
 - The Latin I and the Cyrillic І both draw, so the stringtable's Latin-I rule (made for the
   vanilla fonts) does no harm here.
-- A character the font lacks draws as a box.
+- A character the font lacks should draw as a box: every font carries U+25A1, the glyph the
+  engine draws for a missing character. Inferred, not measured -- the vanilla SDF fonts do
+  it; no FNT3 font of the stand probe missed a character.
 - There are no family files (`.xml`): the engine's choice among the sizes of a family was
   measured unpredictable (a 28-high row took the 22-pixel file), so a layout names the size.
 
 ## Character set
 
 Every font carries printable ASCII; the Latin-1 signs U+00A0-U+00BF (without the soft hyphen)
-and × ÷; the Cyrillic letters of Ukrainian and Russian (А-я, U+0401 and U+0451, Є є, І і, Ї ї,
-Ґ ґ);
+and × ÷; the Cyrillic letters А-я, U+0401 and U+0451, Є є, І і, Ї ї, Ґ ґ;
 – — ‘ ’ ‚ “ ” „ • … ‹ › № ₴ ′ ″ ʼ; and the box □. Where a face has them and they fit its
 cell, also ← ↑ → ↓ ◆ ◇ ● ○ ★ ☆ ✓ ✔ ✕ ✗ ☮ ♥ ∞ (PT Mono has the arrows, ● ○ ♥ ∞; Caveat
 none; the others only ∞).
@@ -70,6 +71,12 @@ The cell of a face is set by ASCII, the Cyrillic letters and the punctuation of 
 A sign taller than that is left out instead of shrinking every glyph: the spacing cedilla ¸
 in Oswald and PT Serif, ¹ ² ³ in Pangolin. The PT faces have no ′ ″ and draw ' and " for
 them. Every face has every Ukrainian letter.
+
+The build stops (non-zero exit, naming the face, the cell and the code points) when a font
+would lack a required character: the English and Ukrainian alphabets, the digits, the Latin I
+and ’ « » · — – “ ” №. Only the Cyrillic І and і may be drawn with the Latin letter when a
+face lacks them, and the build prints a WARNING when it does. An output name holding a
+Reserved Font Name of its face's `OFL.txt` stops the build too.
 
 ## Rebuilding
 
@@ -91,8 +98,9 @@ and commit `OpenZone_Research/gui/fonts/`.
 ## How the cell sizes were chosen
 
 The engine scales a cell of N pixels to S x k screen pixels, k being 1.0 on 1920x1080 and
-1.48 on 3840x1600. Magnifying blurs; shrinking samples the atlas's mip chain, sharpest at
-exactly one half. Drawn that way from the real atlases, a cell of twice the body text size
+1.48 on 3840x1600. Simulated -- a GPU-style model of that scaling run on the real atlases,
+not a shot of the engine: magnifying blurs; shrinking samples the atlas's mip chain,
+sharpest at exactly one half. In that simulation a cell of twice the body text size
 puts it at one half on 1920x1080 and at 0.74 on 3840x1600, and nothing is magnified on
 either. A cell equal to the text size blurs on 3840x1600; one of 1.48 times it softens on
 1920x1080. So: the cell is twice the most common text size of the face, plus a second,

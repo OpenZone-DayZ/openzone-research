@@ -8,6 +8,11 @@
 Next to the fonts it writes OFL.txt: the copyright lines of every bundled typeface and the
 SIL Open Font License once, so the licence travels inside the pbo with the fonts.
 
+The build stops with a non-zero exit when a font would lack a required character (every
+Ukrainian letter, the Latin I, the UI punctuation -- fontbuild.REQUIRED) or when an output
+name carries a Reserved Font Name of its face's OFL.txt. A Cyrillic І or і drawn with the
+Latin letter is allowed and printed as a WARNING.
+
 Needs Python 3.10+ and Pillow. Paths come from this file's own place in the repository,
 nothing machine-specific. The output is deterministic: an unchanged manifest and unchanged
 TTFs give byte-identical files, so `--check` doubles as the "are the fonts up to date" test.
@@ -15,6 +20,7 @@ TTFs give byte-identical files, so `--check` doubles as the "are the fonts up to
 import argparse
 import json
 import os
+import re
 import sys
 import tempfile
 
@@ -32,6 +38,22 @@ LICENCE_NOTE = (
     "repository. They are Modified Versions under the SIL Open Font License 1.1 and do not use\n"
     "any Reserved Font Name. The original TTF files are in that repository, source/fonts/.\n")
 LICENCE_START = "This Font Software is licensed"
+RFN = re.compile(r'Reserved Font Names?((?:\s*(?:,|and)?\s*"[^"]+")+)')
+
+
+def face_path(face):
+    """A manifest face: a path below this folder (an absolute path works too)."""
+    return os.path.normpath(os.path.join(HERE, face))
+
+
+def read_licence(face):
+    """(copyright lines, licence text, Reserved Font Names) of the OFL.txt beside a face."""
+    with open(os.path.join(os.path.dirname(face_path(face)), "OFL.txt"), encoding="utf-8-sig") as fh:
+        text = fh.read().replace("\r\n", "\n")
+    head, rest = text.split(LICENCE_START, 1)
+    m = RFN.search(head)
+    reserved = re.findall(r'"([^"]+)"', m.group(1)) if m else []
+    return head.strip(), LICENCE_START + rest, reserved
 
 
 def licence_text(manifest):
@@ -41,15 +63,16 @@ def licence_text(manifest):
         faces.setdefault(o["face"], []).append(o["name"])
     parts, body = [LICENCE_NOTE], None
     for face in sorted(faces):
-        folder = os.path.join(HERE, *face.split("/")[:-1])
-        with open(os.path.join(folder, "OFL.txt"), encoding="utf-8-sig") as fh:
-            text = fh.read().replace("\r\n", "\n")
-        head, rest = text.split(LICENCE_START, 1)
+        head, licence, _ = read_licence(face)
         if body is None:
-            body = LICENCE_START + rest
-        family = sfnt.names(os.path.join(HERE, *face.split("/"))).get(1, face)
-        parts.append("%s -- %s\n%s\n" % (", ".join(sorted(faces[face])), family, head.strip()))
+            body = licence
+        family = sfnt.names(face_path(face)).get(1, face)
+        parts.append("%s -- %s\n%s\n" % (", ".join(sorted(faces[face])), family, head))
     return "\n".join(parts) + "\n" + body.rstrip() + "\n"
+
+
+def squash(name):
+    return re.sub(r"[^0-9a-z]", "", name.lower())
 
 
 def load_manifest(path):
@@ -61,14 +84,18 @@ def load_manifest(path):
     for o in m["outputs"]:
         if not o["name"].endswith(str(o["cell"])):
             raise SystemExit("fonts.json: %s must end with its cell height %d" % (o["name"], o["cell"]))
+        # a converted font is a Modified Version under the OFL: no Reserved Font Name in it
+        for rfn in read_licence(o["face"])[2]:
+            if squash(rfn) in squash(o["name"]):
+                raise SystemExit("fonts.json: %s carries the Reserved Font Name %r of %s" % (
+                    o["name"], rfn, o["face"]))
     return m
 
 
 def build_one(o, charsets):
-    face = os.path.join(HERE, *o["face"].split("/"))
     stem = o["name"][: -len(str(o["cell"]))]
-    return fontbuild.build(face, stem, o["cell"], charset=charsets.get(o["charset"], o["charset"]),
-                           wght=o.get("wght"))
+    return fontbuild.build(face_path(o["face"]), stem, o["cell"],
+                           charset=charsets.get(o["charset"], o["charset"]), wght=o.get("wght"))
 
 
 def same_file(a, b):
@@ -89,10 +116,22 @@ def main(argv=None):
 
     m = load_manifest(args.manifest)
     out_dir = os.path.join(REPO, *m["output"].split("/"))
+    # build everything first: a font that fails leaves the folder exactly as it was
+    built, failed = [], []
+    for o in m["outputs"]:
+        try:
+            built.append(build_one(o, m["charsets"]))
+        except SystemExit as e:             # a required character is missing: report, go on
+            failed.append(o["name"])
+            print("FAILED %s: %s" % (o["name"], e))
+    if failed:
+        print("BUILD FAILED: %s; nothing was written" % ", ".join(failed))
+        return 2
     work = tempfile.mkdtemp(prefix="ozl_fonts_") if args.check else out_dir
     written, total = [], 0
-    for o in m["outputs"]:
-        b = build_one(o, m["charsets"])
+    for b in built:
+        for w in b.warnings:
+            print("WARNING %s: %s" % (b.name, w))
         fnt_path, edds_path = fontbuild.write(b, work)
         written += [fnt_path, edds_path]
         size = os.path.getsize(fnt_path) + os.path.getsize(edds_path)
@@ -129,4 +168,5 @@ def main(argv=None):
 
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     sys.exit(main())

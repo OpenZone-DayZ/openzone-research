@@ -43,7 +43,7 @@ CHARSETS = {
     "latin": _r(0x20, 0x7E),
     # Latin-1 punctuation and signs: NBSP ¡ ¢ £ ¤ ¥ ¦ § ¨ © ª « ¬ ® ¯ ° ± ² ³ ´ µ ¶ · ¸ ¹ º » ¼ ½ ¾ ¿, × ÷
     "latin1": [c for c in _r(0xA0, 0xBF) if c != 0xAD] + [0xD7, 0xF7],
-    # Cyrillic letters of Ukrainian and Russian: А..я, U+0401 U+0451, Є є, І і, Ї ї, Ґ ґ
+    # Cyrillic letters: А..я, U+0401 U+0451, Є є, І і, Ї ї, Ґ ґ (every Ukrainian letter among them)
     "cyrillic": _r(0x410, 0x44F) + [0x401, 0x451, 0x404, 0x454, 0x406, 0x456, 0x407, 0x457, 0x490, 0x491],
     # the whole basic Cyrillic block (Serbian, Macedonian, Belarusian letters too)
     "cyrillic_full": _r(0x400, 0x45F) + [0x490, 0x491],
@@ -76,6 +76,30 @@ ALIASES = {0x02BC: 0x2019,   # ʼ -> ’
            0x0456: 0x0069,   # і -> i
            0x2032: 0x0027,   # ′ -> '
            0x2033: 0x0022}   # ″ -> "
+
+# What the mod's text cannot do without: the English and Ukrainian alphabets, the digits,
+# the Latin I the stringtables put for the Cyrillic one, the apostrophe and the punctuation
+# of the UI. Whatever of this the requested character set holds must end up in the font, or
+# the build stops (check_required). A stand-in counts only for І and і -- they look like the
+# Latin I and i in most faces -- and is reported every time.
+UKRAINIAN = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
+REQUIRED = sorted({ord(c) for c in UKRAINIAN} | set(_r(0x30, 0x39)) | set(_r(0x41, 0x5A))
+                  | set(_r(0x61, 0x7A)) | {0x2019, 0xAB, 0xBB, 0xB7, 0x2014, 0x2013, 0x201C,
+                                           0x201D, 0x2116})
+LOUD_STAND_INS = {0x0406, 0x0456}
+
+
+def check_required(path, n, want, glyphs, stand_ins):
+    """Stop on a required character the font lacks; return the warnings for allowed stand-ins."""
+    final = {g.cp for g in glyphs}
+    via = dict(stand_ins)
+    required = [c for c in REQUIRED if c in set(want)]
+    bad = [c for c in required if c not in final or (c in via and c not in LOUD_STAND_INS)]
+    if bad:
+        raise SystemExit("%s, cell %d: the font would lack required character(s): %s" % (
+            os.path.basename(path), n, ", ".join("U+%04X %s" % (c, chr(c)) for c in bad)))
+    return ["the face has no U+%04X %s: the font draws U+%04X %s for it" % (c, chr(c), via[c], chr(via[c]))
+            for c in required if c in via]
 
 SAMPLE = ("Обов’язок: Їжак, ґанок, єнот — «ІЇЄҐ іїєґ» № 7 · "
           "Quick brown fox 0123456789 AV To Wa")
@@ -296,6 +320,7 @@ def build(path, name, n, charset=DEFAULT_CHARSET, wght=None, mode="fit", symbols
         d = by_cp[dst]
         glyphs.append(fnt.Glyph(src, d.x, d.y, d.w, d.h, d.pre, d.post))
     glyphs.sort(key=lambda g: g.cp)
+    warnings = check_required(path, n, want, glyphs, stand_ins)
 
     pairs = []
     if kerning:
@@ -321,7 +346,7 @@ def build(path, name, n, charset=DEFAULT_CHARSET, wght=None, mode="fit", symbols
     out.name, out.n, out.font, out.atlas, out.mips = "%s%d" % (name, n), n, f, atlas, mips
     out.freetype_px, out.cell, out.baseline = px, cell, top
     out.missing, out.stand_ins, out.symbols, out.clipped = missing, stand_ins, extra, clipped
-    out.dropped = dropped
+    out.dropped, out.warnings = dropped, warnings
     return out
 
 
@@ -393,10 +418,13 @@ def main(argv=None):
         if args.preview:
             preview(b, fnt_path, args.preview)
         print(describe(b))
+        for w in b.warnings:
+            print("WARNING %s: %s" % (b.name, w), file=sys.stderr)
     return 0
 
 
 if __name__ == "__main__":
     sys.dont_write_bytecode = True
     sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     sys.exit(main())
