@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the freedom tree window «ВОЛЯ.narod» (mockup body[data-f=freedom]: its variables and the literal colours of its rules). Every name starts with 'freedom_' so the seven skin files never collide; only the freedom skin task edits this file (source/ui/SKINS.md). Fonts: the mockup's Verdana is PT Sans, Times is PT Serif, Comic Sans is Pangolin, Impact is Oswald 600, the LED counters are the vanilla 7segment. exact text size = the cell height = round(CSS px x the face's cell ratio x k), where k matches the x-height of the mockup's own face: PT Sans draws 0.91 of Verdana's x-height at one em (k = 1.1), PT Serif 1.11 of Times' (k = 0.9; the bold marquee keeps k = 1, as wide as bold Times); Pangolin and Oswald are within 2-11 % of Comic Sans and Impact (k = 1). Measured 2026-10-31 with the TTFs of both faces (the freedom skin task report). Bold, italic and glow exist only on the SDF faces (SetBold / SetItalic / text shadow are no-ops on bitmap faces, measured 2026-10-31), so the mockup's bold Comic (node names, status, button, 'Сторінка в розробці!'), bold Times (marquee), italic Times (dev line), bold Courier (LED counters: PT Mono) and the glowing Impact (branch name) use ozl_sdf_*; their label boxes are k x S tall (fonts README). Half-transparent fills are corrected for the game's linear-light blending: black at a is 1 - (1 - a)^2.2 (box .72 -> .939, tree .82 -> .977, footer .75 -> .953).",
+  "note": "Tokens of the freedom tree window «ВОЛЯ.narod» (mockup body[data-f=freedom]: its variables and the literal colours of its rules). Every name starts with 'freedom_' so the seven skin files never collide; only the freedom skin task edits this file (source/ui/SKINS.md). Fonts: the mockup's Verdana is PT Sans, Times is PT Serif, Comic Sans is Pangolin, Impact is Oswald 600, the LED counters' bold Courier is PT Mono. exact text size = the cell height = round(CSS px x the face's cell ratio x k), where k matches the x-height of the mockup's own face: PT Sans draws 0.91 of Verdana's x-height at one em (k = 1.1), PT Serif 1.11 of Times' (k = 0.9; the bold marquee keeps k = 1, as wide as bold Times); Pangolin and Oswald are within 2-11 % of Comic Sans and Impact (k = 1). Measured 2026-10-31 with the TTFs of both faces (the freedom skin task report). Bold, italic and glow exist only on the SDF faces (SetBold / SetItalic / text shadow are no-ops on bitmap faces, measured 2026-10-31), so the mockup's bold Comic (node names, status, button, 'Сторінка в розробці!'), bold Times (marquee), italic Times (dev line), bold Courier (LED counters: PT Mono) the glowing Impact (branch name) and the tier labels (bold PT Mono, whose I has serifs like Verdana Bold's) use ozl_sdf_*; their label boxes are k x S tall (fonts README). Half-transparent fills are corrected for the game's linear-light blending: black at a is 1 - (1 - a)^2.2 (box .72 -> .939, tree .82 -> .977, footer .75 -> .953). Colours only the script sets (the cost verdicts' green, the locked grey, the dark red of a zero) live in the skin class, not here.",
   "color": {
     "freedom_txt": [0.8, 1.0, 0.4, 1.0],
     "freedom_dim": [0.561, 0.682, 0.353, 1.0],
@@ -20,7 +20,6 @@
     "freedom_link": [0.4, 0.8, 1.0, 1.0],
     "freedom_link_here": [1.0, 0.4, 1.0, 1.0],
     "freedom_led": [1.0, 0.188, 0.188, 1.0],
-    "freedom_led_off": [0.416, 0.063, 0.063, 1.0],
     "freedom_led_foot": [0.2, 1.0, 0.2, 1.0],
     "freedom_tier": [0.6, 1.0, 0.2, 1.0],
     "freedom_legend_edge": [0.4, 0.8, 0.2, 1.0],
@@ -31,11 +30,9 @@
     "freedom_cname": [0.502, 0.0, 0.502, 1.0],
     "freedom_cname_shadow": [1.0, 0.6, 1.0, 1.0],
     "freedom_sec_bg": [0.0, 0.502, 0.502, 1.0],
-    "freedom_cost_ok": [0.0, 0.502, 0.0, 1.0],
     "freedom_cost_bad": [0.753, 0.0, 0.0, 1.0],
     "freedom_navy": [0.0, 0.0, 0.502, 1.0],
     "freedom_link_blue": [0.0, 0.0, 0.933, 1.0],
-    "freedom_grey": [0.502, 0.502, 0.502, 1.0],
     "freedom_emboss": [0.91, 0.91, 0.91, 1.0],
     "freedom_new_red": [1.0, 0.0, 0.0, 1.0],
     "freedom_blink": [1.0, 0.4, 1.0, 1.0]
@@ -55,7 +52,7 @@
     "freedom_help_button": {"face": "OpenZone_Research/gui/fonts/ozl_sans28", "size": 15, "fixed": false},
     "freedom_bname": {"face": "OpenZone_Research/gui/fonts/ozl_sdf_oswaldb32", "size": 37, "fixed": false},
     "freedom_bsub": {"face": "OpenZone_Research/gui/fonts/ozl_sans28", "size": 16, "fixed": false},
-    "freedom_tier": {"face": "OpenZone_Research/gui/fonts/ozl_sansb28", "size": 16, "fixed": false},
+    "freedom_tier": {"face": "OpenZone_Research/gui/fonts/ozl_sdf_type32", "size": 14, "fixed": false},
     "freedom_legend": {"face": "OpenZone_Research/gui/fonts/ozl_sans28", "size": 15, "fixed": false},
     "freedom_tip": {"face": "OpenZone_Research/gui/fonts/ozl_sans28", "size": 16, "fixed": false},
     "freedom_or": {"face": "OpenZone_Research/gui/fonts/ozl_comic30", "size": 12, "fixed": false},

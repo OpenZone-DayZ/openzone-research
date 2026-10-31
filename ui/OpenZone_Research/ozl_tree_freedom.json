@@ -368,7 +368,7 @@
                     92
                   ],
                   "color": "$none",
-                  "note": "The banner (.fbanner): the spinning peace sign, the rainbow WordArt title of the player's language and the leaf, centred together (the skin places the two symbols by the title's width, OnShow), and the dev line bottom right.",
+                  "note": "The banner (.fbanner): the spinning peace sign, the rainbow WordArt title of the player's language and the leaf, centred together (the skin places the two symbols by the title's width once the banner is laid out, OnUpdate), and the dev line bottom right.",
                   "children": [
                     {
                       "icon": {
@@ -544,6 +544,71 @@
                     },
                     {
                       "icon": {
+                        "name": "LeftRidgeT",
+                        "at": [
+                          5,
+                          0
+                        ],
+                        "size": [
+                          308,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_t",
+                        "color": "$white",
+                        "note": "The edges run one unit under the corners at both ends and are drawn first: pieces that only abut round apart at 1.48 px per unit and leave a dark notch at each joint."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeB",
+                        "at": [
+                          5,
+                          688
+                        ],
+                        "size": [
+                          308,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_b",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeL",
+                        "at": [
+                          0,
+                          5
+                        ],
+                        "size": [
+                          6,
+                          684
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_l",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeR",
+                        "at": [
+                          312,
+                          5
+                        ],
+                        "size": [
+                          6,
+                          684
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_r",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
                         "name": "LeftRidgeTL",
                         "at": [
                           0,
@@ -603,70 +668,6 @@
                         ],
                         "set": "ozl_freedom",
                         "image": "ridge_br",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "LeftRidgeT",
-                        "at": [
-                          6,
-                          0
-                        ],
-                        "size": [
-                          306,
-                          6
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_t",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "LeftRidgeB",
-                        "at": [
-                          6,
-                          688
-                        ],
-                        "size": [
-                          306,
-                          6
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_b",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "LeftRidgeL",
-                        "at": [
-                          0,
-                          6
-                        ],
-                        "size": [
-                          6,
-                          682
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_l",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "LeftRidgeR",
-                        "at": [
-                          312,
-                          6
-                        ],
-                        "size": [
-                          6,
-                          682
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_r",
                         "color": "$white"
                       }
                     },
@@ -1229,6 +1230,71 @@
                     },
                     {
                       "icon": {
+                        "name": "TreeRidgeT",
+                        "at": [
+                          5,
+                          0
+                        ],
+                        "size": [
+                          796,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_t",
+                        "color": "$white",
+                        "note": "The edges run one unit under the corners at both ends and are drawn first: pieces that only abut round apart at 1.48 px per unit and leave a dark notch at each joint."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeB",
+                        "at": [
+                          5,
+                          688
+                        ],
+                        "size": [
+                          796,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_b",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeL",
+                        "at": [
+                          0,
+                          5
+                        ],
+                        "size": [
+                          6,
+                          684
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_l",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeR",
+                        "at": [
+                          800,
+                          5
+                        ],
+                        "size": [
+                          6,
+                          684
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_r",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
                         "name": "TreeRidgeTL",
                         "at": [
                           0,
@@ -1288,70 +1354,6 @@
                         ],
                         "set": "ozl_freedom",
                         "image": "ridge_br",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "TreeRidgeT",
-                        "at": [
-                          6,
-                          0
-                        ],
-                        "size": [
-                          794,
-                          6
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_t",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "TreeRidgeB",
-                        "at": [
-                          6,
-                          688
-                        ],
-                        "size": [
-                          794,
-                          6
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_b",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "TreeRidgeL",
-                        "at": [
-                          0,
-                          6
-                        ],
-                        "size": [
-                          6,
-                          682
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_l",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "TreeRidgeR",
-                        "at": [
-                          800,
-                          6
-                        ],
-                        "size": [
-                          6,
-                          682
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "ridge_r",
                         "color": "$white"
                       }
                     },
@@ -1913,18 +1915,18 @@
                             "row": {
                               "name": "OZL_FreedomTierLabel",
                               "h": 1,
-                              "note": "A tier label (.tierlab: bold Verdana 13, #99ff33); the menu puts the row's corner on the label's centre.",
+                              "note": "A tier label (.tierlab: bold Verdana 13, #99ff33, letter-spacing .2em); the menu puts the row's corner on the label's centre. Bold PT Mono SDF (the skin bolds it): its I has serifs like Verdana Bold's, and its fixed pitch is about Verdana's letters plus the .2em spacing.",
                               "children": [
                                 {
                                   "label": {
                                     "name": "TierText",
                                     "at": [
                                       -40,
-                                      -9
+                                      -11.025
                                     ],
                                     "size": [
                                       80,
-                                      18
+                                      19.25
                                     ],
                                     "font": "freedom_tier",
                                     "color": "$freedom_tier",
@@ -2075,8 +2077,9 @@
                                         }
                                       },
                                       {
-                                        "frame": {
+                                        "raw": {
                                           "name": "CostBarFill",
+                                          "class": "FrameWidgetClass",
                                           "at": [
                                             2,
                                             2
@@ -2085,6 +2088,9 @@
                                             0,
                                             8
                                           ],
+                                          "props": {
+                                            "ignorepointer": 1
+                                          },
                                           "children": [
                                             {
                                               "icon": {
@@ -2102,7 +2108,8 @@
                                                 "color": "$white"
                                               }
                                             }
-                                          ]
+                                          ],
+                                          "note": "The clipping frame the menu widens over the dashes; raw so it carries ignorepointer 1 (a frame takes the mouse, SKINS pointer rule)."
                                         }
                                       }
                                     ]
@@ -2201,6 +2208,71 @@
                     },
                     {
                       "icon": {
+                        "name": "InfoBevelT",
+                        "at": [
+                          3,
+                          0
+                        ],
+                        "size": [
+                          418,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_t",
+                        "color": "$white",
+                        "note": "The edges run one unit under the corners at both ends and are drawn first: pieces that only abut round apart at 1.48 px per unit and leave a dark notch at each joint."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelB",
+                        "at": [
+                          3,
+                          690
+                        ],
+                        "size": [
+                          418,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_b",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelL",
+                        "at": [
+                          0,
+                          3
+                        ],
+                        "size": [
+                          4,
+                          688
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_l",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelR",
+                        "at": [
+                          420,
+                          3
+                        ],
+                        "size": [
+                          4,
+                          688
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_r",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
                         "name": "InfoBevelTL",
                         "at": [
                           0,
@@ -2260,70 +2332,6 @@
                         ],
                         "set": "ozl_freedom",
                         "image": "win_br",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "InfoBevelT",
-                        "at": [
-                          4,
-                          0
-                        ],
-                        "size": [
-                          416,
-                          4
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "win_t",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "InfoBevelB",
-                        "at": [
-                          4,
-                          690
-                        ],
-                        "size": [
-                          416,
-                          4
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "win_b",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "InfoBevelL",
-                        "at": [
-                          0,
-                          4
-                        ],
-                        "size": [
-                          4,
-                          686
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "win_l",
-                        "color": "$white"
-                      }
-                    },
-                    {
-                      "icon": {
-                        "name": "InfoBevelR",
-                        "at": [
-                          420,
-                          4
-                        ],
-                        "size": [
-                          4,
-                          686
-                        ],
-                        "set": "ozl_freedom",
-                        "image": "win_r",
                         "color": "$white"
                       }
                     },
@@ -2476,7 +2484,7 @@
                                           "w": 382,
                                           "h": 37,
                                           "color": "$none",
-                                          "note": "The name (Impact 30, purple) over its pink shadow 2 units off; both word-wrapped into two lines. The skin sets the box to the lines in use (OnUpdate).",
+                                          "note": "The name (Impact 30, purple) over its pink shadow 2 units off; both word-wrapped into two lines. The skin sets the box to the lines in use (OnWrapped).",
                                           "children": [
                                             {
                                               "panel": {
@@ -3433,7 +3441,7 @@
                     50
                   ],
                   "color": "$none",
-                  "note": "The footer (.ffoot): the visit counter, the blinking NEW, the guestbook and links (inert), the copyright line. Centred as one row by the skin from the widths of its texts (OnUpdate, once).",
+                  "note": "The footer (.ffoot): the visit counter, the blinking NEW, the guestbook and links (inert), the copyright line. Centred as one row by the skin from the widths of its texts, each part sized to its text so nothing is clipped (OnUpdate, once).",
                   "children": [
                     {
                       "panel": {
@@ -3825,15 +3833,16 @@
                         "name": "BubbleMid",
                         "at": [
                           0,
-                          12
+                          11
                         ],
                         "size": [
                           266,
-                          106.34
+                          108.34
                         ],
                         "set": "ozl_freedom",
                         "image": "bubble_mid",
-                        "color": "$white"
+                        "color": "$white",
+                        "note": "Stretched to the text by the skin (LayHelper); it reaches one unit under both end slices (rows identical there), so their joints never round apart into a dark line."
                       }
                     },
                     {

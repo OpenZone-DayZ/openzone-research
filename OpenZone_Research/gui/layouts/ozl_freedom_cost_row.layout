@@ -83,6 +83,7 @@ FrameWidgetClass OZL_FreedomCostRow {
      mode blend
      "src alpha" 1
     }
+    // The clipping frame the menu widens over the dashes; raw so it carries ignorepointer 1 (a frame takes the mouse, SKINS pointer rule).
     FrameWidgetClass CostBarFill {
      visible 1
      position 2 2
@@ -92,6 +93,7 @@ FrameWidgetClass OZL_FreedomCostRow {
      hexactsize 1
      vexactsize 1
      priority 1
+     ignorepointer 1
      {
       ImageWidgetClass CostBarDash {
        visible 1

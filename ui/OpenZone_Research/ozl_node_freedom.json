@@ -246,8 +246,9 @@
                   "hidden": true,
                   "children": [
                     {
-                      "frame": {
+                      "raw": {
                         "name": "NodeBarFill",
+                        "class": "FrameWidgetClass",
                         "at": [
                           0,
                           0
@@ -256,6 +257,9 @@
                           0,
                           5
                         ],
+                        "props": {
+                          "ignorepointer": 1
+                        },
                         "children": [
                           {
                             "icon": {
@@ -273,7 +277,8 @@
                               "color": "$white"
                             }
                           }
-                        ]
+                        ],
+                        "note": "The clipping frame the menu widens over the dashes; raw so it carries ignorepointer 1 (SKINS pointer rule 1: in the node only NodeHit takes the mouse)."
                       }
                     }
                   ]

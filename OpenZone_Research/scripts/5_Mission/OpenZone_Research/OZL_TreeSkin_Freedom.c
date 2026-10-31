@@ -12,13 +12,15 @@
 // source/ui/freedom/ (набір ozl_freedom і текстура плитки); кольори й шрифти:
 // ui/tokens/freedom.json. Числа нижче -- ті самі токени в ARGB.
 //
-// Анімації -- в OnUpdate: бігучий рядок, кадри пацифіка, блимання «NEW», помічник
-// (гойдання, моргання, «Відчепись» на 10 с), світліший вузол під мишею, натиснуті кнопки.
-// Жирний, курсив і світіння рушій дає лише SDF-шрифтам (SetBold / SetItalic / тінь тексту на
-// бітмапових нічого не роблять, виміряно 2026-10-31), тож жирний Comic (назви вузлів, статус,
-// кнопка, «Сторінка в розробці!»), жирний і курсивний Times, жирний Courier табло (PT Mono) і
-// Impact назви гілки зі світінням -- шрифти ozl_sdf_*. Напівпрозорі кольори виправлено під
-// лінійне змішування рушія (чорний шар a -> 1 - (1 - a)^2.2, світлий на темному -> a^2.2).
+// Анімації -- в OnUpdate: бігучий рядок, кадри пацифіка, блимання «NEW» і пісочного годинника,
+// помічник (гойдання, моргання, «Відчепись» на 10 с), світліший вузол під мишею, натиснуті
+// кнопки. Жирний, курсив і світіння рушій дає лише SDF-шрифтам (SetBold / SetItalic / тінь
+// тексту на бітмапових нічого не роблять, виміряно 2026-10-31), тож жирний Comic (назви
+// вузлів, статус, кнопка, «Сторінка в розробці!»), жирний і курсивний Times, жирний Courier
+// табло і підписи тирів (PT Mono) та Impact назви гілки зі світінням -- шрифти ozl_sdf_*.
+// Напівпрозорі кольори виправлено під лінійне змішування рушія (чорний шар a -> 1 - (1 - a)^2.2,
+// світлий на темному -> a^2.2). Що скін рухає чи розтягує, він міряє в самій розкладці (Measure,
+// щойно її розкладено); сталі нижче -- числа мокапа, не розкладки, або поряд названо, звідки вони.
 
 #ifndef NO_GUI
 
@@ -26,21 +28,55 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
 {
     static const string SET = "set:ozl_freedom image:";
     static const float MARQUEE_SEC  = 26;     // прохід бігучого рядка (f-marquee)
-    static const float MARQUEE_Y    = -2.62;  // верх рядка в рамці: SDF-напис 1.562 x 20 заввишки
     static const float PEACE_SEC    = 6;      // оберт пацифіка (f-spin)
     static const int   PEACE_FRAMES = 16;
     static const float BOB_SEC      = 2.4;    // гойдання листика (f-bob)
+    static const float BOB          = 6;      // ...на 6 угору (translateY(-6px))
     static const float WINK_SEC     = 5;      // моргання (f-wink)
     static const float HIDE_SEC     = 10;     // «Відчепись»
     static const float FADE_SEC     = 0.3;    // .fhelp { transition: .3s }
+    static const float HELP_DROP    = 20;     // .fhelp.hide: translateY(20px)
+    static const float LEAF_GAP     = 4;      // листик під хмаркою (margin-top 4)
     static const float TIP_LINE     = 18.2;   // рядок хмарки: Verdana 14 / 1.3
+    static const float TITLE_GAP    = 4;      // заголовок підказки -> текст
+    static const float TEXT_GAP     = 8;      // текст -> кнопки
+    static const float BTN_PAD      = 24;     // кнопка хмарки: слово + padding 0 12px
+    static const float BTN_GAP      = 8;      // між кнопками хмарки
+    static const float BEVEL_W      = 2;      // фаска кнопки Windows 98
     static const float NAME_LINE    = 37;     // рядок назви в картці (Impact 30)
     static const int   TIPS         = 6;      // своя підказка вузла + п'ять загальних
-    static const float LED_Y        = -0.75;  // верх цифри табло в рядку пулу (SDF PT Mono 20)
-    static const float BRANCH_ROW   = 24;     // рядок гілки в меню
-    // Блимання мокапа гасить до прозорості .2; рушій змішує лінійно, тож світле на темному
-    // треба .2^2.2 = .03, щоб видно було стільки ж.
-    static const float BLINK_DIM    = 0.03;
+    static const float BRANCH_ROW   = 24;     // рядок гілки в меню (рядок ozl_freedom_branch_row)
+    static const float LINK_GAP     = 9.5;    // «»», назва і «← ти тут» у рядку гілки
+    static const float LEGEND_GAP   = 14;     // пункти легенди (.legend gap 14)
+    static const float TAG_PAD      = 12;     // табличка розділу: слово + padding 0 6px
+    static const float NEW_EDGE_PAD = 10;     // «NEW!»: рамка і поле навколо слова
+    static const float NEW_FILL_PAD = 8;
+    static const float POOL_GAP     = 8;      // меню гілок -> смуга «БАЛИ»
+    static const float POOL_CLEAR   = 3;      // низ балів -- на 3 вище хмарки помічника
+    static const float POOL_MIN     = 110;    // бали показують щонайменше три рядки
+    // Заголовок «ВордАрт»: половина ширини напису в запеченій картинці (мокап: 637.08 укр.,
+    // 450.95 англ.) і відстань до символів обабіч (margin 0 26px).
+    static const float ART_HALF_UA  = 318.54;
+    static const float ART_HALF_EN  = 225.475;
+    static const float ART_GAP      = 26;
+    // Підвал (.ffoot): проміжок 18, пробіл шрифту 4, ширина ★ і ☮ у Verdana 13.
+    static const float FOOT_GAP     = 18;
+    static const float FOOT_SPACE   = 4;
+    static const float STAR_W       = 10.84;
+    static const float PEACE_W      = 11.2;
+    // Табло пулу -- числа рядка ozl_freedom_pool_row (рядок вимальовує меню, тож у PaintPoolRow
+    // він ще не розкладений і не міряється): PoolLed 232..296 з рамкою 4, цифри між 236 і 292;
+    // PoolDigit0 на 272.6, 14 завширшки (центр 279.6), слоти через 13.8, верх цифри -0.75.
+    static const float LED_PITCH    = 13.8;
+    static const float LED_RIGHT    = 279.6;
+    static const float LED_EDGE     = 292;
+    static const float LED_SPAN     = 56;
+    static const float DIGIT_HALF   = 7;
+    static const float LED_Y        = -0.75;
+    // Блимання мокапа (blink 1s steps(2)): 1, .6, .2, .6 по чверть секунди. Рушій змішує
+    // лінійно, тож світле на темному -- a^2.2: .6 -> .325, .2 -> .03.
+    static const float BLINK_MID    = 0.325;
+    static const float BLINK_LOW    = 0.03;
     // Світіння (тінь тексту SDF): табло -- 0 0 6px rgba(255,48,48,.8) мокапа, назва гілки --
     // 0 0 8px #ff00ff. Розмір і непрозорість -- з виміру СОП (4/.45 ледь, 8/1.0 сильно).
     static const int   LED_GLOW     = 5;
@@ -48,7 +84,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     static const int   NAME_GLOW    = 7;
     static const float NAME_GLOW_A  = 0.75;
 
-    // Кольори поза базовою палітрою (ARGB; токени freedom_* у ui/tokens/freedom.json).
+    // Кольори поза базовою палітрою (ARGB; ті, що є й у розкладці, -- токени freedom_* у
+    // ui/tokens/freedom.json; Grey, LedOff і CostOk -- лише тут).
     int Ink;          // чорний текст на світлому
     int White;
     int WinLo;        // #404040: темний бік кнопки Windows 98
@@ -78,9 +115,9 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     int Magenta;      // #ff00ff: світіння назви гілки
 
     protected float  m_Time;
-    protected float  m_MarqueeW;
+    protected float  m_MarqueeW;    // ширина тексту бігучого рядка
     protected int    m_PeaceFrame;
-    protected bool   m_BlinkOn;
+    protected int    m_BlinkStep;   // чверть секунди блимання: 0..3, -1 -- ще не було
     protected string m_HoverShown;
     protected bool   m_BtnOn;
     protected bool   m_BtnDown;
@@ -90,6 +127,30 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     protected int    m_FootTries;
     protected int    m_NameLines;
     protected float  m_SkyH;
+    protected bool   m_LeftPending;   // меню гілок і бали чекають розкладки
+    protected bool   m_BannerPending; // символи обабіч заголовка -- теж
+    protected bool   m_TiersDirty;    // меню переписало підписи тирів: зробити жирними
+    protected float  m_ArtHalf;
+
+    // Числа розкладки, виміряні в ній самій (Measure), одиниці.
+    protected bool   m_Measured;
+    protected int    m_MeasureTries;
+    protected float  m_StripW;     // рамка бігучого рядка
+    protected float  m_TickerY;    // верх рядка в ній
+    protected float  m_ArtMid;     // середина заголовка
+    protected float  m_PeaceW;     // символ обабіч нього
+    protected float  m_FootW;      // підвал
+    protected float  m_CounterW;   // табло лічильника
+    protected float  m_ListY;      // меню гілок у рамці
+    protected float  m_PoolTop;    // список балів під своєю смугою
+    protected float  m_PoolFloor;  // нижче балам не можна: хмарка помічника
+    protected float  m_HelpX;      // помічник на своєму місці
+    protected float  m_HelpY;
+    protected float  m_LeafX;
+    protected float  m_Pad;        // хмарка: рамка + поле, згори й знизу
+    protected float  m_InnerR;     // правий край тексту в хмарці
+    protected float  m_Slice;      // верхній і нижній зрізи хмарки
+    protected float  m_BtnH;       // кнопка хмарки
 
     // Помічник.
     protected string m_TipKey;
@@ -260,6 +321,14 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         return OZL_Text.Upper(OZL_Text.Words(key));
     }
 
+    // Підписи тирів -- жирний PT Mono (SDF): його «I» із засічками, як у жирної Verdana мокапа.
+    // Меню щойно переписало підпис -- OnUpdate зробить його жирним.
+    override string TierText(int tier)
+    {
+        m_TiersDirty = true;
+        return super.TierText(tier);
+    }
+
     // Назва жирним Comic, у закритого -- над світлою тінню (той самий текст, перенесений так
     // само: свій контейнер рядків); доступний -- з табличкою «NEW!» на ширину слова.
     override void PaintNode(OZL_TreeMenu menu, Widget cell, OZL_NodeView node, string status, bool selected)
@@ -285,10 +354,19 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             if (fresh)
             {
                 TextWidget word = TextWidget.Cast(cell.FindAnyWidget("NodeMarkText"));
-                menu.FitLater(word, cell.FindAnyWidget("NodeNewEdge"), 10, 0);
-                menu.FitLater(word, cell.FindAnyWidget("NodeNewFill"), 8, 0);
+                menu.FitLater(word, cell.FindAnyWidget("NodeNewEdge"), NEW_EDGE_PAD, 0);
+                menu.FitLater(word, cell.FindAnyWidget("NodeNewFill"), NEW_FILL_PAD, 0);
                 BlinkTag(cell);
             }
+        }
+        // Пісочний годинник у ділі блимає (.st-research .mark); інша мітка -- повна.
+        Widget mark = cell.FindAnyWidget("NodeMark");
+        if (mark)
+        {
+            float shown = 1;
+            if (status == "researching")
+                shown = BlinkAlpha();
+            mark.SetAlpha(shown);
         }
         // Світлішу кнопку під мишею ставить OnUpdate; перемальована комірка починає без неї.
         Widget hover = cell.FindAnyWidget("NodeHoverFace");
@@ -317,9 +395,9 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         LedDigits(menu, row, have.ToString(), ink, lit);
     }
 
-    // Цифри табло справа наліво по слотах PoolDigit0.. (0 -- крайній правий) через 13.8
-    // одиниці, як жирний Courier 18 з letter-spacing 3 у мокапі (тут жирний PT Mono SDF); від
-    // п'яти цифр -- тісніше, у ту саму коробку. Сяйво (text-shadow мокапа) -- тінь тексту SDF.
+    // Цифри табло справа наліво по слотах PoolDigit0.. (0 -- крайній правий) через LED_PITCH,
+    // як жирний Courier 18 з letter-spacing 3 у мокапі (тут жирний PT Mono SDF); від п'яти
+    // цифр -- тісніше, у ту саму коробку. Сяйво (text-shadow мокапа) -- тінь тексту SDF.
     protected void LedDigits(OZL_TreeMenu menu, Widget row, string digits, int ink, bool lit)
     {
         int n = digits.Length();
@@ -328,12 +406,12 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             digits = "999999";
             n = 6;
         }
-        float pitch = 13.8;
-        float right = 279.6;
+        float pitch = LED_PITCH;
+        float right = LED_RIGHT;
         if (n > 4)
         {
-            pitch = 56.0 / n;
-            right = 292 - pitch / 2;
+            pitch = LED_SPAN / n;
+            right = LED_EDGE - pitch / 2;
         }
         for (int i = 0; i < 6; i++)
         {
@@ -349,8 +427,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             digit.SetColor(ink);
             if (lit)
                 digit.SetShadow(LED_GLOW, Led, LED_GLOW_A, 0, 0);
-            if (n > 4)
-                menu.PlaceUnits(digit, right - pitch * i - 7, LED_Y);
+            // Завжди на місце: рядок, який колись мав п'ять цифр, не лишає їх тісними.
+            menu.PlaceUnits(digit, right - pitch * i - DIGIT_HALF, LED_Y);
         }
     }
 
@@ -476,7 +554,7 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         m_Time           = 0;
         m_MarqueeW       = 0;
         m_PeaceFrame     = -1;
-        m_BlinkOn        = true;
+        m_BlinkStep      = -1;
         m_HoverShown     = "";
         m_BtnDown        = false;
         m_NextDown       = false;
@@ -485,24 +563,26 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         m_TitleLines     = 0;
         m_TextLines      = 0;
         m_ButtonsPending = true;
-        m_BubbleH        = 130.34;
+        m_BubbleH        = 0;
         m_LeafFrame      = 0;
         m_HelpState      = 0;
         m_HelpClock      = 0;
         m_TipKey         = "-";
         m_TipIndex       = 0;
+        m_Measured       = false;
+        m_MeasureTries   = 0;
+        m_LeftPending    = false;
+        m_BannerPending  = true;
+        m_TiersDirty     = true;
 
-        // Заголовок мовою гравця і символи обабіч нього на відстані 26: ширина напису в
-        // мокапі -- 637.08 (укр.) і 450.95 (англ.), центр -- 800.
+        // Заголовок мовою гравця; символи обабіч нього ставить LayBanner за його шириною.
         string art = OZL_Text.Words("STR_OZL_SKIN_FREEDOM_WORDART_IMG");
         ImageWidget wordart = ImageWidget.Cast(menu.Role("WordArt"));
         if (wordart && wordart.LoadImageFile(0, art))
             wordart.SetImage(0);
-        float half = 318.54;
+        m_ArtHalf = ART_HALF_UA;
         if (art.IndexOf("wordart_en") >= 0)
-            half = 225.475;
-        menu.PlaceUnits(menu.Role("Peace"), 800 - half - 26 - 66, 13);
-        menu.PlaceUnits(menu.Role("Leaf"), 800 + half + 26, 13);
+            m_ArtHalf = ART_HALF_EN;
 
         // Times курсивом і жирним, Comic жирним (шрифти SDF), назва гілки світиться пурпуром.
         TextWidget dev = TextWidget.Cast(menu.Role("DevName"));
@@ -515,7 +595,7 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         if (branch)
             branch.SetShadow(NAME_GLOW, Magenta, NAME_GLOW_A, 0, 0);
 
-        menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
+        menu.FlowLater(menu.Role("LegendRow"), LEGEND_GAP, 0, false);
 
         // Лічильник відвідувачів: цифра на слот (letter-spacing мокапа). Ряд підвалу
         // розставляє OnUpdate, щойно тексти мають ширину.
@@ -556,25 +636,12 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
                     color = MenuHere;
                 Paint(row.FindAnyWidget("RowName"), color);
                 Paint(row.FindAnyWidget("RowNameLine"), color);
-                menu.FlowLater(row.FindAnyWidget("RowFlow"), 9.5, 0, false);
+                menu.FlowLater(row.FindAnyWidget("RowFlow"), LINK_GAP, 0, false);
                 row = row.GetSibling();
             }
         }
-        // Список гілок -- на стільки рядків, скільки гілок (24 одиниці), далі проміжок 8 і бали;
-        // низ балів -- над хмаркою помічника.
-        int n = menu.BranchCount();
-        if (n < 1)
-            n = 1;
-        menu.SizeUnits(menu.Role("BranchScroll"), 308, BRANCH_ROW * n);
-        Widget branches = menu.Role("BranchScroll");
-        if (branches)
-            branches.Update();
-        float top = 40 + BRANCH_ROW * n + 8;
-        menu.PlaceUnits(menu.Role("PoolSection"), 5, top);
-        float room = 357 - top - 35;
-        if (room < 110)
-            room = 110;
-        menu.SizeUnits(menu.Role("PoolScroll"), 308, room);
+        m_LeftPending = true;
+        LayLeft(menu);
 
         TextWidget shade = TextWidget.Cast(menu.Role("BranchNameShadow"));
         if (shade)
@@ -634,8 +701,15 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             n = 2;
         if (n == m_NameLines)
             return;
+        // Ширину коробки HeightUnits бере з екрана: ще не розкладена -- наступне перенесення.
+        Widget nameBox = menu.Role("CardNameBox");
+        float boxW;
+        float boxH;
+        menu.UnitsOf(nameBox, boxW, boxH);
+        if (boxW <= 0)
+            return;
         m_NameLines = n;
-        menu.SizeUnits(menu.Role("CardNameBox"), 382, NAME_LINE * n);
+        menu.HeightUnits(nameBox, NAME_LINE * n);
         menu.RefreshCard();
     }
 
@@ -667,14 +741,115 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     override void OnUpdate(OZL_TreeMenu menu, float dt)
     {
         m_Time += dt;
-        RunMarquee(menu);
         RunPeace(menu);
         RunBlink(menu);
-        RunHelper(menu, dt);
         RunHover(menu);
         RunPress(menu);
+        if (m_TiersDirty)
+            BoldTiers(menu);
+        // Далі -- те, що стоїть за числами розкладки: до її першого кадру -- як у файлі.
+        if (!m_Measured && !Measure(menu))
+            return;
+        if (m_BannerPending)
+            LayBanner(menu);
+        if (m_LeftPending)
+            LayLeft(menu);
+        RunMarquee(menu);
+        RunHelper(menu, dt);
         if (m_FootPending)
             RunFooter(menu);
+    }
+
+    // ------------------------------------------------------------------
+    // Розкладка
+    // ------------------------------------------------------------------
+
+    // Числа розкладки, за якими скін рухає й розтягує віджети, -- з самих віджетів, раз на
+    // відкриття, щойно вони розкладені (до того віджет міряється нулями).
+    protected bool Measure(OZL_TreeMenu menu)
+    {
+        if (m_MeasureTries > 600)
+            return false;
+        m_MeasureTries++;
+        float stripW = WidthOf(menu, menu.Role("Marquee"));
+        float footW = WidthOf(menu, menu.Role("Footer"));
+        float counterW = WidthOf(menu, menu.Role("FootCounter"));
+        float peaceW = WidthOf(menu, menu.Role("Peace"));
+        float artW = WidthOf(menu, menu.Role("WordArt"));
+        float textW = WidthOf(menu, menu.Role("HelperText"));
+        float slice = HeightOf(menu, menu.Role("BubbleTop"));
+        float btnH = HeightOf(menu, menu.Role("HelperNextBox"));
+        if (stripW <= 0 || footW <= 0 || counterW <= 0 || peaceW <= 0)
+            return false;
+        if (artW <= 0 || textW <= 0 || slice <= 0 || btnH <= 0)
+            return false;
+        m_StripW   = stripW;
+        m_FootW    = footW;
+        m_CounterW = counterW;
+        m_PeaceW   = peaceW;
+        m_Slice    = slice;
+        m_BtnH     = btnH;
+        m_ArtMid   = XOf(menu, menu.Role("WordArt")) + artW / 2;
+        m_TickerY  = YOf(menu, menu.Role("MarqueeText"));
+        m_ListY    = YOf(menu, menu.Role("BranchScroll"));
+        m_PoolTop  = YOf(menu, menu.Role("PoolScroll"));
+        m_HelpX    = XOf(menu, menu.Role("HelperRoot"));
+        m_HelpY    = YOf(menu, menu.Role("HelperRoot"));
+        m_PoolFloor = m_HelpY - YOf(menu, menu.Role("LeftBox")) - POOL_CLEAR;
+        m_LeafX    = XOf(menu, menu.Role("HelperLeaf"));
+        m_Pad      = YOf(menu, menu.Role("HelperTitle"));
+        m_InnerR   = XOf(menu, menu.Role("HelperText")) + textW;
+        if (m_BubbleH <= 0)
+            m_BubbleH = YOf(menu, menu.Role("BubbleBot")) + slice;
+        m_Measured = true;
+        return true;
+    }
+
+    // Пацифік і листок обабіч заголовка мовою гравця (margin 0 26px мокапа).
+    protected void LayBanner(OZL_TreeMenu menu)
+    {
+        m_BannerPending = false;
+        PlaceX(menu, menu.Role("Peace"), m_ArtMid - m_ArtHalf - ART_GAP - m_PeaceW);
+        PlaceX(menu, menu.Role("Leaf"), m_ArtMid + m_ArtHalf + ART_GAP);
+    }
+
+    // Меню гілок -- на стільки рядків, скільки гілок, під ним проміжок і бали; низ балів --
+    // над хмаркою помічника, але щонайменше POOL_MIN.
+    protected void LayLeft(OZL_TreeMenu menu)
+    {
+        if (!m_Measured)
+            return;
+        m_LeftPending = false;
+        int n = menu.BranchCount();
+        if (n < 1)
+            n = 1;
+        Widget branches = menu.Role("BranchScroll");
+        menu.HeightUnits(branches, BRANCH_ROW * n);
+        if (branches)
+            branches.Update();
+        float top = m_ListY + BRANCH_ROW * n + POOL_GAP;
+        PlaceY(menu, menu.Role("PoolSection"), top);
+        float room = m_PoolFloor - top - m_PoolTop;
+        if (room < POOL_MIN)
+            room = POOL_MIN;
+        menu.HeightUnits(menu.Role("PoolScroll"), room);
+    }
+
+    // Підписи тирів, які меню щойно переписало, -- жирні (PT Mono SDF).
+    protected void BoldTiers(OZL_TreeMenu menu)
+    {
+        m_TiersDirty = false;
+        Widget tiers = menu.Role("TreeTiers");
+        if (!tiers)
+            return;
+        Widget lab = tiers.GetChildren();
+        while (lab)
+        {
+            TextWidget t = TextWidget.Cast(lab.FindAnyWidget("TierText"));
+            if (t)
+                t.SetBold(true);
+            lab = lab.GetSibling();
+        }
     }
 
     // ------------------------------------------------------------------
@@ -696,12 +871,13 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             if (pw > 0)
                 m_MarqueeW = pw / menu.Px();
         }
+        // Ширини ще нема -- рядок лишається за правим краєм, де його поставила розкладка.
         float width = m_MarqueeW;
         if (width <= 0)
-            width = 1532;
+            return;
         float t = m_Time / MARQUEE_SEC;
         t = t - Math.Floor(t);
-        menu.PlaceUnits(text, 1600 - (1600 + width) * t, MARQUEE_Y);
+        menu.PlaceUnits(text, m_StripW - (m_StripW + width) * t, m_TickerY);
     }
 
     protected void RunPeace(OZL_TreeMenu menu)
@@ -719,18 +895,18 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             peace.SetImage(0);
     }
 
-    // Блимання мокапа (blink 1s steps(2)): пів секунди видно, пів -- прозорість .2 (тут
-    // BLINK_DIM: лінійне змішування).
+    // Блимання мокапа (blink 1s steps(2): 1 -> .6 -> .2 -> .6, чверть секунди кожне):
+    // «★ NEW ★» підвалу, табличка «NEW!» доступного вузла і пісочний годинник того, що в ділі.
     protected void RunBlink(OZL_TreeMenu menu)
     {
         float f = m_Time - Math.Floor(m_Time);
-        bool on = f < 0.5;
-        if (on == m_BlinkOn)
+        int step = f * 4;
+        if (step > 3)
+            step = 3;
+        if (step == m_BlinkStep)
             return;
-        m_BlinkOn = on;
-        float a = BLINK_DIM;
-        if (on)
-            a = 1;
+        m_BlinkStep = step;
+        float a = BlinkAlpha();
         Fade(menu.Role("FootStarL"), a);
         Fade(menu.Role("FootNewText"), a);
         Fade(menu.Role("FootStarR"), a);
@@ -743,18 +919,41 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             Widget tag = cell.FindAnyWidget("NodeNew");
             if (tag && tag.IsVisible())
                 BlinkTag(cell);
+            else if (Researching(menu, cell))
+                Fade(cell.FindAnyWidget("NodeMark"), a);
             cell = cell.GetSibling();
         }
     }
 
+    protected float BlinkAlpha()
+    {
+        if (m_BlinkStep <= 0)
+            return 1;
+        if (m_BlinkStep == 2)
+            return BLINK_LOW;
+        return BLINK_MID;
+    }
+
     protected void BlinkTag(Widget cell)
     {
-        float a = BLINK_DIM;
-        if (m_BlinkOn)
-            a = 1;
+        float a = BlinkAlpha();
         Fade(cell.FindAnyWidget("NodeNewEdge"), a);
         Fade(cell.FindAnyWidget("NodeNewFill"), a);
         Fade(cell.FindAnyWidget("NodeMarkText"), a);
+    }
+
+    // Комірка cell:<id> вузла, що досліджується.
+    protected bool Researching(OZL_TreeMenu menu, Widget cell)
+    {
+        string nm = cell.GetName();
+        if (nm.IndexOf("cell:") != 0)
+            return false;
+        OZL_NodeView n = menu.NodeOf(nm.Substring(5, nm.Length() - 5));
+        if (!n)
+            return false;
+        if (n.Status == "researching")
+            return true;
+        return false;
     }
 
     // Вузол під мишею -- та сама кнопка, на 8 % світліша (.node:hover .cell).
@@ -844,8 +1043,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     }
 
     // Помічник: хмарка за рядками підказки, кнопки за ширинами слів, листик під хмаркою
-    // гойдається на 6 одиниць (f-bob) і моргає раз на 5 с (f-wink: 92 %..100 %), «Відчепись»
-    // -- згасає й опускається на 20 за 0.3 с і через 10 с від кліку повертається.
+    // гойдається на BOB (f-bob) і моргає раз на 5 с (f-wink: 92 %..100 %), «Відчепись» --
+    // згасає й опускається на HELP_DROP за 0.3 с і через 10 с від кліку повертається.
     protected void RunHelper(OZL_TreeMenu menu, float dt)
     {
         Widget root = menu.Role("HelperRoot");
@@ -888,8 +1087,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
                     k = 0;
             }
             HelperAlpha(k);
-            drop = 20 * (1 - k);
-            menu.PlaceUnits(root, 40, 500 + drop);
+            drop = HELP_DROP * (1 - k);
+            menu.PlaceUnits(root, m_HelpX, m_HelpY + drop);
         }
         if (!root.IsVisible())
             return;
@@ -899,8 +1098,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         if (titles != m_TitleLines || texts != m_TextLines || m_ButtonsPending)
             LayHelper(menu, titles, texts);
 
-        float bob = 3 - 3 * Math.Cos(2 * Math.PI * m_Time / BOB_SEC);
-        menu.PlaceUnits(menu.Role("HelperLeaf"), 138, m_BubbleH + 4 - 6 - bob);
+        float bob = BOB / 2 - BOB / 2 * Math.Cos(2 * Math.PI * m_Time / BOB_SEC);
+        menu.PlaceUnits(menu.Role("HelperLeaf"), m_LeafX, m_BubbleH + LEAF_GAP - BOB - bob);
 
         float wink = m_Time / WINK_SEC;
         wink = (wink - Math.Floor(wink)) * WINK_SEC;
@@ -924,7 +1123,9 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             leaf.SetImage(0);
     }
 
-    // Хмарка: 1 рамка + 10 поля, заголовок, 4, текст, 8, кнопки 23.6, 10 + 1 знизу (.fbubble).
+    // Хмарка (.fbubble): рамка й поле (m_Pad), заголовок, TITLE_GAP, текст, TEXT_GAP, кнопки,
+    // знову рамка й поле. Середній зріз заходить на одиницю під обидва крайні (рядки там
+    // однакові): стики, що лише торкаються, при 1.48 px на одиницю розходяться темною рискою.
     protected void LayHelper(OZL_TreeMenu menu, int titles, int texts)
     {
         float next = TextUnits(menu, "HelperNextText");
@@ -934,30 +1135,32 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         m_ButtonsPending = false;
         m_TitleLines = titles;
         m_TextLines = texts;
-        float textY = 11 + titles * TIP_LINE + 4;
-        menu.PlaceUnits(menu.Role("HelperText"), 13, textY);
-        float by = textY + texts * TIP_LINE + 8;
-        float hideW = hide + 24;
-        float nextW = next + 24;
-        float hideX = 249 - hideW;
+        float textY = m_Pad + titles * TIP_LINE + TITLE_GAP;
+        PlaceY(menu, menu.Role("HelperText"), textY);
+        float by = textY + texts * TIP_LINE + TEXT_GAP;
+        float hideW = hide + BTN_PAD;
+        float nextW = next + BTN_PAD;
+        float hideX = m_InnerR - hideW;
         LayButton(menu, "HelperHide", hideX, by, hideW);
-        LayButton(menu, "HelperNext", hideX - 8 - nextW, by, nextW);
-        m_BubbleH = by + 23.6 + 11;
-        menu.SizeUnits(menu.Role("BubbleMid"), 266, m_BubbleH - 24);
-        menu.PlaceUnits(menu.Role("BubbleBot"), 0, m_BubbleH - 12);
+        LayButton(menu, "HelperNext", hideX - BTN_GAP - nextW, by, nextW);
+        m_BubbleH = by + m_BtnH + m_Pad;
+        Widget mid = menu.Role("BubbleMid");
+        PlaceY(menu, mid, m_Slice - 1);
+        menu.HeightUnits(mid, m_BubbleH - 2 * m_Slice + 2);
+        PlaceY(menu, menu.Role("BubbleBot"), m_BubbleH - m_Slice);
     }
 
-    // Кнопка хмарки: тло, фаска 2 (світла згори й зліва), слово, клік -- на ширину слова + 24.
+    // Кнопка хмарки: тло, фаска (світла згори й зліва), слово, клік -- на ширину слова + поле.
     protected void LayButton(OZL_TreeMenu menu, string prefix, float x, float y, float width)
     {
-        float h = 23.6;
+        float h = m_BtnH;
         menu.PlaceUnits(menu.Role(prefix + "Box"), x, y);
         menu.SizeUnits(menu.Role(prefix + "Box"), width, h);
         Part(menu, prefix + "Face", 0, 0, width, h);
-        Part(menu, prefix + "Top", 0, 0, width, 2);
-        Part(menu, prefix + "Left", 0, 0, 2, h);
-        Part(menu, prefix + "Bottom", 0, h - 2, width, 2);
-        Part(menu, prefix + "Right", width - 2, 0, 2, h);
+        Part(menu, prefix + "Top", 0, 0, width, BEVEL_W);
+        Part(menu, prefix + "Left", 0, 0, BEVEL_W, h);
+        Part(menu, prefix + "Bottom", 0, h - BEVEL_W, width, BEVEL_W);
+        Part(menu, prefix + "Right", width - BEVEL_W, 0, BEVEL_W, h);
         Part(menu, prefix + "Text", 0, 0, width, h);
         Part(menu, prefix, 0, 0, width, h);
     }
@@ -1008,12 +1211,6 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
             title = OZL_Text.Words(general + "_TITLE");
             text = OZL_Text.Words(general + "_TEXT");
         }
-        for (int i = 0; i < 3; i++)
-        {
-            TextWidget line = TextWidget.Cast(menu.Role("HelperTitle" + i.ToString()));
-            if (line)
-                line.SetBold(true);
-        }
         menu.PutText(menu.Role("HelperTitle"), title, Ink);
         menu.PutText(menu.Role("HelperText"), text, Ink);
     }
@@ -1040,8 +1237,10 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         return stem + "NONE";
     }
 
-    // Підвал -- один ряд по центру з проміжком 18 (.ffoot): лічильник, «★ NEW ★», два
-    // посилання, копірайт із пацифіком. Ширини -- з текстів, раз, коли вони розкладені.
+    // Підвал -- один ряд по центру з проміжком FOOT_GAP (.ffoot): лічильник, «★ NEW ★», два
+    // посилання, копірайт із пацифіком. Ширини -- з текстів, раз, коли вони розкладені; кожна
+    // частина -- завширшки зі свій текст (англійський копірайт довший за рамку файлу, і ☮
+    // обрізало навпіл). Висоти й верхи -- з розкладки: ряд рухається лише вбік.
     protected void RunFooter(OZL_TreeMenu menu)
     {
         float label = TextUnits(menu, "FootCounterLabel");
@@ -1056,27 +1255,40 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         if (!ready && m_FootTries < 30)
             return;
         m_FootPending = false;
-        float sp = 4;          // пробіл шрифту підвалу
-        float star = 10.84;    // ★ Verdana 13
-        float counter = label + sp + 98;
-        float blink = star + sp + word + sp + star;
-        float tail = copy + sp + 11.2;
-        float x = (1600 - counter - blink - guest - links - tail - 4 * 18) / 2;
-        menu.PlaceUnits(menu.Role("FootCounterLabel"), x, 16.5);
-        menu.PlaceUnits(menu.Role("FootCounter"), x + label + sp, 13);
-        x += counter + 18;
-        menu.PlaceUnits(menu.Role("FootNew"), x, 16.5);
-        menu.PlaceUnits(menu.Role("FootNewText"), star + sp, 0);
-        menu.PlaceUnits(menu.Role("FootStarR"), star + sp + word + sp, -0.5);
-        x += blink + 18;
-        menu.PlaceUnits(menu.Role("FootGuest"), x, 17);
-        menu.SizeUnits(menu.Role("FootGuestLine"), guest, 1);
-        x += guest + 18;
-        menu.PlaceUnits(menu.Role("FootLinks"), x, 17);
-        menu.SizeUnits(menu.Role("FootLinksLine"), links, 1);
-        x += links + 18;
-        menu.PlaceUnits(menu.Role("FootCopy"), x, 16.5);
-        menu.PlaceUnits(menu.Role("FootPeace"), copy + sp, -0.5);
+        float counter = label + FOOT_SPACE + m_CounterW;
+        float blink = STAR_W + FOOT_SPACE + word + FOOT_SPACE + STAR_W;
+        float tail = copy + FOOT_SPACE + PEACE_W;
+        float x = (m_FootW - counter - blink - guest - links - tail - 4 * FOOT_GAP) / 2;
+        PlaceX(menu, menu.Role("FootCounterLabel"), x);
+        PlaceX(menu, menu.Role("FootCounter"), x + label + FOOT_SPACE);
+        x += counter + FOOT_GAP;
+
+        Widget fresh = menu.Role("FootNew");
+        PlaceX(menu, fresh, x);
+        PlaceX(menu, menu.Role("FootNewText"), STAR_W + FOOT_SPACE);
+        Widget star = menu.Role("FootStarR");
+        float starX = STAR_W + FOOT_SPACE + word + FOOT_SPACE;
+        PlaceX(menu, star, starX);
+        WidthUnits(menu, fresh, starX + WidthOf(menu, star));
+        x += blink + FOOT_GAP;
+
+        Widget guestBox = menu.Role("FootGuest");
+        PlaceX(menu, guestBox, x);
+        WidthUnits(menu, guestBox, guest);
+        WidthUnits(menu, menu.Role("FootGuestLine"), guest);
+        x += guest + FOOT_GAP;
+
+        Widget linksBox = menu.Role("FootLinks");
+        PlaceX(menu, linksBox, x);
+        WidthUnits(menu, linksBox, links);
+        WidthUnits(menu, menu.Role("FootLinksLine"), links);
+        x += links + FOOT_GAP;
+
+        Widget copyBox = menu.Role("FootCopy");
+        PlaceX(menu, copyBox, x);
+        Widget peace = menu.Role("FootPeace");
+        PlaceX(menu, peace, copy + FOOT_SPACE);
+        WidthUnits(menu, copyBox, copy + FOOT_SPACE + WidthOf(menu, peace));
     }
 
     // ------------------------------------------------------------------
@@ -1092,7 +1304,7 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         bool shown = word.IsVisible();
         box.Show(shown);
         if (shown)
-            menu.FitLater(word, menu.Role(tag + "Bg"), 12, 0);
+            menu.FitLater(word, menu.Role(tag + "Bg"), TAG_PAD, 0);
     }
 
     protected void Collect(Widget root)
@@ -1130,6 +1342,82 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         int ph;
         t.GetTextSize(pw, ph);
         return pw / menu.Px();
+    }
+
+    // Розмір і місце віджета в одиницях розкладки -- з екрана (до першого кадру там нулі).
+    protected float WidthOf(OZL_TreeMenu menu, Widget w)
+    {
+        float width;
+        float height;
+        menu.UnitsOf(w, width, height);
+        return width;
+    }
+
+    protected float HeightOf(OZL_TreeMenu menu, Widget w)
+    {
+        float width;
+        float height;
+        menu.UnitsOf(w, width, height);
+        return height;
+    }
+
+    // Місце віджета в батькові: різниця їхніх екранних кутів.
+    protected float XOf(OZL_TreeMenu menu, Widget w)
+    {
+        float x;
+        float y;
+        Offset(menu, w, x, y);
+        return x;
+    }
+
+    protected float YOf(OZL_TreeMenu menu, Widget w)
+    {
+        float x;
+        float y;
+        Offset(menu, w, x, y);
+        return y;
+    }
+
+    protected void Offset(OZL_TreeMenu menu, Widget w, out float x, out float y)
+    {
+        x = 0;
+        y = 0;
+        if (!w || menu.Px() <= 0)
+            return;
+        Widget parent = w.GetParent();
+        if (!parent)
+            return;
+        float wx;
+        float wy;
+        float px;
+        float py;
+        w.GetScreenPos(wx, wy);
+        parent.GetScreenPos(px, py);
+        x = (wx - px) / menu.Px();
+        y = (wy - py) / menu.Px();
+    }
+
+    // Посунути лише вбік або лише вгору-вниз: друга координата лишається з розкладки.
+    protected void PlaceX(OZL_TreeMenu menu, Widget w, float x)
+    {
+        if (w)
+            menu.PlaceUnits(w, x, YOf(menu, w));
+    }
+
+    protected void PlaceY(OZL_TreeMenu menu, Widget w, float y)
+    {
+        if (w)
+            menu.PlaceUnits(w, XOf(menu, w), y);
+    }
+
+    // Нова ширина за тієї самої висоти; нерозкладений віджет (висота нуль) не чіпати.
+    protected void WidthUnits(OZL_TreeMenu menu, Widget w, float width)
+    {
+        float oldW;
+        float oldH;
+        menu.UnitsOf(w, oldW, oldH);
+        if (oldH > 0)
+            menu.SizeUnits(w, width, oldH);
     }
 
     protected void BoldRole(OZL_TreeMenu menu, string role)

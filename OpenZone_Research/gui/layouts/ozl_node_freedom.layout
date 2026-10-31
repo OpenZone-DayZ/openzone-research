@@ -245,6 +245,7 @@ FrameWidgetClass NodeCell {
      priority 9
      style rover_sim_colorable
      {
+      // The clipping frame the menu widens over the dashes; raw so it carries ignorepointer 1 (SKINS pointer rule 1: in the node only NodeHit takes the mouse).
       FrameWidgetClass NodeBarFill {
        visible 1
        position 0 0
@@ -254,6 +255,7 @@ FrameWidgetClass NodeCell {
        hexactsize 1
        vexactsize 1
        priority 0
+       ignorepointer 1
        {
         ImageWidgetClass NodeBarDash {
          visible 1

@@ -388,7 +388,7 @@ FrameWidgetClass TreeWindow {
    vexactsize 1
    priority 2
    {
-    // The banner (.fbanner): the spinning peace sign, the rainbow WordArt title of the player's language and the leaf, centred together (the skin places the two symbols by the title's width, OnShow), and the dev line bottom right.
+    // The banner (.fbanner): the spinning peace sign, the rainbow WordArt title of the player's language and the leaf, centred together (the skin places the two symbols by the title's width once the banner is laid out, OnUpdate), and the dev line bottom right.
     PanelWidgetClass Banner {
      visible 1
      ignorepointer 1
@@ -568,6 +568,67 @@ FrameWidgetClass TreeWindow {
        priority 0
        style rover_sim_colorable
       }
+      // The edges run one unit under the corners at both ends and are drawn first: pieces that only abut round apart at 1.48 px per unit and leave a dark notch at each joint.
+      ImageWidgetClass LeftRidgeT {
+       visible 1
+       ignorepointer 1
+       position 5 0
+       size 308 6
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 1
+       image0 "set:ozl_freedom image:ridge_t"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass LeftRidgeB {
+       visible 1
+       ignorepointer 1
+       position 5 688
+       size 308 6
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 2
+       image0 "set:ozl_freedom image:ridge_b"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass LeftRidgeL {
+       visible 1
+       ignorepointer 1
+       position 0 5
+       size 6 684
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 3
+       image0 "set:ozl_freedom image:ridge_l"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass LeftRidgeR {
+       visible 1
+       ignorepointer 1
+       position 312 5
+       size 6 684
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 4
+       image0 "set:ozl_freedom image:ridge_r"
+       mode blend
+       "src alpha" 1
+      }
       ImageWidgetClass LeftRidgeTL {
        visible 1
        ignorepointer 1
@@ -578,7 +639,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 1
+       priority 5
        image0 "set:ozl_freedom image:ridge_tl"
        mode blend
        "src alpha" 1
@@ -593,7 +654,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 2
+       priority 6
        image0 "set:ozl_freedom image:ridge_tr"
        mode blend
        "src alpha" 1
@@ -608,7 +669,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 3
+       priority 7
        image0 "set:ozl_freedom image:ridge_bl"
        mode blend
        "src alpha" 1
@@ -623,68 +684,8 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 4
-       image0 "set:ozl_freedom image:ridge_br"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass LeftRidgeT {
-       visible 1
-       ignorepointer 1
-       position 6 0
-       size 306 6
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 5
-       image0 "set:ozl_freedom image:ridge_t"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass LeftRidgeB {
-       visible 1
-       ignorepointer 1
-       position 6 688
-       size 306 6
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 6
-       image0 "set:ozl_freedom image:ridge_b"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass LeftRidgeL {
-       visible 1
-       ignorepointer 1
-       position 0 6
-       size 6 682
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 7
-       image0 "set:ozl_freedom image:ridge_l"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass LeftRidgeR {
-       visible 1
-       ignorepointer 1
-       position 312 6
-       size 6 682
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
        priority 8
-       image0 "set:ozl_freedom image:ridge_r"
+       image0 "set:ozl_freedom image:ridge_br"
        mode blend
        "src alpha" 1
       }
@@ -908,6 +909,67 @@ FrameWidgetClass TreeWindow {
        priority 0
        style rover_sim_colorable
       }
+      // The edges run one unit under the corners at both ends and are drawn first: pieces that only abut round apart at 1.48 px per unit and leave a dark notch at each joint.
+      ImageWidgetClass TreeRidgeT {
+       visible 1
+       ignorepointer 1
+       position 5 0
+       size 796 6
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 1
+       image0 "set:ozl_freedom image:ridge_t"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass TreeRidgeB {
+       visible 1
+       ignorepointer 1
+       position 5 688
+       size 796 6
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 2
+       image0 "set:ozl_freedom image:ridge_b"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass TreeRidgeL {
+       visible 1
+       ignorepointer 1
+       position 0 5
+       size 6 684
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 3
+       image0 "set:ozl_freedom image:ridge_l"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass TreeRidgeR {
+       visible 1
+       ignorepointer 1
+       position 800 5
+       size 6 684
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 4
+       image0 "set:ozl_freedom image:ridge_r"
+       mode blend
+       "src alpha" 1
+      }
       ImageWidgetClass TreeRidgeTL {
        visible 1
        ignorepointer 1
@@ -918,7 +980,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 1
+       priority 5
        image0 "set:ozl_freedom image:ridge_tl"
        mode blend
        "src alpha" 1
@@ -933,7 +995,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 2
+       priority 6
        image0 "set:ozl_freedom image:ridge_tr"
        mode blend
        "src alpha" 1
@@ -948,7 +1010,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 3
+       priority 7
        image0 "set:ozl_freedom image:ridge_bl"
        mode blend
        "src alpha" 1
@@ -963,68 +1025,8 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 4
-       image0 "set:ozl_freedom image:ridge_br"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass TreeRidgeT {
-       visible 1
-       ignorepointer 1
-       position 6 0
-       size 794 6
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 5
-       image0 "set:ozl_freedom image:ridge_t"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass TreeRidgeB {
-       visible 1
-       ignorepointer 1
-       position 6 688
-       size 794 6
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 6
-       image0 "set:ozl_freedom image:ridge_b"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass TreeRidgeL {
-       visible 1
-       ignorepointer 1
-       position 0 6
-       size 6 682
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 7
-       image0 "set:ozl_freedom image:ridge_l"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass TreeRidgeR {
-       visible 1
-       ignorepointer 1
-       position 800 6
-       size 6 682
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
        priority 8
-       image0 "set:ozl_freedom image:ridge_r"
+       image0 "set:ozl_freedom image:ridge_br"
        mode blend
        "src alpha" 1
       }
@@ -1631,6 +1633,67 @@ FrameWidgetClass TreeWindow {
        priority 0
        style rover_sim_colorable
       }
+      // The edges run one unit under the corners at both ends and are drawn first: pieces that only abut round apart at 1.48 px per unit and leave a dark notch at each joint.
+      ImageWidgetClass InfoBevelT {
+       visible 1
+       ignorepointer 1
+       position 3 0
+       size 418 4
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 1
+       image0 "set:ozl_freedom image:win_t"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass InfoBevelB {
+       visible 1
+       ignorepointer 1
+       position 3 690
+       size 418 4
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 2
+       image0 "set:ozl_freedom image:win_b"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass InfoBevelL {
+       visible 1
+       ignorepointer 1
+       position 0 3
+       size 4 688
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 3
+       image0 "set:ozl_freedom image:win_l"
+       mode blend
+       "src alpha" 1
+      }
+      ImageWidgetClass InfoBevelR {
+       visible 1
+       ignorepointer 1
+       position 420 3
+       size 4 688
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 1 1 1 1
+       priority 4
+       image0 "set:ozl_freedom image:win_r"
+       mode blend
+       "src alpha" 1
+      }
       ImageWidgetClass InfoBevelTL {
        visible 1
        ignorepointer 1
@@ -1641,7 +1704,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 1
+       priority 5
        image0 "set:ozl_freedom image:win_tl"
        mode blend
        "src alpha" 1
@@ -1656,7 +1719,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 2
+       priority 6
        image0 "set:ozl_freedom image:win_tr"
        mode blend
        "src alpha" 1
@@ -1671,7 +1734,7 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 3
+       priority 7
        image0 "set:ozl_freedom image:win_bl"
        mode blend
        "src alpha" 1
@@ -1686,68 +1749,8 @@ FrameWidgetClass TreeWindow {
        hexactsize 1
        vexactsize 1
        color 1 1 1 1
-       priority 4
-       image0 "set:ozl_freedom image:win_br"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass InfoBevelT {
-       visible 1
-       ignorepointer 1
-       position 4 0
-       size 416 4
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 5
-       image0 "set:ozl_freedom image:win_t"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass InfoBevelB {
-       visible 1
-       ignorepointer 1
-       position 4 690
-       size 416 4
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 6
-       image0 "set:ozl_freedom image:win_b"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass InfoBevelL {
-       visible 1
-       ignorepointer 1
-       position 0 4
-       size 4 686
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
-       priority 7
-       image0 "set:ozl_freedom image:win_l"
-       mode blend
-       "src alpha" 1
-      }
-      ImageWidgetClass InfoBevelR {
-       visible 1
-       ignorepointer 1
-       position 420 4
-       size 4 686
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       color 1 1 1 1
        priority 8
-       image0 "set:ozl_freedom image:win_r"
+       image0 "set:ozl_freedom image:win_br"
        mode blend
        "src alpha" 1
       }
@@ -1884,7 +1887,7 @@ FrameWidgetClass TreeWindow {
            Margin 0
            "Size To Content V" 1
            {
-            // The name (Impact 30, purple) over its pink shadow 2 units off; both word-wrapped into two lines. The skin sets the box to the lines in use (OnUpdate).
+            // The name (Impact 30, purple) over its pink shadow 2 units off; both word-wrapped into two lines. The skin sets the box to the lines in use (OnWrapped).
             PanelWidgetClass CardNameBox {
              visible 1
              ignorepointer 1
@@ -3089,7 +3092,7 @@ FrameWidgetClass TreeWindow {
       }
      }
     }
-    // The footer (.ffoot): the visit counter, the blinking NEW, the guestbook and links (inert), the copyright line. Centred as one row by the skin from the widths of its texts (OnUpdate, once).
+    // The footer (.ffoot): the visit counter, the blinking NEW, the guestbook and links (inert), the copyright line. Centred as one row by the skin from the widths of its texts, each part sized to its text so nothing is clipped (OnUpdate, once).
     PanelWidgetClass Footer {
      visible 1
      ignorepointer 1
@@ -3506,11 +3509,12 @@ FrameWidgetClass TreeWindow {
        mode blend
        "src alpha" 1
       }
+      // Stretched to the text by the skin (LayHelper); it reaches one unit under both end slices (rows identical there), so their joints never round apart into a dark line.
       ImageWidgetClass BubbleMid {
        visible 1
        ignorepointer 1
-       position 0 12
-       size 266 106.34
+       position 0 11
+       size 266 108.34
        hexactpos 1
        vexactpos 1
        hexactsize 1
