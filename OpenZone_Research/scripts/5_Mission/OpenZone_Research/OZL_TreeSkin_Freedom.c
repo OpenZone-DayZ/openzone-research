@@ -47,6 +47,7 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     static const int   TIPS         = 6;      // своя підказка вузла + п'ять загальних
     static const float BRANCH_ROW   = 24;     // рядок гілки в меню (рядок ozl_freedom_branch_row)
     static const float LINK_GAP     = 9.5;    // «»», назва і «← ти тут» у рядку гілки
+    static const float COUNT_GAP    = 8;      // «ти тут» -> лічильник гілки: не ближче
     static const float LEGEND_GAP   = 14;     // пункти легенди (.legend gap 14)
     static const float TAG_PAD      = 12;     // табличка розділу: слово + padding 0 6px
     static const float NEW_EDGE_PAD = 10;     // «NEW!»: рамка і поле навколо слова
@@ -130,6 +131,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     protected bool   m_LeftPending;   // меню гілок і бали чекають розкладки
     protected bool   m_BannerPending; // символи обабіч заголовка -- теж
     protected bool   m_TiersDirty;    // меню переписало підписи тирів: зробити жирними
+    protected bool   m_RowsPending;   // нові рядки гілок: чи влізло «ти тут»
+    protected int    m_RowsTries;
     protected float  m_ArtHalf;
 
     // Числа розкладки, виміряні в ній самій (Measure), одиниці.
@@ -640,6 +643,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
                 row = row.GetSibling();
             }
         }
+        m_RowsPending = true;
+        m_RowsTries = 0;
         m_LeftPending = true;
         LayLeft(menu);
 
@@ -747,6 +752,8 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         RunPress(menu);
         if (m_TiersDirty)
             BoldTiers(menu);
+        if (m_RowsPending)
+            FitRows(menu);
         // Далі -- те, що стоїть за числами розкладки: до її першого кадру -- як у файлі.
         if (!m_Measured && !Measure(menu))
             return;
@@ -833,6 +840,50 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
         if (room < POOL_MIN)
             room = POOL_MIN;
         menu.HeightUnits(menu.Role("PoolScroll"), room);
+    }
+
+    // «← ти тут» не налазить на лічильник «2 / 4»: коли не влазить (англійське «you are
+    // here», довга назва гілки), лишається сама стрілка. Права межа -- як її рахує FlowLater
+    // меню: пункти «»», назва, «ти тут», кожен від свого лівого краю до правого краю тексту,
+    // через LINK_GAP; лічильник вирівняно праворуч. Раз на нові рядки, щойно тексти мають ширину.
+    protected void FitRows(OZL_TreeMenu menu)
+    {
+        Widget list = menu.Role("BranchList");
+        if (!list)
+        {
+            m_RowsPending = false;
+            return;
+        }
+        m_RowsTries++;
+        Widget row = list.GetChildren();
+        while (row)
+        {
+            Widget pick = row.FindAnyWidget("RowPick");
+            TextWidget word = TextWidget.Cast(row.FindAnyWidget("RowPickText"));
+            Widget count = row.FindAnyWidget("RowCount");
+            if (pick && word && count && pick.IsVisible() && word.IsVisible())
+            {
+                float markW = TextOf(menu, row.FindAnyWidget("RowMark"));
+                float nameW = TextOf(menu, row.FindAnyWidget("RowName"));
+                float wordW = TextOf(menu, word);
+                float countW = TextOf(menu, count);
+                bool ready = true;
+                if (markW <= 0 || nameW <= 0 || wordW <= 0 || countW <= 0)
+                    ready = false;
+                if (!ready && m_RowsTries < 60)
+                    return;
+                if (ready)
+                {
+                    float right = XOf(menu, row.FindAnyWidget("RowFlow")) + markW + LINK_GAP + nameW + LINK_GAP;
+                    right += XOf(menu, word) + wordW;
+                    float left = XOf(menu, count) + WidthOf(menu, count) - countW;
+                    if (right + COUNT_GAP > left)
+                        word.Show(false);
+                }
+            }
+            row = row.GetSibling();
+        }
+        m_RowsPending = false;
     }
 
     // Підписи тирів, які меню щойно переписало, -- жирні (PT Mono SDF).
@@ -1337,6 +1388,18 @@ class OZL_TreeSkin_Freedom : OZL_TreeSkin
     {
         TextWidget t = TextWidget.Cast(menu.Role(role));
         if (!t)
+            return 0;
+        int pw;
+        int ph;
+        t.GetTextSize(pw, ph);
+        return pw / menu.Px();
+    }
+
+    // Ширина тексту напису в одиницях (не напису: тексту в ньому).
+    protected float TextOf(OZL_TreeMenu menu, Widget w)
+    {
+        TextWidget t = TextWidget.Cast(w);
+        if (!t || menu.Px() <= 0)
             return 0;
         int pw;
         int ph;
