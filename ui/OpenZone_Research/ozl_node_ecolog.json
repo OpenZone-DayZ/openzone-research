@@ -71,21 +71,51 @@
                 }
               },
               {
-                "icon": {
+                "panel": {
                   "name": "NodeSel",
                   "at": [
-                    37,
-                    -2
+                    0,
+                    85
                   ],
                   "size": [
-                    76,
-                    76
+                    150,
+                    16
                   ],
-                  "set": "ozl_ecolog",
-                  "image": "hex_sel",
-                  "color": "$ecolog_txt",
+                  "color": "$none",
                   "hidden": true,
-                  "note": "The selected node: a 1.5-unit ring 5 outside the hexagon, clear of the progress bar (the mockup underlines the name instead)."
+                  "note": "The selected node (.node.sel .lbl: text-decoration underline, offset 4): a 1-unit line under each line of the name, 49 under the node's point like the mockup's; the skin sizes each to its line's text and shows it then.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "NodeUnder0",
+                        "at": [
+                          14,
+                          0
+                        ],
+                        "size": [
+                          122,
+                          1
+                        ],
+                        "color": "$ecolog_txt",
+                        "hidden": true
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "NodeUnder1",
+                        "at": [
+                          14,
+                          14.95
+                        ],
+                        "size": [
+                          122,
+                          1
+                        ],
+                        "color": "$ecolog_txt",
+                        "hidden": true
+                      }
+                    }
+                  ]
                 }
               },
               {

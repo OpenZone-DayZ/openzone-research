@@ -8,22 +8,26 @@
 // Розкладки: ozl_tree_ecolog, ozl_node_ecolog (ui/OpenZone_Research/);
 // картинки: source/ui/ecolog/ (набір ozl_ecolog і текстури
 // gui/textures/tree/ecolog/); кольори й шрифти: ui/tokens/ecolog.json. Числа
-// нижче -- ті самі токени в ARGB. Шрифт -- ванільний Metron (howto мокапа;
-// сам мокап малює на його місці Bahnschrift).
+// кольорів нижче -- ті самі токени в ARGB. Шрифт -- ванільний Metron (howto
+// мокапа; сам мокап малює на його місці Bahnschrift). Числа розкладки скін
+// читає з віджетів (OnShow), а не тримає копій; сталі нижче -- лише міри
+// шрифту й власні відступи скіна, яких розкладка не має.
 //
 // Понад дані клас робить:
 // - великі літери (OZL_Text.Upper) і розрядку пробілами там, де мокап пише
 //   letter-spacing від .16em (Spread: заголовки розділів, кнопка, тири) --
-//   SetTextSpacing рушій не малює зовсім (скіл gui-layouts §32);
+//   SetTextSpacing рушій не малює зовсім (скіл gui-layouts §32); назву й
+//   пристрій (.14em) -- картинками мови гравця (рядки *_IMG), живі написи --
+//   запас;
 // - вузол: заливку шестикутника за статусом (NodeFill), шестерню мокапа,
-//   коли значка нема, мітку проєкту, що блимає, ціну по центру під вузлом;
-// - прилади пулу -- власні (EcoPool0..7): меню дає лінії через PaintPoolRow
+//   коли значка нема, мітку проєкту, що блимає, ціну по центру під вузлом,
+//   підкреслену назву вибраного (.node.sel .lbl);
+// - прилади пулу -- власні (EcoPool0..): меню дає лінії через PaintPoolRow
 //   у сховані рядки, а скін малює їх у приладах і ділить ширину порівну;
-// - підписи тирів -- власні (EcoTier0..9), без рядків рушія: на стенді рушій
-//   віддав на ці шляхи файли інших скінів (SKINS.md, «Layout mix-up»); рядок
-//   чужого файлу в цінах, вартості, «Відкриває» чи «АБО» -- ховається;
-// - протокол: «Лишилось» + годинник жирним + «з ...», чіпи «Відкриває» в рамці
-//   (пунктирній у заглушки туману), кнопку з причиною, притиснуті донизу;
+// - підписи тирів -- власні (EcoTier0..): точка на тирі, напис по центру;
+// - протокол: «Лишилось» + годинник жирним + «з ...», рамки чіпів
+//   «Відкриває» (пунктирні в заглушки туману), кнопку з причиною, притиснуті
+//   донизу;
 // - шапку: кнопку «Закрити», якої мокап не має, -- зліва від гілки, і
 //   перемикач гілок (клік по назві гілки), коли їх кілька;
 // - кириличну І даних -- латинською (DataText): ванільний Metron її не має
@@ -44,55 +48,49 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
     static const string GEAR   = "set:dayz_gui image:gear";
 
     // Скільки кадрів чекати, поки текст розкладеться (як LATER_TRIES меню).
-    static const int   TRIES    = 12;
-    // Ряд приладів (.pool): ширина, проміжок, висота приладу; приладів у
-    // розкладці -- вісім (ліній більше -- показано перші вісім).
-    static const float POOL_W   = 1505;
-    static const float POOL_GAP = 10;
-    static const float POOL_H   = 58;
-    static const int   POOLS    = 8;
-    // Підписи тирів: скільки їх у розкладці, і верх напису відносно точки
-    // тиру (22 від краю вмісту поперек, мокап .tierlab).
-    static const int   TIERS    = 10;
-    static const float TIER_V   = 22;
-    static const float TIER_DX  = -60;
-    static const float TIER_DY  = -8.93;
-    // Ціна під вузлом: верх рядка в комірці; пробіл Metron22 при 14 перед
-    // хвостом «+N предм.» (у мокапі це один рядок тексту).
-    static const float PRICE_Y  = 103.32;
-    static const float PRICE_SP = 3.2;
-    // Рядок часу: пробіл Metron28 при 16 і верх напису в рядку.
-    static const float SPACE    = 4;
-    static const float TIME_Y   = 0.04;
-    // «Відкриває» (.opens): ширина колонки часу, висота чіпа, проміжок 6.
-    static const float OPENS_W  = 281;
-    static const float CHIP_H   = 24;
-    static const float CHIP_GAP = 6;
-    // Підвал протоколу (.c-foot): кнопка 50 на 86, причина на 142.5; рядок
-    // причини -- SDF Metron при 13: перший заввишки 19.5, кожен наступний 13.
-    static const float FOOT_BTN = 86;
-    static const float FOOT_WHY = 142.5;
-    static const float WHY_ONE  = 19.5;
-    static const float WHY_LINE = 13;
-    // Шапка: правий край тексту гілки (у плашці), кнопка «Закрити» за 30 від
-    // ширшого з двох рядків гілки, 10 поля по боках слова.
-    static const float HEAD_RIGHT = 1547;
-    static const float CLOSE_GAP  = 30;
-    static const float CLOSE_PAD  = 10;
-    static const float CLOSE_Y    = 20;
-    static const float CLOSE_H    = 22;
+    static const int   TRIES     = 12;
+    // Міри шрифту: пробіл Metron22 при 14 (ціна: хвіст «+N предм.» -- той
+    // самий рядок тексту через пробіл), пробіл Metron28 при 16 (рядок часу);
+    // кожен наступний рядок причини (SDF Metron при 13) додає 13.
+    static const float PRICE_SP  = 3.2;
+    static const float SPACE     = 4;
+    static const float WHY_LINE  = 13;
+    // Власні відступи скіна (мокап не має ні кнопки «Закрити», ні знака
+    // гілок): кнопка -- за 30 від ширшого з двох рядків гілки; знак -- за 6
+    // перед назвою гілки.
+    static const float CLOSE_GAP = 30;
+    static const float MARK_GAP  = 6;
 
     // Кольори мокапа, яких нема в базовому класі (color-mix його CSS).
     int Faint;       // --faint: закритий вузол, неактивна кнопка, нуль пулу
-    int Soft;        // --soft: мета й опис протоколу
     int Track;       // --track: порожні сегменти, доріжки смуг
     int EdgeColor;   // --edge: рамки плашок, кнопки, чіпів
     int Cell;        // --cell: середина шестикутника
     int DoneBg;      // --done-bg: середина дослідженого
-    int Screen;      // --screen: слово кнопки під мишею
     int ItemChip;    // квадратик рядка матеріалу (#9a957f мокапа)
 
     private static ref array<string> s_Letters;
+
+    // Числа розкладки, прочитані з віджетів в OnShow (одиниці).
+    private int    m_Pools;       // приладів пулу EcoPool<i>
+    private int    m_Tiers;       // підписів тирів EcoTier<i>
+    private float  m_PoolW;       // ряд приладів (EcoPools)
+    private float  m_PoolGap;     // між приладами
+    private float  m_PoolH;       // прилад
+    private float  m_PoolEdgeW;   // правий край приладу
+    private float  m_PoolChipR;   // квадратик лінії: від правого краю
+    private float  m_PoolChipY;
+    private float  m_HeadRight;   // правий край тексту гілки
+    private float  m_CloseY;
+    private float  m_CloseH;
+    private float  m_ClosePad;    // поле слова в кнопці «Закрити»
+    private float  m_MarkY;
+    private float  m_MarkW;
+    private float  m_NextY;
+    private float  m_NextH;
+    private float  m_BtnY;        // кнопка протоколу, коли причина в один рядок
+    private float  m_WhyY;
+    private float  m_WhyH;        // висота одного рядка причини
 
     private float  m_Clock;
     private int    m_BlinkStep;
@@ -112,7 +110,11 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
     private bool   m_CloseLit;
     private int    m_WhyLines;
     private int    m_PoolCount;
-    private bool   m_RowWarned;
+    private bool   m_PoolWarned;
+    private bool   m_TierWarned;
+    private Widget m_SelCell;
+    private int    m_SelW0;
+    private int    m_SelW1;
 
     void OZL_TreeSkin_Ecolog()
     {
@@ -141,12 +143,10 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         Lcd       = ARGB(255,  11,  26,  34);
         FogColor  = ARGB(255,  10,  24,  31);
         Faint     = ARGB(255,  86, 116, 129);
-        Soft      = ARGB(255, 182, 209, 220);
         Track     = ARGB(255,  30,  41,  47);
         EdgeColor = ARGB(255,  36,  65,  78);
         Cell      = ARGB(255,  22,  33,  39);
         DoneBg    = ARGB(255,  26,  50,  46);
-        Screen    = ARGB(255,  12,  22,  28);
         ItemChip  = ARGB(255, 154, 149, 127);
 
         // Сітка екрана (.content .bg мокапа: --grid, --grid-step 24): смужка в 1
@@ -308,6 +308,21 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             }
         }
 
+        // Вибраний -- підкреслена назва (.node.sel .lbl), кольором назви; риски
+        // на ширину рядків ставить SelTick, щойно текст розкладено.
+        Tint(cell, "NodeUnder0", NameColorOf(status));
+        Tint(cell, "NodeUnder1", NameColorOf(status));
+        if (selected)
+        {
+            m_SelCell = cell;
+            m_SelW0 = -1;
+            m_SelW1 = -1;
+        }
+        else if (cell == m_SelCell)
+        {
+            m_SelCell = null;
+        }
+
         // Ціну меню покладе слідом -- поставити й центрувати, коли її текст
         // розкладеться.
         if (IndexIn(m_Prices, cell) < 0)
@@ -321,14 +336,24 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
     // Пул, протокол, кнопка
     // ------------------------------------------------------------------
 
-    // Лінія пулу: меню створило для неї рядок у СХОВАНОМУ PoolList (на стенді
-    // шлях рядка давав чужий файл) -- скін малює її у приладі EcoPool<index>
-    // (.prow): назва великими (тьмяна), число -- txt, нуль -- faint
-    // (.prow.zero), квадратик кольору лінії. Ширину й місце приладам дає OnPaint.
+    // Лінія пулу: меню створило для неї рядок у СХОВАНОМУ PoolList -- скін
+    // малює її у приладі EcoPool<index> (.prow): назва великими (тьмяна),
+    // число -- txt, нуль -- faint (.prow.zero), квадратик кольору лінії.
+    // Ширину й місце приладам дає OnPaint. Ліній більше, ніж приладів, --
+    // зайві не видно, і про це раз на вікно каже лог.
     override void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
     {
-        if (index < 0 || index >= POOLS)
+        if (index < 0)
             return;
+        if (index >= m_Pools)
+        {
+            if (!m_PoolWarned)
+            {
+                m_PoolWarned = true;
+                OZL_Log.Warn("tree: ecolog: more pool lines than the " + m_Pools.ToString() + " instruments of ozl_tree_ecolog (EcoPool<n>) -- the rest are not shown");
+            }
+            return;
+        }
         string slot = "EcoPool" + index.ToString();
         TextWidget name = TextWidget.Cast(menu.Role(slot + "Name"));
         if (name)
@@ -350,11 +375,9 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
     }
 
     // Рядок вартості (.crow): у рядка матеріалу квадратик #9a957f мокапа, а не
-    // тьмяний. Рядок чужого файлу (Layout mix-up) -- схований.
+    // тьмяний.
     override void PaintCostRow(OZL_TreeMenu menu, Widget row, string label, string text, int verdict)
     {
-        if (!Mine(row, "CostName", "cost_row"))
-            return;
         super.PaintCostRow(menu, row, label, text, verdict);
         Widget items = menu.Role("CardItemList");
         Widget chip = row.FindAnyWidget("CostChip");
@@ -363,12 +386,10 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
     }
 
     // Чіп «Відкриває» в рамці 1 (.opens a); заглушка туману -- faint і рамка
-    // пунктиром (.opens a.fogged). Рамку під текст ставить OnUpdate. Чіп
-    // чужого файлу -- схований.
+    // пунктиром (.opens a.fogged). Розкладає чіпи меню; рамку на ширину чіпа
+    // ставить OnUpdate.
     override void PaintOpenChip(OZL_TreeMenu menu, Widget chip, string text, bool fogged)
     {
-        if (!Mine(chip, "ChipText", "opens_chip"))
-            return;
         super.PaintOpenChip(menu, chip, text, fogged);
         if (fogged)
         {
@@ -435,20 +456,40 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
 
     override void OnShow(OZL_TreeMenu menu)
     {
-        // .title, .dev -- великими (.14em -- без розрядки: пробіл Metron ширший
-        // за всю розрядку мокапа).
-        SetUpper(menu, "EcoTitle", "STR_OZL_SKIN_ECOLOG_TITLE");
-        SetUpper(menu, "DevName", "STR_OZL_SKIN_ECOLOG_DEV");
+        ReadLayout(menu);
+
+        // Точка тиру -- 1 x 1, її напис висить за її краєм; панель, як і рамка,
+        // ріже дітей по своєму краю, поки не сказано інакше (стенд 2026-10-31:
+        // від «тир III» лишалась крапка в 1 піксель, від «тир I» -- нічого).
+        for (int i = 0; i < m_Tiers; i++)
+        {
+            Widget point = menu.Role("EcoTier" + i.ToString());
+            if (point)
+                point.ClearFlags(WidgetFlags.CLIPCHILDREN);
+        }
+
+        // Назва і пристрій -- картинки мови гравця з розрядкою мокапа (.title,
+        // .dev: .14em; рядки *_IMG). Рядок не називає картинки -- живі написи
+        // великими (без розрядки: пробіл Metron ширший за всю розрядку мокапа),
+        // пристрій через 18 за назвою за шириною тексту.
+        bool pics = Picture(menu, "EcoTitleImg", OZL_Text.Words("STR_OZL_SKIN_ECOLOG_TITLE_IMG"));
+        if (pics)
+            pics = Picture(menu, "EcoDevImg", OZL_Text.Words("STR_OZL_SKIN_ECOLOG_DEV_IMG"));
+        ShowRole(menu, "EcoTitleImg", pics);
+        ShowRole(menu, "EcoDevImg", pics);
+        ShowRole(menu, "EcoTitleRow", !pics);
+        if (!pics)
+        {
+            SetUpper(menu, "EcoTitle", "STR_OZL_SKIN_ECOLOG_TITLE");
+            SetUpper(menu, "DevName", "STR_OZL_SKIN_ECOLOG_DEV");
+            menu.FlowLater(menu.Role("EcoTitleRow"), 18, 0, false);
+        }
         SetUpper(menu, "BtnCloseText", "STR_OZL_TREE_CLOSE");
 
         // Вертикальне «Бали» -- картинка мовою гравця (рядок stringtable каже, яка).
-        ImageWidget poolLabel = ImageWidget.Cast(menu.Role("EcoPoolLabel"));
-        if (poolLabel && poolLabel.LoadImageFile(0, OZL_Text.Words("STR_OZL_SKIN_ECOLOG_POOL_VERTICAL_IMG")))
-            poolLabel.SetImage(0);
+        Picture(menu, "EcoPoolLabel", OZL_Text.Words("STR_OZL_SKIN_ECOLOG_POOL_VERTICAL_IMG"));
 
-        // Назва, за нею через 18 пристрій (.ehead gap) -- за шириною текстів;
-        // легенда -- рядом через 14.
-        menu.FlowLater(menu.Role("EcoTitleRow"), 18, 0, false);
+        // Легенда -- рядком через 14 за шириною текстів.
         menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
 
         m_Clock = 0;
@@ -456,10 +497,12 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         m_TimerLeft = -1;
         m_WhyLines = -1;
         m_PoolCount = 0;
-        m_RowWarned = false;
+        m_PoolWarned = false;
+        m_TierWarned = false;
         m_HeadDirty = true;
         m_HeadTries = 0;
         m_CloseLit = false;
+        m_SelCell = null;
         m_Blink.Clear();
         m_Prices.Clear();
         m_PriceTries.Clear();
@@ -538,10 +581,102 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         ChipTick(menu);
         TimerTick(menu);
         FogTick(menu);
-        OrGuardTick(menu);
+        SelTick(menu);
         HeadTick(menu);
         CloseHoverTick(menu);
         FootTick(menu);
+    }
+
+    // ------------------------------------------------------------------
+    // Числа розкладки (OnShow)
+    // ------------------------------------------------------------------
+
+    // Що скін ставить сам, ставиться за числами самої розкладки: їх
+    // прочитано тут, до першого малювання, поки віджети стоять, як у файлі.
+    // Get* дають екранні пікселі (скіл gui-layouts: «every position and size
+    // API is in SCREEN PIXELS»); одиниця -- висота екрана / 1080, як у меню.
+    private void ReadLayout(OZL_TreeMenu menu)
+    {
+        int sw;
+        int sh;
+        GetScreenSize(sw, sh);
+        float s = 1;
+        if (sh > 0)
+            s = sh / 1080.0;
+
+        m_Pools = CountRoles(menu, "EcoPool", "");
+        m_Tiers = CountRoles(menu, "EcoTier", "Text");
+
+        float x;
+        float y;
+        float w;
+        float h;
+        float x1;
+        float y1;
+        UnitsSize(menu.Role("EcoPools"), s, m_PoolW, h);
+        Widget pool = menu.Role("EcoPool0");
+        UnitsPos(pool, s, x, y);
+        UnitsSize(pool, s, w, m_PoolH);
+        UnitsPos(menu.Role("EcoPool1"), s, x1, y1);
+        m_PoolGap = x1 - x - w;
+        UnitsSize(menu.Role("EcoPool0EdgeR"), s, m_PoolEdgeW, h);
+        UnitsPos(menu.Role("EcoPool0Chip"), s, x1, m_PoolChipY);
+        m_PoolChipR = w - x1;
+
+        Widget branch = menu.Role("BranchName");
+        UnitsPos(branch, s, x, y);
+        UnitsSize(branch, s, w, h);
+        m_HeadRight = x + w;
+        UnitsPos(menu.Role("BtnClose"), s, x, m_CloseY);
+        UnitsSize(menu.Role("BtnClose"), s, w, m_CloseH);
+        UnitsPos(menu.Role("BtnCloseText"), s, m_ClosePad, y);
+        UnitsPos(menu.Role("EcoBranchMark"), s, x, m_MarkY);
+        UnitsSize(menu.Role("EcoBranchMark"), s, m_MarkW, h);
+        UnitsPos(menu.Role("EcoBranchNext"), s, x, m_NextY);
+        UnitsSize(menu.Role("EcoBranchNext"), s, w, m_NextH);
+
+        UnitsPos(menu.Role("EcoBtnBox"), s, x, m_BtnY);
+        UnitsPos(menu.Role("CardWhy"), s, x, m_WhyY);
+        UnitsSize(menu.Role("CardWhy"), s, w, m_WhyH);
+
+        // Одним виразом рядок не складається: рушій каже "Formula too complex".
+        string readLine = "tree: ecolog: layout read -- " + m_Pools.ToString() + " pool instruments, row " + m_PoolW.ToString() + " gap " + m_PoolGap.ToString();
+        readLine = readLine + " height " + m_PoolH.ToString() + ", chip " + m_PoolChipR.ToString() + " from the right at " + m_PoolChipY.ToString();
+        readLine = readLine + "; " + m_Tiers.ToString() + " tier labels; branch right edge " + m_HeadRight.ToString();
+        readLine = readLine + ", close key at " + m_CloseY.ToString() + " x " + m_CloseH.ToString() + " pad " + m_ClosePad.ToString();
+        readLine = readLine + "; button at " + m_BtnY.ToString() + ", reason at " + m_WhyY.ToString() + " x " + m_WhyH.ToString();
+        OZL_Log.Dbg(readLine);
+    }
+
+    // Скільки віджетів <stem>0, <stem>1... (з суфіксом -- <stem>0<suffix>...).
+    private static int CountRoles(OZL_TreeMenu menu, string stem, string suffix)
+    {
+        int n = 0;
+        while (menu.Role(stem + n.ToString() + suffix))
+            n++;
+        return n;
+    }
+
+    private static void UnitsPos(Widget w, float s, out float x, out float y)
+    {
+        x = 0;
+        y = 0;
+        if (!w)
+            return;
+        w.GetPos(x, y);
+        x = x / s;
+        y = y / s;
+    }
+
+    private static void UnitsSize(Widget w, float s, out float width, out float height)
+    {
+        width = 0;
+        height = 0;
+        if (!w)
+            return;
+        w.GetSize(width, height);
+        width = width / s;
+        height = height / s;
     }
 
     // ------------------------------------------------------------------
@@ -590,11 +725,11 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         }
     }
 
-    // Ціна під вузлом (.price: квадратик 7, 3 до числа, 6 між лініями, по
-    // центру). Хвіст «+N предм.» -- той самий рядок тексту через пробіл, а не
-    // ще один чіп через 6. Меню кладе чіпи своїм кроком тим самим кадром раніше
-    // (RunFlows іде перед OnUpdate); тут -- за мокапом. Чіп чужого файлу (без
-    // PriceText) ховається. false -- текст ще не розкладено.
+    // Ціна під вузлом (.price): чіпи ліній рядком кладе меню (FlowLater, через 6)
+    // тим самим кадром раніше (RunFlows іде перед OnUpdate). Тут -- за мокапом:
+    // хвіст «+N предм.» (чіп без квадратика) -- той самий рядок тексту через
+    // пробіл, а не ще один чіп; і весь рядок -- по центру під вузлом. false --
+    // текст ще не розкладено.
     private bool LayPrice(OZL_TreeMenu menu, Widget cell, bool force)
     {
         Widget box = cell.FindAnyWidget("NodePrice");
@@ -603,56 +738,62 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         float px = menu.Px();
         array<Widget> items = new array<Widget>();
         array<float> widths = new array<float>();
-        array<bool> tails = new array<bool>();
         Widget chip = box.GetChildren();
         while (chip)
         {
             TextWidget t = TextWidget.Cast(chip.FindAnyWidget("PriceText"));
-            if (!t)
-            {
-                chip.Show(false);
-            }
-            else if (chip.IsVisible())
+            if (t && chip.IsVisible())
             {
                 int pw;
                 int ph;
                 t.GetTextSize(pw, ph);
                 if (pw <= 0 && !force)
                     return false;
-                Widget dot = chip.FindAnyWidget("PriceChip");
-                // Через локальну: складений булевий вираз просто в аргумент
-                // псує купу рушія (скіл, залізні правила).
-                bool tail = false;
-                if (dot && !dot.IsVisible())
-                    tail = true;
                 items.Insert(chip);
                 widths.Insert(pw / px);
-                tails.Insert(tail);
             }
             chip = chip.GetSibling();
         }
+        if (items.Count() == 0)
+            return true;
+        // Відступ тексту в чіпі -- з самого чіпа.
+        float tx;
+        float ty;
+        Widget first = items[0].FindAnyWidget("PriceText");
+        first.GetPos(tx, ty);
+        tx = tx / px;
         float end = 0;
         for (int i = 0; i < items.Count(); i++)
         {
-            float x = 0;
-            if (i > 0)
+            float x;
+            float y;
+            items[i].GetPos(x, y);
+            x = x / px;
+            Widget dot = items[i].FindAnyWidget("PriceChip");
+            // Через локальну: складений булевий вираз просто в аргумент
+            // псує купу рушія (скіл, залізні правила).
+            bool tail = false;
+            if (i > 0 && dot && !dot.IsVisible())
+                tail = true;
+            if (tail)
             {
-                if (tails[i])
-                    x = end + PRICE_SP - 10;
-                else
-                    x = end + 6;
+                x = end + PRICE_SP - tx;
+                menu.PlaceUnits(items[i], x, y / px);
             }
-            menu.PlaceUnits(items[i], x, 0);
-            end = x + 10 + widths[i];
+            end = x + tx + widths[i];
         }
-        menu.PlaceUnits(box, AnchorX - end / 2, PRICE_Y);
+        float bx;
+        float by;
+        box.GetPos(bx, by);
+        menu.PlaceUnits(box, AnchorX - end / 2, by / px);
         return true;
     }
 
-    // «Відкриває» (.opens): чіпи зліва направо через 6 з переносом (рядок 24 + 6),
-    // кожен -- 1 + 8 + текст + 8 + 1. Меню кладе їх тим самим кроком (OpensPad
-    // 9, OpensGap 6); тут -- рамки на ширину чіпа, після нього (OnUpdate іде
-    // після RunFlows).
+    // Рамки чіпів «Відкриває» (.opens a: 1 + 8 + текст + 8 + 1): чіпи кладе й
+    // розтягує їм ChipHit меню (FlowLater з OpensGap / OpensPad); тут -- рамка на
+    // ту саму ширину: від лівого краю чіпа до кінця тексту + OpensPad, як
+    // міряє меню. Двічі: якщо меню перемалює чіпи кадром пізніше, друга
+    // розкладка поставить рамки й на них.
     private void ChipTick(OZL_TreeMenu menu)
     {
         if (!m_ChipsDirty)
@@ -678,8 +819,14 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
                 t.GetTextSize(tw, th);
                 if (tw <= 0)
                     ready = false;
+                float cx;
+                float cy;
+                float tx;
+                float ty;
+                chip.GetScreenPos(cx, cy);
+                t.GetScreenPos(tx, ty);
                 chips.Insert(chip);
-                widths.Insert(18 + tw / px);
+                widths.Insert((tx + tw - cx) / px + OpensPad);
             }
             chip = chip.GetSibling();
         }
@@ -688,41 +835,26 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             m_ChipTries++;
             return;
         }
-        // Двічі: якщо меню розкладе чіпи кадром пізніше, друга розкладка
-        // поставить рамки й на них.
         m_ChipPasses--;
         if (m_ChipPasses <= 0)
             m_ChipsDirty = false;
-        float x = 0;
-        float y = 0;
         for (int i = 0; i < chips.Count(); i++)
         {
-            float w = widths[i];
-            if (x > 0 && x + w > OPENS_W)
-            {
-                x = 0;
-                y += CHIP_H + CHIP_GAP;
-            }
             Widget c = chips[i];
-            menu.PlaceUnits(c, x, y);
-            Resize(menu, c, "ChipHit", w, CHIP_H);
-            Resize(menu, c, "ChipTop", w, 1);
-            Resize(menu, c, "ChipBottom", w, 1);
-            Resize(menu, c, "ChipDashTop", w, 1);
-            Resize(menu, c, "ChipDashBottom", w, 1);
-            Move(menu, c, "ChipRight", w - 1, 0);
-            Move(menu, c, "ChipDashRight", w - 1, 0);
-            x += w + CHIP_GAP;
+            float w = widths[i];
+            Stretch(menu, c, "ChipTop", w);
+            Stretch(menu, c, "ChipBottom", w);
+            Stretch(menu, c, "ChipDashTop", w);
+            Stretch(menu, c, "ChipDashBottom", w);
+            ToRight(menu, c, "ChipRight", w);
+            ToRight(menu, c, "ChipDashRight", w);
         }
-        float h = 0;
-        if (chips.Count() > 0)
-            h = y + CHIP_H;
-        menu.SizeUnits(list, OPENS_W, h);
         UpdateRole(menu, "EcoTimeStack");
     }
 
     // Годинник проєкту (.tmr, жирний): за «Лишилось» через пробіл, далі
-    // «з 1 хв 00 с». Меню пише CardTimer щосекунди; тут -- місця і хвіст.
+    // «з 1 хв 00 с», на рядку слова. Меню пише CardTimer щосекунди; тут --
+    // місця і хвіст.
     private void TimerTick(OZL_TreeMenu menu)
     {
         OZL_NodeView n = menu.NodeOf(menu.SelectedId());
@@ -755,9 +887,14 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             rest = OZL_Text.Words("STR_OZL_TREE_OF") + " " + OZL_Text.Duration(n.Duration);
         tail.SetText(rest);
         float px = menu.Px();
-        float at = ww / px + SPACE;
-        menu.PlaceUnits(clock, at, TIME_Y);
-        menu.PlaceUnits(tail, at + cw / px + SPACE, TIME_Y);
+        float x;
+        float y;
+        word.GetPos(x, y);
+        x = x / px;
+        y = y / px;
+        float at = x + ww / px + SPACE;
+        menu.PlaceUnits(clock, at, y);
+        menu.PlaceUnits(tail, at + cw / px + SPACE, y);
     }
 
     // Смужки туману (135 градусів) -- під переходом TreeFogEdge, на його
@@ -796,28 +933,66 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         stripes.Show(true);
     }
 
-    // Рядки «АБО» (or_label), які меню кладе в TreeNodes поруч із комірками: рядок
-    // чужого файлу (без OrText, SKINS.md «Layout mix-up») ховається щокадру --
-    // меню показує свої рядки знову на кожне малювання ліній. Попередження
-    // про такий рядок пише саме меню (Expect).
-    private void OrGuardTick(OZL_TreeMenu menu)
+    // Риски під назвою вибраного (NodeUnder0/1 у NodeSel): кожна -- на ширину
+    // тексту свого рядка, по центру напису. Меню переносить назву кадром
+    // пізніше, тож ширину тексту видно не відразу -- риска стає, коли вона є, і
+    // переставляється, коли змінюється.
+    private void SelTick(OZL_TreeMenu menu)
     {
-        Widget nodes = menu.Role("TreeNodes");
-        if (!nodes)
+        if (!m_SelCell)
             return;
-        Widget c = nodes.GetChildren();
-        while (c)
+        Widget sel = m_SelCell.FindAnyWidget("NodeSel");
+        if (!sel || !sel.IsVisible())
+            return;
+        m_SelW0 = Underline(menu, sel, "NodeName0", "NodeUnder0", m_SelW0);
+        m_SelW1 = Underline(menu, sel, "NodeName1", "NodeUnder1", m_SelW1);
+    }
+
+    // Повертає ширину тексту (пікселі), під яку стоїть риска; -1 -- риски нема.
+    private int Underline(OZL_TreeMenu menu, Widget sel, string labelName, string lineName, int was)
+    {
+        Widget line = sel.FindAnyWidget(lineName);
+        if (!line)
+            return was;
+        TextWidget t = TextWidget.Cast(m_SelCell.FindAnyWidget(labelName));
+        int pw = 0;
+        int ph = 0;
+        if (t && t.IsVisible())
+            t.GetTextSize(pw, ph);
+        if (pw <= 0)
         {
-            string nm = c.GetName();
-            if (c.IsVisible() && nm.IndexOf("cell:") != 0 && !c.FindAnyWidget("OrText"))
-                c.Show(false);
-            c = c.GetSibling();
+            if (line.IsVisible())
+                line.Show(false);
+            return -1;
         }
+        if (pw == was && line.IsVisible())
+            return was;
+        float px = menu.Px();
+        float lx;
+        float ly;
+        float lw;
+        float lh;
+        float sx;
+        float sy;
+        t.GetScreenPos(lx, ly);
+        t.GetScreenSize(lw, lh);
+        sel.GetScreenPos(sx, sy);
+        float gx;
+        float gy;
+        float gw;
+        float gh;
+        line.GetPos(gx, gy);
+        line.GetSize(gw, gh);
+        menu.PlaceUnits(line, (lx + (lw - pw) / 2 - sx) / px, gy / px);
+        menu.SizeUnits(line, pw / px, gh / px);
+        line.Show(true);
+        return pw;
     }
 
     // Шапка праворуч (мокап має лише гілку): кілька гілок -- знак ▸ перед назвою
     // і кнопка на весь блок гілки, що відкриває наступну; «Закрити» -- клавіша
-    // завширшки зі слово + 2 x 10, правим краєм за 30 від блоку гілки.
+    // завширшки зі слово + поля по боках, правим краєм за CLOSE_GAP від блоку
+    // гілки.
     private void HeadTick(OZL_TreeMenu menu)
     {
         if (!m_HeadDirty)
@@ -849,7 +1024,7 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         }
         m_HeadDirty = false;
         float px = menu.Px();
-        float left = HEAD_RIGHT - Math.Max(nw, sw) / px;
+        float left = m_HeadRight - Math.Max(nw, sw) / px;
         bool many = menu.BranchCount() > 1;
         Widget mark = menu.Role("EcoBranchMark");
         if (mark)
@@ -857,8 +1032,8 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             mark.Show(many);
             if (many)
             {
-                left = HEAD_RIGHT - Math.Max(nw / px + 14, sw / px);
-                menu.PlaceUnits(mark, HEAD_RIGHT - nw / px - 14, 17);
+                left = m_HeadRight - Math.Max(nw / px + m_MarkW + MARK_GAP, sw / px);
+                menu.PlaceUnits(mark, m_HeadRight - nw / px - m_MarkW - MARK_GAP, m_MarkY);
             }
         }
         Widget next = menu.Role("EcoBranchNext");
@@ -867,16 +1042,16 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             next.Show(many);
             if (many)
             {
-                menu.PlaceUnits(next, left, 8);
-                menu.SizeUnits(next, HEAD_RIGHT - left, 46);
+                menu.PlaceUnits(next, left, m_NextY);
+                menu.SizeUnits(next, m_HeadRight - left, m_NextH);
             }
         }
-        float w = ww / px + 2 * CLOSE_PAD;
-        menu.PlaceUnits(btn, left - CLOSE_GAP - w, CLOSE_Y);
-        menu.SizeUnits(btn, w, CLOSE_H);
-        Resize(menu, btn, "EcoCloseTop", w, 1);
-        Resize(menu, btn, "EcoCloseBottom", w, 1);
-        Move(menu, btn, "EcoCloseRight", w - 1, 0);
+        float w = ww / px + 2 * m_ClosePad;
+        menu.PlaceUnits(btn, left - CLOSE_GAP - w, m_CloseY);
+        menu.SizeUnits(btn, w, m_CloseH);
+        Stretch(menu, btn, "EcoCloseTop", w);
+        Stretch(menu, btn, "EcoCloseBottom", w);
+        ToRight(menu, btn, "EcoCloseRight", w);
     }
 
     // Під мишею «Закрити» світлішає -- як рамка чіпа (txt).
@@ -904,9 +1079,9 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
     }
 
     // Підвал протоколу притиснутий донизу (.c-foot: justify-content flex-end):
-    // причина у два рядки піднімає і себе, і кнопку на рядок. Причину пише й
-    // меню (Say: запит, відмова), тож лічимо рядки щокадру, а рухаємо -- коли
-    // їх число змінилось.
+    // кожен зайвий рядок причини піднімає і її, і кнопку (EcoBtnBox) на рядок.
+    // Причину пише й меню (Say: запит, відмова), тож лічимо рядки щокадру, а
+    // рухаємо -- коли їх число змінилось.
     private void FootTick(OZL_TreeMenu menu)
     {
         TextWidget why = TextWidget.Cast(menu.Role("CardWhy"));
@@ -919,7 +1094,7 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         if (pw > 0)
         {
             float h = ph / menu.Px();
-            lines = Math.Round((h - WHY_ONE) / WHY_LINE) + 1;
+            lines = Math.Round((h - m_WhyH) / WHY_LINE) + 1;
             if (lines < 1)
                 lines = 1;
             if (lines > 4)
@@ -929,55 +1104,51 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             return;
         m_WhyLines = lines;
         float lift = (lines - 1) * WHY_LINE;
-        menu.PlaceUnits(why, 0, FOOT_WHY - lift);
-        float top = FOOT_BTN - lift;
-        Place(menu, "BtnResearch", 0, top);
-        Place(menu, "EcoBtnTop", 0, top);
-        Place(menu, "EcoBtnBottom", 0, top + 48);
-        Place(menu, "EcoBtnLeft", 0, top);
-        Place(menu, "EcoBtnRight", 209, top);
-        Place(menu, "BtnResearchText", 0, top + 13.2);
-        Place(menu, "BtnResearchHover", 2, top + 2);
+        menu.PlaceUnits(why, 0, m_WhyY - lift);
+        Place(menu, "EcoBtnBox", 0, m_BtnY - lift);
     }
 
     // ------------------------------------------------------------------
     // Розкладка власних частин (OnPaint)
     // ------------------------------------------------------------------
 
-    // Прилади пулу -- порівну по ширині ряду, через 10 (.pool gap, .prow flex 1):
+    // Прилади пулу -- порівну по ширині ряду (.pool gap, .prow flex 1):
     // стільки, скільки ліній дав PaintPoolRow за це малювання; решта схована
     // (нема ліній -- меню показує PoolEmpty).
     private void LayPool(OZL_TreeMenu menu)
     {
         int count = m_PoolCount;
         m_PoolCount = 0;
-        if (count > POOLS)
-            count = POOLS;
-        float w = POOL_W;
+        if (m_PoolW <= 0)
+            return;
+        if (count > m_Pools)
+            count = m_Pools;
+        float w = m_PoolW;
         if (count > 0)
-            w = (POOL_W - POOL_GAP * (count - 1)) / count;
-        for (int i = 0; i < POOLS; i++)
+            w = (m_PoolW - m_PoolGap * (count - 1)) / count;
+        for (int i = 0; i < m_Pools; i++)
         {
-            Widget slot = menu.Role("EcoPool" + i.ToString());
+            string p = "EcoPool" + i.ToString();
+            Widget slot = menu.Role(p);
             if (!slot)
                 continue;
             bool used = i < count;
             slot.Show(used);
             if (!used)
                 continue;
-            menu.PlaceUnits(slot, i * (w + POOL_GAP), 0);
-            menu.SizeUnits(slot, w, POOL_H);
-            Resize(menu, slot, "EcoPool" + i.ToString() + "EdgeT", w, 1);
-            Resize(menu, slot, "EcoPool" + i.ToString() + "EdgeB", w, 1);
-            // Правий край і квадратик лінії (.prow .chip: right 10, top 10).
-            Move(menu, slot, "EcoPool" + i.ToString() + "EdgeR", w - 1, 0);
-            Move(menu, slot, "EcoPool" + i.ToString() + "Chip", w - 21, 11);
+            menu.PlaceUnits(slot, i * (w + m_PoolGap), 0);
+            menu.SizeUnits(slot, w, m_PoolH);
+            Stretch(menu, slot, p + "EdgeT", w);
+            Stretch(menu, slot, p + "EdgeB", w);
+            ToRight(menu, slot, p + "EdgeR", w);
+            Move(menu, slot, p + "Chip", w - m_PoolChipR, m_PoolChipY);
         }
     }
 
     // Підписи тирів «тир I»: тири видимих вузлів гілки за зростанням, кожен --
-    // на точці тиру (Top + Row x (i + 1/2) уздовж, 22 поперек), як кладе свої
-    // рядки меню (OZL_TreePlan, PaintTree).
+    // на точці тиру вздовж (Top + Row x (i + 1/2), як кладе свої рядки меню:
+    // OZL_TreePlan, PaintTree); глибину точці дає розкладка, напис висить на
+    // ній по центру.
     private void PlaceTiers(OZL_TreeMenu menu, OZL_BranchView b)
     {
         array<int> tiers = new array<int>();
@@ -994,41 +1165,33 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             }
         }
         tiers.Sort();
-        for (i = 0; i < TIERS; i++)
+        if (tiers.Count() > m_Tiers && !m_TierWarned)
         {
-            TextWidget lab = TextWidget.Cast(menu.Role("EcoTier" + i.ToString()));
-            if (!lab)
+            m_TierWarned = true;
+            OZL_Log.Warn("tree: ecolog: " + tiers.Count().ToString() + " tiers, ozl_tree_ecolog has " + m_Tiers.ToString() + " tier labels (EcoTier<n>) -- the rest are not shown");
+        }
+        float px = menu.Px();
+        for (i = 0; i < m_Tiers; i++)
+        {
+            Widget point = menu.Role("EcoTier" + i.ToString());
+            TextWidget lab = TextWidget.Cast(menu.Role("EcoTier" + i.ToString() + "Text"));
+            if (!point || !lab)
                 continue;
             bool used = i < tiers.Count();
-            lab.Show(used);
+            point.Show(used);
             if (!used)
                 continue;
             lab.SetText(TierText(tiers[i]));
-            menu.PlaceUnits(lab, Top + Row * (i + 0.5) + TIER_DX, TIER_V + TIER_DY);
+            float x;
+            float y;
+            point.GetPos(x, y);
+            menu.PlaceUnits(point, Top + Row * (i + 0.5), y / px);
         }
     }
 
     // ------------------------------------------------------------------
     // Дрібниці
     // ------------------------------------------------------------------
-
-    // Рядок, створений меню з шаблону цього скіну, -- справді наш (має свою
-    // дитину)? Ні -- рушій віддав інший файл (SKINS.md, «Layout mix-up»): рядок
-    // ховається, раз на вікно -- попередження з іменем кореня, що прийшов.
-    private bool Mine(Widget row, string child, string rowName)
-    {
-        if (!row)
-            return false;
-        if (row.FindAnyWidget(child))
-            return true;
-        row.Show(false);
-        if (!m_RowWarned)
-        {
-            m_RowWarned = true;
-            OZL_Log.Warn("tree: ecolog: " + RowLayout(rowName) + " gave a row '" + row.GetName() + "' without " + child + " -- hidden (SKINS.md, Layout mix-up)");
-        }
-        return false;
-    }
 
     // Розрядка пробілами (letter-spacing мокапа від .16em): після кожної цілої
     // літери чи цифри -- пробіл, крім останньої (слово по центру стоїть рівно).
@@ -1054,6 +1217,19 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
         if (n > 0 && t.Substring(n - 1, 1) == " ")
             t = t.Substring(0, n - 1);
         return t;
+    }
+
+    // Картинка мови гравця в ImageWidget ролі (рядок *_IMG stringtable): true --
+    // рядок назвав картинку набору і вона стала.
+    private static bool Picture(OZL_TreeMenu menu, string role, string image)
+    {
+        ImageWidget w = ImageWidget.Cast(menu.Role(role));
+        if (!w || image.IndexOf("set:") != 0)
+            return false;
+        if (!w.LoadImageFile(0, image))
+            return false;
+        w.SetImage(0);
+        return true;
     }
 
     private static void SetUpper(OZL_TreeMenu menu, string role, string key)
@@ -1131,18 +1307,40 @@ class OZL_TreeSkin_Ecolog : OZL_TreeSkin
             menu.PlaceUnits(w, x, y);
     }
 
-    private static void Resize(OZL_TreeMenu menu, Widget root, string name, float width, float height)
-    {
-        Widget w = root.FindAnyWidget(name);
-        if (w)
-            menu.SizeUnits(w, width, height);
-    }
-
     private static void Move(OZL_TreeMenu menu, Widget root, string name, float x, float y)
     {
         Widget w = root.FindAnyWidget(name);
         if (w)
             menu.PlaceUnits(w, x, y);
+    }
+
+    // Смужка рамки на ширину `width`; її товщина -- своя, з розкладки.
+    private static void Stretch(OZL_TreeMenu menu, Widget root, string name, float width)
+    {
+        Widget w = root.FindAnyWidget(name);
+        if (!w)
+            return;
+        float gw;
+        float gh;
+        w.GetSize(gw, gh);
+        menu.SizeUnits(w, width, gh / menu.Px());
+    }
+
+    // Права смужка рамки -- впритул до правого краю ширини `width`, на своїй
+    // висоті; її товщина -- своя, з розкладки.
+    private static void ToRight(OZL_TreeMenu menu, Widget root, string name, float width)
+    {
+        Widget w = root.FindAnyWidget(name);
+        if (!w)
+            return;
+        float px = menu.Px();
+        float x;
+        float y;
+        float gw;
+        float gh;
+        w.GetPos(x, y);
+        w.GetSize(gw, gh);
+        menu.PlaceUnits(w, width - gw / px, y / px);
     }
 }
 

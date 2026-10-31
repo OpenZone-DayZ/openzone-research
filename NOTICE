@@ -57,3 +57,23 @@ Font Names: they are named by role, ozl_<role><cell height>.
 
     Шрифти в OpenZone_Research/gui/fonts -- растрові версії перелічених вище гарнітур; на
     них поширюється SIL Open Font License 1.1, а не ліцензія CC BY-NC-SA цього моду.
+
+
+DayZ game data
+==============
+
+The Ecolog window's title and device label are pictures composed from the glyphs of
+DayZ's own Metron font (the game's gui/fonts/Metron48 atlas), so that they match the
+window's live text, which the game draws in that font: source/ui/ecolog/words/*.png,
+written by source/ui/ecolog/metron_words.py, and their copies in the
+OpenZone_Research/gui/imagesets/ozl_ecolog atlas. They are DayZ game data of Bohemia
+Interactive, used in this mod for DayZ under Bohemia's terms for DayZ mods -- not under
+the CC BY-NC-SA licence of the mod, and not for use outside DayZ.
+
+    Заголовок і підпис пристрою вікна Екологів -- картинки, складені з гліфів власного
+    шрифту DayZ Metron (атлас гри gui/fonts/Metron48), щоб збігатися з живим текстом вікна,
+    який гра малює цим шрифтом: source/ui/ecolog/words/*.png, їх пише
+    source/ui/ecolog/metron_words.py, і їхні копії в атласі
+    OpenZone_Research/gui/imagesets/ozl_ecolog. Це ігрові дані DayZ від Bohemia
+    Interactive; мод використовує їх для DayZ на умовах Bohemia для модів DayZ -- не за
+    ліцензією CC BY-NC-SA цього моду і не для використання поза DayZ.

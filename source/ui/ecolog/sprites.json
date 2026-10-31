@@ -4,7 +4,9 @@
     "Sizes are layout units; drawn at 1.5 px per unit. White shapes are tinted in the game (the layout's color or SetColor);",
     "the textures with their own colours (tree_glow, fog_stripes) are shown with color 1 1 1 1.",
     "The rules are the mockup's own CSS (body[data-f=ecolog] and the base it builds on), lifted into ecolog.css.",
-    "hex_sel is not in the mockup: it underlines the selected node's name, the game rings the hexagon instead (the task's brief).",
+    "title and dev are the header's tracked words (.title, .dev: letter-spacing .14em, which a TextWidget cannot draw), in the",
+    "vanilla Metron glyphs of the live texts: pictures composed by metron_words.py into words/ (see there); the dev picture",
+    "starts where the title starts and carries its text 18 after the title's tracked width in the same language.",
     "branch_next is not in the mockup either (one branch per faction there): the mark before the branch name when there are several.",
     "fog_stripes and dash are pixel tiles: the game repeats a picture shown without stretching at one texel per screen",
     "pixel, so they are drawn at exactly 32 and 16 pixels (w x 1.5 = size)."
@@ -16,8 +18,14 @@
     { "name": "hex_edge", "w": 60, "h": 60, "html": "<div class='eco-hex'></div>" },
     { "name": "hex_fill", "w": 60, "h": 60, "html": "<div class='eco-hex-in'></div>" },
     {
-      "name": "hex_sel", "w": 60, "h": 60, "pad": 8,
-      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='-8 -8 76 76' style='position:absolute;left:-8px;top:-8px'><polygon points='11.996,-3.2 48.004,-3.2 65.663,30 48.004,63.2 11.996,63.2 -5.663,30' fill='none' stroke='#fff' stroke-width='1.5' stroke-linejoin='miter'/></svg>"
+      "name": "title", "w": 278, "h": 24,
+      "html_ua": "<img src='words/title_ua.png' style='width:278px;height:24px'>",
+      "html_en": "<img src='words/title_en.png' style='width:278px;height:24px'>"
+    },
+    {
+      "name": "dev", "w": 460, "h": 14,
+      "html_ua": "<img src='words/dev_ua.png' style='width:460px;height:14px'>",
+      "html_en": "<img src='words/dev_en.png' style='width:460px;height:14px'>"
     },
     {
       "name": "pool_vertical", "w": 13, "h": 58,

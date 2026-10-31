@@ -67,21 +67,47 @@ FrameWidgetClass NodeCell {
      mode blend
      "src alpha" 1
     }
-    // The selected node: a 1.5-unit ring 5 outside the hexagon, clear of the progress bar (the mockup underlines the name instead).
-    ImageWidgetClass NodeSel {
+    // The selected node (.node.sel .lbl: text-decoration underline, offset 4): a 1-unit line under each line of the name, 49 under the node's point like the mockup's; the skin sizes each to its line's text and shows it then.
+    PanelWidgetClass NodeSel {
      visible 0
      ignorepointer 1
-     position 37 -2
-     size 76 76
+     position 0 85
+     size 150 16
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     color 0.831 0.925 0.961 1
+     color 0 0 0 0
      priority 3
-     image0 "set:ozl_ecolog image:hex_sel"
-     mode blend
-     "src alpha" 1
+     style rover_sim_colorable
+     {
+      PanelWidgetClass NodeUnder0 {
+       visible 0
+       ignorepointer 1
+       position 14 0
+       size 122 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 0.831 0.925 0.961 1
+       priority 0
+       style rover_sim_colorable
+      }
+      PanelWidgetClass NodeUnder1 {
+       visible 0
+       ignorepointer 1
+       position 14 14.95
+       size 122 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       color 0.831 0.925 0.961 1
+       priority 1
+       style rover_sim_colorable
+      }
+     }
     }
     // The node's own icon (the menu loads it into slot 0; the skin falls back to the mockup's gear).
     ImageWidgetClass NodeIcon {

@@ -79,7 +79,7 @@
                           62
                         ],
                         "color": "$none",
-                        "note": "The title, then the device name 18 after it: lined up by the menu (FlowLater from the skin's OnShow) by the width of each TEXT -- the title is wider in Ukrainian than in English.",
+                        "note": "The live fallback of EcoTitleImg / EcoDevImg (a translation whose *_IMG key names no picture): the title, then the device name 18 after it, lined up by the menu (FlowLater from the skin's OnShow) by the width of each TEXT. Untracked: a Metron space is twice the mockup's .14em.",
                         "children": [
                           {
                             "panel": {
@@ -108,7 +108,7 @@
                                     "font": "ecolog_title",
                                     "color": "$ecolog_txt",
                                     "text": "#STR_OZL_SKIN_ECOLOG_TITLE",
-                                    "note": "Upper-cased and spaced by the skin (.title)."
+                                    "note": "Upper-cased by the skin (.title)."
                                   }
                                 }
                               ]
@@ -141,13 +141,49 @@
                                     "font": "ecolog_dev",
                                     "color": "$ecolog_dim",
                                     "text": "#STR_OZL_SKIN_ECOLOG_DEV",
-                                    "note": "Upper-cased and spaced by the skin (.dev)."
+                                    "note": "Upper-cased by the skin (.dev)."
                                   }
                                 }
                               ]
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoTitleImg",
+                        "at": [
+                          21,
+                          18.2
+                        ],
+                        "size": [
+                          278,
+                          24
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "title_ua",
+                        "color": "$ecolog_txt",
+                        "hidden": true,
+                        "note": "The title with the mockup's tracking (.title .14em), a picture per language (STR_OZL_SKIN_ECOLOG_TITLE_IMG): the vanilla Metron glyphs of the live texts, composed by source/ui/ecolog/metron_words.py; the glyph cell at the top, where EcoTitle's would be."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoDevImg",
+                        "at": [
+                          21,
+                          23.32
+                        ],
+                        "size": [
+                          460,
+                          14
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "dev_ua",
+                        "color": "$ecolog_dim",
+                        "hidden": true,
+                        "note": "The device label (.dev .14em), STR_OZL_SKIN_ECOLOG_DEV_IMG: it starts where the title starts and carries its text 18 after the title's tracked width in the same language, so the pair needs no measuring."
                       }
                     },
                     {
@@ -375,7 +411,7 @@
                         ],
                         "color": "$none",
                         "hidden": true,
-                        "note": "HIDDEN on purpose: the menu still creates one ozl_ecolog_pool_row per line here and hands each to PaintPoolRow (which lines, in which order), but the skin draws the line in its own instrument EcoPool<n> below. On the stand (2026-10-31) the engine handed this path another skin's file (OZL_DutyRegistryRow: SKINS.md, Layout mix-up); a row that is never shown cannot show the wrong widgets."
+                        "note": "HIDDEN on purpose: the menu creates one ozl_ecolog_pool_row per line here and hands each to PaintPoolRow (which lines, in which order); the skin draws the line in its own instrument EcoPool<n> below, the instruments sharing the row's width out equally (.pool / .prow flex 1)."
                       }
                     },
                     {
@@ -1484,177 +1520,337 @@
                                     "color": "$none",
                                     "children": [
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier0",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier0Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier1",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier1Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier2",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier2Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier3",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier3Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier4",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier4Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier5",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier5Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier6",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier6Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier7",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier7Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier8",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier8Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       {
-                                        "label": {
+                                        "panel": {
                                           "name": "EcoTier9",
                                           "at": [
                                             0,
-                                            0
+                                            22
                                           ],
                                           "size": [
-                                            120,
-                                            15
+                                            1,
+                                            1
                                           ],
-                                          "font": "ecolog_tier",
-                                          "color": "$ecolog_dim",
-                                          "align": "center",
-                                          "hidden": true
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoTier9Text",
+                                                "at": [
+                                                  -60,
+                                                  -8.93
+                                                ],
+                                                "size": [
+                                                  120,
+                                                  15
+                                                ],
+                                                "font": "ecolog_tier",
+                                                "color": "$ecolog_dim",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       }
                                     ],
-                                    "note": "The tier labels 'тир I' (.tierlab) -- the skin's own, placed by it (OnPaint) on the tier's point, 22 from the top. No TreeTiers role: the engine's tier_label rows came back as another skin's file on the stand (OZL_DutyPriceChip, SKINS.md Layout mix-up)."
+                                    "note": "The tier labels 'т и р  I' (.tierlab) -- the skin's own points with a label centred on each, placed by it (OnPaint) along the tree; no TreeTiers role."
                                   }
                                 },
                                 {
@@ -2330,7 +2526,7 @@
                             "row": {
                               "name": "OZL_EcologOpensChip",
                               "h": 24,
-                              "note": "A node this one opens (.opens a): the word in a 1-unit frame, 8 + text + 8; a hidden node's chip ('??? невідомо') is faint in a dashed frame. The skin lines the chips up and sizes the frames.",
+                              "note": "A node this one opens (.opens a): the word in a 1-unit frame, 8 + text + 8; a hidden node's chip ('??? невідомо') is faint in a dashed frame. The menu lines the chips up (OpensGap 6, OpensPad 9) and stretches ChipHit (renamed open:<id>); the skin sizes the frames to the chip.",
                               "children": [
                                 {
                                   "raw": {
@@ -3573,9 +3769,8 @@
                               "note": "Column 5 (.c-foot): the button and the reason under it, held to the bottom (the skin lifts them when the reason takes two lines).",
                               "children": [
                                 {
-                                  "raw": {
-                                    "name": "BtnResearch",
-                                    "class": "ButtonWidgetClass",
+                                  "frame": {
+                                    "name": "EcoBtnBox",
                                     "at": [
                                       0,
                                       86
@@ -3584,115 +3779,132 @@
                                       211,
                                       50
                                     ],
-                                    "props": {
-                                      "style": "Empty",
-                                      "text": ""
-                                    },
-                                    "note": "style Empty: the skin draws the frame, the menu the hover."
-                                  }
-                                },
-                                {
-                                  "panel": {
-                                    "name": "EcoBtnTop",
-                                    "at": [
-                                      0,
-                                      86
-                                    ],
-                                    "size": [
-                                      211,
-                                      2
-                                    ],
-                                    "color": "$ecolog_edge"
-                                  }
-                                },
-                                {
-                                  "panel": {
-                                    "name": "EcoBtnBottom",
-                                    "at": [
-                                      0,
-                                      134
-                                    ],
-                                    "size": [
-                                      211,
-                                      2
-                                    ],
-                                    "color": "$ecolog_edge"
-                                  }
-                                },
-                                {
-                                  "panel": {
-                                    "name": "EcoBtnLeft",
-                                    "at": [
-                                      0,
-                                      86
-                                    ],
-                                    "size": [
-                                      2,
-                                      50
-                                    ],
-                                    "color": "$ecolog_edge"
-                                  }
-                                },
-                                {
-                                  "panel": {
-                                    "name": "EcoBtnRight",
-                                    "at": [
-                                      209,
-                                      86
-                                    ],
-                                    "size": [
-                                      2,
-                                      50
-                                    ],
-                                    "color": "$ecolog_edge"
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "BtnResearchText",
-                                    "at": [
-                                      0,
-                                      99.2
-                                    ],
-                                    "size": [
-                                      211,
-                                      21
-                                    ],
-                                    "font": "ecolog_button",
-                                    "color": "$ecolog_faint",
-                                    "text": "#STR_OZL_TREE_RESEARCH",
-                                    "align": "center"
-                                  }
-                                },
-                                {
-                                  "panel": {
-                                    "name": "BtnResearchHover",
-                                    "at": [
-                                      2,
-                                      88
-                                    ],
-                                    "size": [
-                                      207,
-                                      46
-                                    ],
-                                    "color": "$ecolog_acc",
-                                    "hidden": true,
-                                    "note": "Under the mouse while enabled (.go:hover): acc fill, the word in the screen colour.",
+                                    "note": "The button (.go) as one piece: the skin lifts it a line for every extra line of the reason.",
                                     "children": [
                                       {
-                                        "label": {
-                                          "name": "EcoBtnHoverText",
+                                        "raw": {
+                                          "name": "BtnResearch",
+                                          "class": "ButtonWidgetClass",
                                           "at": [
-                                            -2,
-                                            11.2
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            211,
+                                            50
+                                          ],
+                                          "props": {
+                                            "style": "Empty",
+                                            "text": ""
+                                          },
+                                          "note": "style Empty: the skin draws the frame, the menu the hover."
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoBtnTop",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            211,
+                                            2
+                                          ],
+                                          "color": "$ecolog_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoBtnBottom",
+                                          "at": [
+                                            0,
+                                            48
+                                          ],
+                                          "size": [
+                                            211,
+                                            2
+                                          ],
+                                          "color": "$ecolog_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoBtnLeft",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            2,
+                                            50
+                                          ],
+                                          "color": "$ecolog_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoBtnRight",
+                                          "at": [
+                                            209,
+                                            0
+                                          ],
+                                          "size": [
+                                            2,
+                                            50
+                                          ],
+                                          "color": "$ecolog_edge"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchText",
+                                          "at": [
+                                            0,
+                                            13.2
                                           ],
                                           "size": [
                                             211,
                                             21
                                           ],
                                           "font": "ecolog_button",
-                                          "color": "$ecolog_screen",
+                                          "color": "$ecolog_faint",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
                                           "align": "center"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "BtnResearchHover",
+                                          "at": [
+                                            2,
+                                            2
+                                          ],
+                                          "size": [
+                                            207,
+                                            46
+                                          ],
+                                          "color": "$ecolog_acc",
+                                          "hidden": true,
+                                          "note": "Under the mouse while enabled (.go:hover): acc fill, the word in the screen colour.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "EcoBtnHoverText",
+                                                "at": [
+                                                  -2,
+                                                  11.2
+                                                ],
+                                                "size": [
+                                                  211,
+                                                  21
+                                                ],
+                                                "font": "ecolog_button",
+                                                "color": "$ecolog_screen",
+                                                "align": "center"
+                                              }
+                                            }
+                                          ]
                                         }
                                       }
                                     ]
@@ -3734,17 +3946,17 @@
                     900
                   ],
                   "color": "$none",
-                  "note": "#stage::before: the light lab casing over the whole window -- 10 of casing (outer corners rounded 6: the four corner pictures), a 2-unit highlight and the 10-unit dark rim the plates' edges run under. Last child, so it is drawn above the screen; a transparent panel, so the mouse goes through.",
+                  "note": "#stage::before: the light lab casing over the whole window -- 10 of casing (outer corners rounded 6: the four corner pictures, the straight runs reaching 2 into them so no seam shows where a joint falls inside a pixel), a 2-unit highlight and the 10-unit dark rim the plates' edges run under. Last child, so it is drawn above the screen; a transparent panel, so the mouse goes through.",
                   "children": [
                     {
                       "panel": {
                         "name": "EcoCaseTop",
                         "at": [
-                          10,
+                          8,
                           0
                         ],
                         "size": [
-                          1580,
+                          1584,
                           10
                         ],
                         "color": "$ecolog_casing"
@@ -3754,11 +3966,11 @@
                       "panel": {
                         "name": "EcoCaseBottom",
                         "at": [
-                          10,
+                          8,
                           890
                         ],
                         "size": [
-                          1580,
+                          1584,
                           10
                         ],
                         "color": "$ecolog_casing"
@@ -3769,11 +3981,11 @@
                         "name": "EcoCaseLeft",
                         "at": [
                           0,
-                          10
+                          8
                         ],
                         "size": [
                           10,
-                          880
+                          884
                         ],
                         "color": "$ecolog_casing"
                       }
@@ -3783,11 +3995,11 @@
                         "name": "EcoCaseRight",
                         "at": [
                           1590,
-                          10
+                          8
                         ],
                         "size": [
                           10,
-                          880
+                          884
                         ],
                         "color": "$ecolog_casing"
                       }
