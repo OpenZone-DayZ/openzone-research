@@ -72,9 +72,12 @@ unknown materials do not make a node `short`.
 
 The fog of war is counted by the server. A node is shown when it is a root, completed or running,
 or when it lies within `TreeVisibilityDepth` steps of a completed node: 1, the default, shows the
-next step only; 0 shows nothing beyond the completed nodes. Every other node of the branch reaches
-the client as a nameless stub that carries only its place, its tier and the parents that are shown;
-the counter of the branch still counts them all.
+next step only; 0 shows nothing beyond the completed nodes. A hidden node one step past the shown
+ones (with at least one shown parent) reaches the client as a nameless stub that carries only its
+place, its tier and the parents that are shown; deeper nodes are not sent at all. No terminal tells
+how many technologies remain: the counter of a branch counts the shown nodes, the client gets no
+branch total, and the places (`Index`) are dense over what is sent, so a gap cannot betray a
+hidden node.
 
 ## Files
 

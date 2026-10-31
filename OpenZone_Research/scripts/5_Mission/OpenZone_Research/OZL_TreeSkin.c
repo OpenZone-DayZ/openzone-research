@@ -90,6 +90,10 @@ class OZL_TreeSkin
     int SegOff = 0;   // 0 -- взяти Acc / LineDim
     // Скільки одиниць поля між краєм підказки і текстом.
     float TipPadX = 9;
+    // Чіпи "Відкриває" (FlowLater): проміжок між чіпами і поле праворуч від
+    // тексту кожного, одиниці.
+    float OpensGap = 6;
+    float OpensPad = 4;
 
     // Пікселів на одиницю -- меню ставить перед кожним малюванням канви.
     float PxPerUnit = 1;
@@ -132,6 +136,26 @@ class OZL_TreeSkin
         if (Shapes.Count() == 0)
             return -1;
         return 0;
+    }
+
+    // Слот форми для конкретного вузла: скін може вибрати варіант за вузлом
+    // (Id чи menu.NumberOf(Id) -- не за Index: це порядок дроту, а не номер).
+    // Типово -- ShapeOf(status, selected). Меню й PaintNode кличуть саме цей.
+    int ShapeOfNode(OZL_NodeView node, string status, bool selected)
+    {
+        return ShapeOf(status, selected);
+    }
+
+    // Кожен текст із конфігу (назви вузлів і гілок, опис, мета, чіпи,
+    // підказка, назви ліній і матеріалів, фракція) іде крізь цей гачок
+    // ОСТАННІМ кроком перед показом -- уже з прикрасами скіна (NodeNameText
+    // великими) і зі словами меню навколо (мета, підказка "назва · статус"),
+    // тож фільтр шрифту бачить кожну літеру. Типово -- як є; скін на
+    // ванільному шрифті без кириличної І (U+0406) міняє її на латинську I
+    // тут, в одному місці. Скін, що сам ставить такий текст, теж кличе його.
+    string DataText(string text)
+    {
+        return text;
     }
 
     int ShapeColorOf(string status)
@@ -238,9 +262,27 @@ class OZL_TreeSkin
         return OZL_Text.Words(StatusKey(status));
     }
 
+    // Слово статусу в картці (CardStatus). Типово -- StatusText; скін, що
+    // пише його інакше лише в картці (великими, розрядкою), перекриває тут, а
+    // підказка й реєстр лишаються зі StatusText.
+    string CardStatusText(string status)
+    {
+        return StatusText(status);
+    }
+
+    // Слово кнопки (BtnResearchText): "Досліджено" для дослідженого, інакше
+    // "Дослідити"; enabled -- чи кнопка активна.
+    string ButtonText(string status, bool enabled)
+    {
+        if (status == "completed")
+            return OZL_Text.Words("STR_OZL_TREE_COMPLETED");
+        return OZL_Text.Words("STR_OZL_TREE_RESEARCH");
+    }
+
     // Заголовок розділу картки (Опис, Вартість, Матеріали, Тривалість,
-    // Відкриває). Папір дописує ":", Чисте небо ставить "// " попереду, СОП
-    // і Долг пишуть великими -- кожен у своєму класі.
+    // Відкриває). Папір дописує ":", СОП і Долг пишуть великими -- кожен у
+    // своєму класі. Прикрасу скін може винести в окремий віджет і
+    // повертати саме слово: Чисте небо малює «//» власним тьмяним написом.
     string SectionText(string key)
     {
         return OZL_Text.Words(key);
@@ -267,7 +309,7 @@ class OZL_TreeSkin
         ImageWidget shape = ImageWidget.Cast(cell.FindAnyWidget("NodeShape"));
         if (shape)
         {
-            int slot = ShapeOf(status, selected);
+            int slot = ShapeOfNode(node, status, selected);
             if (slot >= 0)
                 shape.SetImage(slot);
             shape.SetColor(ShapeColorOf(status));
@@ -297,7 +339,7 @@ class OZL_TreeSkin
         // Напис або контейнер рядків NodeName0, NodeName1 (перенос по словах).
         Widget name = cell.FindAnyWidget("NodeName");
         if (name)
-            menu.PutText(name, NodeNameText(node.Name), NameColorOf(status));
+            menu.PutText(name, DataText(NodeNameText(node.Name)), NameColorOf(status));
 
         ImageWidget mark = ImageWidget.Cast(cell.FindAnyWidget("NodeMark"));
         if (mark)
@@ -323,19 +365,22 @@ class OZL_TreeSkin
             markText.Show(mt != "");
         }
 
+        // Номер для гравця -- щільний, лише видимі вузли (як у реєстрі), а не
+        // Index: за прогалинами було б видно приховані.
         TextWidget num = TextWidget.Cast(cell.FindAnyWidget("NodeNum"));
         if (num)
-            num.SetText(OZL_Text.Two(node.Index + 1));
+            num.SetText(OZL_Text.Two(menu.NumberOf(node.Id)));
     }
 
-    // Рядок пулу: назва лінії, скільки є, і чим заповнити сегменти
-    // (need -- найбільша ціна одного вузла по цій лінії).
-    void PaintPoolRow(OZL_TreeMenu menu, Widget row, string line, int have, int need, int color)
+    // Рядок пулу: назва лінії і скільки є -- лише це (смуги-сегменти рішенням
+    // власника 2026-10-31 прибрано). index -- номер рядка згори (0, 1, ...);
+    // color -- колір лінії для PoolChip.
+    void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
     {
         TextWidget name = TextWidget.Cast(row.FindAnyWidget("PoolName"));
         if (name)
         {
-            name.SetText(menu.PointName(line));
+            name.SetText(DataText(menu.PointName(line)));
             if (have > 0)
                 name.SetColor(Txt);
             else
@@ -353,24 +398,50 @@ class OZL_TreeSkin
         Widget chip = row.FindAnyWidget("PoolChip");
         if (chip)
             chip.SetColor(color);
-        if (need < 1)
-            need = 10;
-        // Крізь float: int / int в Enforce -- ціле ділення.
-        float frac = have;
-        frac = frac / need;
-        if (frac > 1)
-            frac = 1;
-        int on = Math.Round(10 * frac);
-        for (int i = 0; i < 10; i++)
-        {
-            Widget seg = row.FindAnyWidget("PoolSeg" + i.ToString());
-            if (!seg)
-                break;
-            if (i < on)
-                seg.SetColor(Acc);
-            else
-                seg.SetColor(LineDim);
-        }
+    }
+
+    // Рядок реєстру (Долг): лише видимі вузли, прихованих рядків нема.
+    // number -- щільний номер для гравця (1, 2... у порядку показу, як
+    // NodeNum; menu.NumberOf), tier -- тир рядка, selected -- чи це вибраний.
+    // Ім'я reg:<id> і правило миші вже поставило меню. Типово: RegNum (дві
+    // цифри), RegName, RegTier, RegState кольором статусу, RegPick.
+    void PaintRegistryRow(OZL_TreeMenu menu, Widget row, OZL_NodeView node, int number, int tier, bool selected)
+    {
+        if (!node)
+            return;
+        SetRowText(row, "RegNum", OZL_Text.Two(number));
+        SetRowText(row, "RegName", DataText(NodeNameText(node.Name)));
+        SetRowText(row, "RegTier", tier.ToString());
+        SetRowText(row, "RegState", StatusText(node.Status));
+        TextWidget st = TextWidget.Cast(row.FindAnyWidget("RegState"));
+        if (st)
+            st.SetColor(StatusColorOf(node.Status));
+        Widget pick = row.FindAnyWidget("RegPick");
+        if (pick)
+            pick.Show(selected);
+    }
+
+    protected static void SetRowText(Widget row, string name, string text)
+    {
+        TextWidget t = TextWidget.Cast(row.FindAnyWidget(name));
+        if (t)
+            t.SetText(text);
+    }
+
+    // Миша над рядком, що клацається, чи зійшла з нього. kind -- "reg"
+    // (реєстр), "branch" (гілки), "open" (чіп "Відкриває"); id -- його вузол
+    // чи гілка. Типово показує дитину-підсвітку рядка: RegHover, RowHover,
+    // ChipHover відповідно (нема -- нічого).
+    void OnRowHover(OZL_TreeMenu menu, Widget row, string kind, string id, bool on)
+    {
+        string role = "ChipHover";
+        if (kind == "reg")
+            role = "RegHover";
+        else if (kind == "branch")
+            role = "RowHover";
+        Widget hover = row.FindAnyWidget(role);
+        if (hover)
+            hover.Show(on);
     }
 
     // Рядок вартості картки (лінія чи матеріал): назва, текст "є / треба" чи
@@ -656,6 +727,14 @@ class OZL_TreeSkin
 
     // Вибрано вузол (або null -- нічого не вибрано).
     void OnSelect(OZL_TreeMenu menu, OZL_NodeView node, string status, bool canResearch)
+    {
+    }
+
+    // Меню щойно розклало текст по рядках-написах контейнера `box` (назва
+    // вузла, CardName, CardMeta, CardDesc...) -- наступним кадром після
+    // PutText. Стос картки меню вже оновило (menu.RefreshCard); свої стоси
+    // скін оновлює тут.
+    void OnWrapped(OZL_TreeMenu menu, Widget box)
     {
     }
 

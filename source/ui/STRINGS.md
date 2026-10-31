@@ -96,15 +96,15 @@ Used by every skin; a skin only decides where to put them. Status words for the 
 | `STR_OZL_TREE_DESC` | `Опис` | `Description` | card section head over the description; the mockup shows it in ecolog, duty and freedom only |
 | `STR_OZL_TREE_OPENS` | `Відкриває` | `Opens` | card section head over the chips of the nodes this one opens (`CardOpensHead`) |
 | `STR_OZL_TREE_UNKNOWN` | `невідомо` | `unknown` | card meta: the name of a parent that is not shown (`після всіх: Назва, невідомо`) |
-| `STR_OZL_TREE_UNKNOWN_OPENS` | `??? невідомо` | `??? unknown` | card, "Відкриває": the chip of a hidden child (a `Hidden` stub); not clickable |
-| `STR_OZL_TREE_UNKNOWN_ROW` | `— невідомо —` | `— unknown —` | duty registry: the row of a hidden node (number from `Index`, tier from the stub) |
+| `STR_OZL_TREE_UNKNOWN_OPENS` | `??? невідомо` | `??? unknown` | card, "Відкриває": the chip of a hidden child (a `Hidden` stub — the next step only); not clickable |
+| `STR_OZL_TREE_UNKNOWN_ROW` | `— невідомо —` | `— unknown —` | UNUSED since 2026-10-31 (the key stays): the registry lists only visible nodes — the owner's rule that no terminal tells how many technologies remain (SKINS.md, "What the player may know") |
 | `STR_OZL_TREE_OR` | `АБО` | `OR` | the label beside the diamond of a dashed (`any`) connector, drawn on the tree |
 | `STR_OZL_TREE_OR_TAG` | `(АБО)` | `(OR)` | tag after the name of an "opens" chip whose node opens after ANY parent |
 | `STR_OZL_TREE_MORE_TAG` | `(+ ін.)` | `(+ others)` | tag after the name of an "opens" chip whose node needs several parents (mode all) |
 | `STR_OZL_TREE_AFTER_ONE` | `після:` | `after:` | card meta, a node with one parent: `тир 2 · після: Назва` |
 | `STR_OZL_TREE_AFTER_ALL` | `після всіх:` | `after all:` | card meta, several parents, mode all |
 | `STR_OZL_TREE_AFTER_ANY` | `після будь-якого з:` | `after any of:` | card meta, several parents, mode any |
-| `STR_OZL_TREE_RESEARCHED` | `досліджено` | `researched` | `BranchSub`: `<фракція> · досліджено 3 з 10` (lower case; the status word is COMPLETED) |
+| `STR_OZL_TREE_RESEARCHED` | `досліджено` | `researched` | `BranchSub`: `<фракція> · досліджено 3 з 10` (lower case; the status word is COMPLETED; 10 = the visible nodes, never the branch total) |
 | `STR_OZL_TREE_OF` | `з` | `of` | `BranchSub` (`3 з 10`) and the card timer (`Лишилось 0:41 з 1 хв 00 с`) |
 | `STR_OZL_TREE_UNIT_S` | `с` | `s` | seconds in a duration: `45 с`, `1 хв 05 с` |
 | `STR_OZL_TREE_UNIT_MIN` | `хв` | `min` | minutes in a duration |

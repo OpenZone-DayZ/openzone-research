@@ -107,6 +107,9 @@ class OZL_TreeMenu : UIScriptedMenu
     static const string HOST_LAYOUT = "OpenZone_Research/gui/layouts/ozl_tree_host.layout";
     // Стільки кадрів відкладене чекає, поки віджет розкладеться.
     static const int    LATER_TRIES = 12;
+    // Смуга прокрутки ScrollWidget: 10 одиниць розкладки (виміряно
+    // 2026-09-04 і 2026-10-31, вертикальна й горизонтальна).
+    static const float  SCROLLBAR_UNITS = 10;
 
     private static OZL_TreeMenu s_Open;
 
@@ -119,6 +122,13 @@ class OZL_TreeMenu : UIScriptedMenu
     private string m_Branch = "";
     private string m_Node   = "";
     private string m_Hover  = "";
+    // Рядок, що клацається, під мишею (OnRowHover скіна): корінь рядка, вид
+    // ("reg", "branch", "open") і його id.
+    private Widget m_RowHover;
+    private string m_RowKind = "";
+    private string m_RowId   = "";
+    // Попередження про підмінений файл рядка вже було в цьому вікні.
+    private bool   m_RowWarned = false;
 
     // Коли приїхала відповідь: залишок проєкту -- від серверної секунди в ній.
     private float m_ViewAge  = 0;
@@ -166,6 +176,16 @@ class OZL_TreeMenu : UIScriptedMenu
     // Що вже розкладено в контейнер рядків: "текст|колір" (повтор не
     // перекладається). Чиститься разом із комірками й вікном.
     private ref map<Widget, string>       m_WrapShown;
+    // Пропорційна ширина віджета, яку HeightUnits порахував уперше: повторний
+    // виклик бере її, а не рахує знову з уже зміненого розміру. Чиститься з
+    // вікном.
+    private ref map<Widget, float>        m_WidthFrac;
+
+    // Номер вузла для очей гравця (01, 02...): лише видимі вузли гілки,
+    // щільно, у порядку показу -- тир, тоді Index. Реєстр і NodeNum беруть
+    // його, а не Index, тож за номером не видно, скільки вузлів сховано
+    // (рішення власника 2026-10-31).
+    private ref map<string, int>          m_Nums;
 
     // --- перетягування
     private bool  m_DragDown  = false;
@@ -193,6 +213,8 @@ class OZL_TreeMenu : UIScriptedMenu
         m_Bars       = new array<ref OZL_TreeBarJob>();
         m_Wraps      = new array<ref OZL_TreeWrap>();
         m_WrapShown  = new map<Widget, string>();
+        m_WidthFrac  = new map<Widget, float>();
+        m_Nums       = new map<string, int>();
     }
 
     static OZL_TreeMenu Open()
@@ -266,13 +288,22 @@ class OZL_TreeMenu : UIScriptedMenu
         excludes.Insert("menu");
         // HUD ховається, поки екран відкритий (як мокап: лише вікно); кожен
         // крок -- через локальну, без ланцюжка GetMission().GetHud() (скіл §18).
+        // Ідіома ванілі (MapMenu, NoteMenu, RadialQuickbarMenu.OnShow/OnHide):
+        // ShowHudUI ховає ліву й праву частини HUD (стан, витривалість),
+        // ShowQuickbarUI -- панель швидкого доступу. Hud.Show(false) ховав лише
+        // m_HudPanelWidget, і решта лишалася під деревом (знімок sop 13:47).
+        // Пара з OnHide: рушій кличе його на кожному закритті (ESC, кнопка,
+        // смерть, інше меню поверх).
         Mission mission = GetGame().GetMission();
         if (mission)
         {
             mission.AddActiveInputExcludes(excludes);
             Hud hud = mission.GetHud();
             if (hud)
-                hud.Show(false);
+            {
+                hud.ShowHudUI(false);
+                hud.ShowQuickbarUI(false);
+            }
         }
 
         m_ProbeStep  = 1;
@@ -294,7 +325,10 @@ class OZL_TreeMenu : UIScriptedMenu
             mission.RemoveActiveInputExcludes(excludes, true);
             Hud hud = mission.GetHud();
             if (hud)
-                hud.Show(true);
+            {
+                hud.ShowHudUI(true);
+                hud.ShowQuickbarUI(true);
+            }
         }
         UnlockControls();
         if (s_Open == this)
@@ -432,6 +466,10 @@ class OZL_TreeMenu : UIScriptedMenu
     // ширина (hexactsize 0, як у списку "Відкриває" в стосі картки) -- це
     // частка батька: абсолютне число в неї робило віджет у сотні разів
     // ширшим (звіт автора sop), тож вона йде назад часткою. Висота -- точна.
+    // Частка рахується раз на віджет і пам'ятається (m_WidthFrac): дитина
+    // ScrollWidget зі смугою має ширину прокрутки мінус 10 одиниць (виміряно
+    // 2026-09-04, генератор), і частка від повної ширини батька щоразу
+    // звужувала б її ще. Ширина 0 (ще не розкладено) частки не дає: тоді 1.
     void HeightUnits(Widget w, float height)
     {
         if (!w)
@@ -447,19 +485,34 @@ class OZL_TreeMenu : UIScriptedMenu
         float width = sw;
         int flags = w.GetFlags();
         if ((flags & WidgetFlags.HEXACTSIZE) == 0)
-        {
-            width = 1;
-            Widget parent = w.GetParent();
-            if (parent)
-            {
-                float pw;
-                float ph;
-                parent.GetScreenSize(pw, ph);
-                if (pw > 0)
-                    width = sw / pw;
-            }
-        }
+            width = WidthFrac(w, sw);
         w.SetSize(width, height * k);
+    }
+
+    // Пропорційна ширина віджета: частка від того, що батько йому дає.
+    private float WidthFrac(Widget w, float sw)
+    {
+        float frac;
+        if (m_WidthFrac.Find(w, frac))
+            return frac;
+        frac = 1;
+        Widget parent = w.GetParent();
+        if (parent && sw > 0)
+        {
+            float pw;
+            float ph;
+            parent.GetScreenSize(pw, ph);
+            // Дитині прокрутки рушій дає ширину без смуги (10 одиниць).
+            if (ScrollWidget.Cast(parent))
+                pw -= SCROLLBAR_UNITS * m_Px;
+            if (pw > 0)
+                frac = sw / pw;
+        }
+        if (frac <= 0 || frac > 1)
+            frac = 1;
+        if (sw > 0)
+            m_WidthFrac.Set(w, frac);
+        return frac;
     }
 
     // Розмір віджета на екрані, одиниці.
@@ -785,7 +838,12 @@ class OZL_TreeMenu : UIScriptedMenu
         m_Bars.Clear();
         m_Wraps.Clear();
         m_WrapShown.Clear();
+        m_WidthFrac.Clear();
         m_Hover = "";
+        m_RowHover = null;
+        m_RowKind = "";
+        m_RowId = "";
+        m_RowWarned = false;
         m_TipPending = false;
 
         OZL_TreeSkin skin = OZL_TreeSkins.Make(id);
@@ -838,6 +896,7 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (!m_View || !m_Skin)
             return;
+        Number();
         PaintHeader();
         PaintBranches();
         PaintPool();
@@ -865,8 +924,8 @@ class OZL_TreeMenu : UIScriptedMenu
             int done = DoneOf(b);
             sub += " · " + Words("STR_OZL_TREE_RESEARCHED") + " " + done.ToString() + " " + Words("STR_OZL_TREE_OF") + " " + TotalOf(b).ToString();
         }
-        SetText("BranchName", name);
-        SetText("BranchSub", sub);
+        SetText("BranchName", m_Skin.DataText(name));
+        SetText("BranchSub", m_Skin.DataText(sub));
     }
 
     private int DoneOf(OZL_BranchView b)
@@ -880,13 +939,53 @@ class OZL_TreeMenu : UIScriptedMenu
         return done;
     }
 
+    // M у "досліджено N з M" -- лише вузли, видимі крізь туман: скільки
+    // технологій лишилося, гравець знати не мусить на жодному терміналі
+    // (рішення власника 2026-10-31). Сервер загального числа й не шле.
     private int TotalOf(OZL_BranchView b)
     {
-        int total = b.Total;
-        int seen = b.Nodes.Count() + b.Hidden.Count();
-        if (total < seen)
-            total = seen;
-        return total;
+        return b.Nodes.Count();
+    }
+
+    // Щільні номери видимих вузлів поточної гілки в порядку показу: тир за
+    // тиром, у тирі -- за Index (порядок конфігу). Заглушки туману номера не
+    // мають.
+    private void Number()
+    {
+        m_Nums.Clear();
+        OZL_BranchView b = CurrentBranch();
+        if (!b)
+            return;
+        int seq = 1;
+        for (int tier = 1; tier <= OZL_TreePlan.MAX_TIER; tier++)
+        {
+            array<OZL_NodeView> row = new array<OZL_NodeView>();
+            for (int i = 0; i < b.Nodes.Count(); i++)
+            {
+                OZL_NodeView n = b.Nodes[i];
+                if (!n || OZL_TreePlan.TierOf(n) != tier)
+                    continue;
+                // Вставка за Index: тир невеликий.
+                int at = row.Count();
+                while (at > 0 && row[at - 1].Index > n.Index)
+                    at--;
+                row.InsertAt(n, at);
+            }
+            for (int k = 0; k < row.Count(); k++)
+            {
+                m_Nums.Set(row[k].Id, seq);
+                seq++;
+            }
+        }
+    }
+
+    // Номер вузла для гравця: 1, 2... (щільно, лише видимі); 0 -- не з
+    // поточної гілки. Пишеться двома цифрами: OZL_Text.Two(NumberOf(id)).
+    int NumberOf(string id)
+    {
+        int num = 0;
+        m_Nums.Find(id, num);
+        return num;
     }
 
     private void Unlink(array<Widget> list)
@@ -903,7 +1002,31 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (!parent || !m_Skin)
             return null;
-        return GetGame().GetWorkspace().CreateWidgets(m_Skin.RowLayout(row), parent);
+        Widget w = GetGame().GetWorkspace().CreateWidgets(m_Skin.RowLayout(row), parent);
+        Expect(w, row);
+        return w;
+    }
+
+    // Напис-рядок без своєї дитини -- ознака того, що рушій віддав інший
+    // файл: стенд 2026-10-31, шлях ozl_sop_or_label.layout на двох свіжих
+    // клієнтах дав віджети ozl_sop_price_chip.layout. Причини не знайдено
+    // (SKINS.md, "Layout mix-up"); тут -- лише попередження, раз на вікно, з
+    // іменем кореня, яке каже, чий файл прийшов.
+    private void Expect(Widget w, string row)
+    {
+        if (!w || m_RowWarned)
+            return;
+        string need = "";
+        if (row == "or_label")
+            need = "OrText";
+        else if (row == "price_chip")
+            need = "PriceText";
+        else if (row == "tier_label")
+            need = "TierText";
+        if (need == "" || w.FindAnyWidget(need))
+            return;
+        m_RowWarned = true;
+        OZL_Log.Warn("tree: " + m_Skin.RowLayout(row) + " gave a row '" + w.GetName() + "' without " + need + " -- the engine may have handed another layout file (SKINS.md, Layout mix-up)");
     }
 
     private void PaintBranches()
@@ -930,7 +1053,7 @@ class OZL_TreeMenu : UIScriptedMenu
             IgnorePointer(row, rowHit);
             TextWidget name = TextWidget.Cast(row.FindAnyWidget("RowName"));
             if (name)
-                name.SetText(b.Name);
+                name.SetText(m_Skin.DataText(b.Name));
             int done = DoneOf(b);
             int total = TotalOf(b);
             TextWidget count = TextWidget.Cast(row.FindAnyWidget("RowCount"));
@@ -953,15 +1076,16 @@ class OZL_TreeMenu : UIScriptedMenu
     }
 
     // Пул: кожна лінія, яку витрачають видимі вузли гілок фракції або яка
-    // є в пулі (renderPool() мокапа). need -- найбільша ціна одного вузла по
-    // лінії, для сегментів.
+    // є в пулі (renderPool() мокапа) -- назва й число, і все. Смуги-сегменти
+    // прибрано рішенням власника 2026-10-31: частка від найдорожчого вузла
+    // "не залежить від чисел", тож меню її більше не рахує.
     private void PaintPool()
     {
         Unlink(m_PoolRows);
         Widget list = Role("PoolList");
         if (!list)
             return;
-        map<string, int> need = new map<string, int>();
+        map<string, bool> spends = new map<string, bool>();
         int b;
         int i;
         for (b = 0; b < m_View.Branches.Count(); b++)
@@ -977,12 +1101,8 @@ class OZL_TreeMenu : UIScriptedMenu
                 for (int c = 0; c < n.Cost.Count(); c++)
                 {
                     OZL_KV kv = n.Cost[c];
-                    if (!kv)
-                        continue;
-                    int had = 0;
-                    need.Find(kv.Key, had);
-                    if (kv.Value > had)
-                        need.Set(kv.Key, kv.Value);
+                    if (kv && kv.Value > 0)
+                        spends.Set(kv.Key, true);
                 }
             }
         }
@@ -993,14 +1113,12 @@ class OZL_TreeMenu : UIScriptedMenu
             if (!pn)
                 continue;
             int have = PoolOf(pn.Id);
-            int most = 0;
-            bool spent = need.Find(pn.Id, most);
-            if (have <= 0 && !spent)
+            if (have <= 0 && !spends.Contains(pn.Id))
                 continue;
             Widget row = Row("pool_row", list);
             if (!row)
                 break;
-            m_Skin.PaintPoolRow(this, row, pn.Id, have, most, PointColor(pn.Id));
+            m_Skin.PaintPoolRow(this, row, shown, pn.Id, have, PointColor(pn.Id));
             m_PoolRows.Insert(row);
             shown++;
         }
@@ -1447,11 +1565,12 @@ class OZL_TreeMenu : UIScriptedMenu
         }
     }
 
-    // ---------- реєстр (Долг): усі вузли гілки за тирами, приховані -- "невідомо" ----------
+    // ---------- реєстр (Долг): видимі вузли гілки за тирами ----------
 
-    // Тир за тиром, а в тирі -- за Index (порядок конфігу), заглушки туману
-    // на своїх місцях: № іде підряд, як у конфігу, а не "видимі, потім
-    // приховані".
+    // Лише вузли, видимі крізь туман, у порядку показу (тир, у тирі -- Index)
+    // і з щільним номером 01, 02... (NumberOf). Рядків "— невідомо —" для
+    // прихованих немає: за ними було видно, скільки технологій лишилося
+    // (рішення власника 2026-10-31).
     private void PaintRegistry()
     {
         Unlink(m_RegRows);
@@ -1459,97 +1578,39 @@ class OZL_TreeMenu : UIScriptedMenu
         OZL_BranchView b = CurrentBranch();
         if (!list || !b)
             return;
-        int top = MaxIndex(b);
-        if (top < 0)
-        {
-            list.Update();
-            return;
-        }
-        array<OZL_NodeView> nodeAt = new array<OZL_NodeView>();
-        array<OZL_HiddenView> stubAt = new array<OZL_HiddenView>();
-        nodeAt.Resize(top + 1);
-        stubAt.Resize(top + 1);
-        int i;
-        for (i = 0; i < b.Nodes.Count(); i++)
+        array<OZL_NodeView> order = new array<OZL_NodeView>();
+        order.Resize(m_Nums.Count());
+        for (int i = 0; i < b.Nodes.Count(); i++)
         {
             OZL_NodeView n = b.Nodes[i];
-            if (n && n.Index >= 0 && n.Index <= top)
-                nodeAt[n.Index] = n;
+            if (!n)
+                continue;
+            int num = NumberOf(n.Id);
+            if (num >= 1 && num <= order.Count())
+                order[num - 1] = n;
         }
-        for (i = 0; i < b.Hidden.Count(); i++)
+        for (int k = 0; k < order.Count(); k++)
         {
-            OZL_HiddenView h = b.Hidden[i];
-            if (h && h.Index >= 0 && h.Index <= top)
-                stubAt[h.Index] = h;
-        }
-        for (int tier = 1; tier <= OZL_TreePlan.MAX_TIER; tier++)
-        {
-            for (int index = 0; index <= top; index++)
-            {
-                OZL_NodeView vn = nodeAt[index];
-                if (vn)
-                {
-                    if (OZL_TreePlan.TierOf(vn) == tier)
-                        RegRow(list, vn.Id, vn.Index, tier, m_Skin.NodeNameText(vn.Name), m_Skin.StatusText(vn.Status), vn.Status);
-                    continue;
-                }
-                OZL_HiddenView vh = stubAt[index];
-                if (vh && StubTier(vh) == tier)
-                    RegRow(list, "", vh.Index, tier, Words("STR_OZL_TREE_UNKNOWN_ROW"), "—", "");
-            }
+            if (order[k])
+                RegRow(list, order[k], k + 1);
         }
         list.Update();
     }
 
-    private static int StubTier(OZL_HiddenView h)
-    {
-        int t = h.Tier;
-        if (t < 1)
-            t = 1;
-        if (t > OZL_TreePlan.MAX_TIER)
-            t = OZL_TreePlan.MAX_TIER;
-        return t;
-    }
-
-    private void RegRow(Widget list, string id, int index, int tier, string name, string state, string status)
+    private void RegRow(Widget list, OZL_NodeView node, int number)
     {
         Widget row = Row("registry_row", list);
         if (!row)
             return;
         // Клацається RegHit (кнопка зі style Empty), або сам рядок -- тоді він
-        // сам має бути такою кнопкою. Рядок заглушки не клацається зовсім.
+        // сам має бути такою кнопкою.
         Widget hit = row.FindAnyWidget("RegHit");
         if (!hit)
             hit = row;
-        if (id != "")
-        {
-            hit.SetName("reg:" + id);
-            IgnorePointer(row, hit);
-        }
-        else
-        {
-            if (hit != row)
-                hit.Show(false);
-            IgnorePointer(row, null);
-        }
-        SetRowText(row, "RegNum", OZL_Text.Two(index + 1));
-        SetRowText(row, "RegName", name);
-        SetRowText(row, "RegTier", tier.ToString());
-        SetRowText(row, "RegState", state);
-        TextWidget st = TextWidget.Cast(row.FindAnyWidget("RegState"));
-        if (st && status != "")
-            st.SetColor(m_Skin.StatusColorOf(status));
-        Widget pick = row.FindAnyWidget("RegPick");
-        if (pick)
-            pick.Show(id != "" && id == m_Node);
+        hit.SetName("reg:" + node.Id);
+        IgnorePointer(row, hit);
+        m_Skin.PaintRegistryRow(this, row, node, number, OZL_TreePlan.TierOf(node), node.Id == m_Node);
         m_RegRows.Insert(row);
-    }
-
-    private void SetRowText(Widget row, string name, string text)
-    {
-        TextWidget t = TextWidget.Cast(row.FindAnyWidget(name));
-        if (t)
-            t.SetText(text);
     }
 
     // ---------- картка (renderCard() мокапа) ----------
@@ -1573,15 +1634,17 @@ class OZL_TreeMenu : UIScriptedMenu
         string st = n.Status;
         bool paid = st == "completed" || st == "researching";
 
-        PutText(Role("CardName"), m_Skin.NodeNameText(n.Name), 0);
-        PutText(Role("CardMeta"), MetaOf(n), 0);
+        // Тексти з конфігу -- крізь DataText останнім кроком (шрифт скіна
+        // може не мати якоїсь літери, напр. кириличної І у ванільному Metron).
+        PutText(Role("CardName"), m_Skin.DataText(m_Skin.NodeNameText(n.Name)), 0);
+        PutText(Role("CardMeta"), m_Skin.DataText(MetaOf(n)), 0);
         TextWidget status = TextWidget.Cast(Role("CardStatus"));
         if (status)
         {
-            status.SetText(m_Skin.StatusText(st));
+            status.SetText(m_Skin.CardStatusText(st));
             status.SetColor(m_Skin.StatusColorOf(st));
         }
-        PutText(Role("CardDesc"), n.Desc, 0);
+        PutText(Role("CardDesc"), m_Skin.DataText(n.Desc), 0);
         SetText("CardDescHead", m_Skin.SectionText("STR_OZL_TREE_DESC"));
         SetText("CardCostHead", m_Skin.SectionText("STR_OZL_TREE_COST"));
         SetText("CardItemsHead", m_Skin.SectionText("STR_OZL_TREE_ITEMS"));
@@ -1595,7 +1658,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             OZL_KV kv = n.Cost[i];
             if (kv)
-                CostRow(costs, PointColor(kv.Key), PointName(kv.Key), PoolOf(kv.Key), kv.Value, paid, true);
+                CostRow(costs, PointColor(kv.Key), m_Skin.DataText(PointName(kv.Key)), PoolOf(kv.Key), kv.Value, paid, true);
         }
         Widget items = Role("CardItemList");
         Widget itemsHead = Role("CardItemsHead");
@@ -1607,7 +1670,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             OZL_ItemView iv = n.Items[i];
             if (iv)
-                CostRow(items, m_Skin.Dim, ItemLabel(iv), iv.Have, iv.Qty, paid, iv.Have >= 0);
+                CostRow(items, m_Skin.Dim, m_Skin.DataText(ItemLabel(iv)), iv.Have, iv.Qty, paid, iv.Have >= 0);
         }
 
         PaintTime(n);
@@ -1615,10 +1678,7 @@ class OZL_TreeMenu : UIScriptedMenu
 
         // Кнопка видна завжди; неактивна -- з причиною під нею (спека §5.4).
         bool can = st == "available" && m_View.MaySpend;
-        string label = Words("STR_OZL_TREE_RESEARCH");
-        if (st == "completed")
-            label = Words("STR_OZL_TREE_COMPLETED");
-        SetText("BtnResearchText", label);
+        SetText("BtnResearchText", m_Skin.ButtonText(st, can));
         Widget btn = Role("BtnResearch");
         if (btn)
         {
@@ -1661,15 +1721,18 @@ class OZL_TreeMenu : UIScriptedMenu
     // Стос картки змінився: оновити його, а тоді й прокрутку картки. Сама
     // вона не бачить, що стос виріс (стенд 2026-10-31: довгий опис, CardFlow
     // 819 px у CardScroll 690 px -- смуги нема, колесо не крутить), тож без
-    // цього кінець довгої картки недосяжний.
-    private void RefreshCard()
+    // цього кінець довгої картки недосяжний. Оновлює ЛИШЕ CardFlow і
+    // CardScroll: скін, чий список "Відкриває" чи інший стос стоїть деінде,
+    // оновлює його сам (OnWrapped, OnSelect) і кличе це після.
+    void RefreshCard()
     {
         UpdateRole("CardFlow");
         UpdateRole("CardScroll");
     }
 
     // "тир 2 · після: Назва" / "після всіх: А, невідомо" / "після будь-якого з: ...".
-    private string MetaOf(OZL_NodeView n)
+    // Публічна: скін, що пише мету інакше, бере її тут, а не копіює.
+    string MetaOf(OZL_NodeView n)
     {
         string meta = Words("STR_OZL_TREE_TIER") + " " + n.Tier.ToString();
         int count = n.Parents.Count();
@@ -1831,7 +1894,7 @@ class OZL_TreeMenu : UIScriptedMenu
                     tag = " " + Words("STR_OZL_TREE_OR_TAG");
                 else if (kid.Parents.Count() > 1)
                     tag = " " + Words("STR_OZL_TREE_MORE_TAG");
-                OpenChip(list, kid.Id, kid.Name + tag);
+                OpenChip(list, kid.Id, m_Skin.DataText(kid.Name + tag));
                 count++;
             }
             else if (StubAt(b, index, n.Id))
@@ -1846,7 +1909,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             list.Show(count > 0);
             if (count > 0)
-                FlowLater(list, 6, 4, true);
+                FlowLater(list, m_Skin.OpensGap, m_Skin.OpensPad, true);
         }
     }
 
@@ -2043,7 +2106,7 @@ class OZL_TreeMenu : UIScriptedMenu
         {
             OZL_NodeView n = NodeOf(m_Hover);
             if (n)
-                SetText("TreeTipText", n.Name + " · " + m_Skin.StatusText(n.Status));
+                SetText("TreeTipText", m_Skin.DataText(n.Name + " · " + m_Skin.StatusText(n.Status)));
         }
         m_NeedLines = true;
     }
@@ -2059,7 +2122,7 @@ class OZL_TreeMenu : UIScriptedMenu
         ImageWidget shape = ImageWidget.Cast(cell.FindAnyWidget("NodeShape"));
         if (!shape)
             return;
-        int slot = m_Skin.ShapeOf(n.Status, n.Id == m_Node);
+        int slot = m_Skin.ShapeOfNode(n, n.Status, n.Id == m_Node);
         if (on)
             slot = m_Skin.ShapeHover;
         if (slot >= 0)
@@ -2117,6 +2180,9 @@ class OZL_TreeMenu : UIScriptedMenu
         // Стос картки оновлюється раз за кадр і лише якщо переклали щось у ній.
         Widget flow = Role("CardFlow");
         bool cardDone = false;
+        // Розкладені цього кадру -- скінові (OnWrapped), коли стос картки
+        // вже оновлено.
+        array<Widget> done = new array<Widget>();
         for (int j = m_Wraps.Count() - 1; j >= 0; j--)
         {
             OZL_TreeWrap job = m_Wraps[j];
@@ -2198,10 +2264,16 @@ class OZL_TreeMenu : UIScriptedMenu
                 m_WrapShown.Remove(job.Box);
             if (flow && Holds(flow, job.Box))
                 cardDone = true;
+            done.Insert(job.Box);
             m_Wraps.RemoveOrdered(j);
         }
         if (cardDone)
             RefreshCard();
+        for (int d = 0; d < done.Count() && m_Skin; d++)
+        {
+            if (done[d])
+                m_Skin.OnWrapped(this, done[d]);
+        }
     }
 
     private void RunBars()
@@ -2448,11 +2520,13 @@ class OZL_TreeMenu : UIScriptedMenu
             m_ProbeStep = 2;
             return;
         }
-        // Рамка-проба могла зникнути між кадрами -- тоді теж пікселі.
+        // Рамка-проба могла зникнути між кадрами -- тоді теж пікселі, і так
+        // само вголос, як на кроці 1.
         if (!m_Probe)
         {
             m_K = m_Px;
             m_ProbeStep = 0;
+            OZL_Log.Warn("tree: TreeProbe vanished during the probe, taking SetPos/SetSize in screen pixels (measured 2026-10-31)");
             return;
         }
         if (m_ProbeStep == 2)
@@ -2537,7 +2611,9 @@ class OZL_TreeMenu : UIScriptedMenu
     }
 
     // Чи натиск на самому TreeScroll припав на його смугу (нижні чи праві
-    // 10 одиниць).
+    // 10 одиниць) -- і лише на ту, яку рушій справді малює: смуга є, коли
+    // вміст (TreeContent) не влазить у вид. Без цього край вигляду, де смуги
+    // нема, не тягнув дерево.
     private bool OnScrollbar(Widget w)
     {
         Widget scroll = Role("TreeScroll");
@@ -2552,10 +2628,27 @@ class OZL_TreeMenu : UIScriptedMenu
         float sh;
         scroll.GetScreenPos(sx, sy);
         scroll.GetScreenSize(sw, sh);
-        float bar = 10 * m_Px;
-        if (mx >= sx + sw - bar)
+        float bar = SCROLLBAR_UNITS * m_Px;
+        bool barV = true;
+        bool barH = true;
+        Widget content = Role("TreeContent");
+        if (content)
+        {
+            float cw;
+            float ch;
+            content.GetScreenSize(cw, ch);
+            barV = ch > sh;
+            barH = cw > sw;
+            // Одна смуга забирає 10 одиниць у другого виміру -- і може
+            // покликати другу.
+            if (barH && !barV && ch > sh - bar)
+                barV = true;
+            if (barV && !barH && cw > sw - bar)
+                barH = true;
+        }
+        if (barV && mx >= sx + sw - bar)
             return true;
-        if (my >= sy + sh - bar)
+        if (barH && my >= sy + sh - bar)
             return true;
         return false;
     }
@@ -2614,6 +2707,7 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (w)
         {
+            RowHover(w);
             string id = NodeIdAt(w);
             if (id != "")
                 SetHover(id);
@@ -2627,6 +2721,15 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (w)
         {
+            // Зійшли з рядка не на нього ж -- рядок гасне.
+            if (m_RowHover && (w == m_RowHover || Holds(m_RowHover, w)))
+            {
+                bool stays = false;
+                if (enterW)
+                    stays = enterW == m_RowHover || Holds(m_RowHover, enterW);
+                if (!stays)
+                    RowHover(enterW);
+            }
             string from = NodeIdAt(w);
             if (from != "" && from == m_Hover)
             {
@@ -2642,6 +2745,62 @@ class OZL_TreeMenu : UIScriptedMenu
             }
         }
         return super.OnMouseLeave(w, enterW, x, y);
+    }
+
+    // Рядок, що клацається, під мишею: реєстр (reg:), гілки (branch:), чіп
+    // "Відкриває" (open:). Скінові -- OnRowHover: вихід із попереднього, тоді
+    // вхід у новий. w без мітки (чи null) лише гасить попередній.
+    private void RowHover(Widget w)
+    {
+        string kind = "";
+        string id = TaggedAt(w, "reg:");
+        if (id != "")
+            kind = "reg";
+        if (kind == "")
+        {
+            id = TaggedAt(w, "branch:");
+            if (id != "")
+                kind = "branch";
+        }
+        if (kind == "")
+        {
+            id = TaggedAt(w, "open:");
+            if (id != "")
+                kind = "open";
+        }
+        Widget row = null;
+        if (kind != "")
+            row = RowOf(w, kind);
+        if (row == m_RowHover && kind == m_RowKind && id == m_RowId)
+            return;
+        if (m_RowHover && m_Skin)
+            m_Skin.OnRowHover(this, m_RowHover, m_RowKind, m_RowId, false);
+        m_RowHover = row;
+        m_RowKind  = kind;
+        m_RowId    = id;
+        if (m_RowHover && m_Skin)
+            m_Skin.OnRowHover(this, m_RowHover, m_RowKind, m_RowId, true);
+    }
+
+    // Корінь рядка: предок w, чий батько -- список ролі (Registry,
+    // BranchList, CardOpensList). Поза списком -- сам w.
+    private Widget RowOf(Widget w, string kind)
+    {
+        string role = "CardOpensList";
+        if (kind == "reg")
+            role = "Registry";
+        else if (kind == "branch")
+            role = "BranchList";
+        Widget list = Role(role);
+        Widget cur = w;
+        while (cur && list)
+        {
+            Widget up = cur.GetParent();
+            if (up == list)
+                return cur;
+            cur = up;
+        }
+        return w;
     }
 
     private void HoverButton(bool on)

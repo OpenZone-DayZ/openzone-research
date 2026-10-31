@@ -526,17 +526,17 @@ class OZL_Tree
             OZL_BranchView bv = new OZL_BranchView();
             bv.Id   = br.Id;
             bv.Name = br.Name;
-            // Місце вузла рахується серед вузлів гілки, що належать власникові,
-            // видимих і прихованих разом -- тож Index не стрибає, коли туман
-            // відступає.
+            // Місце вузла рахується лише серед того, що їде клієнтові: видимі
+            // вузли й заглушки наступного кроку, у порядку конфігу, щільно.
+            // Прихований вузол без жодного видимого батька не їде й місця не
+            // займає -- ні число, ні прогалина в Index не кажуть, скільки
+            // технологій лишилося (рішення власника 2026-10-31).
             int place = 0;
             for (int n = 0; n < br.Nodes.Count(); n++)
             {
                 OZL_TreeNode node = br.Nodes[n];
                 if (!node || !shown.Contains(node.Id))
                     continue;
-                int index = place;
-                place++;
                 int tier = node.Tier;
                 if (tier < 1)
                     tier = 1;
@@ -544,16 +544,22 @@ class OZL_Tree
                 if (!IsShown(shown, node.Id))
                 {
                     OZL_HiddenView hv = new OZL_HiddenView();
-                    hv.Index = index;
-                    hv.Tier  = tier;
+                    hv.Tier = tier;
                     for (i = 0; i < node.Parents.Count(); i++)
                     {
                         if (IsShown(shown, node.Parents[i]))
                             hv.Parents.Insert(node.Parents[i]);
                     }
+                    // Глибше за наступний крок -- не їде зовсім.
+                    if (hv.Parents.Count() == 0)
+                        continue;
+                    hv.Index = place;
+                    place++;
                     bv.Hidden.Insert(hv);
                     continue;
                 }
+                int index = place;
+                place++;
 
                 OZL_NodeView nv = new OZL_NodeView();
                 nv.Id       = node.Id;
@@ -606,9 +612,6 @@ class OZL_Tree
                 nv.Status = ViewStatus(st, node, nv.Items);
                 bv.Nodes.Insert(nv);
             }
-            // Усього вузлів гілки в цього власника -- і показаних, і ні:
-            // лічильник "досліджено N / M" не росте, коли туман відступає.
-            bv.Total = place;
             v.Branches.Insert(bv);
         }
         return v;

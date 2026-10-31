@@ -144,9 +144,9 @@ class OZL_TreeSkin_Neutral : OZL_TreeSkin
 
     // Нуль у пулі закреслено -- окремо назву і число, як text-decoration
     // мокапа; довжину рисок міряє меню, коли текст уже розкладено.
-    override void PaintPoolRow(OZL_TreeMenu menu, Widget row, string line, int have, int need, int color)
+    override void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
     {
-        super.PaintPoolRow(menu, row, line, have, need, color);
+        super.PaintPoolRow(menu, row, index, line, have, color);
         Widget nameStrike = row.FindAnyWidget("PoolNameStrike");
         Widget valueStrike = row.FindAnyWidget("PoolValueStrike");
         bool zero = have <= 0;
