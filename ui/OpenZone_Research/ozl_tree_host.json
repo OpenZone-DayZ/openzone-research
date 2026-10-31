@@ -1,0 +1,40 @@
+{
+  "layout": "ozl_tree_host",
+  "note": "The research tree screen's host (menu 135, OZL_TreeMenu.Init): the whole screen dimmed, a loading line, and an invisible probe frame. Which window to show is known only when the server answers (OZL_TreeView.Skin), so the window of the faction's skin (ozl_tree_<skin>.layout, root TreeWindow) is created INTO this host then, on top of everything here. TreeProbe has no look of its own: the menu moves it twice in its first frames to measure what SetPos/SetSize take on this screen (source/ui/SKINS.md, 'Units').",
+  "root": {
+    "frame": {
+      "name": "OZL_TreeHost",
+      "size": "screen",
+      "priority": 2,
+      "children": [
+        {
+          "panel": {
+            "name": "TreeDim",
+            "size": "fill",
+            "color": "$dim",
+            "note": "Dims the world behind the screen; the skin's own window covers it with its desk or casing."
+          }
+        },
+        {
+          "label": {
+            "name": "TreeLoading",
+            "anchor": "center",
+            "size": [800, 40],
+            "text": "#STR_OZL_TREE_LOADING",
+            "font": "title",
+            "color": "$text",
+            "align": "center",
+            "note": "Shown until the answer of the server arrives; the menu hides it when the window is built."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeProbe",
+            "size": [10, 10],
+            "note": "The SetPos/SetSize probe: no look, never seen."
+          }
+        }
+      ]
+    }
+  }
+}
