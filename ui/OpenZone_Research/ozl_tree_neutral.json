@@ -1,0 +1,2211 @@
+{
+  "layout": "ozl_tree_neutral",
+  "note": "The neutral window («Записник сталкера», the mockup's loner): a clean notebook spread on a wooden desk. Left page ruled: title, the pool as plain numbers, the entry of the selected node; right page squared: the tree growing down, branch name and line on top, the legend below. Root TreeWindow fills the screen with the desk; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome.",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "image": {
+            "name": "TreeDesk",
+            "size": "fill",
+            "file": "OpenZone_Research/gui/textures/tree/neutral/desk_ca.paa",
+            "stretch": false,
+            "note": "Wood, tiled at its own size over the whole screen."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "anchor": "center",
+            "size": [
+              1600,
+              900
+            ],
+            "children": [
+              {
+                "image": {
+                  "name": "SpreadShadow",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/neutral/shadow_ca.paa",
+                  "note": "The notebook's shadow on the desk."
+                }
+              },
+              {
+                "panel": {
+                  "name": "PageL",
+                  "at": [
+                    28,
+                    24
+                  ],
+                  "size": [
+                    760,
+                    852
+                  ],
+                  "color": "$neutral_screen",
+                  "children": [
+                    {
+                      "rule": {
+                        "name": "Rule0",
+                        "at": [
+                          0,
+                          2
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule1",
+                        "at": [
+                          0,
+                          34
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule2",
+                        "at": [
+                          0,
+                          66
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule3",
+                        "at": [
+                          0,
+                          98
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule4",
+                        "at": [
+                          0,
+                          130
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule5",
+                        "at": [
+                          0,
+                          162
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule6",
+                        "at": [
+                          0,
+                          194
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule7",
+                        "at": [
+                          0,
+                          226
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule8",
+                        "at": [
+                          0,
+                          258
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule9",
+                        "at": [
+                          0,
+                          290
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule10",
+                        "at": [
+                          0,
+                          322
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule11",
+                        "at": [
+                          0,
+                          354
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule12",
+                        "at": [
+                          0,
+                          386
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule13",
+                        "at": [
+                          0,
+                          418
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule14",
+                        "at": [
+                          0,
+                          450
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule15",
+                        "at": [
+                          0,
+                          482
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule16",
+                        "at": [
+                          0,
+                          514
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule17",
+                        "at": [
+                          0,
+                          546
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule18",
+                        "at": [
+                          0,
+                          578
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule19",
+                        "at": [
+                          0,
+                          610
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule20",
+                        "at": [
+                          0,
+                          642
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule21",
+                        "at": [
+                          0,
+                          674
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule22",
+                        "at": [
+                          0,
+                          706
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule23",
+                        "at": [
+                          0,
+                          738
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule24",
+                        "at": [
+                          0,
+                          770
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule25",
+                        "at": [
+                          0,
+                          802
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "rule": {
+                        "name": "Rule26",
+                        "at": [
+                          0,
+                          834
+                        ],
+                        "w": 760,
+                        "color": "$neutral_rule"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "PageMargin",
+                        "at": [
+                          56,
+                          0
+                        ],
+                        "size": [
+                          2,
+                          852
+                        ],
+                        "color": "$neutral_margin",
+                        "note": "The red margin line."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "TreeTitle",
+                        "at": [
+                          74,
+                          23
+                        ],
+                        "size": [
+                          440,
+                          46
+                        ],
+                        "text": "#STR_OZL_SKIN_NEUTRAL_TITLE",
+                        "font": "neutral_title",
+                        "color": "$neutral_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "DevName",
+                        "at": [
+                          380,
+                          40
+                        ],
+                        "size": [
+                          346,
+                          26
+                        ],
+                        "text": "#STR_OZL_SKIN_NEUTRAL_DEV",
+                        "font": "neutral_dev",
+                        "color": "$neutral_dim",
+                        "align": "right"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "PoolHead",
+                        "at": [
+                          74,
+                          72
+                        ],
+                        "size": [
+                          300,
+                          38
+                        ],
+                        "text": "#STR_OZL_SKIN_NEUTRAL_POOL",
+                        "font": "neutral_heading",
+                        "color": "$neutral_txt"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "PoolHeadLine",
+                        "at": [
+                          74,
+                          103
+                        ],
+                        "size": [
+                          60,
+                          2
+                        ],
+                        "color": "$neutral_txt",
+                        "note": "The underline of the heading; the skin sizes it to the word."
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "PoolScroll",
+                        "stack": "PoolList",
+                        "at": [
+                          74,
+                          116
+                        ],
+                        "size": [
+                          662,
+                          161
+                        ],
+                        "note": "Five lines on the ruling; a faction with more lines scrolls.",
+                        "rows": {
+                          "ozl_neutral_pool_row": {
+                            "row": {
+                              "name": "OZL_NeutralPoolRow",
+                              "h": 32,
+                              "note": "One line of the pool: its name and the number, right-aligned; a zero is crossed out (the strikes are sized by the skin to the text).",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "PoolName",
+                                    "at": [
+                                      0,
+                                      1
+                                    ],
+                                    "size": [
+                                      500,
+                                      30
+                                    ],
+                                    "font": "neutral_pool",
+                                    "color": "$neutral_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolValue",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": "fill",
+                                    "h": 33,
+                                    "font": "neutral_pool_value",
+                                    "color": "$neutral_txt",
+                                    "align": "right"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "PoolNameStrike",
+                                    "at": [
+                                      0,
+                                      17
+                                    ],
+                                    "size": [
+                                      10,
+                                      1.5
+                                    ],
+                                    "color": "$neutral_dim",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "PoolValueStrike",
+                                    "at": [
+                                      0,
+                                      17
+                                    ],
+                                    "anchor": "right",
+                                    "size": [
+                                      10,
+                                      1.5
+                                    ],
+                                    "color": "$neutral_dim",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          74,
+                          282
+                        ],
+                        "size": [
+                          652,
+                          548
+                        ],
+                        "hidden": true,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                0,
+                                230
+                              ],
+                              "size": [
+                                652,
+                                34
+                              ],
+                              "text": "#STR_OZL_TREE_PICK",
+                              "font": "neutral_empty",
+                              "color": "$neutral_dim",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                0,
+                                266
+                              ],
+                              "size": [
+                                652,
+                                26
+                              ],
+                              "text": "#STR_OZL_TREE_HINT",
+                              "font": "neutral_empty_hint",
+                              "color": "$neutral_dim",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardBody",
+                        "at": [
+                          74,
+                          282
+                        ],
+                        "size": [
+                          652,
+                          548
+                        ],
+                        "children": [
+                          {
+                            "list": {
+                              "name": "CardScroll",
+                              "stack": "CardFlow",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                662,
+                                466
+                              ],
+                              "note": "The node's entry, top to bottom; the engine stacks it and a long entry scrolls above the button.",
+                              "rows": {
+                                "ozl_neutral_cost_row": {
+                                  "row": {
+                                    "name": "OZL_NeutralCostRow",
+                                    "h": 26,
+                                    "note": "A cost line of the card: the name and 'have / need' (or 'need' alone when paid or not known); what is short is underlined. Paper skins show no chip and no bar here.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CostName",
+                                          "at": [
+                                            8,
+                                            0
+                                          ],
+                                          "size": [
+                                            540,
+                                            26
+                                          ],
+                                          "font": "neutral_crow",
+                                          "color": "$neutral_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CostValue",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "w": "fill",
+                                          "h": 26,
+                                          "font": "neutral_crow",
+                                          "color": "$neutral_txt",
+                                          "align": "right"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CostValueLine",
+                                          "at": [
+                                            0,
+                                            24
+                                          ],
+                                          "anchor": "right",
+                                          "size": [
+                                            10,
+                                            2
+                                          ],
+                                          "color": "$neutral_bad",
+                                          "hidden": true
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                "ozl_neutral_opens_chip": {
+                                  "row": {
+                                    "name": "OZL_NeutralOpensChip",
+                                    "h": 25,
+                                    "note": "A node this one opens: a word with a dashed underline. The menu lines the chips up and stretches ChipHit and ChipLine to each chip's width; a hidden node's chip has no ChipHit.",
+                                    "children": [
+                                      {
+                                        "raw": {
+                                          "name": "ChipHit",
+                                          "class": "ButtonWidgetClass",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            200,
+                                            25
+                                          ],
+                                          "props": {
+                                            "style": "Empty",
+                                            "text": ""
+                                          },
+                                          "note": "style Empty: a style-less button paints a light box under the mouse."
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "ChipText",
+                                          "at": [
+                                            4,
+                                            0
+                                          ],
+                                          "w": "auto",
+                                          "h": 25,
+                                          "font": "neutral_opens",
+                                          "color": "$neutral_txt"
+                                        }
+                                      },
+                                      {
+                                        "image": {
+                                          "name": "ChipLine",
+                                          "at": [
+                                            0,
+                                            24
+                                          ],
+                                          "size": [
+                                            200,
+                                            1
+                                          ],
+                                          "file": "OpenZone_Research/gui/textures/tree/neutral/dash_ca.paa",
+                                          "stretch": false,
+                                          "color": "$neutral_dim"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "CardName",
+                                    "h": 46,
+                                    "font": "neutral_cname",
+                                    "color": "$neutral_txt"
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "CardNameWave",
+                                    "w": 200,
+                                    "h": 6,
+                                    "set": "ozl_neutral",
+                                    "image": "wave",
+                                    "color": "$neutral_txt",
+                                    "note": "The wavy underline of the name; the skin stretches it to the name."
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardMeta",
+                                    "note": "Word-wrapped by the menu into its lines (bitmap fonts: no MultilineTextWidget).",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardMeta0",
+                                          "h": 25,
+                                          "font": "neutral_cmeta",
+                                          "color": "$neutral_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardMeta1",
+                                          "h": 25,
+                                          "font": "neutral_cmeta",
+                                          "color": "$neutral_dim",
+                                          "hidden": true
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardStatus",
+                                    "h": 30,
+                                    "font": "neutral_cstat",
+                                    "color": "$neutral_txt"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 4
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardDesc",
+                                    "note": "Word-wrapped by the menu into its lines, 32 apart like the ruling.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardDesc0",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc1",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc2",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc3",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc4",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc5",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc6",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc7",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc8",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc9",
+                                          "h": 32,
+                                          "font": "neutral_cdesc",
+                                          "color": "$neutral_txt",
+                                          "hidden": true
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 4
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardCostHead",
+                                    "h": 28,
+                                    "font": "neutral_sec",
+                                    "color": "$neutral_acc"
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardCostList"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardItemsHead",
+                                    "h": 28,
+                                    "font": "neutral_sec",
+                                    "color": "$neutral_acc"
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardItemList"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 4
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardTimeHead",
+                                    "h": 28,
+                                    "font": "neutral_sec",
+                                    "color": "$neutral_acc"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardTime",
+                                    "h": 26,
+                                    "font": "neutral_crow",
+                                    "color": "$neutral_txt"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CardSegs",
+                                    "h": 8,
+                                    "hidden": true,
+                                    "note": "The 20 segments of a running project: an underline each, red when done.",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg0",
+                                          "at": [
+                                            0.0,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg1",
+                                          "at": [
+                                            32.7,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg2",
+                                          "at": [
+                                            65.4,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg3",
+                                          "at": [
+                                            98.10000000000001,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg4",
+                                          "at": [
+                                            130.8,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg5",
+                                          "at": [
+                                            163.5,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg6",
+                                          "at": [
+                                            196.20000000000002,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg7",
+                                          "at": [
+                                            228.90000000000003,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg8",
+                                          "at": [
+                                            261.6,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg9",
+                                          "at": [
+                                            294.3,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg10",
+                                          "at": [
+                                            327.0,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg11",
+                                          "at": [
+                                            359.70000000000005,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg12",
+                                          "at": [
+                                            392.40000000000003,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg13",
+                                          "at": [
+                                            425.1,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg14",
+                                          "at": [
+                                            457.80000000000007,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg15",
+                                          "at": [
+                                            490.50000000000006,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg16",
+                                          "at": [
+                                            523.2,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg17",
+                                          "at": [
+                                            555.9000000000001,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg18",
+                                          "at": [
+                                            588.6,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSeg19",
+                                          "at": [
+                                            621.3000000000001,
+                                            3
+                                          ],
+                                          "size": [
+                                            30.7,
+                                            3
+                                          ],
+                                          "color": "$neutral_edge"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 4
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardOpensHead",
+                                    "h": 28,
+                                    "font": "neutral_sec",
+                                    "color": "$neutral_acc"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CardOpensList",
+                                    "h": 25,
+                                    "note": "The menu lines the 'opens' chips up here (ozl_neutral_opens_chip) and sets the height to what they take."
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "CardFoot",
+                              "at": [
+                                0,
+                                470
+                              ],
+                              "size": [
+                                652,
+                                78
+                              ],
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchHover",
+                                    "at": [
+                                      2,
+                                      2
+                                    ],
+                                    "size": [
+                                      648,
+                                      54
+                                    ],
+                                    "color": "$neutral_hover",
+                                    "hidden": true,
+                                    "note": "The pale ink under an enabled button the mouse is over."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "BtnResearchRing",
+                                    "at": [
+                                      -3,
+                                      -3
+                                    ],
+                                    "size": [
+                                      658,
+                                      64
+                                    ],
+                                    "set": "ozl_neutral",
+                                    "image": "btn_ring",
+                                    "color": "$neutral_acc",
+                                    "note": "Circled in ink: shown while the button is enabled."
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      652,
+                                      58
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: a style-less button paints a light box under the mouse.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchText",
+                                          "size": "fill",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
+                                          "font": "neutral_button",
+                                          "color": "$neutral_acc",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchStrike",
+                                    "at": [
+                                      0,
+                                      30
+                                    ],
+                                    "size": [
+                                      10,
+                                      2
+                                    ],
+                                    "color": "$neutral_dim",
+                                    "hidden": true,
+                                    "note": "Strikes the words of a disabled button; the skin sizes it to the words."
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      652,
+                                      24
+                                    ],
+                                    "font": "neutral_why",
+                                    "color": "$neutral_bad"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "frame": {
+                  "name": "Spine",
+                  "at": [
+                    788,
+                    24
+                  ],
+                  "size": [
+                    24,
+                    852
+                  ],
+                  "children": [
+                    {
+                      "icon": {
+                        "name": "SpineShade",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          24,
+                          852
+                        ],
+                        "set": "ozl_neutral",
+                        "image": "spine",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "Staple1Top",
+                        "at": [
+                          6,
+                          204
+                        ],
+                        "size": [
+                          12,
+                          2
+                        ],
+                        "color": "$neutral_staple"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "Staple1Bottom",
+                        "at": [
+                          6,
+                          236
+                        ],
+                        "size": [
+                          12,
+                          2
+                        ],
+                        "color": "$neutral_staple"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "Staple2Top",
+                        "at": [
+                          6,
+                          596
+                        ],
+                        "size": [
+                          12,
+                          2
+                        ],
+                        "color": "$neutral_staple"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "Staple2Bottom",
+                        "at": [
+                          6,
+                          628
+                        ],
+                        "size": [
+                          12,
+                          2
+                        ],
+                        "color": "$neutral_staple"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "PageR",
+                  "at": [
+                    812,
+                    24
+                  ],
+                  "size": [
+                    760,
+                    852
+                  ],
+                  "color": "$neutral_page_r",
+                  "children": [
+                    {
+                      "icon": {
+                        "name": "PageGlow",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          760,
+                          852
+                        ],
+                        "set": "ozl_neutral",
+                        "image": "glow",
+                        "color": "$white",
+                        "note": "The soft light on the paper."
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "TreeScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          760,
+                          818
+                        ],
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "Scrollbar H": 1
+                        },
+                        "note": "The tree: drag it, or the wheel. The menu sizes TreeContent.",
+                        "children": [
+                          {
+                            "frame": {
+                              "name": "TreeContent",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                748,
+                                806
+                              ],
+                              "children": [
+                                {
+                                  "image": {
+                                    "name": "TreeBg",
+                                    "size": "fill",
+                                    "file": "OpenZone_Research/gui/textures/tree/neutral/desk_ca.paa",
+                                    "hidden": true,
+                                    "note": "Shown only with the admin's own TreeBackground (the menu loads it); the paper's squares are drawn on TreeLines."
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTiers",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill",
+                                    "props": {
+                                      "ignorepointer": 1
+                                    },
+                                    "note": "The squares of the paper and every link, drawn by the menu."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "TreeFogEdge",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      748,
+                                      80
+                                    ],
+                                    "set": "ozl_neutral",
+                                    "image": "fog_edge",
+                                    "color": "$neutral_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "TreeFog",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      748,
+                                      100
+                                    ],
+                                    "color": "$neutral_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeNodes",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTip",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      300,
+                                      30
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipEdge",
+                                          "size": "fill",
+                                          "color": "$neutral_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipBg",
+                                          "at": [
+                                            1,
+                                            1
+                                          ],
+                                          "size": [
+                                            298,
+                                            28
+                                          ],
+                                          "color": "$neutral_paper_hi"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "TreeTipText",
+                                          "at": [
+                                            9,
+                                            0
+                                          ],
+                                          "w": "auto",
+                                          "h": 30,
+                                          "font": "neutral_tip",
+                                          "color": "$neutral_txt"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchName",
+                        "at": [
+                          20,
+                          12
+                        ],
+                        "size": [
+                          710,
+                          47
+                        ],
+                        "font": "neutral_bname",
+                        "color": "$neutral_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchSub",
+                        "at": [
+                          20,
+                          63
+                        ],
+                        "size": [
+                          710,
+                          24
+                        ],
+                        "font": "neutral_bsub",
+                        "color": "$neutral_dim"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "BtnClose",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          630,
+                          8
+                        ],
+                        "size": [
+                          120,
+                          28
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "note": "Not in the mockup: the paper has no frame to close, so a pencilled word in the corner.",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "BtnCloseText",
+                              "size": "fill",
+                              "text": "#STR_OZL_TREE_CLOSE",
+                              "font": "neutral_legend",
+                              "color": "$neutral_dim",
+                              "align": "right"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "BranchScroll",
+                        "stack": "BranchList",
+                        "at": [
+                          600,
+                          40
+                        ],
+                        "size": [
+                          160,
+                          58
+                        ],
+                        "hidden": true,
+                        "note": "Only when the faction has more than one branch (the skin shows it).",
+                        "rows": {
+                          "ozl_neutral_branch_row": {
+                            "row": {
+                              "name": "OZL_NeutralBranchRow",
+                              "h": 26,
+                              "note": "A branch: RowHit is clicked (the menu renames it branch:<id>); the open one is underlined in red.",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "RowHit",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      150,
+                                      26
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    }
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RowName",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      110,
+                                      26
+                                    ],
+                                    "font": "neutral_branch",
+                                    "color": "$neutral_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RowCount",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": "fill",
+                                    "h": 26,
+                                    "font": "neutral_branch",
+                                    "color": "$neutral_dim",
+                                    "align": "right"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "RowPick",
+                                    "at": [
+                                      0,
+                                      23
+                                    ],
+                                    "size": [
+                                      150,
+                                      1.5
+                                    ],
+                                    "color": "$neutral_bad",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "TreeLegend",
+                        "at": [
+                          0,
+                          818
+                        ],
+                        "size": [
+                          760,
+                          34
+                        ],
+                        "children": [
+                          {
+                            "image": {
+                              "name": "LegendRule",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                760,
+                                1
+                              ],
+                              "file": "OpenZone_Research/gui/textures/tree/neutral/dash_ca.paa",
+                              "stretch": false,
+                              "color": "$neutral_edge"
+                            }
+                          },
+                          {
+                            "hrow": {
+                              "name": "LegendRow",
+                              "at": [
+                                16,
+                                6
+                              ],
+                              "h": 22,
+                              "children": [
+                                {
+                                  "frame": {
+                                    "name": "LegLocked",
+                                    "w": 12,
+                                    "h": 22,
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegLockedBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "set": "ozl_neutral",
+                                          "image": "legend_box",
+                                          "color": "$neutral_faint"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 6
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegLockedText",
+                                    "w": "auto",
+                                    "h": 22,
+                                    "text": "#STR_OZL_TREE_LEGEND_LOCKED",
+                                    "font": "neutral_legend",
+                                    "color": "$neutral_dim"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 14
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "LegShort",
+                                    "w": 12,
+                                    "h": 22,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegShortBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$neutral_bad"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 6
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegShortText",
+                                    "w": "auto",
+                                    "h": 22,
+                                    "text": "#STR_OZL_TREE_LEGEND_SHORT",
+                                    "font": "neutral_legend",
+                                    "color": "$neutral_dim"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 14
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "LegOpen",
+                                    "w": 12,
+                                    "h": 22,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegOpenBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$neutral_acc"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 6
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegOpenText",
+                                    "w": "auto",
+                                    "h": 22,
+                                    "text": "#STR_OZL_TREE_LEGEND_OPEN",
+                                    "font": "neutral_legend",
+                                    "color": "$neutral_dim"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 14
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "LegDone",
+                                    "w": 12,
+                                    "h": 22,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegDoneBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$neutral_ok"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 6
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegDoneText",
+                                    "w": "auto",
+                                    "h": 22,
+                                    "text": "#STR_OZL_TREE_LEGEND_DONE",
+                                    "font": "neutral_legend",
+                                    "color": "$neutral_dim"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 14
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "LegAll",
+                                    "w": 34,
+                                    "h": 22,
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAllMark",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            34,
+                                            12
+                                          ],
+                                          "set": "ozl_neutral",
+                                          "image": "legend_all",
+                                          "color": "$neutral_dim"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 6
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegAllText",
+                                    "w": "auto",
+                                    "h": 22,
+                                    "text": "#STR_OZL_TREE_LEGEND_ALL",
+                                    "font": "neutral_legend",
+                                    "color": "$neutral_dim"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 14
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "LegAny",
+                                    "w": 38,
+                                    "h": 22,
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAnyMark",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            38,
+                                            12
+                                          ],
+                                          "set": "ozl_neutral",
+                                          "image": "legend_any",
+                                          "color": "$neutral_dim"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "w": 6
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegAnyText",
+                                    "w": "auto",
+                                    "h": 22,
+                                    "text": "#STR_OZL_TREE_LEGEND_ANY",
+                                    "font": "neutral_legend",
+                                    "color": "$neutral_dim"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "TreeTemplates",
+                        "stack": "TreeTemplateList",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          100,
+                          20
+                        ],
+                        "hidden": true,
+                        "note": "Holds no rows: it only declares the row files the menu creates outside the lists.",
+                        "rows": {
+                          "ozl_neutral_tier_label": {
+                            "row": {
+                              "name": "OZL_NeutralTierLabel",
+                              "h": 1,
+                              "note": "A tier label; the menu puts the row's corner on the label's centre.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "TierText",
+                                    "at": [
+                                      -40,
+                                      -15
+                                    ],
+                                    "size": [
+                                      80,
+                                      30
+                                    ],
+                                    "font": "neutral_tier",
+                                    "color": "$neutral_dim",
+                                    "align": "center"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_neutral_or_label": {
+                            "row": {
+                              "name": "OZL_NeutralOrLabel",
+                              "h": 1,
+                              "note": "The 'АБО' beside an 'any' diamond; the menu puts the row's corner on the diamond and colours the word like its line.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "OrText",
+                                    "at": [
+                                      12,
+                                      -8
+                                    ],
+                                    "size": [
+                                      60,
+                                      16
+                                    ],
+                                    "text": "#STR_OZL_TREE_OR",
+                                    "font": "neutral_or",
+                                    "color": "$neutral_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_neutral_price_chip": {
+                            "row": {
+                              "name": "OZL_NeutralPriceChip",
+                              "h": 22,
+                              "note": "One line of a node's price: its coloured dot and the amount. The menu lines them up in NodePrice.",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "PriceChip",
+                                    "at": [
+                                      0,
+                                      9
+                                    ],
+                                    "size": [
+                                      6,
+                                      6
+                                    ],
+                                    "set": "ozl_neutral",
+                                    "image": "dot",
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PriceText",
+                                    "at": [
+                                      9,
+                                      0
+                                    ],
+                                    "w": "auto",
+                                    "h": 22,
+                                    "font": "neutral_price",
+                                    "color": "$neutral_dim"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "icon": {
+                  "name": "Ribbon",
+                  "at": [
+                    1377,
+                    17
+                  ],
+                  "size": [
+                    24,
+                    126
+                  ],
+                  "set": "ozl_neutral",
+                  "image": "ribbon",
+                  "color": "$white",
+                  "note": "The bookmark ribbon."
+                }
+              },
+              {
+                "icon": {
+                  "name": "Pencil",
+                  "at": [
+                    1145,
+                    772
+                  ],
+                  "size": [
+                    340,
+                    48
+                  ],
+                  "set": "ozl_neutral",
+                  "image": "pencil",
+                  "color": "$white",
+                  "note": "The pencil, drawn already turned."
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

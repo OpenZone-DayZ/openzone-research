@@ -1,6 +1,152 @@
 {
-  "comment": "Placeholder until the skin is drawn: one 8x8 transparent sprite, so the imageset that config.cpp registers exists and loads.",
+  "comment": [
+    "The neutral window («Записник сталкера», the mockup's loner): every picture the mockup draws with CSS.",
+    "Sizes are layout units; drawn at 1.5 px per unit. White shapes are tinted in the game (SetColor / the layout's color);",
+    "pictures with their own colours (spine, ribbon, pencil, glow, the textures) are shown with color 1 1 1 1.",
+    "Values are the mockup's CSS: the shared paper block plus the body[data-f=loner] overrides."
+  ],
+  "scale": 1.5,
   "sprites": [
-    { "name": "blank", "w": 8, "h": 8, "html": "" }
+    {
+      "name": "card",
+      "w": 176,
+      "h": 64,
+      "pad": 12,
+      "html": "<div style='position:absolute;inset:0;background:#fff;border:1px solid rgba(60,50,30,.35);border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.18)'></div>"
+    },
+    {
+      "name": "card_hover",
+      "w": 176,
+      "h": 64,
+      "pad": 12,
+      "html": "<div style='position:absolute;inset:0;background:#fff;border:1px solid rgba(60,50,30,.35);border-radius:2px;box-shadow:2px 4px 8px rgba(0,0,0,.45)'></div>"
+    },
+    {
+      "name": "card_flat",
+      "w": 176,
+      "h": 64,
+      "pad": 12,
+      "html": "<div style='position:absolute;inset:0;background:#fff;border:1px solid rgba(60,50,30,.35);border-radius:2px'></div>"
+    },
+    {
+      "name": "ring",
+      "w": 192,
+      "h": 76,
+      "pad": 2,
+      "html": "<div style='position:absolute;inset:0;border:2px solid #fff;border-radius:10px'></div>"
+    },
+    {
+      "name": "ring_dash",
+      "w": 192,
+      "h": 76,
+      "pad": 2,
+      "html": "<div style='position:absolute;inset:0;border:2px dashed #fff;border-radius:10px'></div>"
+    },
+    {
+      "name": "btn_ring",
+      "w": 652,
+      "h": 58,
+      "pad": 3,
+      "html": "<div style='position:absolute;inset:0;border:2px solid #fff;border-radius:12px'></div>"
+    },
+    {
+      "name": "tick",
+      "w": 26,
+      "h": 30,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'><path d='M1.5 16.6L4.6 14.4L10.2 22.6L22.2 1.2L25.2 2.8L11.2 28.6Z' fill='#fff' stroke='#fff' stroke-width='.6' stroke-linejoin='round'/></svg>"
+    },
+    {
+      "name": "dot",
+      "w": 6,
+      "h": 6,
+      "html": "<div style='position:absolute;inset:0;border-radius:50%;background:#fff'></div>"
+    },
+    {
+      "name": "spine",
+      "w": 24,
+      "h": 32,
+      "html": "<div style='position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(0,0,0,.05) 40%,rgba(0,0,0,.05) 60%,rgba(0,0,0,.28)),#ebe3cb'></div>"
+    },
+    {
+      "name": "ribbon",
+      "w": 18,
+      "h": 120,
+      "pad": 3,
+      "html": "<div style='position:absolute;inset:0;background:#7a2420;clip-path:polygon(0 0,100% 0,100% 100%,50% 92%,0 100%)'></div>"
+    },
+    {
+      "name": "pencil",
+      "w": 340,
+      "h": 48,
+      "html": "<div style='position:absolute;left:5px;top:18px;width:330px;height:12px;transform:rotate(-5deg);border-radius:2px;background:linear-gradient(90deg,#d9b98a 0 18px,#3a3a3a 18px 22px,#c49a2c 22px calc(100% - 26px),#b9b9b4 calc(100% - 26px) calc(100% - 14px),#d27a7a calc(100% - 14px));clip-path:polygon(0 50%,18px 0,100% 0,100% 100%,18px 100%)'></div>"
+    },
+    {
+      "name": "glow",
+      "w": 76,
+      "h": 85,
+      "html": "<div style='position:absolute;inset:0;background:radial-gradient(ellipse at 60% 45%,rgba(255,255,250,.35),transparent 65%)'></div>"
+    },
+    {
+      "name": "fog_edge",
+      "w": 32,
+      "h": 80,
+      "html": "<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0),#fff)'></div>"
+    },
+    {
+      "name": "wave",
+      "w": 300,
+      "h": 6,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='6' viewBox='0 0 300 6'><path d='M0 3 Q1.5 0.6 3 3 T6 3 T9 3 T12 3 T15 3 T18 3 T21 3 T24 3 T27 3 T30 3 T33 3 T36 3 T39 3 T42 3 T45 3 T48 3 T51 3 T54 3 T57 3 T60 3 T63 3 T66 3 T69 3 T72 3 T75 3 T78 3 T81 3 T84 3 T87 3 T90 3 T93 3 T96 3 T99 3 T102 3 T105 3 T108 3 T111 3 T114 3 T117 3 T120 3 T123 3 T126 3 T129 3 T132 3 T135 3 T138 3 T141 3 T144 3 T147 3 T150 3 T153 3 T156 3 T159 3 T162 3 T165 3 T168 3 T171 3 T174 3 T177 3 T180 3 T183 3 T186 3 T189 3 T192 3 T195 3 T198 3 T201 3 T204 3 T207 3 T210 3 T213 3 T216 3 T219 3 T222 3 T225 3 T228 3 T231 3 T234 3 T237 3 T240 3 T243 3 T246 3 T249 3 T252 3 T255 3 T258 3 T261 3 T264 3 T267 3 T270 3 T273 3 T276 3 T279 3 T282 3 T285 3 T288 3 T291 3 T294 3 T297 3 T300 3' fill='none' stroke='#fff' stroke-width='1.1'/></svg>"
+    },
+    {
+      "name": "legend_box",
+      "w": 12,
+      "h": 12,
+      "html": "<div style='position:absolute;inset:0;border:1px dashed #fff'></div>"
+    },
+    {
+      "name": "legend_all",
+      "w": 34,
+      "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='34' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2'/><rect x='26' y='2' width='8' height='8' fill='#fff'/></svg>"
+    },
+    {
+      "name": "legend_any",
+      "w": 38,
+      "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='38' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2' stroke-dasharray='4 3'/><path d='M32 1l5 5-5 5-5-5z' fill='none' stroke='#fff' stroke-width='1.5'/></svg>"
+    }
+  ],
+  "textures": [
+    {
+      "name": "desk",
+      "w": 120,
+      "h": 120,
+      "size": [
+        128,
+        128
+      ],
+      "html": "<div style='position:absolute;inset:0;background:#2b1b10 repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 3px,transparent 3px 22px,rgba(255,200,140,.04) 22px 24px,transparent 24px 60px)'></div>"
+    },
+    {
+      "name": "shadow",
+      "w": 1600,
+      "h": 900,
+      "size": [
+        512,
+        256
+      ],
+      "html": "<div style='position:absolute;left:28px;top:30px;width:1544px;height:852px;background:rgba(0,0,0,.5);filter:blur(5px)'></div>"
+    },
+    {
+      "name": "dash",
+      "w": 16,
+      "h": 16,
+      "size": [
+        16,
+        16
+      ],
+      "html": "<div style='position:absolute;left:0;top:0;width:4px;height:2px;background:#fff'></div><div style='position:absolute;left:8px;top:0;width:4px;height:2px;background:#fff'></div>"
+    }
   ]
 }

@@ -1,0 +1,268 @@
+{
+  "layout": "ozl_node_neutral",
+  "note": "One node of the neutral window («Записник сталкера»): a clean paper card 176x64 lying in a 216x104 cell from (20, 20), so the card's centre is (108, 52) -- the skin's AnchorX/AnchorY; the menu places the cell at the node's point minus that. NodeShape is the card picture with 12 units of room for its shadow; slots 0..2 (plain, hovered, locked) are loaded by the menu from OZL_TreeSkin_Neutral.Shapes and tinted by status. NodeRing (blue ring of an available node) and NodeSel (red dashed ring of the selected one) are drawn round the card, 8 units out. Name in two lines, price line (chips placed by the menu from ozl_neutral_price_chip, or NodePriceText for 'Досліджено' / 'Лишилось m:ss'), the dashed progress line under the card while researching, and the mark above the right corner: a green tick (NodeMark), 'в ділі' (NodeMarkText), or a small '?' for a locked node (NodeMarkQuery). NodeHit is the style-less button UNDER the card: the menu renames it node:<id>. Every other widget ignores the pointer (containers are transparent panels for that: a frame takes the pointer), except NodeBody, which holds NodeHit and so lies under it.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        216,
+        104
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    20,
+                    20
+                  ],
+                  "size": [
+                    176,
+                    64
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "The node's only pointer target: a button with style Empty (a style-less one paints a light box under the mouse), under the card picture."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    8,
+                    8
+                  ],
+                  "size": [
+                    200,
+                    88
+                  ],
+                  "set": "ozl_neutral",
+                  "image": "card",
+                  "color": "$neutral_card"
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeRing",
+                  "at": [
+                    10,
+                    12
+                  ],
+                  "size": [
+                    196,
+                    80
+                  ],
+                  "set": "ozl_neutral",
+                  "image": "ring",
+                  "color": "$neutral_acc",
+                  "hidden": true
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    10,
+                    12
+                  ],
+                  "size": [
+                    196,
+                    80
+                  ],
+                  "set": "ozl_neutral",
+                  "image": "ring_dash",
+                  "color": "$neutral_bad",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    30,
+                    24
+                  ],
+                  "size": [
+                    150,
+                    44
+                  ],
+                  "note": "The name in two lines: the menu word-wraps it into NodeName0 and NodeName1 (a MultilineTextWidget ignores the exact text size with the mod's bitmap fonts).",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          150,
+                          23
+                        ],
+                        "font": "neutral_node",
+                        "color": "$neutral_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0,
+                          20
+                        ],
+                        "size": [
+                          150,
+                          23
+                        ],
+                        "font": "neutral_node",
+                        "color": "$neutral_txt",
+                        "hidden": true
+                      }
+                    }
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    30,
+                    62
+                  ],
+                  "size": [
+                    150,
+                    22
+                  ],
+                  "note": "The menu puts the price chips (ozl_neutral_price_chip) in a row here.",
+                  "color": "$none"
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    30,
+                    62
+                  ],
+                  "size": [
+                    150,
+                    22
+                  ],
+                  "font": "neutral_price",
+                  "color": "$neutral_dim",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    30,
+                    86
+                  ],
+                  "size": [
+                    150,
+                    3
+                  ],
+                  "hidden": true,
+                  "children": [
+                    {
+                      "image": {
+                        "name": "NodeBarTrack",
+                        "at": [
+                          0,
+                          2
+                        ],
+                        "size": [
+                          150,
+                          1
+                        ],
+                        "file": "OpenZone_Research/gui/textures/tree/neutral/dash_ca.paa",
+                        "stretch": false,
+                        "color": "$neutral_edge",
+                        "note": "A dashed line: the tile repeats, it is not stretched."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "NodeBarFill",
+                        "size": [
+                          0,
+                          2
+                        ],
+                        "color": "$neutral_bad"
+                      }
+                    }
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    172,
+                    4
+                  ],
+                  "size": [
+                    26,
+                    30
+                  ],
+                  "set": "ozl_neutral",
+                  "image": "tick",
+                  "color": "$neutral_ok",
+                  "hidden": true
+                }
+              },
+              {
+                "label": {
+                  "name": "NodeMarkText",
+                  "at": [
+                    170,
+                    0
+                  ],
+                  "size": [
+                    120,
+                    46
+                  ],
+                  "font": "neutral_mark",
+                  "color": "$neutral_bad",
+                  "hidden": true
+                }
+              },
+              {
+                "label": {
+                  "name": "NodeMarkQuery",
+                  "at": [
+                    170,
+                    21
+                  ],
+                  "size": [
+                    20,
+                    20
+                  ],
+                  "text": "?",
+                  "font": "neutral_mark_small",
+                  "color": "$neutral_dim",
+                  "hidden": true
+                }
+              }
+            ],
+            "color": "$none",
+            "click": true,
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it is under it and only sees the cell's margins. EVERY other widget of the node ignores the pointer -- a frame does not by default and swallowed the hover in the middle of the card (stand, 2026-10-31)."
+          }
+        }
+      ]
+    }
+  }
+}
