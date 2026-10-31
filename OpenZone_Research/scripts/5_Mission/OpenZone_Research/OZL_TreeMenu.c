@@ -2742,7 +2742,15 @@ class OZL_TreeMenu : UIScriptedMenu
             offY = 0;
         sw.HScrollToPos(offX * m_Px);
         sw.VScrollToPos(offY * m_Px);
-        OZL_Log.Dbg("tree: home (" + m_Skin.Dir + "): content " + m_Plan.W.ToString() + " x " + m_Plan.H.ToString() + ", shown " + shownW.ToString() + " x " + shownH.ToString() + " of " + scrollW.ToString() + " x " + scrollH.ToString() + " units; scrolled to " + offX.ToString() + " x " + offY.ToString() + " units, the engine is at " + sw.GetHScrollPos().ToString() + " x " + sw.GetVScrollPos().ToString() + " px");
+        // Одним виразом рядок не складається: рушій каже "Formula too complex".
+        string homeContent = m_Plan.W.ToString() + " x " + m_Plan.H.ToString();
+        string homeShown = shownW.ToString() + " x " + shownH.ToString();
+        string homeView = scrollW.ToString() + " x " + scrollH.ToString();
+        string homeOff = offX.ToString() + " x " + offY.ToString();
+        string homeAt = sw.GetHScrollPos().ToString() + " x " + sw.GetVScrollPos().ToString();
+        string homeLine = "tree: home (" + m_Skin.Dir + "): content " + homeContent + ", shown " + homeShown;
+        homeLine = homeLine + " of " + homeView + " units; scrolled to " + homeOff + " units, the engine is at " + homeAt + " px";
+        OZL_Log.Dbg(homeLine);
     }
 
     // ------------------------------------------------------------------
