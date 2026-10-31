@@ -61,6 +61,24 @@ class CfgMods
 
         class defs
         {
+            // The picture sets of the research windows: `common` is shared by every skin, the
+            // rest is one set per faction skin. source/ui/bake.py makes each from
+            // source/ui/<set>/sprites.json (see source/ui/README.md). A set that is not listed
+            // here loads as blank pictures, with no error at all.
+            class imageSets
+            {
+                files[] =
+                {
+                    "OpenZone_Research/gui/imagesets/ozl_common.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_ecolog.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_clearsky.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_duty.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_freedom.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_sop.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_bandit.imageset",
+                    "OpenZone_Research/gui/imagesets/ozl_neutral.imageset"
+                };
+            };
             class gameScriptModule
             {
                 value = "";

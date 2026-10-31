@@ -1,0 +1,75 @@
+{
+  "comment": [
+    "The set every skin may use: white shapes on a transparent ground, tinted in the game with SetColor.",
+    "Sizes are layout units (the window layouts' unit); the atlas is drawn at 1.5 px per unit.",
+    "mark_*  the status marks of a node (locked, done, researching, unknown), 24x24, drawn in a 2.4..3 unit line.",
+    "chip    the square before a point line in the pool and in the price row, 10x10.",
+    "and_square  the knot where the links of an 'all of' node meet, 10x10.",
+    "or_diamond  the knot of an 'any of' node, 16x16 over the box, a 2 unit outline only."
+  ],
+  "scale": 1.5,
+  "sprites": [
+    {
+      "name": "mark_lock", "w": 24, "h": 24,
+      "html": [
+        "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>",
+        "<defs><mask id='mark_lock_hole'><rect width='24' height='24' fill='#fff'/>",
+        "<circle cx='12' cy='15.3' r='1.7' fill='#000'/><path d='M11.1 16.2h1.8l.7 3.3h-3.2z' fill='#000'/></mask></defs>",
+        "<rect x='5' y='10.5' width='14' height='11' rx='2' fill='#fff' mask='url(#mark_lock_hole)'/>",
+        "<path d='M8.2 10.5V7.6a3.8 3.8 0 0 1 7.6 0v2.9' fill='none' stroke='#fff' stroke-width='2.4'/>",
+        "</svg>"
+      ]
+    },
+    {
+      "name": "mark_check", "w": 24, "h": 24,
+      "html": [
+        "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>",
+        "<path d='M5.5 12.8l4.7 4.7L18.5 7' fill='none' stroke='#fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/>",
+        "</svg>"
+      ]
+    },
+    {
+      "name": "mark_dot", "w": 24, "h": 24,
+      "html": [
+        "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>",
+        "<circle cx='12' cy='12' r='5' fill='#fff'/>",
+        "</svg>"
+      ]
+    },
+    {
+      "name": "mark_wait", "w": 24, "h": 24,
+      "html": [
+        "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>",
+        "<rect x='5' y='2.6' width='14' height='2.4' rx='1.2' fill='#fff'/>",
+        "<rect x='5' y='19' width='14' height='2.4' rx='1.2' fill='#fff'/>",
+        "<path d='M7 5h10l-5 7zM12 12l5 7H7z' fill='#fff'/>",
+        "</svg>"
+      ]
+    },
+    {
+      "name": "mark_query", "w": 24, "h": 24,
+      "html": [
+        "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>",
+        "<path d='M8.5 8.8a3.6 3.6 0 1 1 5.5 3.1c-1.3.8-2 1.5-2 3.1' fill='none' stroke='#fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/>",
+        "<circle cx='12' cy='19.6' r='1.8' fill='#fff'/>",
+        "</svg>"
+      ]
+    },
+    {
+      "name": "chip", "w": 10, "h": 10,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><rect width='10' height='10' fill='#fff'/></svg>"
+    },
+    {
+      "name": "and_square", "w": 10, "h": 10,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><rect width='10' height='10' fill='#fff'/></svg>"
+    },
+    {
+      "name": "or_diamond", "w": 16, "h": 16,
+      "html": [
+        "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'>",
+        "<path d='M8 1.414L14.586 8L8 14.586L1.414 8Z' fill='none' stroke='#fff' stroke-width='2' stroke-linejoin='miter'/>",
+        "</svg>"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+/* A CSS file of a set: the page gets it as it is, so rules lifted from the mockup work unchanged.
+   url() is resolved against this folder (the set's folder), not against the file. */
+body[data-f="demo"] { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); }
+/* the mockup does the same: a box that is 100% of its parent must not grow by its border */
+* { box-sizing: border-box; }
+
+.tag {
+  width: 100%; height: 100%; display: grid; place-items: center;
+  font-weight: 700; font-size: 13px; letter-spacing: .1em;
+  color: #fff; background: var(--accent); border-radius: 4px;
+}
+
+.stamp {
+  width: 100%; height: 100%; display: grid; place-items: center;
+  font: 700 18px/1 "Arial Narrow", Arial, sans-serif; letter-spacing: .12em;
+  color: var(--accent); border: 3px solid var(--accent); border-radius: 4px;
+  transform: rotate(-4deg); opacity: .85;
+}
+
+.frame {
+  width: 100%; height: 100%; padding: 12px;
+  border: 4px solid var(--ink); border-radius: 10px;
+  background: linear-gradient(135deg, #e8e3d1, #cfc7ad);
+  box-shadow: inset 0 0 0 2px #fff8;
+  font-size: 13px;
+}
+
+/* a blinking mark: the bake turns animations off, so this renders in its first state */
+@keyframes blink { 50% { opacity: .2; } }
+.tag { animation: blink 1s steps(2) infinite; }
