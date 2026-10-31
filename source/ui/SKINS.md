@@ -100,8 +100,10 @@ each cell at `(x - AnchorX, y - AnchorY)` in `TreeNodes` and sizes `TreeContent`
 
 "Home" when the window opens or the branch changes: down — top, up — bottom, right — left edge;
 across — centred. Press-and-drag on the tree scrolls it (a move over 4 units turns the release
-into a drag, not a click); a press on `TreeScroll` itself is its scrollbar and does not drag the
-content; the wheel scrolls natively.
+into a drag, not a click); a press in `TreeScroll`'s scrollbar strips (its bottom and right
+10 units) moves the bar natively and does not drag the content — the menu tells them by position,
+because on an empty part of the tree the engine reports `TreeScroll` itself; the wheel scrolls
+natively.
 
 ## Roles of the window (`ozl_tree_<skin>.layout`, root `TreeWindow`)
 

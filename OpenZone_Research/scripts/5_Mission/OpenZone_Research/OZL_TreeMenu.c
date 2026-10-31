@@ -1644,7 +1644,7 @@ class OZL_TreeMenu : UIScriptedMenu
 
         UpdateRole("CardCostList");
         UpdateRole("CardItemList");
-        UpdateRole("CardFlow");
+        RefreshCard();
         ScrollWidget cardScroll = ScrollWidget.Cast(Role("CardScroll"));
         if (cardScroll)
             cardScroll.VScrollToPos(0);
@@ -1656,6 +1656,16 @@ class OZL_TreeMenu : UIScriptedMenu
         Widget w = Role(role);
         if (w)
             w.Update();
+    }
+
+    // Стос картки змінився: оновити його, а тоді й прокрутку картки. Сама
+    // вона не бачить, що стос виріс (стенд 2026-10-31: довгий опис, CardFlow
+    // 819 px у CardScroll 690 px -- смуги нема, колесо не крутить), тож без
+    // цього кінець довгої картки недосяжний.
+    private void RefreshCard()
+    {
+        UpdateRole("CardFlow");
+        UpdateRole("CardScroll");
     }
 
     // "тир 2 · після: Назва" / "після всіх: А, невідомо" / "після будь-якого з: ...".
@@ -2191,7 +2201,7 @@ class OZL_TreeMenu : UIScriptedMenu
             m_Wraps.RemoveOrdered(j);
         }
         if (cardDone)
-            flow.Update();
+            RefreshCard();
     }
 
     private void RunBars()
@@ -2318,7 +2328,7 @@ class OZL_TreeMenu : UIScriptedMenu
             if (flow.Wrap)
             {
                 HeightUnits(flow.Box, y + lineH);
-                UpdateRole("CardFlow");
+                RefreshCard();
             }
             m_Flows.RemoveOrdered(f);
         }
@@ -2526,12 +2536,37 @@ class OZL_TreeMenu : UIScriptedMenu
         return false;
     }
 
-    // Натиск на самому TreeScroll -- це його смуга прокрутки (вміст закривають
-    // TreeNodes та інші рамки): її тягне рушій, вміст за мишею не їде.
-    override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+    // Чи натиск на самому TreeScroll припав на його смугу (нижні чи праві
+    // 10 одиниць).
+    private bool OnScrollbar(Widget w)
     {
         Widget scroll = Role("TreeScroll");
-        if (button == MouseState.LEFT && w && w != scroll && InTree(w))
+        if (!scroll || w != scroll)
+            return false;
+        int mx;
+        int my;
+        GetMousePos(mx, my);
+        float sx;
+        float sy;
+        float sw;
+        float sh;
+        scroll.GetScreenPos(sx, sy);
+        scroll.GetScreenSize(sw, sh);
+        float bar = 10 * m_Px;
+        if (mx >= sx + sw - bar)
+            return true;
+        if (my >= sy + sh - bar)
+            return true;
+        return false;
+    }
+
+    // Натиск у смугах прокрутки TreeScroll -- це смуги: їх тягне рушій, вміст
+    // за мишею не їде. Смуги -- нижні й праві 10 одиниць прокрутки (виміряно);
+    // деінде натиск тягне вміст, навіть коли під мишею сам TreeScroll: на
+    // порожньому місці дерева рушій повертає саме його (стенд 2026-10-31).
+    override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+    {
+        if (button == MouseState.LEFT && w && InTree(w) && !OnScrollbar(w))
         {
             ScrollWidget sw = ScrollWidget.Cast(Role("TreeScroll"));
             if (sw)
