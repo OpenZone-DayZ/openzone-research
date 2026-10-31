@@ -113,9 +113,6 @@ class OZL_TreeMenu : UIScriptedMenu
     static const string ROOT_HOST   = "OZL_TreeHost";
     static const string ROOT_WINDOW = "TreeWindow";
     static const string ROOT_NODE   = "NodeCell";
-    // Остання спроба Respell: шлях довшає сегментами "./" до цієї довжини, в
-    // байтах (наші шляхи -- 49..64 байти).
-    static const int    LONG_PATH   = 96;
     // Смуга прокрутки ScrollWidget: 10 одиниць розкладки (виміряно
     // 2026-09-04 і 2026-10-31, вертикальна й горизонтальна).
     static const float  SCROLLBAR_UNITS = 10;
@@ -1035,18 +1032,19 @@ class OZL_TreeMenu : UIScriptedMenu
     // віджети ІНШОГО файлу, створеного раніше в цій сесії клієнта (стенд
     // 2026-10-31: ozl_ecolog_tier_label -> OZL_DutyPriceChip,
     // ozl_clearsky_tier_label -> OZL_EcologOpensChip, пул bandit -> чіп
-    // clearsky, комірки вузлів ecolog -> рядок гілки freedom). Корінь файлу
-    // відомий (want), тож підміну видно з кореня; тоді віджет робиться ще раз
-    // (Respell). Корінь комірок вузла (NodeCell) і вікон (TreeWindow) один у
-    // всіх семи скінів, тож підміну між двома скінами сторож не бачить, а
-    // підміну рядком, хостом чи вікном -- бачить. null -- як і раніше, лише
-    // коли CreateWidgets не дав нічого.
+    // clearsky, комірки вузлів ecolog -> рядок гілки freedom, чіп sop -> рядок
+    // вартості bandit). Корінь файлу відомий (want), тож підміну видно з
+    // кореня; тоді віджет робиться ще раз зі зворотними скісними (Reslash).
+    // Корінь комірок вузла (NodeCell) і вікон (TreeWindow) один у всіх семи
+    // скінів, тож підміну між двома скінами сторож не бачить, а підміну
+    // рядком, хостом чи вікном -- бачить. null -- як і раніше, лише коли
+    // CreateWidgets не дав нічого.
     private Widget MakeWidgets(string path, Widget parent, string want)
     {
         Widget w = GetGame().GetWorkspace().CreateWidgets(path, parent);
         if (!w || RootIs(w, want))
             return w;
-        return Respell(w, path, want, parent);
+        return Reslash(w, path, want, parent);
     }
 
     // Рядок списку з файлу розкладки скіна. Корінь рядкової розкладки названий
@@ -1090,95 +1088,47 @@ class OZL_TreeMenu : UIScriptedMenu
         return stem;
     }
 
-    // Рушій віддав чужий файл: корінь не той (want). Причину не знайдено --
-    // схоже на кеш рушія за ключем, якого ми не бачимо; робоча гіпотеза: за
-    // адресою звільненого рядка шляху, а в такому разі рядок іншого класу
-    // розміру ляже деінде. Тож пробуємо інші ключі до того самого файлу: той
-    // самий шлях ще раз, тоді нижній регістр, сегмент "./", подвоєний "/",
-    // зворотні скісні й, останнім, шлях, подовжений сегментами "./" до
-    // LONG_PATH байтів. ПЕРЕД кожною спробою хибний віджет знімається (Unlink);
-    // варіант, що не дав віджета, просто не вдався; перший з правильним
-    // коренем лишається. Нічого не вийшло -- віддаємо останній віджет, як до
-    // сторожа; null там, де раніше був віджет, не буде (коли всі варіанти дали
-    // null, шлях робиться ще раз як є). Один рядок у лозі на підміну: шлях,
-    // який корінь прийшов, чого чекали й чим вийшло (стенд скаже, який запис
-    // працює); той самий шлях з тим самим наслідком у цьому вікні вдруге не
-    // пишеться.
-    private Widget Respell(Widget wrong, string path, string want, Widget parent)
+    // Рушій віддав чужий файл: корінь не той (want). ВИМІРЯНО на стенді
+    // 2026-10-31 о 17:08: ключ кеша розкладок рушія не розрізняє регістру,
+    // але розрізняє вид скісної риски. ozl_sop_opens_chip.layout прийшов як
+    // OZL_BanditCostRow; той самий шлях ще раз і шлях малими літерами дали
+    // той самий чужий рядок, "./" і "//" рушій відхилив двома рядками SCRIPT
+    // (E) "Cannot open/load layout", а шлях зі зворотними скісними
+    // завантажив правильний файл. Тож спроба одна: хибний віджет знімається
+    // (Unlink) і файл вантажиться з "\" замість "/". Правильний корінь --
+    // лишаємо. Знову хибний чи нічого -- пишемо в лог і віддаємо останній
+    // віджет, як до сторожа; null там, де раніше був віджет, не буде (коли
+    // нічого не вийшло, шлях робиться ще раз як є). Один рядок у лозі на
+    // підміну: шлях, який корінь прийшов, чого чекали й чим вийшло; той самий
+    // шлях з тим самим наслідком у цьому вікні вдруге не пишеться.
+    private Widget Reslash(Widget wrong, string path, string want, Widget parent)
     {
         string wrongName = wrong.GetName();
-        string folder = "";
-        string leaf = path;
-        int slash = path.LastIndexOf("/");
-        if (slash >= 0)
-        {
-            folder = path.Substring(0, slash + 1);
-            leaf   = path.Substring(slash + 1, path.Length() - slash - 1);
-        }
-        string lower = path;
-        lower.ToLower();
         string back = path;
         back.Replace("/", "\\");
+        wrong.Unlink();
+        Widget cur = GetGame().GetWorkspace().CreateWidgets(back, parent);
 
-        array<string> spellings = new array<string>();
-        array<string> labels    = new array<string>();
-        spellings.Insert(path);
-        labels.Insert("the same path again");
-        spellings.Insert(lower);
-        labels.Insert("lower case");
-        spellings.Insert(folder + "./" + leaf);
-        labels.Insert("a ./ segment");
-        spellings.Insert(folder + "/" + leaf);
-        labels.Insert("a doubled /");
-        spellings.Insert(back);
-        labels.Insert("backslashes");
-        // Останній: ті самі каталоги й файл, але "./" стільки, що шлях довший
-        // за 64 байти (усі наші -- 49..64) і лежить у рядку іншого розміру.
-        string dots = "./";
-        int longLen = path.Length() + 2;
-        while (longLen < LONG_PATH)
+        string outcome = "backslashes gave nothing";
+        if (cur)
         {
-            dots += "./";
-            longLen += 2;
+            if (RootIs(cur, want))
+                outcome = "the right root came with backslashes";
+            else
+                outcome = "backslashes gave '" + cur.GetName() + "' too, kept it";
         }
-        spellings.Insert(folder + dots + leaf);
-        labels.Insert("a path padded with ./ to " + longLen.ToString() + " bytes");
-
-        Widget cur = wrong;
-        string how = "";
-        string trail = "";
-        for (int i = 0; i < spellings.Count() && how == ""; i++)
+        else
         {
-            if (cur)
-                cur.Unlink();
-            cur = GetGame().GetWorkspace().CreateWidgets(spellings[i], parent);
-            string verdict = "nothing";
-            if (cur)
-            {
-                verdict = "'" + cur.GetName() + "'";
-                if (RootIs(cur, want))
-                {
-                    verdict = "right";
-                    how = labels[i];
-                }
-            }
-            if (trail != "")
-                trail += "; ";
-            trail += labels[i] + " -> " + verdict;
-        }
-        if (!cur)
             cur = GetGame().GetWorkspace().CreateWidgets(path, parent);
+            if (cur)
+                outcome += ", kept the plain path's '" + cur.GetName() + "'";
+        }
 
-        string outcome = "no spelling gave the right root";
-        if (how != "")
-            outcome = "the right root came with " + how;
-        else if (cur)
-            outcome += ", kept '" + cur.GetName() + "'";
         string key = path + "|" + outcome;
         if (!m_LayoutMixes.Contains(key))
         {
             m_LayoutMixes.Set(key, true);
-            OZL_Log.Warn("tree: " + path + " gave '" + wrongName + "', wanted '" + want + "' (another file's root); " + trail + "; " + outcome + " (SKINS.md, Layout mix-up)");
+            OZL_Log.Warn("tree: " + path + " gave '" + wrongName + "', wanted '" + want + "' (another file's root); " + outcome + " (SKINS.md, Layout mix-up)");
         }
         return cur;
     }

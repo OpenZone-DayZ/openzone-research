@@ -414,6 +414,14 @@ combined pass (log 16:59, windows opened duty, freedom, ecolog) ecolog's node ce
 `ozl_node_ecolog.layout`, held freedom's branch row. The wrong file was always one created earlier in
 the same client session.
 
+Measured on the stand (2026-10-31 17:08), when `ozl_sop_opens_chip.layout` came back as
+`OZL_BanditCostRow`: loading the same path again gave the same wrong row, and so did the path in
+lower case — **the engine's layout cache key ignores letter case**. The spellings with a `./` segment
+and with a doubled `/` were refused by the engine (two `SCRIPT (E)` lines, "Cannot open layout" and
+"Cannot load layout", and no widget). The same path with backslashes
+(`OpenZone_Research\gui\layouts\ozl_sop_opens_chip.layout`) loaded the right file — **the key does tell
+the two kinds of slash apart**.
+
 What to do:
 
 - look at the ROOT's name in `ui_tree` — it says which file the engine used;
@@ -422,16 +430,14 @@ What to do:
   case — a row layout's file name (`ozl_sop_or_label.layout` → `OZL_SopOrLabel`; the generator names
   every root that way, and a hand-written row layout must too), `NodeCell` for
   `ozl_node_<skin>.layout`, `TreeWindow` for `ozl_tree_<skin>.layout`, `OZL_TreeHost` for the host.
-  On a mismatch it unlinks the wrong widget and creates it again — the same path, then the same file
-  spelled differently (lower case, a `./` segment, a doubled `/`, backslashes, and last a path padded
-  with `./` segments to 96 bytes, past the 64 of the usual ones) — keeps the first widget with the
-  right root and writes ONE line: `tree: <path> gave '<root>', wanted '<root>' (another file's
-  root); <what each attempt gave>; <the spelling that worked, or none>`. A spelling that returns
-  nothing just counts as failed. When nothing works the last widget is kept, as before the guard; the
-  same path with the same outcome is written once per window. The node and window roots are the same
-  in all seven skins, so a swap between two skins' node cells (or two windows) is invisible to the
-  guard, while a swap between kinds (a row, the host, a window, a node cell) is caught. Widgets a
-  skin creates itself with `CreateWidgets` are not guarded;
+  On a mismatch it unlinks the wrong widget and creates it ONCE more with the path's `/` replaced by
+  `\` — the spelling measured above — and keeps that one when its root is right. When the backslash
+  spelling is wrong too, or returns nothing, the last widget is kept, as before the guard. Either way
+  it writes ONE line: `tree: <path> gave '<root>', wanted '<root>' (another file's root); <what the
+  backslash retry gave>`; the same path with the same outcome is written once per window. The node and
+  window roots are the same in all seven skins, so a swap between two skins' node cells (or two
+  windows) is invisible to the guard, while a swap between kinds (a row, the host, a window, a node
+  cell) is caught. Widgets a skin creates itself with `CreateWidgets` are not guarded;
 - when the name cannot change, give both files the same widgets and let the script show the right
   ones by where the row sits (sop's workaround: whichever file arrives, the row works); when it
   can, rename.
