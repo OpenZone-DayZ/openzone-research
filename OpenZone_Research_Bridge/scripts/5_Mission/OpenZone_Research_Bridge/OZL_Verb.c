@@ -15,10 +15,15 @@
 //   world_exec verb=oz_research args={"op":"points","owner":"bandit"}
 //   world_exec verb=oz_research args={"op":"grant","owner":"bandit","type":"khabar","amount":"5"}
 //   world_exec verb=oz_research args={"op":"reset","owner":"bandit"}
+//   world_exec verb=oz_research args={"op":"demo","owner":"duty"}      (stand only: that faction into the tree-screen mockup's demo state, see OZL_Demo)
 //   world_exec verb=oz_research args={"op":"reload"}
 //   world_exec verb=oz_research args={"op":"bridge"}
 //   world_exec verb=oz_research args={"op":"admin","cmd":"grant:neutral:khabar:5"}
 //   world_exec verb=oz_research args={"op":"tree","as":"post"}          (as=post: stand only, see OZL_Pretend)
+//   world_exec verb=oz_research args={"op":"tree","owner":"duty"}       (the JSON the tree screen gets, as that faction: stand only, see OZL_PretendOrg;
+//                                                                        Have needs the player within 3 m of that faction's terminal)
+//   world_exec verb=oz_research args={"op":"tree","owner":"duty","file":"duty"}   (the same, written whole to <profile>\oz_research_duty.json: an answer of the
+//                                                                        bridge is cut at 400 characters, a tree is not that short)
 //   world_exec verb=oz_research args={"op":"treeui"}                     (opens the tree SCREEN on the connected client)
 //   world_exec verb=oz_research args={"op":"treeui","owner":"duty"}      (…as that faction: stand only, see OZL_PretendOrg)
 //   world_exec verb=oz_research args={"op":"research","node":"ts_bnd_1","as":"post"}
@@ -192,6 +197,17 @@ modded class DZMCP_BridgeCore
             return true;
         }
 
+        if (op == "demo")
+        {
+            string demoOwner = OZL_Arg(args, "owner", "");
+            if (demoOwner == "")
+            {
+                detail = "demo needs owner=<faction id>";
+                return false;
+            }
+            return OZL_Demo(demoOwner, detail);
+        }
+
         if (op == "fill")
         {
             // Create `item` in the station's cargo until nothing more fits:
@@ -292,8 +308,30 @@ modded class DZMCP_BridgeCore
             string tuid = "";
             if (pt.GetIdentity())
                 tuid = pt.GetIdentity().GetPlainId();
+            string treeOwner = OZL_Arg(args, "owner", "");
+            if (treeOwner != "")
+                OZL_PretendOrg(pt, treeOwner);
             if (OZL_Arg(args, "as", "") == "post")
                 OZL_Pretend(pt);
+            string dumpName = OZL_Arg(args, "file", "");
+            if (dumpName != "")
+            {
+                if (!OZL_Ids.IsPathSafe(dumpName))
+                {
+                    detail = "tree: file must be letters, digits, _ and - only";
+                    return false;
+                }
+                OZL_TreeView dumpView = OZL_Tree.View(OZL_Owner.OfPlayer(pt), tuid, pt);
+                string dumpPath = "$profile:oz_research_" + dumpName + ".json";
+                string dumpErr;
+                if (!JsonFileLoader<OZL_TreeView>.SaveFile(dumpPath, dumpView, dumpErr))
+                {
+                    detail = "tree: " + dumpErr;
+                    return false;
+                }
+                detail = "tree of '" + dumpView.Owner + "' (skin " + dumpView.Skin + ") written to " + dumpPath;
+                return true;
+            }
             detail = OZL_Tree.ViewJson(OZL_Owner.OfPlayer(pt), tuid, pt);
             return true;
         }
@@ -478,8 +516,141 @@ modded class DZMCP_BridgeCore
             return pfails.Count() == 0;
         }
 
-        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, cargo, roll, points, grant, reset, reload, tree, research, admin, bridge, payload_selftest)";
+        detail = "oz_research: unknown op '" + op + "' (owner, put, fill, take, give, station, cargo, roll, points, grant, reset, demo, reload, tree, treeui, research, admin, bridge, payload_selftest)";
         return false;
+    }
+
+    protected int OZL_IndexOf(array<string> list, string value)
+    {
+        for (int i = 0; i < list.Count(); i++)
+        {
+            if (list[i] == value)
+                return i;
+        }
+        return -1;
+    }
+
+    // STAND ONLY. The demo state of the tree-screen mockup (its demoState(), the
+    // case for the factions without a script of their own), so that every status
+    // of the screen can be looked at without playing the tree:
+    //   - in every branch of the owner, each tier-1 node and the first tier-2 node
+    //     are done;
+    //   - the pool of each line is 80% (rounded up) of what ALL the owner's tier-2
+    //     nodes cost in that line;
+    //   - one project, paid for by nobody, runs on the first other tier-2 node
+    //     that the done ones have opened -- for its ResearchTimeSec, 600 s when
+    //     that is 0 -- if there is such a node.
+    // The owner's old state goes through the admin reset (a backed-up file, the
+    // stations of the faction stop), exactly as after `reset`; the demo state is
+    // then written in one save. Events of completion are not raised: nobody
+    // listens to them and nothing here is a real completion.
+    protected bool OZL_Demo(string owner, out string detail)
+    {
+        OZL_TreeConfig tree = OZL_Config.Get().Tree();
+
+        // One pass over the owner's nodes: what to complete, what the tier-2
+        // nodes cost per line, and the tier-2 nodes themselves in config order.
+        array<string>       doneIds   = new array<string>();
+        array<string>       lineTypes = new array<string>();
+        array<int>          lineSums  = new array<int>();
+        array<OZL_TreeNode> second    = new array<OZL_TreeNode>();
+        int mine = 0;
+        for (int b = 0; b < tree.Branches.Count(); b++)
+        {
+            OZL_TreeBranch br = tree.Branches[b];
+            if (!br || !br.BelongsTo(owner))
+                continue;
+            bool firstSecond = true;
+            for (int n = 0; n < br.Nodes.Count(); n++)
+            {
+                OZL_TreeNode node = br.Nodes[n];
+                if (!node || !tree.NodeBelongsTo(node, owner))
+                    continue;
+                mine++;
+                int tier = node.Tier;
+                if (tier < 1)
+                    tier = 1;
+                if (tier == 1)
+                    doneIds.Insert(node.Id);
+                if (tier != 2)
+                    continue;
+                second.Insert(node);
+                if (firstSecond)
+                {
+                    doneIds.Insert(node.Id);
+                    firstSecond = false;
+                }
+                for (int c = 0; c < node.Cost.Count(); c++)
+                {
+                    OZL_TreeCost cost = node.Cost[c];
+                    if (!cost || cost.Type == "" || cost.Amount <= 0)
+                        continue;
+                    int at = OZL_IndexOf(lineTypes, cost.Type);
+                    if (at < 0)
+                    {
+                        lineTypes.Insert(cost.Type);
+                        lineSums.Insert(cost.Amount);
+                    }
+                    else
+                    {
+                        lineSums[at] = lineSums[at] + cost.Amount;
+                    }
+                }
+            }
+        }
+        // A mistyped owner must not leave a state file behind.
+        if (mine == 0)
+        {
+            detail = "demo: owner '" + owner + "' has no nodes in the tree";
+            return false;
+        }
+
+        string why;
+        if (!OZL_State.Reset(owner, why))
+        {
+            detail = "demo refused: " + why;
+            return false;
+        }
+        OZL_FactionState st = OZL_State.Get(owner);
+        if (!st)
+        {
+            detail = "demo: no state for owner '" + owner + "'";
+            return false;
+        }
+
+        for (int d = 0; d < doneIds.Count(); d++)
+        {
+            if (!st.IsCompleted(doneIds[d]))
+                st.CompletedNodes.Insert(doneIds[d]);
+        }
+        // ceil(0.8 * sum) in integers: (8 * sum + 9) / 10.
+        for (int l = 0; l < lineTypes.Count(); l++)
+        {
+            int sum = lineSums[l];
+            st.SetPoints(lineTypes[l], (sum * 8 + 9) / 10);
+        }
+
+        string project = "none";
+        for (int s = 0; s < second.Count(); s++)
+        {
+            if (OZL_Tree.StatusOf(st, second[s]) != "available")
+                continue;
+            int span = second[s].ResearchTimeSec;
+            if (span <= 0)
+                span = 600;
+            OZL_Project pr = new OZL_Project();
+            pr.NodeId     = second[s].Id;
+            pr.StarterUid = "demo";
+            pr.EndSec     = OZL_Clock.NowSec() + span;
+            st.ActiveProjects.Insert(pr);
+            project = pr.NodeId + " (" + span.ToString() + " s)";
+            break;
+        }
+        OZL_State.Save(owner);
+
+        detail = "demo owner=" + owner + " done=" + st.CompletedNodes.Count().ToString();
+        detail += " points=" + OZL_Points.Describe(owner) + " project=" + project;
+        return true;
     }
 
     protected string OZL_Describe(OZL_Station st)
