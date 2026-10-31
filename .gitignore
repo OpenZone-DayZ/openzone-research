@@ -14,6 +14,7 @@ build/model-root/*
 source/models/settings.local.json
 source/models/*/work/
 source/models/**/__pycache__/
+source/ui/__pycache__/
 build/vanilla_png/
 # every built mod folder, the file-patching junction inside it included
 @OpenZone_*/

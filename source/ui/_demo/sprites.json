@@ -28,7 +28,7 @@
     },
     {
       "name": "svg_ring", "w": 30, "h": 30,
-      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><defs><linearGradient id='demo-ring' x1='0' x2='1'><stop offset='0' stop-color='#fff'/><stop offset='1' stop-color='#fff' stop-opacity='.15'/></linearGradient></defs><circle cx='15' cy='15' r='12' fill='none' stroke='url(#demo-ring)' stroke-width='4'/></svg>"
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><defs><linearGradient id='svg_ring_fade' x1='0' x2='1'><stop offset='0' stop-color='#fff'/><stop offset='1' stop-color='#fff' stop-opacity='.15'/></linearGradient></defs><circle cx='15' cy='15' r='12' fill='none' stroke='url(#svg_ring_fade)' stroke-width='4'/></svg>"
     }
   ],
   "textures": [

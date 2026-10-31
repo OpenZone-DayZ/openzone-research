@@ -9,9 +9,9 @@ Output  OpenZone_Research/gui/imagesets/ozl_<set>.imageset + ozl_<set>_ca.paa
         OpenZone_Research/gui/textures/tree/<set>/<name>_ca.paa
         build/ui/<set>/      pages, PNGs, preview (git-ignored, safe to delete)
 
-Needs Python 3 with Pillow, Node 22+ and Google Chrome (shoot.mjs draws the pages), and DayZ Tools
-(ImageToPAA). The manifest format, the rules and the reasons are in source/ui/README.md; this file
-only does it.
+Needs Python 3.10+ with Pillow 9.1+, Node 22+ and Google Chrome (shoot.mjs draws the pages), and
+DayZ Tools (ImageToPAA). The manifest format, the rules and the reasons are in source/ui/README.md;
+this file only does it. `python -m unittest discover -s source/ui` tests its pure parts.
 """
 from __future__ import annotations
 
@@ -117,7 +117,7 @@ def _text(v, what: str) -> str:
 
 
 def _css(v, folder: Path, what: str) -> str:
-    """CSS from the manifest: each entry is inline text (it has a '{') or a file name."""
+    """CSS from the manifest: each entry is inline text (it has a '{', a ';' or a line break) or a file name."""
     parts = v if isinstance(v, list) else [v]
     out = []
     for i, part in enumerate(parts):
@@ -128,7 +128,7 @@ def _css(v, folder: Path, what: str) -> str:
             continue
         path = folder / part
         if not path.is_file():
-            fail(f"{what}[{i}]: {part!r} has no '{{' so it is a file name, and {path} does not exist")
+            fail(f"{what}[{i}]: {part!r} has no '{{', ';' or line break, so it is a file name, and {path} does not exist")
         out.append(path.read_text(encoding="utf-8-sig"))
     return "\n".join(out)
 
@@ -249,8 +249,31 @@ class Sheet:
     png: Path
 
 
+ID_RE = re.compile(r"""(?<![\w-])id\s*=\s*(?:"([^"]*)"|'([^']*)')""", re.IGNORECASE)
+RESERVED_ID = re.compile(r"^(oz\d+|oz-sheet|oz-canary)$")
+
+
+def check_ids(items: list[Item]) -> None:
+    """All the pictures of a page share its ids; refuse an id two of them use, or one the bake owns.
+
+    Two sprites that both say `<linearGradient id="g">` would silently share the first, and the
+    second would be drawn with the wrong gradient.
+    """
+    owner: dict[str, str] = {}
+    for it in items:
+        for m in ID_RE.finditer(it.html):
+            ident = m.group(1) if m.group(1) is not None else m.group(2)
+            if RESERVED_ID.match(ident):
+                fail(f"{it.name}: the id {ident!r} belongs to the bake (oz<N>, oz-sheet, oz-canary); pick another")
+            first = owner.setdefault(ident, it.name)
+            if first != it.name:
+                fail(f"the id {ident!r} is used in {first} and in {it.name}: every picture of a page shares its ids, "
+                     "so prefix each id with the name of its sprite (a language variant is a sprite of its own)")
+
+
 def make_sheet(skin: Skin, items: list[Item], dsf: float, build: Path, stem: str) -> Sheet:
     """Size every picture, put them in shelf rows (manifest order), write the page."""
+    check_ids(items)
     for it in items:
         it.pad_px = math.ceil(it.pad * dsf - 1e-6) if it.pad > 0 else 0
         it.pw = px_of(it.w, dsf) + 2 * it.pad_px
@@ -416,13 +439,18 @@ def bleed(img: Image.Image, radius: int) -> Image.Image:
     Chrome writes transparent pixels as 0,0,0,0. Filtering (bilinear, mipmaps, DXT blocks) then
     mixes that black into the edge of a white glyph and draws a dark fringe round it. The alpha
     is left alone, so nothing visible changes.
+
+    ImageChops.offset() wraps round the edge of the image, so colour that leaves it on one side
+    comes back in on the other. The work image therefore has a margin of `radius` px: colour needs
+    `radius` steps to cross the margin and one more to wrap, and the loop makes only `radius`
+    steps, so none comes back in.
     """
     lo, hi = img.getchannel("A").getextrema()
     if radius <= 0 or hi == 0 or lo > 0:
         return img
     w, h = img.size
-    work = Image.new("RGBA", (w + 2, h + 2), (0, 0, 0, 0))     # a 1 px margin stops offset() wrapping round
-    work.paste(img, (1, 1))
+    work = Image.new("RGBA", (w + 2 * radius, h + 2 * radius), (0, 0, 0, 0))
+    work.paste(img, (radius, radius))
     alpha = work.getchannel("A")
     known = alpha.point(lambda a: 255 if a else 0)
     rgb = work.convert("RGB")
@@ -435,7 +463,7 @@ def bleed(img: Image.Image, radius: int) -> Image.Image:
         rgb, known = new_rgb, new_known
     out = rgb.convert("RGBA")
     out.putalpha(alpha)
-    return out.crop((1, 1, w + 1, h + 1))
+    return out.crop((radius, radius, radius + w, radius + h))
 
 
 def next_pot(n: int) -> int:

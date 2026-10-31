@@ -26,7 +26,7 @@ set it baked is missing there.
 
 ## Requirements
 
-- Python 3 with Pillow, nothing else
+- Python 3.10 or newer with Pillow 9.1 or newer, nothing else
 - Node.js 22 or newer: `shoot.mjs` drives Chrome through its built-in `WebSocket`
 - Google Chrome (`C:\Program Files\Google\Chrome\Application\chrome.exe`)
 - DayZ Tools: `Bin\ImageToPAA\ImageToPAA.exe`
@@ -64,9 +64,11 @@ Commit the manifest together with the `.imageset` and `.paa` it produced.
 ## Looking at the result
 
 Open `build/ui/<set>/preview.png`: the atlas over a checkerboard, every sprite outlined and named.
-`sheet.png` is the raw page as Chrome drew it. The log of a run says, for every picture, the pixel
-size and the alpha range (`alpha 0..255` with many levels means real partial transparency), and,
-for every `.paa`, that `ImageToPAA` read it back as DXT5 with the same size and alpha range.
+`sheet.png` is the raw page as Chrome drew it. The log of a run reports per page (the sprite sheet
+and each texture), for the atlas and for each texture, not per sprite: the pixel size and the alpha
+range (`alpha 0..255` with many levels means real partial transparency); and for every `.paa` that
+`ImageToPAA` read it back as DXT5 with the same size and alpha range. To check one sprite, find it
+in `preview.png`.
 
 ## The manifest
 
@@ -117,6 +119,14 @@ transitions off, so a lifted `body { background: ... }` or a blinking mark canno
 something still paints a background, the run stops with "the empty corner of the page is not
 transparent".
 
+All the sprites of a set are drawn on one page (`build/ui/<set>/sheet.html`), so an `id` in one
+sprite's markup is an id of the whole page: two sprites that both define `<linearGradient id="g">`
+would silently share the first one. **Prefix every SVG id with the name of its sprite**
+(`stamp_uk_noise`, not `noise`), and give the `_uk` and `_en` variants of one sprite ids of their
+own as well: they are two sprites on the same page. The bake stops when two pictures use the same
+id. Reserved: `oz0`, `oz1`, ... (`oz<N>`, the box of each picture), `oz-sheet` and `oz-canary`, and
+the classes `oz-c` and `oz-s`.
+
 A sprite's picture is `ceil(w * scale) + 2 * ceil(pad * scale)` pixels wide (the same for the
 height): 24 units is 36 px at 1.5. That is the `Size` in the imageset. With a `pad`, show the sprite
 in a widget of `w + 2 * pad` by `h + 2 * pad` units, placed `pad` units up and left of where the
@@ -148,7 +158,7 @@ word). For those give `html_uk` and `html_en`; the sprites are `<name>_uk` and `
 the stringtable decides which one is shown: the value of a `*_IMG` key is
 `set:ozl_<skin> image:<name>_uk` in the Ukrainian cells (`original` and every column that repeats
 it) and `set:ozl_<skin> image:<name>_en` in the English cell. Both are drawn with the same box, so
-make it wide enough for the longer text.
+make it wide enough for the longer text, and they share a page, so their SVG ids must differ.
 
 ### Standalone textures
 
@@ -167,17 +177,19 @@ layout uses as a plain image:
   usual answer; the picture is drawn at least at `scale`, and larger if `size` needs it, then
   shrunk, so it stays sharp.
 - **Without `size`**: the picture is `ceil(w * scale)` x `ceil(h * scale)` pixels, put in the
-  **top-left** corner of the next power-of-two canvas; the rest is transparent. A layout cannot cut
-  a sub-rectangle out of a bare texture: a widget shows the whole canvas, transparent rest
-  included, so it must be sized to the canvas for the content to land at its top-left. Prefer
-  `size`. The log of a run states where the content ends.
+  **top-left** corner of the next power-of-two canvas; the rest is transparent. A widget with
+  `stretch_w_h` shows the whole canvas, transparent rest included; without `stretch_w_h` it shows
+  the top-left crop of the texture at native size (dayz-modding skill, gui-layouts, section 12), so
+  what is visible follows the widget's size in pixels rather than the picture. Either way the
+  widget has to be sized to suit; prefer `size`. The log of a run states where the content ends.
 
 ## Adding a skin's pictures
 
 1. In `source/ui/<skin>/sprites.json` replace the `blank` placeholder with the skin's sprites (a
    skin that has real sprites does not need `blank`).
 2. Lift the mockup's CSS for the skin into `source/ui/<skin>/<skin>.css`, name it in `css`, and set
-   `body` if the rules are scoped by `body[...]`. Write each picture's markup in `html`.
+   `body` if the rules are scoped by `body[...]`. Write each picture's markup in `html`, with every
+   SVG id prefixed by the sprite's name.
 3. `python source/ui/bake.py <skin>`, then look at `build/ui/<skin>/preview.png`.
 4. Commit the manifest with the new `.imageset` and `.paa`.
 5. Use a sprite in a layout (or `LoadImageFile`) as `set:ozl_<skin> image:<name>`:
@@ -196,6 +208,13 @@ layout uses as a plain image:
 with an underscore is an example, so `--all` skips it and it needs `--out` to keep it out of the mod:
 
     python source/ui/bake.py _demo --out build/ui/demo-out
+
+## Tests
+
+    python -m unittest discover -s source/ui -v
+
+The tests cover the parts that need neither Chrome nor DayZ Tools: the colour bleed (it must not
+wrap colour round the edge of a sprite), the gutter, the packer, the manifest rules and the ids.
 
 ## How the drawing is done
 

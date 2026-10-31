@@ -13,9 +13,9 @@
       "name": "mark_lock", "w": 24, "h": 24,
       "html": [
         "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>",
-        "<defs><mask id='lockhole'><rect width='24' height='24' fill='#fff'/>",
+        "<defs><mask id='mark_lock_hole'><rect width='24' height='24' fill='#fff'/>",
         "<circle cx='12' cy='15.3' r='1.7' fill='#000'/><path d='M11.1 16.2h1.8l.7 3.3h-3.2z' fill='#000'/></mask></defs>",
-        "<rect x='5' y='10.5' width='14' height='11' rx='2' fill='#fff' mask='url(#lockhole)'/>",
+        "<rect x='5' y='10.5' width='14' height='11' rx='2' fill='#fff' mask='url(#mark_lock_hole)'/>",
         "<path d='M8.2 10.5V7.6a3.8 3.8 0 0 1 7.6 0v2.9' fill='none' stroke='#fff' stroke-width='2.4'/>",
         "</svg>"
       ]
