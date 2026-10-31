@@ -128,8 +128,9 @@ class OZL_TreeMenu : UIScriptedMenu
     private Widget m_RowHover;
     private string m_RowKind = "";
     private string m_RowId   = "";
-    // Попередження про підмінений файл рядка вже було в цьому вікні.
-    private bool   m_RowWarned = false;
+    // Підміни файлу рядка (Row, Layout mix-up), про які в цьому вікні вже
+    // написано в лог: ключ "шлях|чим вийшло". Повтор того самого не пишеться.
+    private ref map<string, bool> m_RowMixes;
 
     // Коли приїхала відповідь: залишок проєкту -- від серверної секунди в ній.
     private float m_ViewAge  = 0;
@@ -220,6 +221,7 @@ class OZL_TreeMenu : UIScriptedMenu
         m_WrapShown  = new map<Widget, string>();
         m_WidthFrac  = new map<Widget, float>();
         m_Nums       = new map<string, int>();
+        m_RowMixes   = new map<string, bool>();
     }
 
     static OZL_TreeMenu Open()
@@ -863,7 +865,7 @@ class OZL_TreeMenu : UIScriptedMenu
         m_RowHover = null;
         m_RowKind = "";
         m_RowId = "";
-        m_RowWarned = false;
+        m_RowMixes.Clear();
         m_TipPending = false;
 
         OZL_TreeSkin skin = OZL_TreeSkins.Make(id);
@@ -1018,35 +1020,132 @@ class OZL_TreeMenu : UIScriptedMenu
         list.Clear();
     }
 
+    // Рядок списку з файлу розкладки скіна. СТОРОЖ ВІД ПІДМІНИ ФАЙЛУ (SKINS.md,
+    // "Layout mix-up"): CreateWidgets на шлях рядка інколи віддає віджети ІНШОГО
+    // рядкового файлу, створеного раніше в цій сесії клієнта (стенд 2026-10-31:
+    // ozl_ecolog_tier_label -> OZL_DutyPriceChip, ozl_clearsky_tier_label ->
+    // OZL_EcologOpensChip, пул bandit -> чіп clearsky). Корінь кожного рядкового
+    // файлу названий за файлом, тож підміну видно з кореня; тоді рядок
+    // робиться ще раз (Respell). null -- як і раніше, лише коли CreateWidgets
+    // не дав нічого.
     private Widget Row(string row, Widget parent)
     {
         if (!parent || !m_Skin)
             return null;
-        Widget w = GetGame().GetWorkspace().CreateWidgets(m_Skin.RowLayout(row), parent);
-        Expect(w, row);
-        return w;
+        string path = m_Skin.RowLayout(row);
+        Widget w = GetGame().GetWorkspace().CreateWidgets(path, parent);
+        if (!w || RootFits(w, path))
+            return w;
+        return Respell(w, path, parent);
     }
 
-    // Напис-рядок без своєї дитини -- ознака того, що рушій віддав інший
-    // файл: стенд 2026-10-31, шлях ozl_sop_or_label.layout на двох свіжих
-    // клієнтах дав віджети ozl_sop_price_chip.layout. Причини не знайдено
-    // (SKINS.md, "Layout mix-up"); тут -- лише попередження, раз на вікно, з
-    // іменем кореня, яке каже, чий файл прийшов.
-    private void Expect(Widget w, string row)
+    // Корінь віджета названий за файлом: ozl_sop_or_label.layout ->
+    // OZL_SopOrLabel; порівнюємо без підкреслень і без регістру. Так названі
+    // корені всіх рядкових розкладок усіх семи скінів на 2026-10-31 (їх
+    // називає генератор); розкладка рядка, написана вручну, мусить мати такий
+    // самий корінь, інакше сторож вважатиме її підміненою.
+    private bool RootFits(Widget w, string path)
     {
-        if (!w || m_RowWarned)
-            return;
-        string need = "";
-        if (row == "or_label")
-            need = "OrText";
-        else if (row == "price_chip")
-            need = "PriceText";
-        else if (row == "tier_label")
-            need = "TierText";
-        if (need == "" || w.FindAnyWidget(need))
-            return;
-        m_RowWarned = true;
-        OZL_Log.Warn("tree: " + m_Skin.RowLayout(row) + " gave a row '" + w.GetName() + "' without " + need + " -- the engine may have handed another layout file (SKINS.md, Layout mix-up)");
+        string want = StemOf(path);
+        string got = w.GetName();
+        want.Replace("_", "");
+        want.ToLower();
+        got.Replace("_", "");
+        got.ToLower();
+        return want == got;
+    }
+
+    // Ім'я файлу без каталогу й розширення: ".../ozl_sop_or_label.layout" ->
+    // "ozl_sop_or_label". Шляхи тут лише ASCII (Substring рахує байти).
+    private string StemOf(string path)
+    {
+        string stem = path;
+        int slash = stem.LastIndexOf("/");
+        if (slash >= 0)
+            stem = stem.Substring(slash + 1, stem.Length() - slash - 1);
+        int dot = stem.LastIndexOf(".");
+        if (dot > 0)
+            stem = stem.Substring(0, dot);
+        return stem;
+    }
+
+    // Рушій віддав чужий файл: корінь не той. Причину не знайдено -- схоже на
+    // кеш рушія за ключем, якого ми не бачимо, тож пробуємо інші ключі до
+    // того самого файлу: той самий шлях ще раз, тоді нижній регістр, сегмент
+    // "./", подвоєний "/", зворотні скісні. ПЕРЕД кожною спробою хибний віджет
+    // знімається (Unlink); варіант, що не дав віджета, просто не вдався; перший
+    // з правильним коренем лишається. Нічого не вийшло -- віддаємо останній
+    // віджет, як до сторожа; null там, де раніше був віджет, не буде (коли всі
+    // варіанти дали null, шлях робиться ще раз як є). Один рядок у лозі на
+    // підміну: який корінь прийшов і чим вийшло (стенд скаже, який запис
+    // працює); той самий шлях з тим самим наслідком у цьому вікні вдруге не
+    // пишеться.
+    private Widget Respell(Widget wrong, string path, Widget parent)
+    {
+        string wrongName = wrong.GetName();
+        string folder = "";
+        string leaf = path;
+        int slash = path.LastIndexOf("/");
+        if (slash >= 0)
+        {
+            folder = path.Substring(0, slash + 1);
+            leaf   = path.Substring(slash + 1, path.Length() - slash - 1);
+        }
+        string lower = path;
+        lower.ToLower();
+        string back = path;
+        back.Replace("/", "\\");
+
+        array<string> spellings = new array<string>();
+        array<string> labels    = new array<string>();
+        spellings.Insert(path);
+        labels.Insert("the same path again");
+        spellings.Insert(lower);
+        labels.Insert("lower case");
+        spellings.Insert(folder + "./" + leaf);
+        labels.Insert("a ./ segment");
+        spellings.Insert(folder + "/" + leaf);
+        labels.Insert("a doubled /");
+        spellings.Insert(back);
+        labels.Insert("backslashes");
+
+        Widget cur = wrong;
+        string how = "";
+        string trail = "";
+        for (int i = 0; i < spellings.Count() && how == ""; i++)
+        {
+            if (cur)
+                cur.Unlink();
+            cur = GetGame().GetWorkspace().CreateWidgets(spellings[i], parent);
+            string verdict = "nothing";
+            if (cur)
+            {
+                verdict = "'" + cur.GetName() + "'";
+                if (RootFits(cur, path))
+                {
+                    verdict = "right";
+                    how = labels[i];
+                }
+            }
+            if (trail != "")
+                trail += "; ";
+            trail += labels[i] + " -> " + verdict;
+        }
+        if (!cur)
+            cur = GetGame().GetWorkspace().CreateWidgets(path, parent);
+
+        string outcome = "no spelling gave the right root";
+        if (how != "")
+            outcome = "the right root came with " + how;
+        else if (cur)
+            outcome += ", kept '" + cur.GetName() + "'";
+        string key = path + "|" + outcome;
+        if (!m_RowMixes.Contains(key))
+        {
+            m_RowMixes.Set(key, true);
+            OZL_Log.Warn("tree: " + path + " gave a row '" + wrongName + "' (another file's root); " + trail + "; " + outcome + " (SKINS.md, Layout mix-up)");
+        }
+        return cur;
     }
 
     private void PaintBranches()
