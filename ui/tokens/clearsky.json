@@ -1,0 +1,27 @@
+{
+  "note": "Tokens of the clearsky tree window «Польовий КПК» (mockup body[data-f=clearsky]). Every name starts with 'clearsky_' so the seven skin files never collide; only the clearsky skin task edits this file (source/ui/SKINS.md).",
+  "color": {
+    "clearsky_txt": [0.765, 0.875, 0.941, 1.0],
+    "clearsky_dim": [0.373, 0.541, 0.651, 1.0],
+    "clearsky_acc": [0.435, 0.757, 1.0, 1.0],
+    "clearsky_ok": [0.541, 0.843, 0.753, 1.0],
+    "clearsky_bad": [1.0, 0.541, 0.361, 1.0],
+    "clearsky_screen": [0.043, 0.082, 0.125, 1.0],
+    "clearsky_edge": [0.141, 0.259, 0.361, 1.0],
+    "clearsky_lcd": [0.039, 0.094, 0.149, 1.0],
+    "clearsky_faint": [0.29, 0.426, 0.52, 1.0],
+    "clearsky_soft": [0.647, 0.775, 0.854, 1.0],
+    "clearsky_track": [0.108, 0.154, 0.199, 1.0],
+    "clearsky_cell": [0.079, 0.122, 0.166, 1.0],
+    "clearsky_cell_edge": [0.202, 0.257, 0.305, 1.0],
+    "clearsky_pick": [0.082, 0.15, 0.213, 1.0],
+    "clearsky_done_bg": [0.113, 0.189, 0.213, 1.0],
+    "clearsky_done_edge": [0.292, 0.463, 0.439, 1.0],
+    "clearsky_res_edge": [0.259, 0.453, 0.606, 1.0],
+    "clearsky_line_dim": [0.373, 0.541, 0.651, 0.6],
+    "clearsky_fog": [0.036, 0.087, 0.137, 1.0],
+    "clearsky_casing": [0.122, 0.2, 0.275, 1.0],
+    "clearsky_casing_hi": [0.235, 0.353, 0.459, 1.0],
+    "clearsky_grid": [0.431, 0.706, 0.941, 0.05]
+  }
+}

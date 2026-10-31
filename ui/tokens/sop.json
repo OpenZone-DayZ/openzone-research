@@ -1,0 +1,27 @@
+{
+  "note": "Tokens of the sop tree window «Тактичний планшет» (mockup body[data-f=sop]). Every name starts with 'sop_' so the seven skin files never collide; only the sop skin task edits this file (source/ui/SKINS.md).",
+  "color": {
+    "sop_txt": [0.925, 0.875, 0.682, 1.0],
+    "sop_dim": [0.604, 0.553, 0.361, 1.0],
+    "sop_acc": [1.0, 0.725, 0.208, 1.0],
+    "sop_ok": [0.706, 0.863, 0.416, 1.0],
+    "sop_bad": [1.0, 0.416, 0.29, 1.0],
+    "sop_screen": [0.078, 0.075, 0.043, 1.0],
+    "sop_edge": [0.353, 0.322, 0.196, 1.0],
+    "sop_lcd": [0.071, 0.067, 0.035, 1.0],
+    "sop_faint": [0.473, 0.433, 0.281, 1.0],
+    "sop_soft": [0.829, 0.778, 0.586, 1.0],
+    "sop_track": [0.155, 0.147, 0.101, 1.0],
+    "sop_cell": [0.121, 0.115, 0.075, 1.0],
+    "sop_cell_edge": [0.265, 0.251, 0.184, 1.0],
+    "sop_pick": [0.171, 0.14, 0.06, 1.0],
+    "sop_done_bg": [0.166, 0.185, 0.095, 1.0],
+    "sop_done_edge": [0.392, 0.469, 0.229, 1.0],
+    "sop_res_edge": [0.585, 0.433, 0.134, 1.0],
+    "sop_line_dim": [0.604, 0.553, 0.361, 0.6],
+    "sop_fog": [0.065, 0.061, 0.032, 1.0],
+    "sop_casing": [0.235, 0.227, 0.173, 1.0],
+    "sop_casing_hi": [0.361, 0.345, 0.259, 1.0],
+    "sop_grid": [1.0, 0.784, 0.431, 0.07]
+  }
+}

@@ -16,8 +16,20 @@ name = "openzone-research"
 #                             bridge (world_exec). Requires @DZMCP_Bridge.
 mods = ["OpenZone_Research", "OpenZone_Research_VPP", "OpenZone_Research_Bridge"]
 # The layout generator reads the series' design tokens from the core
-# repository; descriptions stay here (ui/<Mod>/).
-tokens = "../openzone-core/ui/tokens.json"
+# repository first, then the seven tree windows' own files, layered in this
+# order (descriptions stay here, ui/<Mod>/). Every name in a skin's file starts
+# with its id (neutral_txt, duty_acc ...), so the seven never collide, and each
+# skin task edits only its own file (source/ui/SKINS.md).
+tokens = [
+    "../openzone-core/ui/tokens.json",
+    "ui/tokens/neutral.json",
+    "ui/tokens/ecolog.json",
+    "ui/tokens/clearsky.json",
+    "ui/tokens/duty.json",
+    "ui/tokens/freedom.json",
+    "ui/tokens/sop.json",
+    "ui/tokens/bandit.json",
+]
 # The station models (OpenZone_Research/models/<obj>). The build root is not in
 # git: the generators in source/models write their MLODs into it with the mod's
 # paths, and asset_build binarizes them from it into the mod. The root also links

@@ -1,0 +1,25 @@
+{
+  "note": "Tokens of the duty tree window «Реєстр досліджень» (mockup body[data-f=duty]). Every name starts with 'duty_' so the seven skin files never collide; only the duty skin task edits this file (source/ui/SKINS.md).",
+  "color": {
+    "duty_txt": [0.118, 0.11, 0.098, 1.0],
+    "duty_dim": [0.42, 0.396, 0.345, 1.0],
+    "duty_acc": [0.647, 0.141, 0.102, 1.0],
+    "duty_ok": [0.227, 0.208, 0.537, 1.0],
+    "duty_bad": [0.722, 0.337, 0.059, 1.0],
+    "duty_screen": [0.91, 0.89, 0.82, 1.0],
+    "duty_edge": [0.235, 0.22, 0.188, 1.0],
+    "duty_lcd": [0.922, 0.902, 0.835, 1.0],
+    "duty_faint": [0.542, 0.52, 0.464, 1.0],
+    "duty_soft": [0.208, 0.196, 0.172, 1.0],
+    "duty_track": [0.839, 0.82, 0.755, 1.0],
+    "duty_cell": [0.87, 0.851, 0.784, 1.0],
+    "duty_cell_edge": [0.736, 0.719, 0.661, 1.0],
+    "duty_pick": [0.884, 0.815, 0.748, 1.0],
+    "duty_done_bg": [0.814, 0.795, 0.78, 1.0],
+    "duty_done_edge": [0.569, 0.549, 0.678, 1.0],
+    "duty_res_edge": [0.765, 0.478, 0.425, 1.0],
+    "duty_line_dim": [0.639, 0.612, 0.541, 1.0],
+    "duty_fog": [0.863, 0.839, 0.761, 1.0],
+    "duty_paper_hi": [0.953, 0.937, 0.886, 1.0]
+  }
+}

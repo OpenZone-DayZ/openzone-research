@@ -1,0 +1,25 @@
+{
+  "note": "Tokens of the bandit tree window «Записи братви» (mockup: the shared paper block plus body[data-f=bandit]). Every name starts with 'bandit_' so the seven skin files never collide; only the bandit skin task edits this file (source/ui/SKINS.md).",
+  "color": {
+    "bandit_txt": [0.165, 0.125, 0.094, 1.0],
+    "bandit_dim": [0.435, 0.361, 0.259, 1.0],
+    "bandit_acc": [0.122, 0.247, 0.525, 1.0],
+    "bandit_ok": [0.184, 0.416, 0.165, 1.0],
+    "bandit_bad": [0.69, 0.165, 0.102, 1.0],
+    "bandit_screen": [0.867, 0.816, 0.678, 1.0],
+    "bandit_edge": [0.627, 0.541, 0.384, 1.0],
+    "bandit_lcd": [0.839, 0.78, 0.627, 1.0],
+    "bandit_faint": [0.543, 0.475, 0.364, 1.0],
+    "bandit_soft": [0.246, 0.196, 0.144, 1.0],
+    "bandit_track": [0.803, 0.754, 0.626, 1.0],
+    "bandit_cell": [0.832, 0.781, 0.649, 1.0],
+    "bandit_cell_edge": [0.712, 0.664, 0.55, 1.0],
+    "bandit_pick": [0.792, 0.759, 0.663, 1.0],
+    "bandit_done_bg": [0.771, 0.76, 0.607, 1.0],
+    "bandit_done_edge": [0.525, 0.616, 0.422, 1.0],
+    "bandit_res_edge": [0.457, 0.503, 0.594, 1.0],
+    "bandit_line_dim": [0.435, 0.361, 0.259, 0.6],
+    "bandit_fog": [0.788, 0.722, 0.561, 1.0],
+    "bandit_paper_hi": [0.91, 0.863, 0.737, 1.0]
+  }
+}

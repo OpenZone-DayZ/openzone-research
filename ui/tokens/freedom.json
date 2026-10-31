@@ -1,0 +1,24 @@
+{
+  "note": "Tokens of the freedom tree window «ВОЛЯ.narod» (mockup body[data-f=freedom]). Every name starts with 'freedom_' so the seven skin files never collide; only the freedom skin task edits this file (source/ui/SKINS.md).",
+  "color": {
+    "freedom_txt": [0.8, 1.0, 0.4, 1.0],
+    "freedom_dim": [0.561, 0.682, 0.353, 1.0],
+    "freedom_acc": [1.0, 1.0, 0.0, 1.0],
+    "freedom_ok": [0.2, 1.0, 0.4, 1.0],
+    "freedom_bad": [1.0, 0.31, 0.627, 1.0],
+    "freedom_screen": [0.039, 0.078, 0.02, 1.0],
+    "freedom_edge": [0.298, 0.659, 0.165, 1.0],
+    "freedom_lcd": [0.012, 0.031, 0.008, 1.0],
+    "freedom_faint": [0.43, 0.531, 0.27, 1.0],
+    "freedom_soft": [0.728, 0.905, 0.386, 1.0],
+    "freedom_track": [0.108, 0.161, 0.054, 1.0],
+    "freedom_cell": [0.077, 0.125, 0.039, 1.0],
+    "freedom_cell_edge": [0.207, 0.281, 0.103, 1.0],
+    "freedom_pick": [0.135, 0.171, 0.018, 1.0],
+    "freedom_done_bg": [0.062, 0.207, 0.073, 1.0],
+    "freedom_done_edge": [0.12, 0.539, 0.21, 1.0],
+    "freedom_res_edge": [0.568, 0.585, 0.009, 1.0],
+    "freedom_line_dim": [0.31, 0.478, 0.208, 1.0],
+    "freedom_fog": [0.012, 0.031, 0.008, 1.0]
+  }
+}
