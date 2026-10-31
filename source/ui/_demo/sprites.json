@@ -23,7 +23,7 @@
     },
     {
       "name": "stamp", "w": 160, "h": 44, "pad": 6,
-      "html_uk": "<div class='stamp'>ЗАТВЕРДЖУЮ</div>",
+      "html_ua": "<div class='stamp'>ЗАТВЕРДЖУЮ</div>",
       "html_en": "<div class='stamp'>APPROVED</div>"
     },
     {

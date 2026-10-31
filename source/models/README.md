@@ -1,6 +1,6 @@
 # Model generators
 
-*[Українською](README.uk.md)*
+*[Українською](README.ua.md)*
 
 Every station, sample, carrier and module model of OpenZone Research is built by a Blender
 script, `source/models/<obj>/scripts/build_mNN.py`, with the shared kit in `source/models/_kit`.

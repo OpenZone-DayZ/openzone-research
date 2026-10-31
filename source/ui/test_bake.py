@@ -100,10 +100,10 @@ class Manifest(unittest.TestCase):
                 bake._css("missing.css", folder, "css")
 
     def test_language_variants_make_two_sprites(self):
-        items = bake._items([{"name": "stamp", "w": 10, "h": 5, "html_uk": "a", "html_en": "b"}], "sprite")
-        self.assertEqual([(i.name, i.html) for i in items], [("stamp_uk", "a"), ("stamp_en", "b")])
+        items = bake._items([{"name": "stamp", "w": 10, "h": 5, "html_ua": "a", "html_en": "b"}], "sprite")
+        self.assertEqual([(i.name, i.html) for i in items], [("stamp_ua", "a"), ("stamp_en", "b")])
         with self.assertRaises(bake.BakeError):
-            bake._items([{"name": "stamp", "w": 10, "h": 5, "html_uk": "a"}], "sprite")
+            bake._items([{"name": "stamp", "w": 10, "h": 5, "html_ua": "a"}], "sprite")
 
 
 class Ids(unittest.TestCase):

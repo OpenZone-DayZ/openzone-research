@@ -29,10 +29,10 @@ the CSS `content:` texts) and the design `E:\openzone\docs\specs\2026-10-31-rese
   the mockup's `loner`). Every faction has a skin of its own, so there is no key set for a
   base window.
 - Keys that end in `_IMG` stand for text drawn as a picture (rotated or styled text). The value
-  is a sprite reference, `set:ozl_<skin> image:<what>_uk` in the Ukrainian columns and
+  is a sprite reference, `set:ozl_<skin> image:<what>_ua` in the Ukrainian columns and
   `set:ozl_<skin> image:<what>_en` in the English one, so the stringtable picks the language.
   Load it like a node icon: `ImageWidget.LoadImageFile(0, Widget.TranslateString("#" + key))`.
-  The bake manifest of that skin must produce both sprites, `<what>_uk` and `<what>_en`
+  The bake manifest of that skin must produce both sprites, `<what>_ua` and `<what>_en`
   (`<what>` is the key suffix in lower case: `GRIF` is `grif`, `SEAL_DONE` is `seal_done`).
   Where the same words also exist as a plain-text key (`..._GRIF` beside `..._GRIF_IMG`),
   that is a text twin for previews and for a skin that has no sprite yet.
@@ -121,7 +121,7 @@ Mockup window: ecolog -- «Науковий термінал» (the Scientists' 
 | `STR_OZL_SKIN_ECOLOG_DEV` | `Науковий термінал` | `Scientific terminal` | `DevName`: the device name in the header plate (mockup `SKINS.ecolog.dev`) |
 | `STR_OZL_SKIN_ECOLOG_TITLE` | `Дерево досліджень` | `Research tree` | header plate title (`.ehead .title`) |
 | `STR_OZL_SKIN_ECOLOG_POOL` | `Бали` | `Points` | label of the readouts row of the pool (`.readouts .lab`); the mockup turns it 90 degrees, so the skin draws POOL_VERTICAL_IMG instead and keeps this key as a text twin |
-| `STR_OZL_SKIN_ECOLOG_POOL_VERTICAL_IMG` | `set:ozl_ecolog image:pool_vertical_uk` | `set:ozl_ecolog image:pool_vertical_en` | sprite reference: the vertical "Бали" / "Points" label of the readouts row |
+| `STR_OZL_SKIN_ECOLOG_POOL_VERTICAL_IMG` | `set:ozl_ecolog image:pool_vertical_ua` | `set:ozl_ecolog image:pool_vertical_en` | sprite reference: the vertical "Бали" / "Points" label of the readouts row |
 
 ## Skin `clearsky`
 
@@ -143,7 +143,7 @@ Mockup window: duty -- «Реєстр досліджень» (the Duty form on t
 | `STR_OZL_SKIN_DUTY_ORG_UNIT` | `Штаб · відділ забезпечення` | `HQ · supply department` | form requisites, line 2 (`.dorg`) |
 | `STR_OZL_SKIN_DUTY_ORG_REF` | `Вих. № 0417/Д` | `Out. No. 0417/D` | form requisites, line 3: outgoing number (the number is typed text in the mockup) |
 | `STR_OZL_SKIN_DUTY_GRIF` | `Для службового користування` | `For official use only` | the classification stamp (`.dsk`); the mockup draws it rotated in a box, so the skin shows GRIF_IMG and keeps this key as a text twin |
-| `STR_OZL_SKIN_DUTY_GRIF_IMG` | `set:ozl_duty image:grif_uk` | `set:ozl_duty image:grif_en` | sprite reference: the rotated "Для службового користування" stamp |
+| `STR_OZL_SKIN_DUTY_GRIF_IMG` | `set:ozl_duty image:grif_ua` | `set:ozl_duty image:grif_en` | sprite reference: the rotated "Для службового користування" stamp |
 | `STR_OZL_SKIN_DUTY_FORM` | `Форма № 7-Д` | `Form No. 7-D` | top right corner of the sheet (`.dform`) |
 | `STR_OZL_SKIN_DUTY_APPROVE` | `Затверджую` | `I approve` | approval block, line 1 (bold) |
 | `STR_OZL_SKIN_DUTY_APPROVE_CMD` | `Командир ___________` | `Commander ___________` | approval block, line 2 (the blank is typed text) |
@@ -161,9 +161,9 @@ Mockup window: duty -- «Реєстр досліджень» (the Duty form on t
 | `STR_OZL_SKIN_DUTY_CARD_HEAD` | `КАРТКА ДОСЛIДЖЕННЯ · ФОРМА № 7-Д/2` | `RESEARCH CARD · FORM No. 7-D/2` | first line of the clipped card (CSS `.c-head::before`); already capitals |
 | `STR_OZL_SKIN_DUTY_SIGN` | `Підпис ____________  /Командир/` | `Signature ____________  /Commander/` | last line of the card above the handwritten signature (CSS `.c-foot::after`) |
 | `STR_OZL_SKIN_DUTY_SEAL_DONE` | `Затверджено` | `Approved` | the round seal on a completed node (`CardStamp`); the skin shows SEAL_DONE_IMG, this key is the text twin |
-| `STR_OZL_SKIN_DUTY_SEAL_DONE_IMG` | `set:ozl_duty image:seal_done_uk` | `set:ozl_duty image:seal_done_en` | sprite reference: the seal "ЗАТВЕРДЖЕНО" / "APPROVED" (`CardStampImg`) |
+| `STR_OZL_SKIN_DUTY_SEAL_DONE_IMG` | `set:ozl_duty image:seal_done_ua` | `set:ozl_duty image:seal_done_en` | sprite reference: the seal "ЗАТВЕРДЖЕНО" / "APPROVED" (`CardStampImg`) |
 | `STR_OZL_SKIN_DUTY_SEAL_WORK` | `В роботі` | `In progress` | the round seal on a researching node; the skin shows SEAL_WORK_IMG, this key is the text twin |
-| `STR_OZL_SKIN_DUTY_SEAL_WORK_IMG` | `set:ozl_duty image:seal_work_uk` | `set:ozl_duty image:seal_work_en` | sprite reference: the seal "В РОБОТІ" / "IN PROGRESS" (`CardStampImg`) |
+| `STR_OZL_SKIN_DUTY_SEAL_WORK_IMG` | `set:ozl_duty image:seal_work_ua` | `set:ozl_duty image:seal_work_en` | sprite reference: the seal "В РОБОТІ" / "IN PROGRESS" (`CardStampImg`) |
 
 ## Skin `freedom`
 
@@ -173,7 +173,7 @@ Mockup window: freedom -- «ВОЛЯ.narod» (the home-made 2000s site).
 |---|---|---|---|
 | `STR_OZL_SKIN_FREEDOM_DEV` | `ВОЛЯ.narod — найкраще в 800x600` | `FREEDOM.narod — best viewed in 800x600` | `DevName`: italic line in the banner (mockup `SKINS.freedom.dev`); the multiplication sign of the mockup is the letter x here |
 | `STR_OZL_SKIN_FREEDOM_WORDART` | `~ Дерево досліджень ~` | `~ Research tree ~` | the rainbow banner title; the skin shows WORDART_IMG, this key is the text twin |
-| `STR_OZL_SKIN_FREEDOM_WORDART_IMG` | `set:ozl_freedom image:wordart_uk` | `set:ozl_freedom image:wordart_en` | sprite reference: the rainbow WordArt title |
+| `STR_OZL_SKIN_FREEDOM_WORDART_IMG` | `set:ozl_freedom image:wordart_ua` | `set:ozl_freedom image:wordart_en` | sprite reference: the rainbow WordArt title |
 | `STR_OZL_SKIN_FREEDOM_MARQUEE` | `+++ Ласкаво просимо, брате! +++ Свобода — це коли досліджуєш що хочеш +++ Мир, дружба, жуйка +++ Нові досліди щотижня!!! +++ Не забудь залишити запис у гостьовій книзі +++` | `+++ Welcome, brother! +++ Freedom is when you research whatever you want +++ Peace, friendship, chewing gum +++ New experiments every week!!! +++ Don't forget to sign the guestbook +++` | `Marquee`: the running line, shifted in `OnUpdate`. The mockup has a peace sign on both sides of "Мир, дружба, жуйка"; dropped |
 | `STR_OZL_SKIN_FREEDOM_MENU_BAR` | `:: МЕНЮ ::` | `:: MENU ::` | title bar over the branch list (`.fbar`) |
 | `STR_OZL_SKIN_FREEDOM_POOL_BAR` | `:: БАЛИ ::` | `:: POINTS ::` | title bar over the pool (`.fbar`) |
@@ -233,9 +233,9 @@ Mockup window: bandit -- «Записи братви» (the crumpled notebook).
 | `STR_OZL_SKIN_BANDIT_TITLE_PRE` | `Дерево` | `Tree of` | title, part 1: `Дерево <s>знань</s> досліджень` |
 | `STR_OZL_SKIN_BANDIT_TITLE_STRUCK` | `знань` | `knowledge` | title, part 2: the struck-out word (drawn with a line over it) |
 | `STR_OZL_SKIN_BANDIT_TITLE_POST` | `досліджень` | `research` | title, part 3 |
-| `STR_OZL_SKIN_BANDIT_TITLE_IMG` | `set:ozl_bandit image:title_uk` | `set:ozl_bandit image:title_en` | sprite reference: the whole handwritten title with the struck word |
+| `STR_OZL_SKIN_BANDIT_TITLE_IMG` | `set:ozl_bandit image:title_ua` | `set:ozl_bandit image:title_en` | sprite reference: the whole handwritten title with the struck word |
 | `STR_OZL_SKIN_BANDIT_POOL` | `Общак` | `The pot` | heading over the pool (`.h`, handwritten, underlined with a wave); the skin shows POOL_IMG, this key is the text twin |
-| `STR_OZL_SKIN_BANDIT_POOL_IMG` | `set:ozl_bandit image:pool_uk` | `set:ozl_bandit image:pool_en` | sprite reference: the handwritten pool heading |
+| `STR_OZL_SKIN_BANDIT_POOL_IMG` | `set:ozl_bandit image:pool_ua` | `set:ozl_bandit image:pool_en` | sprite reference: the handwritten pool heading |
 | `STR_OZL_SKIN_BANDIT_SEC_MARK` | `:` | `:` | suffix of every card section head (CSS `.sec::after`) |
 
 ## Skin `neutral`
@@ -246,9 +246,9 @@ Mockup window: neutral -- «Записник сталкера» (the clean noteb
 |---|---|---|---|
 | `STR_OZL_SKIN_NEUTRAL_DEV` | `Записник сталкера` | `Stalker's notebook` | `DevName`: the handwritten line at the right of the title (mockup `SKINS.loner.dev`) |
 | `STR_OZL_SKIN_NEUTRAL_TITLE` | `Дерево досліджень` | `Research tree` | page title (`.title`), drawn as live text in the mod's Caveat face (`ozl_hand72`) |
-| `STR_OZL_SKIN_NEUTRAL_TITLE_IMG` | `set:ozl_neutral image:title_uk` | `set:ozl_neutral image:title_en` | sprite reference: the handwritten page title. Not used: neutral draws the title as live text, and `ozl_neutral` has no `title_uk`/`title_en` sprite |
+| `STR_OZL_SKIN_NEUTRAL_TITLE_IMG` | `set:ozl_neutral image:title_ua` | `set:ozl_neutral image:title_en` | sprite reference: the handwritten page title. Not used: neutral draws the title as live text, and `ozl_neutral` has no `title_ua`/`title_en` sprite |
 | `STR_OZL_SKIN_NEUTRAL_POOL` | `Бали` | `Points` | heading over the pool (`.h`), live text in `ozl_hand72` with an underline sized to the word |
-| `STR_OZL_SKIN_NEUTRAL_POOL_IMG` | `set:ozl_neutral image:pool_uk` | `set:ozl_neutral image:pool_en` | sprite reference: the handwritten pool heading. Not used: neutral draws the heading as live text, and `ozl_neutral` has no `pool_uk`/`pool_en` sprite |
+| `STR_OZL_SKIN_NEUTRAL_POOL_IMG` | `set:ozl_neutral image:pool_ua` | `set:ozl_neutral image:pool_en` | sprite reference: the handwritten pool heading. Not used: neutral draws the heading as live text, and `ozl_neutral` has no `pool_ua`/`pool_en` sprite |
 | `STR_OZL_SKIN_NEUTRAL_SEC_MARK` | `:` | `:` | suffix of every card section head (CSS `.sec::after`) |
 
 ## Dropped glyphs

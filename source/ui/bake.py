@@ -32,7 +32,7 @@ from PIL import Image, ImageChops, ImageDraw
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 MOD = "OpenZone_Research"          # the pbo prefix ($PBOPREFIX$) -- the root of every in-game path
-LANGS = ("uk", "en")               # html_uk + html_en make name_uk + name_en
+LANGS = ("ua", "en")               # html_ua + html_en make name_ua + name_en
 BLEED = 4                          # px of colour carried from a visible pixel into transparent ones
 MIN_ATLAS = 32
 MIN_TEXTURE = 16
@@ -46,7 +46,7 @@ DEFAULT_TOOLS = r"E:\Programs\Steam\steamapps\common\DayZ Tools"
 NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 SET_RE = re.compile(r"^_?[a-z][a-z0-9_]*$")
 TOP_KEYS = {"comment", "scale", "atlas_max", "gutter", "css", "body", "sprites", "textures"}
-ITEM_KEYS = {"name", "w", "h", "html", "html_uk", "html_en", "css"}
+ITEM_KEYS = {"name", "w", "h", "html", "html_ua", "html_en", "css"}
 SPRITE_KEYS = ITEM_KEYS | {"pad"}
 TEXTURE_KEYS = ITEM_KEYS | {"size"}
 
@@ -163,9 +163,9 @@ def _items(raw_list, kind: str) -> list[Item]:
         plain = "html" in raw
         langs = [lang for lang in LANGS if f"html_{lang}" in raw]
         if plain and langs:
-            fail(f"{where}: give html, or html_uk with html_en, not both")
+            fail(f"{where}: give html, or html_ua with html_en, not both")
         if not plain and not langs:
-            fail(f"{where}: no html (use html, or html_uk with html_en)")
+            fail(f"{where}: no html (use html, or html_ua with html_en)")
         if langs and len(langs) != len(LANGS):
             missing = [f"html_{lang}" for lang in LANGS if lang not in langs]
             fail(f"{where}: language variants come in a set, {missing} is missing")

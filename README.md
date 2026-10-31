@@ -1,6 +1,6 @@
 # OpenZone Research
 
-*[Українською](README.uk.md)*
+*[Українською](README.ua.md)*
 
 Research points and a technology tree for OpenZone servers, on the OpenZone core.
 

@@ -1,6 +1,6 @@
 # UI bake: from the mockup's CSS to DayZ textures
 
-*[Українською](README.uk.md)*
+*[Українською](README.ua.md)*
 
 The research tree window is drawn from the owner's HTML mockup, and everything the mockup draws
 with CSS (frames, paper, scraps, hexagons, buttons, stamps, a picture-tube bezel) has to be a
@@ -102,7 +102,7 @@ A sprite:
 | `name` | letters, digits, `_`, starting with a letter. It becomes the image name in the imageset |
 | `w`, `h` | the design box in units |
 | `html` | the markup inside the box: a string, or a list of lines that is joined with line breaks (easier to write in JSON; single quotes inside SVG save the escaping) |
-| `html_uk` and `html_en` | instead of `html`: two pictures, `name_uk` and `name_en`, see "Two languages". Both are required |
+| `html_ua` and `html_en` | instead of `html`: two pictures, `name_ua` and `name_en`, see "Two languages". Both are required |
 | `css` | declarations and nested rules scoped to this sprite's box: `"background: #fff; .core { inset: 6px; }"`. For `@font-face` or `@keyframes` use the set's `css` |
 | `pad` | units kept around the box for what spills out of it (a glow, a shadow, a rotated corner) |
 
@@ -122,7 +122,7 @@ transparent".
 All the sprites of a set are drawn on one page (`build/ui/<set>/sheet.html`), so an `id` in one
 sprite's markup is an id of the whole page: two sprites that both define `<linearGradient id="g">`
 would silently share the first one. **Prefix every SVG id with the name of its sprite**
-(`stamp_uk_noise`, not `noise`), and give the `_uk` and `_en` variants of one sprite ids of their
+(`stamp_uk_noise`, not `noise`), and give the `_ua` and `_en` variants of one sprite ids of their
 own as well: they are two sprites on the same page. The bake stops when two pictures use the same
 id. Reserved: `oz0`, `oz1`, ... (`oz<N>`, the box of each picture), `oz-sheet` and `oz-canary`, and
 the classes `oz-c` and `oz-s`.
@@ -154,9 +154,9 @@ design box should be.
 ### Two languages
 
 Text does not go into pictures except stylised text (a stamp, a rotated heading, a struck-out
-word). For those give `html_uk` and `html_en`; the sprites are `<name>_uk` and `<name>_en`, and
+word). For those give `html_ua` and `html_en`; the sprites are `<name>_ua` and `<name>_en`, and
 the stringtable decides which one is shown: the value of a `*_IMG` key is
-`set:ozl_<skin> image:<name>_uk` in the Ukrainian cells (`original` and every column that repeats
+`set:ozl_<skin> image:<name>_ua` in the Ukrainian cells (`original` and every column that repeats
 it) and `set:ozl_<skin> image:<name>_en` in the English cell. Both are drawn with the same box, so
 make it wide enough for the longer text, and they share a page, so their SVG ids must differ.
 
@@ -204,7 +204,7 @@ layout uses as a plain image:
    skill, gui-layouts, section 12).
 
 `source/ui/_demo/` shows every feature: a CSS file next to inline CSS, `body`, a scoped `css` with a
-`pad`, `html_uk` with `html_en`, and a texture with and without `size`. A folder whose name starts
+`pad`, `html_ua` with `html_en`, and a texture with and without `size`. A folder whose name starts
 with an underscore is an example, so `--all` skips it and it needs `--out` to keep it out of the mod:
 
     python source/ui/bake.py _demo --out build/ui/demo-out
