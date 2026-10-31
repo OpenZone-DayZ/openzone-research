@@ -677,10 +677,11 @@
                                             4,
                                             0
                                           ],
-                                          "w": "auto",
+                                          "w": 600,
                                           "h": 25,
                                           "font": "neutral_opens",
-                                          "color": "$neutral_txt"
+                                          "color": "$neutral_txt",
+                                          "note": "Wider than any chip text on purpose: a label sized to its text clips the slanted last letter; FlowLater lines the chips up by GetTextSize, not by this box."
                                         }
                                       },
                                       {

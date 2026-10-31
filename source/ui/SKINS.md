@@ -307,11 +307,12 @@ Bitmap faces are fine in every one-line `TextWidget`. The vanilla `7segment` fac
 **A TextWidget clips its own text at its box, and `"w": "auto"` (`"size to text h"`) makes the box
 the sum of the glyphs' advances** (measured 2026-10-31). The last letter of a slanted face reaches
 past its advance and loses its top: in Caveat the English `locked` drew as `lockea` and `after all`
-as `after alı`, in a GridSpacer, a WrapSpacer and a plain frame alike. Ukrainian words mostly end in
-letters without that reach, so look at English. Give such a label a box wider than any text it gets
-and size or line up the rest by the text (`FitLater`, `FlowLater` and the tooltip measure with
-`GetTextSize`, not the box): neutral's legend and `TreeTipText` do. A fixed-width label ending far
-from its right edge is safe as it is.
+as `after alı`, in a GridSpacer, a WrapSpacer and a plain frame alike; Ukrainian words lose it too
+(the opens chip `??? невідомо` drew as `невідомc`). So no label with a slanted face is sized to its
+text: give it a box wider than any text it gets and size or line up the rest by the text
+(`FitLater`, `FlowLater` and the tooltip measure with `GetTextSize`, not the box) — neutral's
+legend, opens chips and `TreeTipText` do. A fixed-width label ending far from its right edge is
+safe as it is.
 
 ## Checking a skin
 
