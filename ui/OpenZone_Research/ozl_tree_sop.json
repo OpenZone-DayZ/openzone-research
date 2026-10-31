@@ -1,6 +1,6 @@
 {
   "layout": "ozl_tree_sop",
-  "note": "The sop window («Тактичний планшет»): an old tube monitor -- a thick rounded bezel, scanlines, dark corners, a glare on the glass, a flicker and a rolling band -- showing a military HUD: the call sign of the branch and the pool (each line's name over its number) under a hazard stripe, the tree growing right in diamonds on an amber grid, and the target frame with the node's data. Root TreeWindow fills the screen; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome (build/ui/sop/reference.png).",
+  "note": "The sop window («Тактичний планшет»): an old tube monitor -- a thick rounded bezel, scanlines, dark corners, a flicker and a rolling band (no glare on the glass: the owner's decision 2026-10-31, it drew rings on the stand) -- showing a military HUD: the call sign of the branch and the pool (each line's name over its number) under a hazard stripe, the tree growing right in diamonds on an amber grid, and the target frame with the node's data. Root TreeWindow fills the screen; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome (build/ui/sop/reference.png).",
   "root": {
     "frame": {
       "name": "TreeWindow",
@@ -2406,22 +2406,6 @@
                   "stretch": false,
                   "color": "$white",
                   "note": "Scanlines 2 of 4: a 16-pixel tile repeated at one texel per screen pixel. Flickers with CrtGlow."
-                }
-              },
-              {
-                "image": {
-                  "name": "CrtGlare",
-                  "at": [
-                    0,
-                    0
-                  ],
-                  "size": [
-                    1600,
-                    900
-                  ],
-                  "file": "OpenZone_Research/gui/textures/tree/sop/crt_glare_ca.paa",
-                  "color": "$sop_glare",
-                  "note": "The glare on the glass (#stage::after's first layer, so above the scanlines): a full-alpha ellipse weakened by this widget's colour ($sop_glare, about 4/255). Flickers with CrtGlow: the skin multiplies this alpha, read once from the widget."
                 }
               },
               {

@@ -1,9 +1,12 @@
 // Вікно sop -- «Тактичний планшет»: старий ламповий монітор. Товста округла
-// рамка кінескопа, рядки розгортки, темні кути, відблиск на склі, мерехтіння
-// і смуга, що біжить згори вниз; на екрані -- армійський HUD: позивний гілки
-// і пул (назва лінії над її числом) під попереджувальною смугою, дерево
-// вправо великими ромбами на бурштиновій сітці, праворуч рамка цілі з даними
-// вузла і великим 7-сегментним годинником проєкту.
+// рамка кінескопа, рядки розгортки, темні кути, мерехтіння і смуга, що біжить
+// згори вниз; на екрані -- армійський HUD: позивний гілки і пул (назва лінії
+// над її числом) під попереджувальною смугою, дерево вправо великими ромбами
+// на бурштиновій сітці, праворуч рамка цілі з даними вузла і великим
+// 7-сегментним годинником проєкту.
+//
+// Відблиску на склі нема -- рішення власника 2026-10-31 (на стенді він
+// малювався кільцями).
 //
 // Розкладки: ozl_tree_sop, ozl_node_sop (ui/OpenZone_Research/); картинки:
 // source/ui/sop/ (набір ozl_sop і текстури gui/textures/tree/sop/); кольори й
@@ -12,8 +15,8 @@
 // на лінійне змішування.
 //
 // Понад дані клас робить:
-// - кінескоп: альфа скла (CrtGlow, CrtLines, CrtGlare) крокує, як
-//   crt-flicker мокапа; смуга CrtRoll їде згори вниз за 7 с;
+// - кінескоп: альфа скла (CrtGlow, CrtLines) крокує, як crt-flicker мокапа;
+//   смуга CrtRoll їде згори вниз за 7 с;
 // - вузол: заливку ромба за статусом (NodeFill), край вузла під мишею -- txt,
 //   мітку проєкту, що блимає, ціну по центру під вузлом;
 // - великі літери (OZL_Text.Upper) і розрядку пробілами там, де мокап пише
@@ -88,11 +91,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
     private float m_FogX;
     private float m_FogW;
     private float m_FogH;
-    // Сила відблиску -- альфа кольору CrtGlare з розкладки ($sop_glare, ~4/255),
-    // прочитана один раз: SetAlpha ЗАМІНЮЄ альфу кольору (ванільний
-    // bleedingdrop.c ставить колір з альфою 0, а тоді SetAlpha), тож
-    // мерехтіння множить її тут, а не кличе SetAlpha(alpha).
-    private float m_GlareAlpha;
 
     void OZL_TreeSkin_Sop()
     {
@@ -284,10 +282,9 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
 
     // Рядок пулу в HUD: назва лінії великими й число під нею, без шкали
     // (рішення власника 2026-10-31: сегменти читались як щось окреме від
-    // числа). Базовий метод не кличемо і need не беремо: рушій прибере
-    // сегменти й, мабуть, сам need, а тут тоді зміниться лише список
-    // параметрів. Розставляє рядки PoolTick.
-    override void PaintPoolRow(OZL_TreeMenu menu, Widget row, string line, int have, int need, int color)
+    // числа). Базовий метод не кличемо: рядок -- лише назва й число.
+    // Розставляє рядки PoolTick.
+    override void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
     {
         TextWidget name = TextWidget.Cast(row.FindAnyWidget("PoolName"));
         if (name)
@@ -468,9 +465,8 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
 
     // Мерехтіння: crt-flicker мокапа, 3.2 с, steps(1) -- 1 до 47 %, .86 до 48 %,
     // 1 до 81 %, .93 до 82 %, далі 1. Провал -- 32 мс, тож кадр, що перескочив
-    // його, однаково показує провал. Мерехтить усе скло (#stage::after):
-    // кути, рядки й відблиск -- відблиску множимо його власну слабку альфу.
-    // Смуга розгортки: crt-roll, від -160 до 900 за 7 с.
+    // його, однаково показує провал. Мерехтить скло (#stage::after): кути й
+    // рядки. Смуга розгортки: crt-roll, від -160 до 900 за 7 с.
     private void CrtTick(OZL_TreeMenu menu)
     {
         float t = Math.ModFloat(m_Clock, 3.2);
@@ -493,13 +489,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
             Widget lines = menu.Role("CrtLines");
             if (lines)
                 lines.SetAlpha(alpha);
-            Widget glare = menu.Role("CrtGlare");
-            if (glare)
-            {
-                if (m_GlareAlpha <= 0)
-                    m_GlareAlpha = glare.GetAlpha();
-                glare.SetAlpha(m_GlareAlpha * alpha);
-            }
         }
         Widget roll = menu.Role("CrtRoll");
         if (roll)
