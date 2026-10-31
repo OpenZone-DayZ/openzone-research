@@ -98,7 +98,7 @@ H пікселів одна одиниця -- `H / 1080` пікселя. Вим�
 |---|---|---|
 | `TreeScroll` | ScrollWidget (`clipchildren 1`, `"Scrollbar V"`/`"Scrollbar H"` за бажанням) | його розмір -- вид; «додому», перетягування; одна дитина -- `TreeContent` |
 | `TreeContent` | FrameWidget, точний розмір | розмір за планом; діти нижче -- `size fill` (пропорційні), тож ідуть за ним |
-| `TreeBg` | ImageWidget, fill | сюди вантажиться й показується `TreeBackground` адміна; без нього -- як у розкладці |
+| `TreeBg` | ImageWidget, fill, необов'язкова | нічого: меню її не шукає. Статична картинка за деревом -- справа самого скину, задається в його розкладці першою дитиною `TreeContent` (прокручується разом із деревом, під підписами тирів і зв'язками) |
 | `TreeTiers` | frame, fill | підписи тирів: рядки `tier_label` (дитина `TierText`), кут рядка -- у точці підпису (`x = 22` поперек, центр тиру вздовж) |
 | `TreeLines` | CanvasWidget, fill, `ignorepointer 1` | сітка паперу (`GridStep`) і всі зв'язки (`OZL_TreeLines`); перемальовується на вибір, наведення, дані, розкладку |
 | `TreeFogEdge` | картинка, необов'язкова | 80 одиниць переходу на початку туману; меню ставить і розтягує її за напрямком скину |
@@ -188,9 +188,8 @@ TextWidget або контейнером написів `<Name>0`, `<Name>1`, �
 `RowPrefix`; геометрія вище; кольори ARGB -- `Txt`, `Dim`, `Acc`, `Ok`, `Bad`, `LineDim`, `LineLit`
 (= Txt), `LineHl` (= Acc), `Lcd` (заливка ромба `АБО`), `FogColor`; `LineStyle` (`"plain"` / `"sketch"`),
 `LineW` (2), `LineWHl` (2,5), `DashOn`/`DashOff` (6/5); `GridStep`, `GridColor`, `GridX`, `GridY`,
-`GridW` (сітка паперу на канві; не малюється під задником адміна); `Shapes`, `ShapeHover` (слот під
-мишею, -1 -- нема), `ShapeColors` (статус -> колір); `Marks`; `SegOn`, `SegOff` (0 = Acc / LineDim);
-`TipPadX`.
+`GridW` (сітка паперу на канві); `Shapes`, `ShapeHover` (слот під мишею, -1 -- нема),
+`ShapeColors` (статус -> колір); `Marks`; `SegOn`, `SegOff` (0 = Acc / LineDim); `TipPadX`.
 
 Тримайте ці числа ARGB рівними `ui/tokens/<skin>.json` скину (рушій не читає JSON під час збирання).
 

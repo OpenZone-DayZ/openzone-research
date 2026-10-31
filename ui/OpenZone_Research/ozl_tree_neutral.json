@@ -1488,15 +1488,6 @@
                               ],
                               "children": [
                                 {
-                                  "image": {
-                                    "name": "TreeBg",
-                                    "size": "fill",
-                                    "file": "OpenZone_Research/gui/textures/tree/neutral/desk_ca.paa",
-                                    "hidden": true,
-                                    "note": "Shown only with the admin's own TreeBackground (the menu loads it); the paper's squares are drawn on TreeLines."
-                                  }
-                                },
-                                {
                                   "frame": {
                                     "name": "TreeTiers",
                                     "size": "fill"

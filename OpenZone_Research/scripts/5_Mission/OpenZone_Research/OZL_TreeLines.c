@@ -33,11 +33,11 @@ class OZL_TreeOrMark
 
 class OZL_TreeLines
 {
-    static void Draw(CanvasWidget canvas, OZL_TreeSkin sk, OZL_TreePlan plan, OZL_BranchView b, string focus, bool grid, array<ref OZL_TreeOrMark> ors)
+    static void Draw(CanvasWidget canvas, OZL_TreeSkin sk, OZL_TreePlan plan, OZL_BranchView b, string focus, array<ref OZL_TreeOrMark> ors)
     {
         canvas.Clear();
         ors.Clear();
-        if (grid && sk.GridStep > 0)
+        if (sk.GridStep > 0)
             DrawGrid(canvas, sk, plan.W, plan.H);
         if (!b)
             return;

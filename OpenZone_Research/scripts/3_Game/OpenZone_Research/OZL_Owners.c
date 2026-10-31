@@ -13,9 +13,6 @@ class OZL_OwnerDef
     string Id = "";
     ref array<string> TerminalClasses;
     ref array<string> DeviceClasses;
-    // Задник полотна дерева: необов'язкова своя картинка, що ЗАМІНЮЄ задник
-    // вікна. Порожньо -- лишається той, що малює вікно.
-    string TreeBackground = "";
     // Вікно дерева, яким фракція дивиться на дерево: ecolog, clearsky, duty,
     // freedom, sop, bandit або neutral. Id названо за фракцією, для якої вікно
     // намальовано, але взяти можна будь-яке. Поле необов'язкове: порожньо --
@@ -33,9 +30,8 @@ class OZL_OwnerDef
     OZL_OwnerDef Copy()
     {
         OZL_OwnerDef c = new OZL_OwnerDef();
-        c.Id             = Id;
-        c.TreeBackground = TreeBackground;
-        c.Skin           = Skin;
+        c.Id   = Id;
+        c.Skin = Skin;
         int i;
         for (i = 0; i < TerminalClasses.Count(); i++)
             c.TerminalClasses.Insert(TerminalClasses[i]);
@@ -245,13 +241,6 @@ class OZL_Owners : OZ_ConfigBase
                     outClasses.Insert(cls);
             }
         }
-    }
-    string BackgroundOf(string owner)
-    {
-        OZL_OwnerDef o = Find(owner);
-        if (o)
-            return o.TreeBackground;
-        return "";
     }
 
     // Вікно дерева цього власника, УЖЕ розв'язане: поле Skin, якщо воно

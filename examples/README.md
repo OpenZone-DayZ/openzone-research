@@ -21,5 +21,4 @@ to `OZ_Factions.json`. A player outside an organisation belongs to the base fact
 `stalker`, and neither pack lists devices for it.
 
 Every faction of both packs names its own tree window in `OZ_Research_Owners.json`
-(`"Skin"`: the faction's own id). The packs name no tree backdrop (`TreeBackground`), so each
-window draws its own.
+(`"Skin"`: the faction's own id).

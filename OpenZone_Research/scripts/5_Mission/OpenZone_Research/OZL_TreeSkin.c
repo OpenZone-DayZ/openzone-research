@@ -65,8 +65,7 @@ class OZL_TreeSkin
     float  DashOn    = 6;         // пунктир "будь-якого": 6 є, 5 нема
     float  DashOff   = 5;
     // Сітка паперу, що прокручується разом із деревом (мокап: .content .bg,
-    // --grid і --grid-step). 0 -- без сітки. Ховається, коли адмін дав свій
-    // задник (TreeBackground).
+    // --grid і --grid-step). 0 -- без сітки.
     float  GridStep  = 0;
     int    GridColor = 0;
     float  GridX     = 0;   // зсув першої лінії

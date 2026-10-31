@@ -119,7 +119,6 @@ class OZL_TreeMenu : UIScriptedMenu
     private string m_Branch = "";
     private string m_Node   = "";
     private string m_Hover  = "";
-    private bool   m_AdminBg = false;
 
     // Коли приїхала відповідь: залишок проєкту -- від серверної секунди в ній.
     private float m_ViewAge  = 0;
@@ -803,24 +802,6 @@ class OZL_TreeMenu : UIScriptedMenu
         }
         SetText("BranchName", name);
         SetText("BranchSub", sub);
-
-        // Свій задник адміна (TreeBackground) замінює задник скину; сітка
-        // паперу тоді не малюється. Без нього TreeBg лишається, як у розкладці.
-        ImageWidget bg = ImageWidget.Cast(Role("TreeBg"));
-        m_AdminBg = false;
-        if (bg && m_View.Background != "")
-        {
-            if (bg.LoadImageFile(0, m_View.Background))
-            {
-                bg.SetImage(0);
-                bg.Show(true);
-                m_AdminBg = true;
-            }
-            else
-            {
-                OZL_Log.Warn("tree: the background '" + m_View.Background + "' did not load");
-            }
-        }
     }
 
     private int DoneOf(OZL_BranchView b)
@@ -1373,7 +1354,7 @@ class OZL_TreeMenu : UIScriptedMenu
         string focus = m_Hover;
         if (focus == "")
             focus = m_Node;
-        OZL_TreeLines.Draw(canvas, m_Skin, m_Plan, CurrentBranch(), focus, !m_AdminBg, m_Ors);
+        OZL_TreeLines.Draw(canvas, m_Skin, m_Plan, CurrentBranch(), focus, m_Ors);
         HidePool(m_OrPool);
         Widget nodes = Role("TreeNodes");
         for (int i = 0; i < m_Ors.Count() && nodes; i++)

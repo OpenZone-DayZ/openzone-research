@@ -1612,23 +1612,6 @@ FrameWidgetClass TreeWindow {
          vexactsize 1
          priority 0
          {
-          // Shown only with the admin's own TreeBackground (the menu loads it); the paper's squares are drawn on TreeLines.
-          ImageWidgetClass TreeBg {
-           visible 0
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           color 1 1 1 1
-           priority 0
-           image0 "OpenZone_Research/gui/textures/tree/neutral/desk_ca.paa"
-           mode blend
-           "src alpha" 1
-           "stretch mode" stretch_w_h
-          }
           FrameWidgetClass TreeTiers {
            visible 1
            position 0 0
@@ -1637,7 +1620,7 @@ FrameWidgetClass TreeWindow {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           priority 1
+           priority 0
           }
           // The squares of the paper and every link, drawn by the menu.
           CanvasWidgetClass TreeLines {
@@ -1648,7 +1631,7 @@ FrameWidgetClass TreeWindow {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           priority 2
+           priority 1
            ignorepointer 1
           }
           ImageWidgetClass TreeFogEdge {
@@ -1661,7 +1644,7 @@ FrameWidgetClass TreeWindow {
            hexactsize 1
            vexactsize 1
            color 0.867 0.824 0.698 1
-           priority 3
+           priority 2
            image0 "set:ozl_neutral image:fog_edge"
            mode blend
            "src alpha" 1
@@ -1676,7 +1659,7 @@ FrameWidgetClass TreeWindow {
            hexactsize 1
            vexactsize 1
            color 0.867 0.824 0.698 1
-           priority 4
+           priority 3
            style rover_sim_colorable
           }
           FrameWidgetClass TreeNodes {
@@ -1687,7 +1670,7 @@ FrameWidgetClass TreeWindow {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           priority 5
+           priority 4
           }
           FrameWidgetClass TreeTip {
            visible 0
@@ -1697,7 +1680,7 @@ FrameWidgetClass TreeWindow {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           priority 6
+           priority 5
            {
             PanelWidgetClass TreeTipEdge {
              visible 1

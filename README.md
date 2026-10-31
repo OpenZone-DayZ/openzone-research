@@ -62,8 +62,7 @@ the same in all of them. The skin is the optional field `Skin` of a faction in
 `OZ_Research_Owners.json`. Left out, it is the faction's own id (a member of `duty` looks through
 the `duty` window), and a faction whose id is none of the seven gets `neutral`. Any faction may
 name any skin; an unknown name is cleared with a warning in the log. The server resolves the skin
-and sends the id, so the client decides nothing. `TreeBackground`, also optional, replaces the
-backdrop of the tree canvas that the skin draws with a picture of your own.
+and sends the id, so the client decides nothing.
 
 A node has one of five statuses: `locked` (the parents are not done), `short` ("not enough": the
 parents are done, but the faction pool or the materials in the cargo of its own terminal near the
@@ -85,7 +84,7 @@ Configs live in the server profile, `$profile:OpenZone\`:
 |---|---|
 | `OZ_Research_Settings.json` | default owner, the two post names, the fog depth of the tree |
 | `OZ_Research_PointTypes.json` | point types, one per line (version 2) |
-| `OZ_Research_Owners.json` | per faction: terminals, devices, the tree window (`Skin`), an optional tree backdrop |
+| `OZ_Research_Owners.json` | per faction: terminals, devices, the tree window (`Skin`) |
 | `OZ_Research_Rules.json` | processing rules in groups (version 2) |
 | `OZ_Research_Tree.json` | branches with nodes (version 2) |
 | `OZ_Research_Modules.json` | modules: purity bonus and double-output chance (version 2) |

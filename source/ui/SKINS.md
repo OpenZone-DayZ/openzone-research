@@ -102,7 +102,7 @@ The root may be the whole screen (neutral: the desk, tiled, and a centred 1600x9
 |---|---|---|
 | `TreeScroll` | ScrollWidget (`clipchildren 1`, `"Scrollbar V"`/`"Scrollbar H"` as wanted) | its size is the view; home, drag; one child: `TreeContent` |
 | `TreeContent` | FrameWidget, exact size | resized to the plan; children below are `size fill` (proportional) so they follow |
-| `TreeBg` | ImageWidget, fill | the admin's `TreeBackground` is loaded into it and shown; without one it stays as the layout made it |
+| `TreeBg` | ImageWidget, fill, optional | nothing: the menu never looks for it. A static picture behind the tree is the skin's own business, set in its layout as the first child of `TreeContent` (it scrolls with the tree, under the tiers and the links) |
 | `TreeTiers` | frame, fill | tier labels: rows `tier_label` (child `TierText`), the row's corner on the label's point (`x = 22` across, the tier's centre along) |
 | `TreeLines` | CanvasWidget, fill, `ignorepointer 1` | the paper grid (`GridStep`) and every link (`OZL_TreeLines`), redrawn on selection, hover, data, layout |
 | `TreeFogEdge` | image, optional | the 80-unit fade at the start of the fog; the menu places and sizes it along the skin's direction |
@@ -195,9 +195,9 @@ Data (set in the constructor; `Named("<id>")` fills the layout names): `Id`, `Wi
 `NodeLayout`, `RowPrefix`; the geometry above; colours as ARGB — `Txt`, `Dim`, `Acc`, `Ok`, `Bad`,
 `LineDim`, `LineLit` (= Txt), `LineHl` (= Acc), `Lcd` (fill of the `АБО` diamond), `FogColor`;
 `LineStyle` (`"plain"` / `"sketch"`), `LineW` (2), `LineWHl` (2.5), `DashOn`/`DashOff` (6/5);
-`GridStep`, `GridColor`, `GridX`, `GridY`, `GridW` (the paper grid, drawn on the canvas; skipped
-under the admin's background); `Shapes`, `ShapeHover` (slot under the mouse, -1 none), `ShapeColors`
-(status -> tint); `Marks`; `SegOn`, `SegOff` (0 = Acc / LineDim); `TipPadX`.
+`GridStep`, `GridColor`, `GridX`, `GridY`, `GridW` (the paper grid, drawn on the canvas); `Shapes`,
+`ShapeHover` (slot under the mouse, -1 none), `ShapeColors` (status -> tint); `Marks`; `SegOn`,
+`SegOff` (0 = Acc / LineDim); `TipPadX`.
 
 Keep these ARGB numbers equal to the skin's `ui/tokens/<skin>.json` (the engine cannot read JSON at
 compile time).
