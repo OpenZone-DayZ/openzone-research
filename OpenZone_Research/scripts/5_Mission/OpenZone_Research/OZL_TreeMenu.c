@@ -173,6 +173,16 @@ class OZL_TreeMenu : UIScriptedMenu
     // Що вже розкладено в контейнер рядків: "текст|колір" (повтор не
     // перекладається). Чиститься разом із комірками й вікном.
     private ref map<Widget, string>       m_WrapShown;
+    // Пропорційна ширина віджета, яку HeightUnits порахував уперше: повторний
+    // виклик бере її, а не рахує знову з уже зміненого розміру. Чиститься з
+    // вікном.
+    private ref map<Widget, float>        m_WidthFrac;
+
+    // Номер вузла для очей гравця (01, 02...): лише видимі вузли гілки,
+    // щільно, у порядку показу -- тир, тоді Index. Реєстр і NodeNum беруть
+    // його, а не Index, тож за номером не видно, скільки вузлів сховано
+    // (рішення власника 2026-10-31).
+    private ref map<string, int>          m_Nums;
 
     // --- перетягування
     private bool  m_DragDown  = false;
@@ -200,6 +210,8 @@ class OZL_TreeMenu : UIScriptedMenu
         m_Bars       = new array<ref OZL_TreeBarJob>();
         m_Wraps      = new array<ref OZL_TreeWrap>();
         m_WrapShown  = new map<Widget, string>();
+        m_WidthFrac  = new map<Widget, float>();
+        m_Nums       = new map<string, int>();
     }
 
     static OZL_TreeMenu Open()
@@ -861,6 +873,7 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (!m_View || !m_Skin)
             return;
+        Number();
         PaintHeader();
         PaintBranches();
         PaintPool();
@@ -903,13 +916,53 @@ class OZL_TreeMenu : UIScriptedMenu
         return done;
     }
 
+    // M у "досліджено N з M" -- лише вузли, видимі крізь туман: скільки
+    // технологій лишилося, гравець знати не мусить на жодному терміналі
+    // (рішення власника 2026-10-31). Сервер загального числа й не шле.
     private int TotalOf(OZL_BranchView b)
     {
-        int total = b.Total;
-        int seen = b.Nodes.Count() + b.Hidden.Count();
-        if (total < seen)
-            total = seen;
-        return total;
+        return b.Nodes.Count();
+    }
+
+    // Щільні номери видимих вузлів поточної гілки в порядку показу: тир за
+    // тиром, у тирі -- за Index (порядок конфігу). Заглушки туману номера не
+    // мають.
+    private void Number()
+    {
+        m_Nums.Clear();
+        OZL_BranchView b = CurrentBranch();
+        if (!b)
+            return;
+        int seq = 1;
+        for (int tier = 1; tier <= OZL_TreePlan.MAX_TIER; tier++)
+        {
+            array<OZL_NodeView> row = new array<OZL_NodeView>();
+            for (int i = 0; i < b.Nodes.Count(); i++)
+            {
+                OZL_NodeView n = b.Nodes[i];
+                if (!n || OZL_TreePlan.TierOf(n) != tier)
+                    continue;
+                // Вставка за Index: тир невеликий.
+                int at = row.Count();
+                while (at > 0 && row[at - 1].Index > n.Index)
+                    at--;
+                row.InsertAt(n, at);
+            }
+            for (int k = 0; k < row.Count(); k++)
+            {
+                m_Nums.Set(row[k].Id, seq);
+                seq++;
+            }
+        }
+    }
+
+    // Номер вузла для гравця: 1, 2... (щільно, лише видимі); 0 -- не з
+    // поточної гілки. Пишеться двома цифрами: OZL_Text.Two(NumberOf(id)).
+    int NumberOf(string id)
+    {
+        int num = 0;
+        m_Nums.Find(id, num);
+        return num;
     }
 
     private void Unlink(array<Widget> list)
@@ -1465,11 +1518,12 @@ class OZL_TreeMenu : UIScriptedMenu
         }
     }
 
-    // ---------- реєстр (Долг): усі вузли гілки за тирами, приховані -- "невідомо" ----------
+    // ---------- реєстр (Долг): видимі вузли гілки за тирами ----------
 
-    // Тир за тиром, а в тирі -- за Index (порядок конфігу), заглушки туману
-    // на своїх місцях: № іде підряд, як у конфігу, а не "видимі, потім
-    // приховані".
+    // Лише вузли, видимі крізь туман, у порядку показу (тир, у тирі -- Index)
+    // і з щільним номером 01, 02... (NumberOf). Рядків "— невідомо —" для
+    // прихованих немає: за ними було видно, скільки технологій лишилося
+    // (рішення власника 2026-10-31).
     private void PaintRegistry()
     {
         Unlink(m_RegRows);
@@ -1477,97 +1531,39 @@ class OZL_TreeMenu : UIScriptedMenu
         OZL_BranchView b = CurrentBranch();
         if (!list || !b)
             return;
-        int top = MaxIndex(b);
-        if (top < 0)
-        {
-            list.Update();
-            return;
-        }
-        array<OZL_NodeView> nodeAt = new array<OZL_NodeView>();
-        array<OZL_HiddenView> stubAt = new array<OZL_HiddenView>();
-        nodeAt.Resize(top + 1);
-        stubAt.Resize(top + 1);
-        int i;
-        for (i = 0; i < b.Nodes.Count(); i++)
+        array<OZL_NodeView> order = new array<OZL_NodeView>();
+        order.Resize(m_Nums.Count());
+        for (int i = 0; i < b.Nodes.Count(); i++)
         {
             OZL_NodeView n = b.Nodes[i];
-            if (n && n.Index >= 0 && n.Index <= top)
-                nodeAt[n.Index] = n;
+            if (!n)
+                continue;
+            int num = NumberOf(n.Id);
+            if (num >= 1 && num <= order.Count())
+                order[num - 1] = n;
         }
-        for (i = 0; i < b.Hidden.Count(); i++)
+        for (int k = 0; k < order.Count(); k++)
         {
-            OZL_HiddenView h = b.Hidden[i];
-            if (h && h.Index >= 0 && h.Index <= top)
-                stubAt[h.Index] = h;
-        }
-        for (int tier = 1; tier <= OZL_TreePlan.MAX_TIER; tier++)
-        {
-            for (int index = 0; index <= top; index++)
-            {
-                OZL_NodeView vn = nodeAt[index];
-                if (vn)
-                {
-                    if (OZL_TreePlan.TierOf(vn) == tier)
-                        RegRow(list, vn.Id, vn.Index, tier, m_Skin.NodeNameText(vn.Name), m_Skin.StatusText(vn.Status), vn.Status);
-                    continue;
-                }
-                OZL_HiddenView vh = stubAt[index];
-                if (vh && StubTier(vh) == tier)
-                    RegRow(list, "", vh.Index, tier, Words("STR_OZL_TREE_UNKNOWN_ROW"), "—", "");
-            }
+            if (order[k])
+                RegRow(list, order[k], k + 1);
         }
         list.Update();
     }
 
-    private static int StubTier(OZL_HiddenView h)
-    {
-        int t = h.Tier;
-        if (t < 1)
-            t = 1;
-        if (t > OZL_TreePlan.MAX_TIER)
-            t = OZL_TreePlan.MAX_TIER;
-        return t;
-    }
-
-    private void RegRow(Widget list, string id, int index, int tier, string name, string state, string status)
+    private void RegRow(Widget list, OZL_NodeView node, int number)
     {
         Widget row = Row("registry_row", list);
         if (!row)
             return;
         // Клацається RegHit (кнопка зі style Empty), або сам рядок -- тоді він
-        // сам має бути такою кнопкою. Рядок заглушки не клацається зовсім.
+        // сам має бути такою кнопкою.
         Widget hit = row.FindAnyWidget("RegHit");
         if (!hit)
             hit = row;
-        if (id != "")
-        {
-            hit.SetName("reg:" + id);
-            IgnorePointer(row, hit);
-        }
-        else
-        {
-            if (hit != row)
-                hit.Show(false);
-            IgnorePointer(row, null);
-        }
-        SetRowText(row, "RegNum", OZL_Text.Two(index + 1));
-        SetRowText(row, "RegName", name);
-        SetRowText(row, "RegTier", tier.ToString());
-        SetRowText(row, "RegState", state);
-        TextWidget st = TextWidget.Cast(row.FindAnyWidget("RegState"));
-        if (st && status != "")
-            st.SetColor(m_Skin.StatusColorOf(status));
-        Widget pick = row.FindAnyWidget("RegPick");
-        if (pick)
-            pick.Show(id != "" && id == m_Node);
+        hit.SetName("reg:" + node.Id);
+        IgnorePointer(row, hit);
+        m_Skin.PaintRegistryRow(this, row, node, number, OZL_TreePlan.TierOf(node), node.Id == m_Node);
         m_RegRows.Insert(row);
-    }
-
-    private void SetRowText(Widget row, string name, string text)
-    {
-        TextWidget t = TextWidget.Cast(row.FindAnyWidget(name));
-        if (t)
-            t.SetText(text);
     }
 
     // ---------- картка (renderCard() мокапа) ----------

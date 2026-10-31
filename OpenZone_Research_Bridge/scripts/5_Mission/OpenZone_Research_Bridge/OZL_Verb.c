@@ -330,6 +330,14 @@ modded class DZMCP_BridgeCore
                     return false;
                 }
                 detail = "tree of '" + dumpView.Owner + "' (skin " + dumpView.Skin + ") written to " + dumpPath;
+                // What the player's view carries per branch: shown nodes and
+                // next-step stubs, Index dense over both (no branch total).
+                for (int db = 0; db < dumpView.Branches.Count(); db++)
+                {
+                    OZL_BranchView dumpBr = dumpView.Branches[db];
+                    if (dumpBr)
+                        detail += "; " + dumpBr.Id + ": " + dumpBr.Nodes.Count().ToString() + " shown + " + dumpBr.Hidden.Count().ToString() + " next-step stubs";
+                }
                 return true;
             }
             detail = OZL_Tree.ViewJson(OZL_Owner.OfPlayer(pt), tuid, pt);

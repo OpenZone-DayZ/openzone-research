@@ -365,9 +365,11 @@ class OZL_TreeSkin
             markText.Show(mt != "");
         }
 
+        // Номер для гравця -- щільний, лише видимі вузли (як у реєстрі), а не
+        // Index: за прогалинами було б видно приховані.
         TextWidget num = TextWidget.Cast(cell.FindAnyWidget("NodeNum"));
         if (num)
-            num.SetText(OZL_Text.Two(node.Index + 1));
+            num.SetText(OZL_Text.Two(menu.NumberOf(node.Id)));
     }
 
     // Рядок пулу: назва лінії і скільки є -- лише це (смуги-сегменти рішенням
