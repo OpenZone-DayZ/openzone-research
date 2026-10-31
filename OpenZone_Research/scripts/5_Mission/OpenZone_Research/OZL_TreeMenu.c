@@ -428,6 +428,40 @@ class OZL_TreeMenu : UIScriptedMenu
         w.SetSize(width * k, height * k);
     }
 
+    // Лише висота, в одиницях; ширина лишається такою, як була. Пропорційна
+    // ширина (hexactsize 0, як у списку "Відкриває" в стосі картки) -- це
+    // частка батька: абсолютне число в неї робило віджет у сотні разів
+    // ширшим (звіт автора sop), тож вона йде назад часткою. Висота -- точна.
+    void HeightUnits(Widget w, float height)
+    {
+        if (!w)
+            return;
+        float k = m_K;
+        if (k <= 0)
+            k = m_Px;
+        if (height < 0)
+            height = 0;
+        float sw;
+        float sh;
+        w.GetScreenSize(sw, sh);
+        float width = sw;
+        int flags = w.GetFlags();
+        if ((flags & WidgetFlags.HEXACTSIZE) == 0)
+        {
+            width = 1;
+            Widget parent = w.GetParent();
+            if (parent)
+            {
+                float pw;
+                float ph;
+                parent.GetScreenSize(pw, ph);
+                if (pw > 0)
+                    width = sw / pw;
+            }
+        }
+        w.SetSize(width, height * k);
+    }
+
     // Розмір віджета на екрані, одиниці.
     void UnitsOf(Widget w, out float width, out float height)
     {
@@ -2283,7 +2317,7 @@ class OZL_TreeMenu : UIScriptedMenu
             }
             if (flow.Wrap)
             {
-                SizeUnits(flow.Box, boxW, y + lineH);
+                HeightUnits(flow.Box, y + lineH);
                 UpdateRole("CardFlow");
             }
             m_Flows.RemoveOrdered(f);

@@ -75,7 +75,8 @@ On a screen H pixels high one unit is `H / 1080` pixels. Measured on the stand 2
   `size`): the node cell, tier and `АБО` labels, `TreeContent`, `TreeFog`/`TreeFogEdge`, `TreeTip`
   and `TreeTipBg`, every bar fill, every `FitLater` target and `FlowLater` item. A proportional
   (`fill`) widget takes the numbers as fractions of its parent. Only children that should follow
-  their parent are `fill`.
+  their parent are `fill`. A wrapping `FlowLater` box (`CardOpensList`) is the one exception: the
+  menu sets only its height (exact) and leaves its width as it is, proportional included.
 
 ## The tree: plan and geometry
 
@@ -298,7 +299,8 @@ The mod's fonts are in `OpenZone_Research/gui/fonts/` (see `source/fonts/README.
   the sum of their one-line heights and clips the rest. A multiline text inside the card's stack
   (`CardFlow`) needs a height of its own, or the line labels.
 
-Bitmap faces are fine in every one-line `TextWidget`.
+Bitmap faces are fine in every one-line `TextWidget`. The vanilla `7segment` faces carry only
+` +,-./0123456789` — no colon: a clock in them draws its `:` as a sprite (sop does).
 
 **A TextWidget clips its own text at its box, and `"w": "auto"` (`"size to text h"`) makes the box
 the sum of the glyphs' advances** (measured 2026-10-31). The last letter of a slanted face reaches
