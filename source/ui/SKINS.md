@@ -178,7 +178,10 @@ the root itself must be such a button — a frame root gets no click. The menu f
 clicked widget or any of its parents. **Hover**: when the mouse enters or leaves a clickable row the
 menu calls `OnRowHover(menu, row, kind, id, on)` (`kind` = `reg` / `branch` / `open`, `row` = the
 row's root); the default shows a child `RegHover` / `RowHover` / `ChipHover` while the mouse is on
-the row, if the row has one.
+the row, if the row has one. When a repaint replaces the rows of a list under the pointer (a click
+that selects, a new answer), the menu forgets the old hovered row WITHOUT an `OnRowHover(…, false)`
+call — the row is gone — and the new row under a still pointer lights at the next move of the mouse
+(expected, not measured).
 
 | Container | Row | Children the menu fills |
 |---|---|---|

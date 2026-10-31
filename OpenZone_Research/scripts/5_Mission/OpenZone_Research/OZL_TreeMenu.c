@@ -123,7 +123,8 @@ class OZL_TreeMenu : UIScriptedMenu
     private string m_Node   = "";
     private string m_Hover  = "";
     // Рядок, що клацається, під мишею (OnRowHover скіна): корінь рядка, вид
-    // ("reg", "branch", "open") і його id.
+    // ("reg", "branch", "open") і його id. Повторне малювання списку цього
+    // виду забуває його (ForgetRowHover): рядка вже нема.
     private Widget m_RowHover;
     private string m_RowKind = "";
     private string m_RowId   = "";
@@ -1036,6 +1037,7 @@ class OZL_TreeMenu : UIScriptedMenu
 
     private void PaintBranches()
     {
+        ForgetRowHover("branch");
         Unlink(m_BranchRows);
         Widget list = Role("BranchList");
         if (!list)
@@ -1578,6 +1580,7 @@ class OZL_TreeMenu : UIScriptedMenu
     // (рішення власника 2026-10-31).
     private void PaintRegistry()
     {
+        ForgetRowHover("reg");
         Unlink(m_RegRows);
         Widget list = Role("Registry");
         OZL_BranchView b = CurrentBranch();
@@ -1622,6 +1625,7 @@ class OZL_TreeMenu : UIScriptedMenu
 
     private void PaintCard()
     {
+        ForgetRowHover("open");
         Unlink(m_CostRows);
         Unlink(m_OpenChips);
         OZL_NodeView n = NodeOf(m_Node);
@@ -2785,6 +2789,22 @@ class OZL_TreeMenu : UIScriptedMenu
         m_RowId    = id;
         if (m_RowHover && m_Skin)
             m_Skin.OnRowHover(this, m_RowHover, m_RowKind, m_RowId, true);
+    }
+
+    // Список виду kind ("reg", "branch", "open") зараз малюється заново, і його
+    // рядки зникнуть (Unlink): якщо наведений саме з них, забути його БЕЗ
+    // OnRowHover(..., false) -- рядка вже нема, а гачок скіна шукає в ньому
+    // дітей (FindAnyWidget). Клік по наведеному рядку якраз так його й
+    // перемальовує (Select, PickBranch). Інші види не чіпаємо: їхні рядки
+    // живі, і без OnRowHover(..., false) їхня підсвітка застрягла б. Рядок на
+    // місці старого під нерухомою мишею засвітиться від її наступного руху.
+    private void ForgetRowHover(string kind)
+    {
+        if (m_RowKind != kind)
+            return;
+        m_RowHover = null;
+        m_RowKind  = "";
+        m_RowId    = "";
     }
 
     // Корінь рядка: предок w, чий батько -- список ролі (Registry,
