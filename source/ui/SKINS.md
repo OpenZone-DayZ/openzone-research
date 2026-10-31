@@ -1,6 +1,6 @@
 # Tree windows ("skins"): the contract
 
-*[Українською](SKINS.uk.md)*
+*[Українською](SKINS.ua.md)*
 
 The research tree screen (menu 135) is ONE script, `OZL_TreeMenu`, drawing seven faction windows:
 `ecolog`, `clearsky`, `duty`, `freedom`, `sop`, `bandit`, `neutral`. A window is a skin: its layouts,
@@ -37,13 +37,16 @@ seven skin files. A later file replaces a same-named entry WHOLE (a font entry r
 ## How the window comes up
 
 1. The menu's own layout is the host (`ozl_tree_host`): the whole screen dimmed, "Дерево
-   завантажується...", an invisible probe frame.
+   завантажується...", an invisible probe frame. A refusal of the server or an unreadable answer
+   before the first window takes the place of that line.
 2. The server answers with the tree and `OZL_TreeView.Skin`, already resolved to one of the seven.
 3. `OZL_TreeSkins.Make(id)` makes the skin; the menu creates `ozl_tree_<skin>.layout` INTO the host.
-   A window whose layout file is not there yet (`FileExist` sees files inside a pbo too) or
-   produces no widgets (its task is not done yet) falls back to `neutral` with one
-   `[OpenZone/Research] tree: window '<id>' has no layout yet ...` line; an id the client does not
-   know is an ERROR line and `neutral` too (defence only).
+   A window whose layout file is not there yet or produces no widgets (its task is not done yet)
+   falls back to `neutral` with one `[OpenZone/Research] tree: window '<id>' has no layout yet ...`
+   line; an id the client does not know is an ERROR line and `neutral` too (defence only). The
+   menu tests the file with `FileExist`, which sees files packed in a pbo — inferred from vanilla
+   (its particle list checks every `.ptc` that way and stays silent), not probed head-on; so
+   `neutral`'s own layout is always tried without the test.
 4. Roles are looked up once (`menu.Role(name)`, cached), `skin.OnShow(menu)` runs, then every
    answer paints: header, branches, pool, tree, registry, card, `skin.OnPaint(menu)`.
 
@@ -67,6 +70,12 @@ On a screen H pixels high one unit is `H / 1080` pixels. Measured on the stand 2
 - A `FrameWidget` clips its children to its own box unless the layout says `clipchildren 0`. The
   menu clears it on the node cell, on NodeHit's containers and on the label rows, so a mark may
   stick out of a cell.
+- **Every widget the menu places or sizes needs an exact position and size** (`hexactpos`,
+  `vexactpos`, `hexactsize`, `vexactsize` 1; the generator writes them for a node with `at` and
+  `size`): the node cell, tier and `АБО` labels, `TreeContent`, `TreeFog`/`TreeFogEdge`, `TreeTip`
+  and `TreeTipBg`, every bar fill, every `FitLater` target and `FlowLater` item. A proportional
+  (`fill`) widget takes the numbers as fractions of its parent. Only children that should follow
+  their parent are `fill`.
 
 ## The tree: plan and geometry
 
@@ -90,7 +99,8 @@ each cell at `(x - AnchorX, y - AnchorY)` in `TreeNodes` and sizes `TreeContent`
 
 "Home" when the window opens or the branch changes: down — top, up — bottom, right — left edge;
 across — centred. Press-and-drag on the tree scrolls it (a move over 4 units turns the release
-into a drag, not a click); the wheel scrolls natively.
+into a drag, not a click); a press on `TreeScroll` itself is its scrollbar and does not drag the
+content; the wheel scrolls natively.
 
 ## Roles of the window (`ozl_tree_<skin>.layout`, root `TreeWindow`)
 
@@ -101,12 +111,11 @@ The root may be the whole screen (neutral: the desk, tiled, and a centred 1600x9
 | Role | Type | What the menu does |
 |---|---|---|
 | `TreeScroll` | ScrollWidget (`clipchildren 1`, `"Scrollbar V"`/`"Scrollbar H"` as wanted) | its size is the view; home, drag; one child: `TreeContent` |
-| `TreeContent` | FrameWidget, exact size | resized to the plan; children below are `size fill` (proportional) so they follow |
-| `TreeBg` | ImageWidget, fill, optional | nothing: the menu never looks for it. A static picture behind the tree is the skin's own business, set in its layout as the first child of `TreeContent` (it scrolls with the tree, under the tiers and the links) |
+| `TreeContent` | FrameWidget, exact size | resized to the plan; children below are `size fill` (proportional) so they follow. A static picture put first inside it scrolls with the tree, under the tiers and the links; the menu does not touch it |
 | `TreeTiers` | frame, fill | tier labels: rows `tier_label` (child `TierText`), the row's corner on the label's point (`x = 22` across, the tier's centre along) |
 | `TreeLines` | CanvasWidget, fill, `ignorepointer 1` | the paper grid (`GridStep`) and every link (`OZL_TreeLines`), redrawn on selection, hover, data, layout |
-| `TreeFogEdge` | image, optional | the 80-unit fade at the start of the fog; the menu places and sizes it along the skin's direction |
-| `TreeFog` | panel or image | the rest of the fog, after the fade |
+| `TreeFogEdge` | image, optional | the 80-unit fade at the start of the fog, tinted `FogColor`; the menu places and sizes it, but does not turn the picture: draw the fade in your tree's direction, clear where the visible tiers end and solid where `TreeFog` starts — `down`: clear at the top; `up`: clear at the bottom; `right`: clear on the left |
+| `TreeFog` | panel or image | the rest of the fog, after the fade, tinted `FogColor` |
 | `TreeNodes` | frame, fill | node cells; the `АБО` labels (rows `or_label`, child `OrText`) with the row's corner on the diamond |
 | `TreeTip` | frame, hidden | above the hovered node, as wide as the TEXT of `TreeTipText` + 2 x `TipPadX`; children `TreeTipEdge` (fill), `TreeTipBg` (inset 1, resized), `TreeTipText` (at `TipPadX`, a fixed width wider than any tip — see Fonts — the frame clips the rest) |
 | `TreeLegend` | anything | static: the six legend items are in the layout. Neutral lines them up by their texts: the items sit in a container `LegendRow` and its `OnShow` calls `menu.FlowLater(menu.Role("LegendRow"), 14, 0, false)` |
@@ -120,15 +129,24 @@ the layout), `BtnClose` (button).
 
 A list container is any widget the menu can create rows into (a `stack` = WrapSpacer, or a `list`'s
 stack). Row templates are declared as `rows` of some `list` in the window description; rows that
-live outside lists (tier and OR labels, price chips) go on a hidden `TreeTemplates` list.
+live outside lists (tier and OR labels, price chips) go on a hidden `TreeTemplates` list. **A
+container role without its row template costs two `SCRIPT (E)` "Cannot load layout" lines for
+every row the menu tries** (`CreateWidgets` on a missing file): declare the row, or leave the
+container out.
+
+**Clickable rows** (branch, opens chip, registry) carry a `...Hit` child: a ButtonWidget with
+`style Empty` that the menu renames `branch:<id>` / `open:<id>` / `reg:<id>`; everything else in
+the row is made to ignore the pointer. Without the `...Hit` child the row ROOT is renamed, and then
+the root itself must be such a button — a frame root gets no click. The menu finds the name on the
+clicked widget or any of its parents.
 
 | Container | Row | Children the menu fills |
 |---|---|---|
-| `BranchList` | `branch_row` | `RowHit` (button, renamed `branch:<id>`; without it the row root is renamed), `RowName`, `RowCount` (`done / total`), `RowPick` (shown on the open branch), `RowBar`/`RowBarFill` (done fraction) |
+| `BranchList` | `branch_row` | `RowHit` (the click, `branch:<id>`), `RowName`, `RowCount` (`done / total`), `RowPick` (shown on the open branch), `RowBar`/`RowBarFill` (done fraction) |
 | `PoolList` | `pool_row` | via `PaintPoolRow`: `PoolChip` (line colour), `PoolName`, `PoolValue`, `PoolSeg0`..`PoolSeg9` (on = have / largest single-node cost), anything the skin adds; `PoolEmpty` (optional) shows when there is no line |
 | `CardCostList`, `CardItemList` | `cost_row` | via `PaintCostRow`: `CostChip`, `CostName`, `CostValue` (`have / need`, or `need` when paid or unknown), `CostBar`/`CostBarFill` |
-| `CardOpensList` | `opens_chip` | lined up left to right with wrapping; the first text child (`ChipText`) sets the width; `ChipHit` (renamed `open:<id>`) and `ChipLine` are stretched to it; a hidden node's chip has no `ChipHit` |
-| `Registry` | `registry_row` | `RegNum` (`Index + 1`, two digits), `RegName`, `RegTier`, `RegState`, `RegPick`; root renamed `reg:<id>`; a hidden node's row reads `— невідомо —` |
+| `CardOpensList` | `opens_chip` | lined up left to right with wrapping; the first text child (`ChipText`) sets the width; `ChipHit` (the click, `open:<id>`) and `ChipLine` are stretched to it; text and look via `PaintOpenChip`; a hidden node's chip (`??? невідомо`) has its `ChipHit` hidden and takes no click |
+| `Registry` | `registry_row` | `RegHit` (the click, `reg:<id>`), `RegNum` (`Index + 1`, two digits), `RegName`, `RegTier`, `RegState`, `RegPick`; rows tier by tier, within a tier by `Index` (the config's order), a hidden node's row `— невідомо —` in its place and not clickable |
 | `TreeTiers` | `tier_label` | `TierText` |
 | `TreeNodes` | `or_label` | `OrText` |
 | `NodePrice` (in the node) | `price_chip` | `PriceChip` (line colour), `PriceText` (amount); the tail `+N предм.` is one more chip with `PriceChip` hidden |
@@ -152,7 +170,8 @@ TextWidget, or a container holding labels `<Name>0`, `<Name>1`, … — then the
 text into those labels (measured with the first one), hides the unused ones and gives the last one
 the rest. Use the container form with the mod's own fonts: a `MultilineTextWidget` or
 `RichTextWidget` ignores `"exact text size"` with them and draws at the atlas cell (48 or 72 units),
-measured 2026-10-31. Labels in a `stack` take no room when hidden.
+measured 2026-10-31. Labels in a `stack` take no room when hidden. The same text in the same colour
+is not wrapped a second time.
 
 ## Roles of the node (`ozl_node_<skin>.layout`, root `NodeCell`)
 
@@ -187,13 +206,14 @@ covered. So:
 3. The menu enforces 1 anyway: after creating a cell it sets `IGNOREPOINTER` on everything but
    `NodeHit` and its containers, and it resolves a node from ANY widget it is told about by walking
    up to `node:<id>` / `cell:<id>`. Label rows (`tier_label`, `or_label`, `price_chip`) and
-   `TreeTip` ignore the pointer entirely.
+   `TreeTip` ignore the pointer entirely; for clickable rows see "Lists".
 
 ## The skin class (`OZL_TreeSkin`)
 
 Data (set in the constructor; `Named("<id>")` fills the layout names): `Id`, `WindowLayout`,
 `NodeLayout`, `RowPrefix`; the geometry above; colours as ARGB — `Txt`, `Dim`, `Acc`, `Ok`, `Bad`,
-`LineDim`, `LineLit` (= Txt), `LineHl` (= Acc), `Lcd` (fill of the `АБО` diamond), `FogColor`;
+`LineDim`, `LineLit` (= Txt), `LineHl` (= Acc), `Lcd` (fill of the `АБО` diamond), `FogColor` (the
+menu tints `TreeFog` and `TreeFogEdge` with it, whatever colour the layout gave them);
 `LineStyle` (`"plain"` / `"sketch"`), `LineW` (2), `LineWHl` (2.5), `DashOn`/`DashOff` (6/5);
 `GridStep`, `GridColor`, `GridX`, `GridY`, `GridW` (the paper grid, drawn on the canvas); `Shapes`,
 `ShapeHover` (slot under the mouse, -1 none), `ShapeColors` (status -> tint); `Marks`; `SegOn`,
@@ -210,7 +230,7 @@ Hooks — each works without an override:
 | `int ShapeColorOf(status)` | `ShapeColors[status]`, else white |
 | `bool RingShown(status, selected)` | available and not selected |
 | `int NameColorOf(status)` / `PriceColorOf` / `IconColorOf` / `StatusColorOf` | the mockup's: locked Dim, short Bad, available/researching Acc, completed Ok (name: Txt, locked Dim) |
-| `int MarkOf(status)` / `string MarkTextOf(status)` / `int MarkColorOf(status)` | lock / check / dot = `Marks` slots 0/1/2 for locked / completed / researching; no text |
+| `int MarkOf(status)` / `string MarkTextOf(status)` / `int MarkColorOf(status)` | lock / check / dot = `Marks` slots 0/1/2 for locked / completed / researching, **only when `Marks` has at least three slots** — with fewer `MarkOf` is always -1, so a skin with one or two marks overrides it (neutral: one tick); no text |
 | `string StatusText(status)` | the status key's word (`StatusKey`) |
 | `string SectionText(key)` | the key's word (paper adds `:`, clearsky prepends `// `, upper-case skins `OZL_Text.Upper`) |
 | `string NodeNameText(name)` | the name (also the card's name) |
@@ -219,13 +239,15 @@ Hooks — each works without an override:
 | `void PaintPoolRow(menu, row, line, have, need, color)` | name, value, chip, segments |
 | `void PaintCostRow(menu, row, label, text, verdict)` | name, value coloured by verdict (1 ok / -1 bad / 0 unknown), bar colour |
 | `void PaintButton(menu, btn, enabled)` | `BtnResearchText` Acc or Dim |
+| `void PaintOpenChip(menu, chip, text, fogged)` | `ChipText` = text in Txt; a fogged chip (`??? невідомо`) in Dim. Its underline or frame is the skin's call: the mockup's paper drops it (neutral hides `ChipLine`), the base style dashes it |
 | `string StampOf(status)` | none |
 | `float DrawSegment(canvas, x1, y1, x2, y2, width, color, dashed, phase)` | a straight piece, dashed 6/5 with the phase carried along the polyline |
 | `void DrawStroke(canvas, xs, ys, width, color, dashed, seed)` | the polyline; `LineStyle "sketch"` = the mockup's `sketch()` (short strokes with jitter and bend, a faint second stroke), seeded by the edge id so nothing trembles |
 | `void DrawOrKnot` / `DrawAllKnot` | the `АБО` diamond (filled with Lcd, outlined) / the 10-unit square — a thick `DrawLine` is a filled rectangle |
+| `void GridLine(canvas, x1, y1, x2, y2)` | one line of the paper grid in `GridColor`, `GridW` thick (called for every grid line when `GridStep` > 0) |
 | `void OnShow(menu)` | — (static texts, start animations) |
 | `void OnUpdate(menu, dt)` | — (every frame: marquee, blinking, flicker) |
-| `void OnPaint(menu)` | — (after every full paint) |
+| `void OnPaint(menu)` | — (after every full paint: a new answer of the server, another branch; a node selection is `OnSelect`, not a full paint) |
 | `void OnSelect(menu, node, status, canResearch)` | — (node null = nothing selected) |
 | `bool OnClick(menu, w)` | false (clicks the menu did not recognise: helper buttons...) |
 
@@ -236,7 +258,8 @@ mode)` (next frame: `target` as wide as the text — underlines, strikes; mode 0
 frame: the box's children left to right, each as wide as from its left edge to the right end of its
 first visible text — `GetTextSize`, the text left-aligned — plus `pad`, then `gap`),
 `PointName(line)`, `PointColor(line)`, `PoolOf(line)`, `ItemLabel(item)`, `LeftOf(node)`,
-`View()`, `CurrentBranch()`, `BranchCount()`, `SelectedId()`, `HoveredId()`, `NodeIdAt(widget)`.
+`View()`, `CurrentBranch()`, `BranchCount()`, `SelectedId()`, `HoveredId()`, `NodeIdAt(widget)`,
+`TaggedAt(widget, "open:")` (the id from a `<tag><id>` name on the widget or a parent).
 Strings: `OZL_Text.Words(key)`, `OZL_Text.Upper(text)` (Latin and Ukrainian Cyrillic; `і` becomes
 the Latin `I`), `Duration`, `Clock`, `Roman`, `Two`.
 
@@ -251,7 +274,7 @@ Everything the mockup draws with CSS is a picture, baked: write `source/ui/<skin
 texture without `"stretch mode"` tiles at its own pixel size (neutral's desk and dash). The shared
 set `ozl_common` holds white `mark_lock`, `mark_check`, `mark_dot`, `mark_wait`, `mark_query`
 (24x24), `chip`, `and_square` (10x10), `or_diamond` (16x16). Text goes into a picture only when it
-is rotated or styled; then two sprites `_uk`/`_en` and a `*_IMG` key (STRINGS.md). Budget: up to
+is rotated or styled; then two sprites `_ua`/`_en` and a `*_IMG` key (STRINGS.md). Budget: up to
 2048x2048 per skin. Neutral: one 1024x512 atlas and three small textures (0.08 MB).
 
 ## Fonts

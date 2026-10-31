@@ -1,51 +1,54 @@
-# Вікна дерева («скини»): контракт
+# Вікна дерева («скіни»): контракт
 
 *[English](SKINS.md)*
 
 Екран дерева досліджень (меню 135) -- ОДИН скрипт, `OZL_TreeMenu`, що малює сім вікон фракцій:
-`ecolog`, `clearsky`, `duty`, `freedom`, `sop`, `bandit`, `neutral`. Вікно -- це скин: його розкладки,
+`ecolog`, `clearsky`, `duty`, `freedom`, `sop`, `bandit`, `neutral`. Вікно -- це скін: його розкладки,
 картинки, кольори й шрифти і невеликий клас скрипта з даними й гачками. Меню знаходить віджети за
 **ролями** (іменами) і заповнює знайдене; ролі, якої в розкладці нема, просто не малює. Тут усе, що
-потрібно авторові скину, крім мокапа власника і [`STRINGS.md`](STRINGS.md). `neutral` («Записник
+потрібно авторові скіну, крім мокапа власника і [`STRINGS.md`](STRINGS.md). `neutral` («Записник
 сталкера») -- готовий приклад: читайте його файли поруч із цим текстом.
 
-## Файли скину
+## Файли скіну
 
-Задача скину володіє рівно цим і більше нічого не править:
+Задача скіну володіє рівно цим і більше нічого не править:
 
 | Файл | Що |
 |---|---|
-| `OpenZone_Research/scripts/5_Mission/OpenZone_Research/OZL_TreeSkin_<Name>.c` | клас скину (дані + гачки) |
+| `OpenZone_Research/scripts/5_Mission/OpenZone_Research/OZL_TreeSkin_<Name>.c` | клас скіну (дані + гачки) |
 | `ui/OpenZone_Research/ozl_tree_<skin>.json` | опис вікна; усі шаблони рядків списків -- в ньому |
 | `ui/OpenZone_Research/ozl_node_<skin>.json` | опис вузла |
 | `OpenZone_Research/gui/layouts/ozl_tree_<skin>.layout`, `ozl_node_<skin>.layout`, `ozl_<skin>_<row>.layout` | згенеровані з двох описів (`python -m dayz_mcp.layoutgen <repo> OpenZone_Research`) |
-| `ui/tokens/<skin>.json` | кольори й шрифти скину; кожне ім'я починається з `<skin>_` |
+| `ui/tokens/<skin>.json` | кольори й шрифти скіну; кожне ім'я починається з `<skin>_` |
 | `source/ui/<skin>/` | маніфест запікання (`sprites.json`) і його CSS |
 | `OpenZone_Research/gui/imagesets/ozl_<skin>.imageset`, `ozl_<skin>_ca.paa`, `gui/textures/tree/<skin>/` | запечене з маніфесту (`python source/ui/bake.py <skin>`) |
 
-Спільне, НЕ для правки скином: `OZL_TreeMenu.c`, `OZL_TreePlan.c`, `OZL_TreeLines.c`,
+Спільне, НЕ для правки скіном: `OZL_TreeMenu.c`, `OZL_TreePlan.c`, `OZL_TreeLines.c`,
 `OZL_TreeSkin.c` (базовий клас і фабрика), `OZL_Text.c`, `ozl_tree_host.json`, набір `ozl_common`
-(`source/ui/common/`), `config.cpp`, `stringtable.csv`, `dayz-mcp.toml`, файли інших скинів. Треба
+(`source/ui/common/`), `config.cpp`, `stringtable.csv`, `dayz-mcp.toml`, файли інших скінів. Треба
 новий гачок, роль чи рядок -- просіть контролера: зміна йде в спільні файли один раз для всіх.
 
-Токени шаруються: `[build] tokens` у `dayz-mcp.toml` -- спершу файл ядра, далі сім файлів скинів.
+Токени шаруються: `[build] tokens` у `dayz-mcp.toml` -- спершу файл ядра, далі сім файлів скінів.
 Пізніший файл замінює однойменний запис ЦІЛИМ (шрифт повторює `face`, `size` і `fixed`); префікс
 `<skin>_` розводить сім файлів.
 
 ## Як з'являється вікно
 
 1. Власна розкладка меню -- хост (`ozl_tree_host`): затемнений екран, «Дерево завантажується...»,
-   невидима рамка-проба.
+   невидима рамка-проба. Відмова сервера чи нечитана відповідь до першого вікна стає на місце
+   цього рядка.
 2. Сервер відповідає деревом і `OZL_TreeView.Skin`, уже розв'язаним до одного з семи.
-3. `OZL_TreeSkins.Make(id)` створює скин; меню створює `ozl_tree_<skin>.layout` У ХОСТІ. Вікно, чиєї
-   розкладки ще немає (`FileExist` бачить і файли в pbo) або чия розкладка не дає віджетів (задача
-   ще не зроблена), падає на `neutral` з одним рядком
-   `[OpenZone/Research] tree: window '<id>' has no layout yet ...`; id, якого клієнт не знає, --
-   рядок ERROR і теж `neutral` (захист, а не режим).
+3. `OZL_TreeSkins.Make(id)` створює скін; меню створює `ozl_tree_<skin>.layout` У ХОСТІ. Вікно, чиєї
+   розкладки ще немає або чия розкладка не дає віджетів (задача ще не зроблена), падає на
+   `neutral` з одним рядком `[OpenZone/Research] tree: window '<id>' has no layout yet ...`; id,
+   якого клієнт не знає, -- рядок ERROR і теж `neutral` (захист, а не режим). Файл меню перевіряє
+   `FileExist`, який бачить і файли в pbo -- виведено з ванілі (її список частинок так перевіряє
+   кожен `.ptc` і мовчить), а не виміряно напряму; тому власну розкладку `neutral` меню пробує
+   завжди, без перевірки.
 4. Ролі шукаються раз (`menu.Role(name)`, у кеші), іде `skin.OnShow(menu)`, далі кожна відповідь
    малює: шапку, гілки, пул, дерево, реєстр, картку, `skin.OnPaint(menu)`.
 
-Вікно створюється заново лише при зміні скину; вибраний вузол і гілка переживають оновлення.
+Вікно створюється заново лише при зміні скіну; вибраний вузол і гілка переживають оновлення.
 
 ## Одиниці -- виміряні, не вгадуйте
 
@@ -63,10 +66,15 @@ H пікселів одна одиниця -- `H / 1080` пікселя. Вим�
   (дерево 2180 x 1120 одиниць) малює до самого краю.
 - `FrameWidget` обрізає дітей своїм краєм, якщо в розкладці не сказано `clipchildren 0`. Меню знімає
   це з комірки вузла, контейнерів NodeHit і рядків підписів, тож мітка може виступати з комірки.
+- **Кожен віджет, який меню ставить чи розтягує, мусить мати точні позицію й розмір** (`hexactpos`,
+  `vexactpos`, `hexactsize`, `vexactsize` 1; генератор пише їх вузлові з `at` і `size`): комірка
+  вузла, підписи тирів і `АБО`, `TreeContent`, `TreeFog`/`TreeFogEdge`, `TreeTip` і `TreeTipBg`,
+  кожне заповнення смуги, кожна ціль `FitLater` і кожен елемент `FlowLater`. Пропорційний (`fill`)
+  віджет прочитає числа як частки батька. `fill` -- лише діти, що мають іти за батьком.
 
 ## Дерево: план і геометрія
 
-`OZL_TreePlan` розкладає вибрану гілку за геометрією скину (спека §3; `SKINS` мокапа):
+`OZL_TreePlan` розкладає вибрану гілку за геометрією скіну (спека §3; `SKINS` мокапа):
 
 | Поле | Зміст |
 |---|---|
@@ -86,7 +94,8 @@ H пікселів одна одиниця -- `H / 1080` пікселя. Вим�
 
 «Додому», коли вікно відкрилось чи змінилась гілка: вниз -- верх, вгору -- низ, вправо -- лівий край;
 поперек -- середина. Натиснути й тягнути по дереву -- прокрутка (зсув понад 4 одиниці робить
-відпускання перетягуванням, а не кліком); колесо прокручує саме.
+відпускання перетягуванням, а не кліком); натиск на самому `TreeScroll` -- це його смуга прокрутки,
+вміст за мишею не їде; колесо прокручує саме.
 
 ## Ролі вікна (`ozl_tree_<skin>.layout`, корінь `TreeWindow`)
 
@@ -97,12 +106,11 @@ H пікселів одна одиниця -- `H / 1080` пікселя. Вим�
 | Роль | Тип | Що робить меню |
 |---|---|---|
 | `TreeScroll` | ScrollWidget (`clipchildren 1`, `"Scrollbar V"`/`"Scrollbar H"` за бажанням) | його розмір -- вид; «додому», перетягування; одна дитина -- `TreeContent` |
-| `TreeContent` | FrameWidget, точний розмір | розмір за планом; діти нижче -- `size fill` (пропорційні), тож ідуть за ним |
-| `TreeBg` | ImageWidget, fill, необов'язкова | нічого: меню її не шукає. Статична картинка за деревом -- справа самого скину, задається в його розкладці першою дитиною `TreeContent` (прокручується разом із деревом, під підписами тирів і зв'язками) |
+| `TreeContent` | FrameWidget, точний розмір | розмір за планом; діти нижче -- `size fill` (пропорційні), тож ідуть за ним. Статична картинка, покладена в нього першою, прокручується разом із деревом, під підписами тирів і зв'язками; меню її не чіпає |
 | `TreeTiers` | frame, fill | підписи тирів: рядки `tier_label` (дитина `TierText`), кут рядка -- у точці підпису (`x = 22` поперек, центр тиру вздовж) |
 | `TreeLines` | CanvasWidget, fill, `ignorepointer 1` | сітка паперу (`GridStep`) і всі зв'язки (`OZL_TreeLines`); перемальовується на вибір, наведення, дані, розкладку |
-| `TreeFogEdge` | картинка, необов'язкова | 80 одиниць переходу на початку туману; меню ставить і розтягує її за напрямком скину |
-| `TreeFog` | panel чи картинка | решта туману після переходу |
+| `TreeFogEdge` | картинка, необов'язкова | 80 одиниць переходу на початку туману, фарбується `FogColor`; меню ставить і розтягує її, але картинки не повертає: малюйте перехід у напрямку свого дерева, прозорим там, де кінчаються видимі тири, і суцільним там, де починається `TreeFog` -- `down`: прозоре вгорі; `up`: прозоре внизу; `right`: прозоре ліворуч |
+| `TreeFog` | panel чи картинка | решта туману після переходу, фарбується `FogColor` |
 | `TreeNodes` | frame, fill | комірки вузлів; написи `АБО` (рядки `or_label`, дитина `OrText`) кутом рядка на ромбі |
 | `TreeTip` | frame, схований | над вузлом під мишею, завширшки з ТЕКСТ `TreeTipText` + 2 x `TipPadX`; діти `TreeTipEdge` (fill), `TreeTipBg` (відступ 1, розтягується), `TreeTipText` (на `TipPadX`, сталої ширини, ширший за будь-яку підказку -- див. «Шрифти»; решту обрізає рамка) |
 | `TreeLegend` | будь-що | статична: шість пунктів легенди -- у розкладці. Neutral шикує їх за текстами: пункти лежать у контейнері `LegendRow`, а його `OnShow` кличе `menu.FlowLater(menu.Role("LegendRow"), 14, 0, false)` |
@@ -116,15 +124,23 @@ H пікселів одна одиниця -- `H / 1080` пікселя. Вим�
 
 Контейнер списку -- будь-який віджет, у який меню може створювати рядки (`stack` = WrapSpacer, або
 stack `list`). Шаблони рядків оголошуються як `rows` якогось `list` в описі вікна; рядки поза
-списками (підписи тирів і АБО, чіпи ціни) -- на схованому списку `TreeTemplates`.
+списками (підписи тирів і АБО, чіпи ціни) -- на схованому списку `TreeTemplates`. **Роль-контейнер
+без свого шаблону рядка коштує двох рядків `SCRIPT (E)` "Cannot load layout" на кожен рядок, який
+пробує меню** (`CreateWidgets` на відсутній файл): оголосіть рядок або не ставте контейнера.
+
+**Рядки, що клацаються** (гілка, чіп «Відкриває», реєстр), мають дитину `...Hit`: ButtonWidget зі
+`style Empty`, яку меню перейменовує на `branch:<id>` / `open:<id>` / `reg:<id>`; усе інше в рядку
+мишу пропускає. Без дитини `...Hit` перейменовується КОРІНЬ рядка, і тоді він сам мусить бути такою
+кнопкою -- корінь-рамка кліку не отримує. Ім'я меню шукає на клацнутому віджеті або на будь-якому
+його предку.
 
 | Контейнер | Рядок | Діти, що заповнює меню |
 |---|---|---|
-| `BranchList` | `branch_row` | `RowHit` (кнопка, перейменована на `branch:<id>`; без неї -- корінь рядка), `RowName`, `RowCount` (`зроблено / усього`), `RowPick` (на відкритій гілці), `RowBar`/`RowBarFill` (частка зробленого) |
-| `PoolList` | `pool_row` | через `PaintPoolRow`: `PoolChip` (колір лінії), `PoolName`, `PoolValue`, `PoolSeg0`..`PoolSeg9` (горять = є / найбільша ціна одного вузла), що додасть скин; `PoolEmpty` (необов'язковий) -- коли ліній нема |
+| `BranchList` | `branch_row` | `RowHit` (клік, `branch:<id>`), `RowName`, `RowCount` (`зроблено / усього`), `RowPick` (на відкритій гілці), `RowBar`/`RowBarFill` (частка зробленого) |
+| `PoolList` | `pool_row` | через `PaintPoolRow`: `PoolChip` (колір лінії), `PoolName`, `PoolValue`, `PoolSeg0`..`PoolSeg9` (горять = є / найбільша ціна одного вузла), що додасть скін; `PoolEmpty` (необов'язковий) -- коли ліній нема |
 | `CardCostList`, `CardItemList` | `cost_row` | через `PaintCostRow`: `CostChip`, `CostName`, `CostValue` (`є / треба`, або `треба`, коли заплачено чи невідомо), `CostBar`/`CostBarFill` |
-| `CardOpensList` | `opens_chip` | у ряд зліва направо з переносом; ширину дає перша текстова дитина (`ChipText`); `ChipHit` (перейменований на `open:<id>`) і `ChipLine` розтягуються на неї; у чіпа прихованого вузла `ChipHit` нема |
-| `Registry` | `registry_row` | `RegNum` (`Index + 1`, дві цифри), `RegName`, `RegTier`, `RegState`, `RegPick`; корінь -- `reg:<id>`; рядок прихованого вузла -- `— невідомо —` |
+| `CardOpensList` | `opens_chip` | у ряд зліва направо з переносом; ширину дає перша текстова дитина (`ChipText`); `ChipHit` (клік, `open:<id>`) і `ChipLine` розтягуються на неї; текст і вигляд -- через `PaintOpenChip`; у чіпа прихованого вузла (`??? невідомо`) `ChipHit` схований, і він не клацається |
+| `Registry` | `registry_row` | `RegHit` (клік, `reg:<id>`), `RegNum` (`Index + 1`, дві цифри), `RegName`, `RegTier`, `RegState`, `RegPick`; рядки тир за тиром, у тирі -- за `Index` (порядок конфігу), рядок прихованого вузла `— невідомо —` на своєму місці й не клацається |
 | `TreeTiers` | `tier_label` | `TierText` |
 | `TreeNodes` | `or_label` | `OrText` |
 | `NodePrice` (у вузлі) | `price_chip` | `PriceChip` (колір лінії), `PriceText` (число); хвіст `+N предм.` -- ще один чіп із прихованим `PriceChip` |
@@ -133,7 +149,7 @@ stack `list`). Шаблони рядків оголошуються як `rows` 
 
 `CardEmpty` (коли нічого не вибрано) / `CardBody`; `CardName`, `CardMeta`
 (`тир N · після: … / після всіх: … / після будь-якого з: …`, приховані батьки -- `невідомо`),
-`CardStatus` (слово й колір від скину), `CardDesc`; заголовки розділів `CardDescHead`, `CardCostHead`,
+`CardStatus` (слово й колір від скіну), `CardDesc`; заголовки розділів `CardDescHead`, `CardCostHead`,
 `CardItemsHead`, `CardTimeHead`, `CardOpensHead` (текст із `SectionText`; `CardItemsHead`/`CardItemList`
 ховаються, коли вузол не коштує матеріалів, `CardOpensHead`/`CardOpensList` -- коли нічого не
 відкриває); `CardTime`, `CardTimer` (голий годинник, поки йде дослідження); `CardSegs` +
@@ -148,6 +164,7 @@ TextWidget або контейнером написів `<Name>0`, `<Name>1`, �
 ці написи (міряючи першим), ховає зайві й віддає останньому решту. З власними шрифтами мода беріть
 контейнер: `MultilineTextWidget` і `RichTextWidget` ігнорують із ними `"exact text size"` і малюють
 клітинкою атласу (48 чи 72 одиниці), виміряно 2026-10-31. Сховані написи у `stack` місця не займають.
+Той самий текст тим самим кольором меню вдруге не переносить.
 
 ## Ролі вузла (`ozl_node_<skin>.layout`, корінь `NodeCell`)
 
@@ -156,7 +173,7 @@ TextWidget або контейнером написів `<Name>0`, `<Name>1`, �
 | Роль | Що |
 |---|---|
 | `NodeHit` | ЄДИНА ціль миші: кнопка зі `style Empty`, перейменована на `node:<id>`, під формою |
-| `NodeShape` | ImageWidget; `Shapes` скину вантажаться в слоти 0..7, `ShapeOf` вибирає, `ShapeColorOf` фарбує |
+| `NodeShape` | ImageWidget; `Shapes` скіну вантажаться в слоти 0..7, `ShapeOf` вибирає, `ShapeColorOf` фарбує |
 | `NodeRing`, `NodeSel` | обведення доступного (`RingShown`) і вибраного |
 | `NodeIcon` | власний значок вузла з конфігу дерева, фарбований `IconColorOf` |
 | `NodeName` | текст або контейнер `NodeName0`, `NodeName1` (з переносом) |
@@ -180,18 +197,19 @@ TextWidget або контейнером написів `<Name>0`, `<Name>1`, �
 3. Меню все одно стежить за пунктом 1: створивши комірку, ставить `IGNOREPOINTER` усьому, крім
    `NodeHit` і його контейнерів, і знаходить вузол за БУДЬ-ЯКИМ віджетом, про який йому скажуть,
    піднімаючись до `node:<id>` / `cell:<id>`. Рядки підписів (`tier_label`, `or_label`, `price_chip`)
-   і `TreeTip` мишу пропускають повністю.
+   і `TreeTip` мишу пропускають повністю; рядки, що клацаються, -- див. «Списки».
 
-## Клас скину (`OZL_TreeSkin`)
+## Клас скіну (`OZL_TreeSkin`)
 
 Дані (у конструкторі; `Named("<id>")` заповнює імена розкладок): `Id`, `WindowLayout`, `NodeLayout`,
 `RowPrefix`; геометрія вище; кольори ARGB -- `Txt`, `Dim`, `Acc`, `Ok`, `Bad`, `LineDim`, `LineLit`
-(= Txt), `LineHl` (= Acc), `Lcd` (заливка ромба `АБО`), `FogColor`; `LineStyle` (`"plain"` / `"sketch"`),
+(= Txt), `LineHl` (= Acc), `Lcd` (заливка ромба `АБО`), `FogColor` (ним меню фарбує `TreeFog` і
+`TreeFogEdge`, хай би який колір дала їм розкладка); `LineStyle` (`"plain"` / `"sketch"`),
 `LineW` (2), `LineWHl` (2,5), `DashOn`/`DashOff` (6/5); `GridStep`, `GridColor`, `GridX`, `GridY`,
 `GridW` (сітка паперу на канві); `Shapes`, `ShapeHover` (слот під мишею, -1 -- нема),
 `ShapeColors` (статус -> колір); `Marks`; `SegOn`, `SegOff` (0 = Acc / LineDim); `TipPadX`.
 
-Тримайте ці числа ARGB рівними `ui/tokens/<skin>.json` скину (рушій не читає JSON під час збирання).
+Тримайте ці числа ARGB рівними `ui/tokens/<skin>.json` скіну (рушій не читає JSON під час збирання).
 
 Гачки -- кожен працює й без перекриття:
 
@@ -201,22 +219,24 @@ TextWidget або контейнером написів `<Name>0`, `<Name>1`, �
 | `int ShapeColorOf(status)` | `ShapeColors[status]`, інакше білий |
 | `bool RingShown(status, selected)` | доступний і не вибраний |
 | `int NameColorOf(status)` / `PriceColorOf` / `IconColorOf` / `StatusColorOf` | як у мокапі: закритий Dim, не вистачає Bad, доступний/іде Acc, досліджений Ok (назва: Txt, закритий Dim) |
-| `int MarkOf(status)` / `string MarkTextOf(status)` / `int MarkColorOf(status)` | замок / галка / крапка = слоти `Marks` 0/1/2 для закритого / дослідженого / того, що йде; без тексту |
+| `int MarkOf(status)` / `string MarkTextOf(status)` / `int MarkColorOf(status)` | замок / галка / крапка = слоти `Marks` 0/1/2 для закритого / дослідженого / того, що йде, **лише коли в `Marks` щонайменше три слоти** -- з меншою кількістю `MarkOf` завжди -1, тож скін з однією-двома мітками перекриває його (neutral: одна галка); без тексту |
 | `string StatusText(status)` | слово ключа статусу (`StatusKey`) |
-| `string SectionText(key)` | слово ключа (папір дописує `:`, clearsky ставить `// `, скини з великими -- `OZL_Text.Upper`) |
+| `string SectionText(key)` | слово ключа (папір дописує `:`, clearsky ставить `// `, скіни з великими -- `OZL_Text.Upper`) |
 | `string NodeNameText(name)` | назва (і в картці теж) |
 | `string TierText(tier)` | `I`, `II`…; дерево вправо -- `тир I` |
 | `void PaintNode(menu, cell, node, status, selected)` | форма, обведення, значок, назва, мітка, номер (ціна й смуга -- меню) |
 | `void PaintPoolRow(menu, row, line, have, need, color)` | назва, число, чіп, сегменти |
 | `void PaintCostRow(menu, row, label, text, verdict)` | назва, число кольором вироку (1 так / -1 ні / 0 невідомо), колір смужки |
 | `void PaintButton(menu, btn, enabled)` | `BtnResearchText` Acc або Dim |
+| `void PaintOpenChip(menu, chip, text, fogged)` | `ChipText` = текст кольором Txt; чіп туману (`??? невідомо`) -- Dim. Його підкреслення чи рамка -- справа скіну: папір мокапа прибирає його (neutral ховає `ChipLine`), базовий стиль робить пунктиром |
 | `string StampOf(status)` | нема |
 | `float DrawSegment(canvas, x1, y1, x2, y2, width, color, dashed, phase)` | прямий відрізок, пунктир 6/5 із фазою через усю ламану |
 | `void DrawStroke(canvas, xs, ys, width, color, dashed, seed)` | ламана; `LineStyle "sketch"` -- `sketch()` мокапа (короткі штрихи зі зсувом і вигином, другий тонкий штрих), зерно -- id ребра, тож нічого не тремтить |
 | `void DrawOrKnot` / `DrawAllKnot` | ромб `АБО` (заливка Lcd, обведений) / квадрат 10 одиниць -- товста `DrawLine` і є залитим прямокутником |
+| `void GridLine(canvas, x1, y1, x2, y2)` | одна лінія сітки паперу кольором `GridColor`, завтовшки `GridW` (на кожну лінію сітки, коли `GridStep` > 0) |
 | `void OnShow(menu)` | -- (статичні тексти, запуск анімацій) |
 | `void OnUpdate(menu, dt)` | -- (кожен кадр: бігучий рядок, мигання, мерехтіння) |
-| `void OnPaint(menu)` | -- (після кожного повного малювання) |
+| `void OnPaint(menu)` | -- (після кожного повного малювання: нова відповідь сервера, інша гілка; вибір вузла -- це `OnSelect`, а не повне малювання) |
 | `void OnSelect(menu, node, status, canResearch)` | -- (node null -- нічого не вибрано) |
 | `bool OnClick(menu, w)` | false (клік, якого меню не впізнало: кнопки помічника...) |
 
@@ -228,13 +248,14 @@ x, 1 -- прив'язаний праворуч, 2 -- по центру бать�
 від свого лівого краю до правого кінця свого першого видимого тексту -- `GetTextSize`, текст
 вирівняний ліворуч -- плюс `pad`, далі `gap`), `PointName(line)`, `PointColor(line)`, `PoolOf(line)`,
 `ItemLabel(item)`, `LeftOf(node)`, `View()`, `CurrentBranch()`, `BranchCount()`, `SelectedId()`,
-`HoveredId()`, `NodeIdAt(widget)`. Рядки: `OZL_Text.Words(key)`, `OZL_Text.Upper(text)` (латиниця й
-українська кирилиця; `і` стає латинською `I`), `Duration`, `Clock`, `Roman`, `Two`.
+`HoveredId()`, `NodeIdAt(widget)`, `TaggedAt(widget, "open:")` (id з імені `<tag><id>` на віджеті
+чи його предку). Рядки: `OZL_Text.Words(key)`, `OZL_Text.Upper(text)` (латиниця й українська
+кирилиця; `і` стає латинською `I`), `Duration`, `Clock`, `Roman`, `Two`.
 
 ## Картинки
 
 Усе, що мокап малює CSS, -- картинки, запечені: напишіть `source/ui/<skin>/sprites.json`
-(див. [`README.uk.md`](README.uk.md)), запустіть `python source/ui/bake.py <skin>`, гляньте
+(див. [`README.ua.md`](README.ua.md)), запустіть `python source/ui/bake.py <skin>`, гляньте
 `build/ui/<skin>/preview.png`, закомітьте маніфест разом з `.imageset` і `.paa`. Спрайт --
 `set:ozl_<skin> image:<name>`; те, що фарбується, малюйте білим і фарбуйте в розкладці чи `SetColor`.
 Розмір в imageset включає `pad`: показуйте у віджеті `w + 2 pad` на `h + 2 pad`, на `pad` вище й
@@ -242,14 +263,14 @@ x, 1 -- прив'язаний праворуч, 2 -- по центру бать�
 `"stretch mode"` лягає плиткою свого піксельного розміру (стіл і пунктир neutral). Спільний набір
 `ozl_common` має білі `mark_lock`, `mark_check`, `mark_dot`, `mark_wait`, `mark_query` (24x24),
 `chip`, `and_square` (10x10), `or_diamond` (16x16). Текст іде в картинку лише повернутий чи
-стилізований; тоді два спрайти `_uk`/`_en` і ключ `*_IMG` (STRINGS.md). Бюджет -- до 2048x2048 на
-скин. Neutral: один атлас 1024x512 і три малі текстури (0,08 МБ).
+стилізований; тоді два спрайти `_ua`/`_en` і ключ `*_IMG` (STRINGS.md). Бюджет -- до 2048x2048 на
+скін. Neutral: один атлас 1024x512 і три малі текстури (0,08 МБ).
 
 ## Шрифти
 
-Бітмапові шрифти мода лежать в `OpenZone_Research/gui/fonts/` (див. `source/fonts/README.uk.md`): у
+Бітмапові шрифти мода лежать в `OpenZone_Research/gui/fonts/` (див. `source/fonts/README.ua.md`): у
 розкладці `font "OpenZone_Research/gui/fonts/ozl_hand48"` з `"exact text size"` = висота КЛІТИНКИ в
-одиницях = round(px CSS x коефіцієнт клітинки обличчя). Кладіть їх у токени скину як шрифти. Вони
+одиницях = round(px CSS x коефіцієнт клітинки шрифту). Кладіть їх у токени скіну як шрифти. Вони
 працюють у написах TextWidget; текст із переносом -- рядками-написами (вище).
 
 **TextWidget обрізає свій текст своїм краєм, а `"w": "auto"` (`"size to text h"`) робить ширину
@@ -261,7 +282,7 @@ x, 1 -- прив'язаний праворуч, 2 -- по центру бать�
 підказка міряють `GetTextSize`, а не напис): так роблять легенда neutral і `TreeTipText`. Напис
 сталої ширини, текст якого закінчується далеко від правого краю, безпечний і так.
 
-## Перевірка скину
+## Перевірка скіну
 
 `python -m dayz_mcp.layoutgen <repo> OpenZone_Research`, далі MCP `mod_lint`, `mod_build`,
 `client_compile_check`, `server_start`, `log_verdict`; на стенді:
