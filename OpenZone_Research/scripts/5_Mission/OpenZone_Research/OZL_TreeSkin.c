@@ -732,7 +732,8 @@ class OZL_TreeSkin
 
     // Меню щойно розклало текст по рядках-написах контейнера `box` (назва
     // вузла, CardName, CardMeta, CardDesc...) -- наступним кадром після
-    // PutText. Стос картки меню вже оновило (menu.RefreshCard); свої стоси
+    // PutText. Коли `box` усередині CardFlow, стос картки меню вже оновило
+    // (menu.RefreshCard); для `box` поза ним (назва вузла) -- ні. Свої стоси
     // скін оновлює тут.
     void OnWrapped(OZL_TreeMenu menu, Widget box)
     {

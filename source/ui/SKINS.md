@@ -133,7 +133,11 @@ ScrollWidget, in its layout:
   that wants a styled bar is a `raw` ScrollWidget with a `stack` child (sop's `CardScroll` +
   `CardFlow`), its row templates on another list;
 - leaving a bar out (`"Scrollbar V"` 0) keeps drag and the wheel — the wheel without a bar is not
-  measured yet: check it on the stand before relying on it.
+  measured yet: check it on the stand before relying on it. Not on `TreeScroll`, though: there the
+  menu keeps the bottom and right 10 units of the view for a bar whenever the content overflows,
+  drawn or not (`OnScrollbar` does not read the layout's `"Scrollbar H"` / `"Scrollbar V"`), so
+  with a bar left out a press in that strip starts no drag. Keep both bars on `TreeScroll`, as all
+  seven skins do.
 
 Neutral draws its tree bars in pencil (`$neutral_dim`); its card is still a `list`, so its card bar
 is the engine's — open.
@@ -146,7 +150,7 @@ The root may be the whole screen (neutral: the desk, tiled, and a centred 1600x9
 
 | Role | Type | What the menu does |
 |---|---|---|
-| `TreeScroll` | ScrollWidget (`clipchildren 1`, `"Scrollbar V"`/`"Scrollbar H"` as wanted; `color` + `style blank` for themed bars, see above) | its size is the view; home, drag; one child: `TreeContent` |
+| `TreeScroll` | ScrollWidget (`clipchildren 1`, `"Scrollbar V"` and `"Scrollbar H"` both 1 — the menu keeps their strips, see above; `color` + `style blank` for themed bars) | its size is the view; home, drag; one child: `TreeContent` |
 | `TreeContent` | FrameWidget, exact size | resized to the plan; children below are `size fill` (proportional) so they follow. A static picture put first inside it scrolls with the tree, under the tiers and the links; the menu does not touch it |
 | `TreeTiers` | frame, fill | tier labels: rows `tier_label` (child `TierText`), the row's corner on the label's point (`x = 22` across, the tier's centre along) |
 | `TreeLines` | CanvasWidget, fill, `ignorepointer 1` | the paper grid (`GridStep`) and every link (`OZL_TreeLines`), redrawn on selection, hover, data, layout |
@@ -209,9 +213,14 @@ from `ButtonText`, `BtnResearchHover` shown under the mouse while enabled), alwa
 button is disabled, a refusal of the server, "Запит надіслано..."); `CardStamp` + `CardStampImg`
 (`StampOf`); `CardScroll` (scrolled to the top on every selection) and `CardFlow` (the stack,
 updated after the card changes) if the card scrolls. `menu.RefreshCard()` updates exactly these
-two, after every card paint and after a wrap inside `CardFlow`; a skin whose opens list or any
-other stack sits elsewhere updates that stack itself (`OnWrapped`, `OnSelect`) and then calls
-`menu.RefreshCard()` — a ScrollWidget does not notice its content growing until it is updated.
+two. The menu calls it after every card paint, after a word-wrap inside `CardFlow` and after every
+wrapping `FlowLater` (the opens list) — a ScrollWidget does not notice its content growing until it
+is updated. A stack that sits elsewhere is the skin's own to update, and no hook follows its
+`FlowLater`: `OnSelect` runs at the end of the card paint, BEFORE the flow lays the opens list out
+(the next frame, or up to 12 frames later while the texts are measured), and `OnWrapped` fires only
+after text wraps. So keep the opens list inside `CardFlow`, where the flow's own `RefreshCard`
+reaches it; otherwise update that stack from `OnUpdate` for a dozen frames after `OnSelect`, then
+call `menu.RefreshCard()`.
 
 **Wrapped text.** `CardName`, `CardMeta`, `CardDesc` and the node's `NodeName` may each be ONE
 text widget (a `TextWidget` for one line, or a `MultilineTextWidget` with an SDF font that the
@@ -304,7 +313,7 @@ Hooks — each works without an override:
 | `void OnUpdate(menu, dt)` | — (every frame: marquee, blinking, flicker) |
 | `void OnPaint(menu)` | — (after every full paint: a new answer of the server, another branch; a node selection is `OnSelect`, not a full paint) |
 | `void OnSelect(menu, node, status, canResearch)` | — (node null = nothing selected) |
-| `void OnWrapped(menu, box)` | — (the frame after `PutText`: the menu has just word-wrapped a container `box` — a node name, `CardName`, `CardMeta`, `CardDesc` — and already called `RefreshCard`; update your own stacks here) |
+| `void OnWrapped(menu, box)` | — (the frame after `PutText`: the menu has just word-wrapped a container `box` — a node name, `CardName`, `CardMeta`, `CardDesc`. When `box` lies inside `CardFlow` the menu has already called `RefreshCard`; for a box outside it (a node name) it has not. Update your own stacks here) |
 | `bool OnClick(menu, w)` | false (clicks the menu did not recognise: helper buttons...) |
 
 Helpers on the menu for hooks: `Role(name)`, `PlaceUnits`, `SizeUnits`, `UnitsOf`, `Px()`,
