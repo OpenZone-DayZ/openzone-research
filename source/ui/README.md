@@ -122,7 +122,7 @@ transparent".
 All the sprites of a set are drawn on one page (`build/ui/<set>/sheet.html`), so an `id` in one
 sprite's markup is an id of the whole page: two sprites that both define `<linearGradient id="g">`
 would silently share the first one. **Prefix every SVG id with the name of its sprite**
-(`stamp_uk_noise`, not `noise`), and give the `_ua` and `_en` variants of one sprite ids of their
+(`stamp_ua_noise`, not `noise`), and give the `_ua` and `_en` variants of one sprite ids of their
 own as well: they are two sprites on the same page. The bake stops when two pictures use the same
 id. Reserved: `oz0`, `oz1`, ... (`oz<N>`, the box of each picture), `oz-sheet` and `oz-canary`, and
 the classes `oz-c` and `oz-s`.

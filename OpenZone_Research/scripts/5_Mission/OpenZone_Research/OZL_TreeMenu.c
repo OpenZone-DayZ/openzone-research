@@ -729,7 +729,7 @@ class OZL_TreeMenu : UIScriptedMenu
     }
 
     // Вікно скіну в хості. Скін, чия розкладка ще не дає віджетів (його
-    // задача не зроблена), -- тетрадь neutral з одним рядком у лозі.
+    // задача не зроблена), -- зошит neutral з одним рядком у лозі.
     private bool BuildWindow(string id)
     {
         if (m_Window)
@@ -2144,7 +2144,14 @@ class OZL_TreeMenu : UIScriptedMenu
                 lines[n].Show(used);
             }
             job.Box.Update();
-            m_WrapShown.Set(job.Box, job.Text + "|" + job.Color.ToString());
+            // Розкладеним вважається лише розклад справжньою шириною напису.
+            // Вимушений (12 кадрів чекання минули, ширина 0) не записується --
+            // наступне малювання з тим самим текстом перекладе його, а не
+            // залишить зламаним.
+            if (lw > 0)
+                m_WrapShown.Set(job.Box, job.Text + "|" + job.Color.ToString());
+            else
+                m_WrapShown.Remove(job.Box);
             if (flow && Holds(flow, job.Box))
                 cardDone = true;
             m_Wraps.RemoveOrdered(j);
@@ -2395,6 +2402,13 @@ class OZL_TreeMenu : UIScriptedMenu
             m_Probe.SetPos(0, 0);
             m_Probe.SetSize(100, 100);
             m_ProbeStep = 2;
+            return;
+        }
+        // Рамка-проба могла зникнути між кадрами -- тоді теж пікселі.
+        if (!m_Probe)
+        {
+            m_K = m_Px;
+            m_ProbeStep = 0;
             return;
         }
         if (m_ProbeStep == 2)
