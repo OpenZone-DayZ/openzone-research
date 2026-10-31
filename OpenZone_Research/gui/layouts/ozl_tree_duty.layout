@@ -144,7 +144,7 @@ FrameWidgetClass TreeWindow {
        visible 1
        ignorepointer 1
        position 40 79.3
-       size 400 17
+       size 400 19
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -249,7 +249,7 @@ FrameWidgetClass TreeWindow {
        visible 1
        ignorepointer 1
        position 820 57.55
-       size 260 17
+       size 260 19
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -315,7 +315,7 @@ FrameWidgetClass TreeWindow {
        visible 1
        ignorepointer 1
        position 820 81.3
-       size 260 17
+       size 260 19
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -1630,7 +1630,7 @@ FrameWidgetClass TreeWindow {
        visible 1
        ignorepointer 1
        position 40 831.62
-       size 700 14
+       size 700 16
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -3321,7 +3321,7 @@ FrameWidgetClass TreeWindow {
            visible 1
            ignorepointer 1
            position 0 105.62
-           size 374 14
+           size 374 15
            hexactpos 1
            vexactpos 1
            hexactsize 1

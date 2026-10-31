@@ -104,15 +104,15 @@
     },
     {
       "name": "dots", "w": 8, "h": 8, "size": [16, 16],
-      "html": "<div style='position:absolute;left:0;top:0;width:1px;height:1px;background:#fff'></div><div style='position:absolute;left:2px;top:0;width:1px;height:1px;background:#fff'></div><div style='position:absolute;left:4px;top:0;width:1px;height:1px;background:#fff'></div><div style='position:absolute;left:6px;top:0;width:1px;height:1px;background:#fff'></div>"
+      "html": "<div style='position:absolute;left:0;top:0;width:1px;height:8px;background:#fff'></div><div style='position:absolute;left:2px;top:0;width:1px;height:8px;background:#fff'></div><div style='position:absolute;left:4px;top:0;width:1px;height:8px;background:#fff'></div><div style='position:absolute;left:6px;top:0;width:1px;height:8px;background:#fff'></div>"
     },
     {
       "name": "dash_h", "w": 8, "h": 8, "size": [16, 16],
-      "html": "<div style='position:absolute;left:0;top:0;width:2px;height:1px;background:#fff'></div><div style='position:absolute;left:4px;top:0;width:2px;height:1px;background:#fff'></div>"
+      "html": "<div style='position:absolute;left:0;top:0;width:2px;height:8px;background:#fff'></div><div style='position:absolute;left:4px;top:0;width:2px;height:8px;background:#fff'></div>"
     },
     {
       "name": "dash_v", "w": 8, "h": 8, "size": [16, 16],
-      "html": "<div style='position:absolute;left:0;top:0;width:1px;height:2px;background:#fff'></div><div style='position:absolute;left:0;top:4px;width:1px;height:2px;background:#fff'></div>"
+      "html": "<div style='position:absolute;left:0;top:0;width:8px;height:2px;background:#fff'></div><div style='position:absolute;left:0;top:4px;width:8px;height:2px;background:#fff'></div>"
     }
   ]
 }

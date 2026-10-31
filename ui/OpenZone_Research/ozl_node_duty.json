@@ -114,7 +114,7 @@
                   ],
                   "size": [
                     118,
-                    24.32
+                    28
                   ],
                   "color": "$none",
                   "note": "The name, upper case (NodeNameText), bold typed (regular when locked), in two lines 12.32 apart (line-height 1.12): the menu word-wraps it into NodeName0 and NodeName1.",
