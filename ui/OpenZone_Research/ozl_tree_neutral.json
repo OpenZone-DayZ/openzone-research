@@ -1469,12 +1469,14 @@
                           760,
                           818
                         ],
+                        "color": "$neutral_dim",
                         "props": {
                           "clipchildren": 1,
                           "Scrollbar V": 1,
-                          "Scrollbar H": 1
+                          "Scrollbar H": 1,
+                          "style": "blank"
                         },
-                        "note": "The tree: drag it, or the wheel. The menu sizes TreeContent.",
+                        "note": "The tree: drag it, or the wheel. The menu sizes TreeContent. The colour and style blank draw the scrollbars in pencil (thumb in the colour, track at half) instead of the engine's white bar, as the vanilla inventory scrollers do (measured by the sop skin, 2026-10-31).",
                         "children": [
                           {
                             "frame": {

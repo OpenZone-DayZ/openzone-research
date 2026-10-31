@@ -1588,7 +1588,7 @@ FrameWidgetClass TreeWindow {
        mode blend
        "src alpha" 1
       }
-      // The tree: drag it, or the wheel. The menu sizes TreeContent.
+      // The tree: drag it, or the wheel. The menu sizes TreeContent. The colour and style blank draw the scrollbars in pencil (thumb in the colour, track at half) instead of the engine's white bar, as the vanilla inventory scrollers do (measured by the sop skin, 2026-10-31).
       ScrollWidgetClass TreeScroll {
        visible 1
        position 0 0
@@ -1597,10 +1597,12 @@ FrameWidgetClass TreeWindow {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       color 0.435 0.361 0.259 1
        priority 1
        clipchildren 1
        "Scrollbar V" 1
        "Scrollbar H" 1
+       style blank
        {
         FrameWidgetClass TreeContent {
          visible 1
