@@ -1,24 +1,32 @@
 {
-  "comment": "Every bitmap font of the mod: build_fonts.py turns each entry into OpenZone_Research/gui/fonts/<name>.fnt + .edds. cell = the cell height in pixels (the atlas resolution, not the size on screen: a layout sets that with \"exact text size\"). See README.md.",
+  "comment": "Every font of the mod: build_fonts.py turns each entry into OpenZone_Research/gui/fonts/<name>.fnt + .edds. kind bitmap = FNT3 (TextWidget; sharpest at the sizes it was built for), kind sdf = FNT5 distance field (the only kind MultilineTextWidget and RichTextWidget scale). cell = the cell height in pixels (the atlas resolution, not the size on screen: a layout sets that with \"exact text size\"). See README.md.",
   "output": "OpenZone_Research/gui/fonts",
   "charsets": {
     "text": "latin+latin1+cyrillic+punct+box"
   },
   "outputs": [
-    {"name": "ozl_hand48",    "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 48, "charset": "text", "for": "bandit, neutral: exact text size up to 32"},
-    {"name": "ozl_hand72",    "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 72, "charset": "text", "for": "bandit, neutral: exact text size 33 and up (headings)"},
-    {"name": "ozl_type30",    "face": "ptmono/PTM55FT.ttf",                          "wght": null, "cell": 30, "charset": "text", "for": "duty typed text, freedom counters"},
-    {"name": "ozl_narrow28",  "face": "ptsansnarrow/PT_Sans-Narrow-Web-Regular.ttf", "wght": null, "cell": 28, "charset": "text", "for": "duty form labels"},
-    {"name": "ozl_narrowb36", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf",    "wght": null, "cell": 36, "charset": "text", "for": "duty headings up to exact text size 24"},
-    {"name": "ozl_narrowb60", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf",    "wght": null, "cell": 60, "charset": "text", "for": "duty title"},
-    {"name": "ozl_oswald40",  "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 40, "charset": "text", "for": "sop text up to exact text size 27"},
-    {"name": "ozl_oswald64",  "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 64, "charset": "text", "for": "sop timer"},
-    {"name": "ozl_oswaldb42", "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 42, "charset": "text", "for": "sop bold labels up to exact text size 28"},
-    {"name": "ozl_oswaldb70", "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 70, "charset": "text", "for": "sop and freedom big headings (the Impact of the mockup)"},
-    {"name": "ozl_serif36",   "face": "ptserif/PT_Serif-Web-Regular.ttf",            "wght": null, "cell": 36, "charset": "text", "for": "freedom: the Times New Roman of the mockup"},
-    {"name": "ozl_sans28",    "face": "ptsans/PT_Sans-Web-Regular.ttf",              "wght": null, "cell": 28, "charset": "text", "for": "freedom: the Verdana of the mockup"},
-    {"name": "ozl_sansb28",   "face": "ptsans/PT_Sans-Web-Bold.ttf",                 "wght": null, "cell": 28, "charset": "text", "for": "freedom: bold Verdana"},
-    {"name": "ozl_comic30",   "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 30, "charset": "text", "for": "freedom: the Comic Sans of the mockup, up to exact text size 20"},
-    {"name": "ozl_comic52",   "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 52, "charset": "text", "for": "freedom: the research button"}
+    {"name": "ozl_hand32",        "kind": "bitmap", "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 32, "charset": "text", "for": "bandit, neutral: labels up to exact text size 21"},
+    {"name": "ozl_hand48",        "kind": "bitmap", "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 48, "charset": "text", "for": "bandit, neutral: exact text size up to 32"},
+    {"name": "ozl_hand72",        "kind": "bitmap", "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 72, "charset": "text", "for": "bandit, neutral: exact text size 33 and up (headings)"},
+    {"name": "ozl_type30",        "kind": "bitmap", "face": "ptmono/PTM55FT.ttf",                          "wght": null, "cell": 30, "charset": "text", "for": "duty typed text, freedom counters"},
+    {"name": "ozl_narrow28",      "kind": "bitmap", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Regular.ttf", "wght": null, "cell": 28, "charset": "text", "for": "duty form labels"},
+    {"name": "ozl_narrowb36",     "kind": "bitmap", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf",    "wght": null, "cell": 36, "charset": "text", "for": "duty headings up to exact text size 24"},
+    {"name": "ozl_narrowb60",     "kind": "bitmap", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf",    "wght": null, "cell": 60, "charset": "text", "for": "duty title"},
+    {"name": "ozl_oswald40",      "kind": "bitmap", "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 40, "charset": "text", "for": "sop text up to exact text size 27"},
+    {"name": "ozl_oswald64",      "kind": "bitmap", "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 64, "charset": "text", "for": "sop timer"},
+    {"name": "ozl_oswaldb42",     "kind": "bitmap", "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 42, "charset": "text", "for": "sop bold labels up to exact text size 28"},
+    {"name": "ozl_oswaldb70",     "kind": "bitmap", "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 70, "charset": "text", "for": "sop and freedom big headings (the Impact of the mockup)"},
+    {"name": "ozl_serif36",       "kind": "bitmap", "face": "ptserif/PT_Serif-Web-Regular.ttf",            "wght": null, "cell": 36, "charset": "text", "for": "freedom: the Times New Roman of the mockup"},
+    {"name": "ozl_sans28",        "kind": "bitmap", "face": "ptsans/PT_Sans-Web-Regular.ttf",              "wght": null, "cell": 28, "charset": "text", "for": "freedom: the Verdana of the mockup"},
+    {"name": "ozl_sansb28",       "kind": "bitmap", "face": "ptsans/PT_Sans-Web-Bold.ttf",                 "wght": null, "cell": 28, "charset": "text", "for": "freedom: bold Verdana"},
+    {"name": "ozl_comic30",       "kind": "bitmap", "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 30, "charset": "text", "for": "freedom: the Comic Sans of the mockup, up to exact text size 20"},
+    {"name": "ozl_comic52",       "kind": "bitmap", "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 52, "charset": "text", "for": "freedom: the research button"},
+    {"name": "ozl_sdf_hand32",    "kind": "sdf",    "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 32, "charset": "text", "for": "bandit, neutral: wrapped text (MultilineTextWidget, RichTextWidget: any exact text size)"},
+    {"name": "ozl_sdf_type32",    "kind": "sdf",    "face": "ptmono/PTM55FT.ttf",                          "wght": null, "cell": 32, "charset": "text", "for": "duty: wrapped typed text (MultilineTextWidget, RichTextWidget: any exact text size)"},
+    {"name": "ozl_sdf_oswald32",  "kind": "sdf",    "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 32, "charset": "text", "for": "sop: wrapped text (MultilineTextWidget, RichTextWidget: any exact text size)"},
+    {"name": "ozl_sdf_oswaldb32", "kind": "sdf",    "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 32, "charset": "text", "for": "sop: wrapped bold labels (MultilineTextWidget, RichTextWidget: any exact text size)"},
+    {"name": "ozl_sdf_serif32",   "kind": "sdf",    "face": "ptserif/PT_Serif-Web-Regular.ttf",            "wght": null, "cell": 32, "charset": "text", "for": "freedom: wrapped Times text (MultilineTextWidget, RichTextWidget: any exact text size)"},
+    {"name": "ozl_sdf_sans32",    "kind": "sdf",    "face": "ptsans/PT_Sans-Web-Regular.ttf",              "wght": null, "cell": 32, "charset": "text", "for": "freedom: wrapped Verdana text (MultilineTextWidget, RichTextWidget: any exact text size)"},
+    {"name": "ozl_sdf_comic32",   "kind": "sdf",    "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 32, "charset": "text", "for": "freedom: wrapped Comic text (MultilineTextWidget, RichTextWidget: any exact text size)"}
   ]
 }

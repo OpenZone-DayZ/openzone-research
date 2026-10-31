@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""TTF/OTF/TTC -> DayZ bitmap font: an FNT3 `.fnt` and its `.edds` atlas.
+"""TTF/OTF/TTC -> DayZ font: a `.fnt` and its `.edds` atlas -- bitmap (FNT3) by default,
+distance field (FNT5) with --sdf.
 
     python source/fonts/fontbuild.py FONT.ttf --name ozl_hand --cells 24 32 --out DIR [options]
+
+MultilineTextWidget and RichTextWidget draw every FNT3 font at its atlas's own pixel size,
+whatever "exact text size" asks (the vanilla FNT3 fonts too; measured 2026-10-31); only
+FNT5 fonts scale there. TextWidget scales both. See build_sdf() for the FNT5 output.
 
 For every cell height N it writes DIR/<name><N>.fnt and DIR/<name><N>.edds. A layout uses
 
@@ -350,6 +355,145 @@ def build(path, name, n, charset=DEFAULT_CHARSET, wght=None, mode="fit", symbols
     return out
 
 
+SDF_PAD = 8     # atlas px of field around each glyph's ink box (the u16 of the vanilla HEAD)
+SDF_K = 4       # the outline is measured on a mask drawn this many times larger
+
+
+def build_sdf(path, name, n, charset=DEFAULT_CHARSET, wght=None, symbols=True, box=True,
+              aliases=True, face_index=0):
+    """Build an FNT5 (SDF) font whose line is `n` atlas pixels -- the same cell and the same
+    glyph size per "exact text size" as the FNT3 font of that cell, but drawn from a
+    distance field: it scales in every widget, MultilineTextWidget and RichTextWidget
+    included (they draw FNT3 fonts at their native size whatever the size asked).
+
+    HEAD size = n, so "exact text size" S scales the font by S / n: the line pitch is S and
+    the em S / r, as with the FNT3 cells -- the same glyphs as the FNT3 font of the face at
+    the same S (measured: equal ink widths). One line measures S x cell / n high, cell being
+    the HEAD's u32 (GetTextSize, "size to text v"); several lines (lines - 1) x S + that.
+    No kerning: no vanilla SDF font carries pairs and the FNT5 KERN record layout is unknown."""
+    import numpy as np
+    from fontkit import sdf
+
+    want = parse_charset(charset)
+    covered = sfnt.coverage(path, face_index)
+    have = [c for c in want if c in covered]
+    stand_ins = []
+    if aliases:
+        for src, dst in ALIASES.items():
+            if src in want and src not in covered and dst in covered:
+                stand_ins.append((src, dst))
+                if dst not in have:
+                    have.append(dst)
+    have.sort()
+    missing = [c for c in want if c not in covered and c != 0x25A1 and c not in dict(stand_ins)]
+    core = [c for c in have if c in EXTENT] or have
+    px, top, cell = choose_size(path, n, core, "fit", face_index, wght)
+    font_ref = open_font(path, REF_PX, face_index, wght)
+    ref_top, ref_bot = ink_extent(path, core, face_index, wght)
+
+    def fits(cp):
+        l, t, r, b = font_ref.getbbox(chr(cp), anchor="ls")
+        return r <= l or (-t <= ref_top + 0.01 * REF_PX and b <= ref_bot + 0.01 * REF_PX)
+
+    chosen, dropped = [], []
+    for cp in have:
+        if cp in core or fits(cp):
+            chosen.append(cp)
+        elif cp != 0x25A1:
+            dropped.append(cp)
+    extra = [cp for cp in SYMBOLS if symbols and cp in covered and cp not in chosen and fits(cp)]
+    chosen = sorted(chosen + extra)
+
+    # The vanilla layout (sdf_MetronBook24, measured): every glyph sits in a square cell of
+    # the HEAD's u32 size (36 there), its ink box centred in it; the cells stand in slots one
+    # pixel apart (pitch u32 + 2, the first at 1,1); TCRD x, y is the cell's corner. The
+    # engine samples the whole cell around the ink, so the ink MUST be centred.
+    k, pad = SDF_K, SDF_PAD
+    font_hi = open_font(path, px * k, face_index, wght)
+    metrics = {}                                 # cp -> (bx, by, w, h, adv) in atlas px
+    for cp in chosen:
+        l, t, r, b = font_hi.getbbox(chr(cp), anchor="ls")
+        adv = int(round(font_hi.getlength(chr(cp)) / k))
+        if r <= l:                               # blank: no ink, like the vanilla space
+            metrics[cp] = (0, 0, 0, 0, adv)
+            continue
+        bx, by = l // k, -(t // k)               # floor of the left edge; ceil of the top
+        metrics[cp] = (bx, by, max(1, -(-r // k) - bx), max(1, -(-b // k) + by), adv)
+    drawn_box = box and 0x25A1 not in metrics
+    if drawn_box:
+        cap = metrics[ord("H")][1] if ord("H") in metrics else int(top * 0.7)
+        bh = max(4, cap)
+        bw = max(4, int(round(bh * 0.7)))
+        side = max(1, n // 16)
+        metrics[0x25A1] = (side, bh, bw, bh, bw + 2 * side)
+    size = max(max(m[2], m[3]) for m in metrics.values()) + 2 * pad
+    size += size % 2                             # even: (size - w) / 2 lands on a k grid
+    pitch = size + 2
+
+    def field_of(cp):
+        bx, by, w, h, _ = metrics[cp]
+        big = Image.new("L", (size * k, size * k), 0)
+        ox, oy = (size - w) * k // 2, (size - h) * k // 2      # ink box corner, hi-res px
+        if cp == 0x25A1 and drawn_box:
+            stroke = max(1, n // 18) * k
+            ImageDraw.Draw(big).rectangle((ox, oy, ox + w * k - 1, oy + h * k - 1), outline=255, width=stroke)
+        else:
+            ImageDraw.Draw(big).text((ox - bx * k, oy + by * k), chr(cp), font=font_hi, fill=255, anchor="ls")
+        return sdf.signed_distance(np.asarray(big) >= 128, k, size, size)
+
+    inked = [cp for cp in sorted(metrics) if metrics[cp][2]]
+    slots = len(inked) + 1                       # slot 0 stays empty: the blank glyphs point there
+    best = None
+    for width in (256, 512, 1024, 2048, 4096):
+        cols = (width - 1) // pitch
+        if cols < 1:
+            continue
+        height = next_pow2(1 + -(-slots // cols) * pitch)
+        if height > 4096:
+            continue
+        key = (width * height, max(width, height) / min(width, height), width)
+        if best is None or key < best[0]:
+            best = (key, width, height, cols)
+    if best is None:
+        raise SystemExit("%s%d: the SDF glyphs do not fit a 4096 atlas" % (name, n))
+    _, width, height, cols = best
+    field = np.zeros((height, width), dtype=np.uint8)
+    glyphs = []
+    for cp in sorted(metrics):
+        bx, by, w, h, adv = metrics[cp]
+        g = fnt.Glyph(cp, 1, 1, w, h, bx, adv - bx - w, top=by, adv=adv)
+        if w:
+            i = inked.index(cp) + 1
+            g.x, g.y = 1 + (i % cols) * pitch, 1 + (i // cols) * pitch
+            field[g.y:g.y + size, g.x:g.x + size] = field_of(cp)
+        glyphs.append(g)
+    rgb = Image.fromarray(field, "L")
+    atlas = Image.merge("RGBA", (rgb, rgb, rgb, Image.new("L", (width, height), 255)))
+
+    by_cp = {g.cp: g for g in glyphs}
+    for src, dst in stand_ins:
+        d = by_cp[dst]
+        glyphs.append(fnt.Glyph(src, d.x, d.y, d.w, d.h, d.pre, d.post, top=d.top, adv=d.adv))
+    glyphs.sort(key=lambda g: g.cp)
+    warnings = check_required(path, n, want, glyphs, stand_ins)
+
+    f = fnt.Font()
+    f.kind = "FNT5"
+    f.name = "%s%d" % (name, n)
+    f.size = cell
+    f.head_tail = fnt.head_fnt5(size, float(top), float(cell), pad)
+    f.glyphs = glyphs
+    f.kern = []
+    f.chunk_order = ["HEAD", "GLPS", "TCRD", "KERN"]      # the vanilla SDF order
+
+    out = Built()
+    out.name, out.n, out.font, out.atlas, out.mips = "%s%d" % (name, n), n, f, atlas, True
+    out.freetype_px, out.cell, out.baseline = px, cell, top
+    out.missing, out.stand_ins, out.symbols, out.clipped = missing, stand_ins, extra, {}
+    out.dropped, out.warnings = dropped, warnings
+    return out
+
+
 def write(built, out_dir, codec="lz4"):
     """Write <name><N>.fnt and .edds into out_dir; returns their paths."""
     os.makedirs(out_dir, exist_ok=True)
@@ -409,11 +553,18 @@ def main(argv=None):
     ap.add_argument("--no-box", dest="box", action="store_false", help="do not draw U+25A1 when the face lacks it")
     ap.add_argument("--no-alias", dest="aliases", action="store_false", help="no stand-ins for lacking characters")
     ap.add_argument("--face-index", type=int, default=0, help="face of a TTC collection")
+    ap.add_argument("--sdf", action="store_true",
+                    help="FNT5 distance field (for MultilineTextWidget, RichTextWidget); needs numpy; "
+                         "--mode, --no-mips, --pad and --no-kern do not apply (no kerning in FNT5)")
     ap.add_argument("--preview", default="", help="also write atlas and sample PNGs here")
     args = ap.parse_args(argv)
     for n in args.cells:
-        b = build(args.face, args.name, n, args.charset, args.wght, args.mode, args.symbols,
-                  args.kerning, args.box, args.aliases, args.mips, args.pad, args.face_index)
+        if args.sdf:
+            b = build_sdf(args.face, args.name, n, args.charset, args.wght, args.symbols,
+                          args.box, args.aliases, args.face_index)
+        else:
+            b = build(args.face, args.name, n, args.charset, args.wght, args.mode, args.symbols,
+                      args.kerning, args.box, args.aliases, args.mips, args.pad, args.face_index)
         fnt_path, _ = write(b, args.out, args.codec)
         if args.preview:
             preview(b, fnt_path, args.preview)

@@ -3,16 +3,16 @@ of the typefaces below, made by source/fonts/build_fonts.py of the OpenZone Rese
 repository. They are Modified Versions under the SIL Open Font License 1.1 and do not use
 any Reserved Font Name. The original TTF files are in that repository, source/fonts/.
 
-ozl_hand48, ozl_hand72 -- Caveat
+ozl_hand32, ozl_hand48, ozl_hand72, ozl_sdf_hand32 -- Caveat
 Copyright 2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)
 
-ozl_oswald40, ozl_oswald64, ozl_oswaldb42, ozl_oswaldb70 -- Oswald
+ozl_oswald40, ozl_oswald64, ozl_oswaldb42, ozl_oswaldb70, ozl_sdf_oswald32, ozl_sdf_oswaldb32 -- Oswald
 Copyright 2016 The Oswald Project Authors (https://github.com/googlefonts/OswaldFont)
 
-ozl_comic30, ozl_comic52 -- Pangolin
+ozl_comic30, ozl_comic52, ozl_sdf_comic32 -- Pangolin
 Copyright 2016 The Pangolin Project Authors (https://github.com/googlefonts/pangolin)
 
-ozl_type30 -- PT Mono
+ozl_sdf_type32, ozl_type30 -- PT Mono
 Copyright (c) 2011, ParaType Ltd. (http://www.paratype.com/public),
 with Reserved Font Names "PT Sans", "PT Serif", "PT Mono" and "ParaType".
 
@@ -20,7 +20,7 @@ ozl_sansb28 -- PT Sans
 Copyright (c) 2010, ParaType Ltd. (http://www.paratype.com/public),
 with Reserved Font Names "PT Sans" and "ParaType".
 
-ozl_sans28 -- PT Sans
+ozl_sans28, ozl_sdf_sans32 -- PT Sans
 Copyright (c) 2010, ParaType Ltd. (http://www.paratype.com/public),
 with Reserved Font Names "PT Sans" and "ParaType".
 
@@ -32,7 +32,7 @@ ozl_narrow28 -- PT Sans Narrow
 Copyright (c) 2010, ParaType Ltd. (http://www.paratype.com/public),
 with Reserved Font Names "PT Sans" and "ParaType".
 
-ozl_serif36 -- PT Serif
+ozl_sdf_serif32, ozl_serif36 -- PT Serif
 Copyright (c) 2010, ParaType Ltd. (http://www.paratype.com/public),
 with Reserved Font Names "PT Sans", "PT Serif" and "ParaType".
 

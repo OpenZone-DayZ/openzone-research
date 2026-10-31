@@ -6,7 +6,8 @@ IFF container (chunk ids and sizes BIG-endian, payload LITTLE-endian):
   then chunks, any order (vanilla FNT3: GLPS TCRD KERN HEAD; 7segment: HEAD first):
   "HEAD" u32be n  (FNT3/FNT5; FNT2 has none)
         u32 len, char name[len] (NUL included), u16 pixel size, u8 zero[6]
-        FNT5 adds: u8 ?, u32 ?, f32 ?, f32 em, u16 sdf range, u8 ?, u8 ?, f32 ?
+        FNT5 adds: u8 2, u32 cell (side of the square glyph cell), f32 ascent, f32 em,
+        u16 sdf spread, u8 1, u8 1, f32 em -- see head_fnt5()
   "GLPS" u32be n
         u8 junk[8] (an uninitialised pointer in the exporter -- ignore)
         u32 glyph count, u32 range count
@@ -17,17 +18,24 @@ IFF container (chunk ids and sizes BIG-endian, payload LITTLE-endian):
         (pixel rectangle in the atlas, cell is full line height;
          advance = pre + w + post)
         FNT2 (8 bytes):  u16 x, u16 y, u16 w, u16 h (monospace cells)
+        FNT5 (14 bytes): u16 x, u16 y (corner of the glyph's square cell), u16 w, u16 h
+        (the ink box, centred in that cell), s16 bearing x, s16 bearing y (ink top above
+        the baseline), s16 advance
   "KERN" u32be n   FNT3: 8-byte records {u16 left cp, u16 right cp, s32 dx px}
+                   FNT5: empty in every vanilla SDF font; the record layout is unknown
 """
 import struct
 
 
 class Glyph:
-    __slots__ = ("cp", "x", "y", "w", "h", "pre", "post", "raw")
+    """FNT3: x, y, w, h = the full-height cell in the atlas; pre/post around it.
+    FNT5: x, y = top-left of the padded SDF cell; w, h = the ink box; pre = bearing X;
+    top = bearing Y (ink top above the baseline); adv = advance."""
+    __slots__ = ("cp", "x", "y", "w", "h", "pre", "post", "raw", "top", "adv")
 
-    def __init__(self, cp, x=0, y=0, w=0, h=0, pre=0, post=0, raw=None):
+    def __init__(self, cp, x=0, y=0, w=0, h=0, pre=0, post=0, raw=None, top=0, adv=0):
         self.cp, self.x, self.y, self.w, self.h, self.pre, self.post = cp, x, y, w, h, pre, post
-        self.raw = raw
+        self.raw, self.top, self.adv = raw, top, adv
 
     @property
     def advance(self):
@@ -141,6 +149,9 @@ def read(path_or_bytes):
         elif rec == 8:  # FNT2 (system.fnt): fixed cells, no bearings
             x, y, w, h = struct.unpack("<4H", r)
             f.glyphs.append(Glyph(cp, x, y, w, h, 0, 0, r))
+        elif rec == 14:  # FNT5 (SDF): padded cell origin, ink box, bearings, advance
+            x, y, w, h, bx, by, adv = struct.unpack("<4H3h", r)
+            f.glyphs.append(Glyph(cp, x, y, w, h, bx, adv - bx - w, r, by, adv))
         else:
             f.glyphs.append(Glyph(cp, raw=r))
     k = d.get("KERN", b"")
@@ -159,14 +170,23 @@ def _chunk(cid, data):
     return cid.encode("latin1") + struct.pack(">I", len(data)) + data
 
 
+def head_fnt5(cell, ascent, em, spread):
+    """The FNT5 HEAD fields after the u16 size, laid out like the vanilla SDF fonts:
+    6 zero bytes, u8 2 (the SDF type of the .fsdf recipe), u32 CELL -- the side of the
+    square every glyph is centred in (atlas slots are cell + 2 apart) --, f32 ascent (the
+    baseline below the top of the line), f32 em, u16 8, u8 1, u8 1, f32 em.
+    sdf_MetronBook24 has (2, 36, 19.0, 24.0, 8, 1, 1, 24.0): 36-px cells in 38-px slots."""
+    return bytes(6) + struct.pack("<BIffHBBf", 2, cell, ascent, em, spread, 1, 1, em)
+
+
 def write(f, path=None):
-    """Serialise an FNT3 (bitmap) font."""
-    if f.kind != "FNT3":
-        raise ValueError("writer supports FNT3 only")
+    """Serialise an FNT3 (bitmap) or FNT5 (SDF) font."""
+    if f.kind not in ("FNT3", "FNT5"):
+        raise ValueError("writer supports FNT3 and FNT5 only")
     cps = [g.cp for g in f.glyphs]
     if cps != sorted(cps) or len(set(cps)) != len(cps):
         raise ValueError("glyphs must be sorted by code point, no duplicates")
-    if cps and cps[-1] > 0xFFFF:
+    if f.kind == "FNT3" and cps and cps[-1] > 0xFFFF:
         raise ValueError("FNT3 ranges are 16-bit: BMP code points only")
     ranges = make_ranges(cps)
     parts = {}
@@ -177,15 +197,21 @@ def write(f, path=None):
     for s, c in ranges:
         if c > 0xFFFF:
             raise ValueError("range too long")
-        glps += struct.pack("<HH", s, c)
+        glps += struct.pack("<IHH", s, c, 0) if f.kind == "FNT5" else struct.pack("<HH", s, c)
     parts["GLPS"] = bytes(glps)
-    parts["TCRD"] = b"".join(struct.pack("<4H2h", g.x, g.y, g.w, g.h, g.pre, g.post) for g in f.glyphs)
-    # vanilla KERN is sorted by (left, right) -- keep it so (the reader may bisect)
-    parts["KERN"] = b"".join(struct.pack("<HHi", a, b, dx) for a, b, dx in sorted(f.kern, key=lambda t: (t[0], t[1])))
+    if f.kind == "FNT5":
+        parts["TCRD"] = b"".join(struct.pack("<4H3h", g.x, g.y, g.w, g.h, g.pre, g.top, g.adv)
+                                 for g in f.glyphs)
+        parts["KERN"] = b""             # no vanilla SDF font has pairs; their layout is unknown
+    else:
+        parts["TCRD"] = b"".join(struct.pack("<4H2h", g.x, g.y, g.w, g.h, g.pre, g.post) for g in f.glyphs)
+        # vanilla KERN is sorted by (left, right) -- keep it so (the reader may bisect)
+        parts["KERN"] = b"".join(struct.pack("<HHi", a, b, dx)
+                                 for a, b, dx in sorted(f.kern, key=lambda t: (t[0], t[1])))
     order = [c for c in f.chunk_order if c in parts] or ["GLPS", "TCRD", "KERN", "HEAD"]
     if not f.has_head and "HEAD" in order:
         order.remove("HEAD")
-    body = b"FNT3" + b"".join(_chunk(c, parts[c]) for c in order)
+    body = f.kind.encode("latin1") + b"".join(_chunk(c, parts[c]) for c in order)
     data = b"FORM" + struct.pack(">I", len(body)) + body
     if path:
         with open(path, "wb") as fh:

@@ -84,6 +84,8 @@ def load_manifest(path):
     for o in m["outputs"]:
         if not o["name"].endswith(str(o["cell"])):
             raise SystemExit("fonts.json: %s must end with its cell height %d" % (o["name"], o["cell"]))
+        if o.get("kind", "bitmap") not in ("bitmap", "sdf"):
+            raise SystemExit("fonts.json: %s: kind is bitmap or sdf" % o["name"])
         # a converted font is a Modified Version under the OFL: no Reserved Font Name in it
         for rfn in read_licence(o["face"])[2]:
             if squash(rfn) in squash(o["name"]):
@@ -94,8 +96,9 @@ def load_manifest(path):
 
 def build_one(o, charsets):
     stem = o["name"][: -len(str(o["cell"]))]
-    return fontbuild.build(face_path(o["face"]), stem, o["cell"],
-                           charset=charsets.get(o["charset"], o["charset"]), wght=o.get("wght"))
+    make = fontbuild.build_sdf if o.get("kind", "bitmap") == "sdf" else fontbuild.build
+    return make(face_path(o["face"]), stem, o["cell"],
+                charset=charsets.get(o["charset"], o["charset"]), wght=o.get("wght"))
 
 
 def same_file(a, b):
