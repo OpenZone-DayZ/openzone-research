@@ -290,8 +290,13 @@ class OZL_TreeMenu : UIScriptedMenu
         // крок -- через локальну, без ланцюжка GetMission().GetHud() (скіл §18).
         // Ідіома ванілі (MapMenu, NoteMenu, RadialQuickbarMenu.OnShow/OnHide):
         // ShowHudUI ховає ліву й праву частини HUD (стан, витривалість),
-        // ShowQuickbarUI -- панель швидкого доступу. Hud.Show(false) ховав лише
-        // m_HudPanelWidget, і решта лишалася під деревом (знімок sop 13:47).
+        // ShowQuickbarUI -- панель швидкого доступу. Це прапорці контексту
+        // (MENU_OPEN, QUICKBAR_DISABLE), а не Hud.Show(false): Show(false) теж
+        // ховає HudPanel з усім, що в ній, але будь-який пізніший
+        // Hud.Show(true) повертає панель над деревом -- її знову показують VPP,
+        // меню КПК і зв'язку (при закритті), перегляд MCP (при вивантаженні).
+        // Прапорці ховають самі елементи, тож це переживають. Хто повернув
+        // HUD на знімку sop 13:47, не виміряно.
         // Пара з OnHide: рушій кличе його на кожному закритті (ESC, кнопка,
         // смерть, інше меню поверх).
         Mission mission = GetGame().GetMission();

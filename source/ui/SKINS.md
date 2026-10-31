@@ -53,8 +53,11 @@ seven skin files. A later file replaces a same-named entry WHOLE (a font entry r
 While the menu is open the game HUD (status icons, stamina, the hotbar) is hidden the vanilla way
 — `ShowHudUI(false)` + `ShowQuickbarUI(false)`, as the map, the note and the radial quickbar do —
 and restored in `OnHide`, which the engine calls on every close (ESC, the button, death, another
-menu on top). A skin does nothing for it. (`Hud.Show(false)`, used before, hid only the HUD's panel
-widget and left the rest under the tree.)
+menu on top). A skin does nothing for it. (Why context flags and not `Hud.Show(false)`: that call
+hides the whole `HudPanel` too, but any later `Hud.Show(true)` brings the panel back over the tree —
+VPP's `UnlockPlayerControl`, OpenZone's link and PDA menus on their close and the MCP preview's
+unload all show it again — while the flags hide the elements themselves and survive that. Which
+caller put the HUD back in the sop snapshot of 13:47 was not measured.)
 
 The window is re-created only when the skin changes; the selected node and branch survive a
 refresh.
