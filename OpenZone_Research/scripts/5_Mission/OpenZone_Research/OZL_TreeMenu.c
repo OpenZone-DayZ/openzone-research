@@ -1612,20 +1612,26 @@ class OZL_TreeMenu : UIScriptedMenu
         if (start + edgeLen > along)
             edgeLen = along - start;
         float rest = along - start - edgeLen;
+        // Туман лягає на одну одиницю поверх кінця переходу: стик двох
+        // віджетів округлюється до різних пікселів, і між ними на 3840
+        // проглядав рядок голого тла (стенд 2026-10-31, bandit).
+        float lap = 0;
+        if (edgeLen > 0 && rest > 0)
+            lap = 1;
         if (m_Plan.Dir == "right")
         {
             FogPart(edge, start, 0, edgeLen, m_Plan.H);
-            FogPart(fog, start + edgeLen, 0, rest, m_Plan.H);
+            FogPart(fog, start + edgeLen - lap, 0, rest + lap, m_Plan.H);
         }
         else if (m_Plan.Dir == "up")
         {
             FogPart(edge, 0, along - start - edgeLen, m_Plan.W, edgeLen);
-            FogPart(fog, 0, 0, m_Plan.W, rest);
+            FogPart(fog, 0, 0, m_Plan.W, rest + lap);
         }
         else
         {
             FogPart(edge, 0, start, m_Plan.W, edgeLen);
-            FogPart(fog, 0, start + edgeLen, m_Plan.W, rest);
+            FogPart(fog, 0, start + edgeLen - lap, m_Plan.W, rest + lap);
         }
     }
 
