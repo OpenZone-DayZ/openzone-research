@@ -508,10 +508,17 @@ def save_png(img: Image.Image, path: Path) -> None:
 # ------------------------------------------------------------------------- outputs
 
 
-def write_if_changed(path: Path, data: bytes) -> bool:
-    """Leave an identical file alone, so a second run touches nothing."""
-    if path.is_file() and path.read_bytes() == data:
-        return False
+def write_if_changed(path: Path, data: bytes, text: bool = False) -> bool:
+    """Leave an identical file alone, so a second run touches nothing.
+
+    A text file is written with LF. A checkout with core.autocrlf has it as CRLF, and rewriting it
+    would make `git status` list it as modified though `git diff` is empty, so for text the line
+    ending is not part of "identical".
+    """
+    if path.is_file():
+        old = path.read_bytes()
+        if old == data or (text and old.replace(b"\r\n", b"\n") == data):
+            return False
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(data)
     return True
@@ -642,7 +649,7 @@ def bake_skin(skin: Skin, chrome: Path, node: Path, paa_exe: Path, mod_root: Pat
     sets = mod_root / "gui" / "imagesets"
     paa_len, note = to_paa(paa_exe, png, sets / f"{skin.set_name}_ca.paa", build)
     text = imageset_text(skin, (aw, ah), f"{MOD}/gui/imagesets/{skin.set_name}_ca.paa", entries)
-    write_if_changed(sets / f"{skin.set_name}.imageset", text.encode("utf-8"))
+    write_if_changed(sets / f"{skin.set_name}.imageset", text.encode("utf-8"), text=True)
     report.files += [(rel(sets / f"{skin.set_name}.imageset"), len(text)), (rel(sets / f"{skin.set_name}_ca.paa"), paa_len)]
     report.paa_bytes += paa_len
     print(f"  {rel(sets / (skin.set_name + '.imageset'))}  ({len(entries)} images)")

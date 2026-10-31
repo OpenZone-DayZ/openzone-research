@@ -44,8 +44,9 @@ Other paths: `--chrome`, `--node`, `--dayz-tools`, or the environment variables 
     python source/ui/bake.py --all            # every set with a sprites.json except the _examples
 
 The same input gives the same bytes: Chrome rasterises in software, animations are off, the packer
-breaks ties by position, and a file is rewritten only if its content changed. A second run changes
-nothing (`git status` stays clean).
+breaks ties by position, and a file is rewritten only if its content changed (an `.imageset` that
+differs only by CRLF line endings, as a Windows checkout has it, counts as unchanged). A second run
+changes nothing, and `git status` stays clean.
 
 What a run writes:
 
