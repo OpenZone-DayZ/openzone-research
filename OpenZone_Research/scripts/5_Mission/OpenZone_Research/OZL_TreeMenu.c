@@ -1002,7 +1002,31 @@ class OZL_TreeMenu : UIScriptedMenu
     {
         if (!parent || !m_Skin)
             return null;
-        return GetGame().GetWorkspace().CreateWidgets(m_Skin.RowLayout(row), parent);
+        Widget w = GetGame().GetWorkspace().CreateWidgets(m_Skin.RowLayout(row), parent);
+        Expect(w, row);
+        return w;
+    }
+
+    // Напис-рядок без своєї дитини -- ознака того, що рушій віддав інший
+    // файл: стенд 2026-10-31, шлях ozl_sop_or_label.layout на двох свіжих
+    // клієнтах дав віджети ozl_sop_price_chip.layout. Причини не знайдено
+    // (SKINS.md, "Layout mix-up"); тут -- лише попередження, раз на вікно, з
+    // іменем кореня, яке каже, чий файл прийшов.
+    private void Expect(Widget w, string row)
+    {
+        if (!w || m_RowWarned)
+            return;
+        string need = "";
+        if (row == "or_label")
+            need = "OrText";
+        else if (row == "price_chip")
+            need = "PriceText";
+        else if (row == "tier_label")
+            need = "TierText";
+        if (need == "" || w.FindAnyWidget(need))
+            return;
+        m_RowWarned = true;
+        OZL_Log.Warn("tree: " + m_Skin.RowLayout(row) + " gave a row '" + w.GetName() + "' without " + need + " -- the engine may have handed another layout file (SKINS.md, Layout mix-up)");
     }
 
     private void PaintBranches()
