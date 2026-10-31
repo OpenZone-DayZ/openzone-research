@@ -11,8 +11,9 @@ creates the settings file, and any other missing file, with defaults on its firs
   of the first row costs 4-6, of the fifth 205-450.
 - `test-stand/` -- the stand pack: all 39 stations in one line along the strip of the
   north-west airfield of Chernarus, faction after faction, each
-  packer with two rules on vanilla items (a plain one worth 1 point, and one showing the
-  options: 25 points, the line's first module required, purity 0.5), every analyzer with
+  packer with two rules on vanilla items (a plain one worth 1 point, which takes the
+  line's base purity, 0.7, and one showing the options: 25 points, the line's first
+  module required, a purity of its own, 0.5), every analyzer with
   its rule, ten seconds a cycle, two cheap nodes per faction. This is what the `dayz` MCP
   stand of this repository runs.
 

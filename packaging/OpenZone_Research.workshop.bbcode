@@ -5,7 +5,7 @@ Research points and a technology tree for OpenZone servers. Raw finds go into a 
 [list]
 [*]Seven lines: biology, anomalies, electronics, loot, trails, ballistics and protection. Each has one sample, one analysis and one carrier, shared by every faction that works the line; the line is also the point type.
 [*]Stations: put the input into a station's cargo and press F; the station works by the clock (a restart loses nothing), puts the result into its own cargo and keeps going while input is left.
-[*]Rules in JSON: which device takes what, how long, what comes out and with what chance. A packer rule sets the sample's points, the rarity of the input, and its starting purity, 0.7 by default; each module of the line in the packer's three slots adds 0.1 purity and a 10% chance of a second sample. Analyzers and terminals take no modules.
+[*]Rules in JSON: which device takes what, how long, what comes out and with what chance. A packer rule sets the sample's points (the input's rarity); purity starts at the line's, 0.7 by default, or at the rule's own. Each module of the line in the packer's three slots adds 0.1 purity and 10% chance of a second sample. Analyzers and terminals take no modules.
 [*]The item carries the numbers, read only by the server: a sample holds its points and its purity, the chance that its analysis succeeds; the carrier keeps the points.
 [*]Terminals: an identified carrier shows its line and points; handing it in pays the pool of the faction of whoever hands it in.
 [*]The tree: branches per faction, nodes with a cost in line points and materials, instant nodes and timed projects, parents by "all" or "any"; the leader or the holder of the research post spends.
@@ -29,7 +29,7 @@ You may repack this mod into your server's own pack, keeping the attribution and
 [list]
 [*]Сім ліній: біологія, аномалії, електроніка, хабар, стежки, балістика й захист. У кожної одна проба, один аналіз і один носій, спільні для всіх фракцій, що працюють на лінії; лінія -- це й тип балів.
 [*]Станції: покладіть сировину в карго станції й натисніть F; станція працює за годинником (рестарт нічого не губить), викладає результат у власне карго й веде далі, поки є сировина.
-[*]Правила в JSON: який прилад що бере, скільки триває, що виходить і з яким шансом. Правило пакувальника задає бали проби -- рідкість сировини -- і її вихідну чистоту, типово 0,7; кожен модуль лінії в трьох слотах пакувальника додає 0,1 чистоти й 10 % шансу на другу пробу. Аналізатори й термінали модулів не беруть.
+[*]Правила в JSON: який прилад що бере, скільки триває, що виходить і з яким шансом. Правило пакувальника задає бали проби (рідкість сировини); чистота стартує з лінії (типово 0,7) або з правила. Кожен модуль лінії в трьох слотах додає 0,1 чистоти й 10 % шансу на другу пробу. Аналізатори й термінали модулів не беруть.
 [*]Числа їдуть у предметі, і читає їх лише сервер: проба тримає свої бали й чистоту -- шанс, що аналіз удасться; носій зберігає бали.
 [*]Термінали: визначений носій показує лінію й бали; здача поповнює пул фракції того, хто здає.
 [*]Дерево: гілки по фракціях, вузли з ціною в балах ліній і матеріалах, миттєві вузли й проєкти зі строком, батьки за «всі» або «будь-який»; тратить лідер або власник поста досліджень.

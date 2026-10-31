@@ -1,5 +1,5 @@
 {
-    "Version": 2,
+    "Version": 3,
     "Groups": [
         {
             "Id": "ts_eco",
@@ -14,7 +14,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -74,7 +74,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -103,7 +103,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -163,7 +163,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -192,7 +192,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -252,7 +252,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -286,7 +286,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -346,7 +346,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -375,7 +375,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -435,7 +435,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -464,7 +464,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -524,7 +524,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -558,7 +558,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -618,7 +618,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -647,7 +647,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -707,7 +707,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -741,7 +741,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -801,7 +801,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -830,7 +830,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -890,7 +890,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -924,7 +924,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -984,7 +984,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1013,7 +1013,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1073,7 +1073,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1107,7 +1107,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1167,7 +1167,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1196,7 +1196,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1256,7 +1256,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1290,7 +1290,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1350,7 +1350,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1379,7 +1379,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
@@ -1439,7 +1439,7 @@
                         "ConsumeInput": 1,
                         "RequireFullQuantity": 0
                     },
-                    "Purity": 0.7,
+                    "Purity": -1,
                     "TimeSec": 10,
                     "Consumables": [],
                     "Outputs": [
