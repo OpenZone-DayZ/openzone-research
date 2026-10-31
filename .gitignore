@@ -31,3 +31,7 @@ desktop.ini
 
 # машинний профіль MCP: шляхи цієї машини, не комітиться
 dayz-mcp.local.toml
+
+# the font converter: previews and bytecode (fonts.json builds land in OpenZone_Research/gui/fonts)
+source/fonts/preview/
+source/fonts/**/__pycache__/

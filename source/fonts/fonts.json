@@ -1,0 +1,24 @@
+{
+  "comment": "Every bitmap font of the mod: build_fonts.py turns each entry into OpenZone_Research/gui/fonts/<name>.fnt + .edds. cell = the cell height in pixels (the atlas resolution, not the size on screen: a layout sets that with \"exact text size\"). See README.md.",
+  "output": "OpenZone_Research/gui/fonts",
+  "charsets": {
+    "text": "latin+latin1+cyrillic+punct+box"
+  },
+  "outputs": [
+    {"name": "ozl_hand48",    "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 48, "charset": "text", "for": "bandit, neutral: exact text size up to 32"},
+    {"name": "ozl_hand72",    "face": "caveat/Caveat[wght].ttf",                     "wght": 400,  "cell": 72, "charset": "text", "for": "bandit, neutral: exact text size 33 and up (headings)"},
+    {"name": "ozl_type30",    "face": "ptmono/PTM55FT.ttf",                          "wght": null, "cell": 30, "charset": "text", "for": "duty typed text, freedom counters"},
+    {"name": "ozl_narrow28",  "face": "ptsansnarrow/PT_Sans-Narrow-Web-Regular.ttf", "wght": null, "cell": 28, "charset": "text", "for": "duty form labels"},
+    {"name": "ozl_narrowb36", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf",    "wght": null, "cell": 36, "charset": "text", "for": "duty headings up to exact text size 24"},
+    {"name": "ozl_narrowb60", "face": "ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf",    "wght": null, "cell": 60, "charset": "text", "for": "duty title"},
+    {"name": "ozl_oswald40",  "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 40, "charset": "text", "for": "sop text up to exact text size 27"},
+    {"name": "ozl_oswald64",  "face": "oswald/Oswald[wght].ttf",                     "wght": 400,  "cell": 64, "charset": "text", "for": "sop timer"},
+    {"name": "ozl_oswaldb42", "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 42, "charset": "text", "for": "sop bold labels up to exact text size 28"},
+    {"name": "ozl_oswaldb70", "face": "oswald/Oswald[wght].ttf",                     "wght": 600,  "cell": 70, "charset": "text", "for": "sop and freedom big headings (the Impact of the mockup)"},
+    {"name": "ozl_serif36",   "face": "ptserif/PT_Serif-Web-Regular.ttf",            "wght": null, "cell": 36, "charset": "text", "for": "freedom: the Times New Roman of the mockup"},
+    {"name": "ozl_sans28",    "face": "ptsans/PT_Sans-Web-Regular.ttf",              "wght": null, "cell": 28, "charset": "text", "for": "freedom: the Verdana of the mockup"},
+    {"name": "ozl_sansb28",   "face": "ptsans/PT_Sans-Web-Bold.ttf",                 "wght": null, "cell": 28, "charset": "text", "for": "freedom: bold Verdana"},
+    {"name": "ozl_comic30",   "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 30, "charset": "text", "for": "freedom: the Comic Sans of the mockup, up to exact text size 20"},
+    {"name": "ozl_comic52",   "face": "pangolin/Pangolin-Regular.ttf",               "wght": null, "cell": 52, "charset": "text", "for": "freedom: the research button"}
+  ]
+}
