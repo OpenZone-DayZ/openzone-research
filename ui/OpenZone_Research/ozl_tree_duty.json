@@ -145,13 +145,13 @@
                               "name": "OrgRefT0",
                               "at": [
                                 50.8,
-                                0.0
+                                -2.46
                               ],
                               "size": [
                                 200.0,
-                                17.0
+                                20.63
                               ],
-                              "font": "duty_type17",
+                              "font": "duty_tb15",
                               "color": "$duty_txt"
                             }
                           }
@@ -243,13 +243,13 @@
                               "name": "ApproveCmdT0",
                               "at": [
                                 75.0,
-                                0.0
+                                -2.46
                               ],
                               "size": [
                                 200.0,
-                                17.0
+                                20.63
                               ],
-                              "font": "duty_type17",
+                              "font": "duty_tb15",
                               "color": "$duty_txt"
                             }
                           }
@@ -290,13 +290,13 @@
                               "name": "ApproveDateT0",
                               "at": [
                                 6.4,
-                                0.0
+                                -2.46
                               ],
                               "size": [
                                 100.0,
-                                17.0
+                                20.63
                               ],
-                              "font": "duty_type17",
+                              "font": "duty_tb15",
                               "color": "$duty_txt"
                             }
                           },
@@ -320,13 +320,13 @@
                               "name": "ApproveDateT1",
                               "at": [
                                 34.6,
-                                0.0
+                                -2.46
                               ],
                               "size": [
                                 120.0,
-                                17.0
+                                20.63
                               ],
-                              "font": "duty_type17",
+                              "font": "duty_tb15",
                               "color": "$duty_txt"
                             }
                           },
@@ -366,13 +366,13 @@
                               "name": "ApproveDateT2",
                               "at": [
                                 0.0,
-                                0.0
+                                -2.46
                               ],
                               "size": [
                                 100.0,
-                                17.0
+                                20.63
                               ],
-                              "font": "duty_type17",
+                              "font": "duty_tb15",
                               "color": "$duty_txt",
                               "hidden": true
                             }
@@ -418,7 +418,7 @@
                       }
                     },
                     {
-                      "panel": {
+                      "frame": {
                         "name": "SubLine",
                         "at": [
                           0.0,
@@ -426,9 +426,8 @@
                         ],
                         "size": [
                           1104.0,
-                          18.0
+                          26.0
                         ],
-                        "color": "$none",
                         "children": [
                           {
                             "label": {
@@ -451,14 +450,31 @@
                               "name": "BranchName",
                               "at": [
                                 407.97,
-                                0.0
+                                -2.47
                               ],
                               "size": [
                                 600.0,
+                                22.0
+                              ],
+                              "font": "duty_tb16",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "BranchMark",
+                              "at": [
+                                520.0,
+                                0.0
+                              ],
+                              "size": [
+                                40.0,
                                 18.0
                               ],
                               "font": "duty_type18",
-                              "color": "$duty_txt"
+                              "color": "$duty_acc",
+                              "text": "»",
+                              "hidden": true
                             }
                           },
                           {
@@ -482,18 +498,38 @@
                               "name": "BranchSub",
                               "at": [
                                 552.0,
-                                0.0
+                                -2.47
                               ],
                               "size": [
                                 700.0,
-                                18.0
+                                22.0
                               ],
-                              "font": "duty_type18",
+                              "font": "duty_tb16",
                               "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "DutyBranchNext",
+                              "class": "ButtonWidgetClass",
+                              "props": {
+                                "style": "Empty",
+                                "text": ""
+                              },
+                              "hidden": true,
+                              "at": [
+                                407.97,
+                                0.0
+                              ],
+                              "size": [
+                                140.0,
+                                22.0
+                              ],
+                              "note": "Shown only with more than one branch; placed over BranchName and BranchMark by the skin."
                             }
                           }
                         ],
-                        "note": "'напрям: <branch> · <faction · досліджено N з M>', centred under the title: the skin lines the four texts up by their measured widths (OnUpdate) with one typed space between them."
+                        "note": "'напрям: <branch> · <faction · досліджено N з M>', centred under the title: the skin lines the texts up by their measured widths (OnUpdate), one typed letter apart (SubDot's width). The branch and the faction line are bold typed (.bname, .bsub). With more than one branch a red » follows the branch and DutyBranchNext, laid over the branch and the », opens the next branch (OnClick). A frame, not a panel: a panel ignores the pointer and would hide the button."
                       }
                     },
                     {
@@ -734,14 +770,22 @@
                           330
                         ],
                         "stack": "Registry",
-                        "note": "The registry rows (max-height 330, then it scrolls); the bar is 10 units right of the table. The skin shrinks it to its rows and moves FundBlock under it (OnSelect).",
+                        "note": "The registry rows (max-height 330, then it scrolls); the bar is 10 units right of the table. The skin shrinks it to its rows and moves FundBlock under it, reading both places from the widgets (OnUpdate).",
                         "rows": {
                           "ozl_duty_registry_row": {
                             "row": {
                               "name": "OZL_DutyRegistryRow",
                               "h": 24,
-                              "note": "One line of the registry: the menu fills RegNum, RegName, RegTier, RegState, renames RegHit reg:<id> and shows RegPick on the selected node; the skin upper-cases, greys a locked or hidden node's line and, when the status needs two lines (НЕ ВИСТАЧАЄ / РЕСУРСІВ), puts the second in RegState2 and makes the line 33 high. The rules are proportional, so they follow that height.",
+                              "note": "One line of the registry (visible nodes only): the menu renames RegHit reg:<id>; the skin's PaintRegistryRow writes the dense number, the name, the tier and the state in bold type (a locked line regular and grey), shows RegPick on the selected node and, when the state needs two lines (НЕ ВИСТАЧАЄ / РЕСУРСІВ), puts the second in RegState2 and makes the line 33 high. RegHover is the mouse's tint (.rrow:hover), not on the selected line. The rules are proportional, so they follow the height.",
                               "children": [
+                                {
+                                  "panel": {
+                                    "name": "RegHover",
+                                    "size": "fill",
+                                    "color": "$duty_reg_hover",
+                                    "hidden": true
+                                  }
+                                },
                                 {
                                   "panel": {
                                     "name": "RegPick",
@@ -759,7 +803,7 @@
                                       "text": ""
                                     },
                                     "size": "fill",
-                                    "note": "The click: renamed reg:<id>; hidden on a hidden node's line."
+                                    "note": "The click: renamed reg:<id> by the menu."
                                   }
                                 },
                                 {
@@ -889,13 +933,13 @@
                                     "name": "RegNum",
                                     "at": [
                                       1.5,
-                                      3.62
+                                      1.11
                                     ],
                                     "size": [
                                       38.0,
-                                      14.0
+                                      17.88
                                     ],
-                                    "font": "duty_type14",
+                                    "font": "duty_tb13",
                                     "color": "$duty_txt",
                                     "align": "center"
                                   }
@@ -905,13 +949,13 @@
                                     "name": "RegName",
                                     "at": [
                                       46.5,
-                                      3.62
+                                      1.11
                                     ],
                                     "size": [
                                       220.0,
-                                      14.0
+                                      17.88
                                     ],
-                                    "font": "duty_type14",
+                                    "font": "duty_tb13",
                                     "color": "$duty_txt"
                                   }
                                 },
@@ -920,13 +964,13 @@
                                     "name": "RegTier",
                                     "at": [
                                       271.5,
-                                      3.62
+                                      1.11
                                     ],
                                     "size": [
                                       39.0,
-                                      14.0
+                                      17.88
                                     ],
-                                    "font": "duty_type14",
+                                    "font": "duty_tb13",
                                     "color": "$duty_txt",
                                     "align": "center"
                                   }
@@ -936,13 +980,13 @@
                                     "name": "RegState",
                                     "at": [
                                       317.5,
-                                      3.56
+                                      1.56
                                     ],
                                     "size": [
                                       106.0,
-                                      12.0
+                                      15.13
                                     ],
-                                    "font": "duty_type12",
+                                    "font": "duty_tb11",
                                     "color": "$duty_txt"
                                   }
                                 },
@@ -951,13 +995,13 @@
                                     "name": "RegState2",
                                     "at": [
                                       317.5,
-                                      15.56
+                                      13.56
                                     ],
                                     "size": [
                                       106.0,
-                                      12.0
+                                      15.13
                                     ],
-                                    "font": "duty_type12",
+                                    "font": "duty_tb11",
                                     "color": "$duty_txt",
                                     "hidden": true
                                   }
@@ -1035,7 +1079,7 @@
                               ],
                               "color": "$duty_edge",
                               "hidden": true,
-                              "note": "The table's bottom edge, 1.5 like its sides: the skin puts it over the last row's rule (OnPaint)."
+                              "note": "The table's bottom edge, 1.5 like its sides: the skin puts it over the last row's rule, read from that row (OnUpdate)."
                             }
                           },
                           {
@@ -1300,14 +1344,15 @@
                                           "name": "TreeTipText",
                                           "at": [
                                             9.0,
-                                            5.62
+                                            3.11
                                           ],
                                           "size": [
                                             600.0,
-                                            14.0
+                                            17.88
                                           ],
-                                          "font": "duty_type14",
-                                          "color": "$duty_txt"
+                                          "font": "duty_tb13",
+                                          "color": "$duty_txt",
+                                          "note": "Bold typed (.tip font-weight 700): SetBold in OnShow."
                                         }
                                       }
                                     ],
@@ -1732,13 +1777,13 @@
                               "name": "ExecutorT0",
                               "at": [
                                 56.88,
-                                0.0
+                                -2.71
                               ],
                               "size": [
                                 300.0,
-                                14.0
+                                17.88
                               ],
-                              "font": "duty_type14",
+                              "font": "duty_tb13",
                               "color": "$duty_dim"
                             }
                           },
@@ -1799,9 +1844,9 @@
                               ],
                               "size": [
                                 374.0,
-                                18.0
+                                22.0
                               ],
-                              "font": "duty_type18",
+                              "font": "duty_tb16",
                               "color": "$duty_dim",
                               "text": "#STR_OZL_TREE_PICK",
                               "align": "center"
@@ -1812,13 +1857,13 @@
                               "name": "CardEmptyHint",
                               "at": [
                                 26.0,
-                                418.0
+                                422.0
                               ],
                               "size": [
                                 374.0,
-                                15.0
+                                19.25
                               ],
-                              "font": "duty_type15",
+                              "font": "duty_tb14",
                               "color": "$duty_dim",
                               "text": "#STR_OZL_TREE_HINT",
                               "align": "center"
@@ -2207,8 +2252,9 @@
                                 {
                                   "label": {
                                     "name": "CardTime",
-                                    "font": "duty_type15",
+                                    "font": "duty_tb14",
                                     "color": "$duty_txt",
+                                    "note": "Bold typed (.ctime): SetBold in OnShow. 16 high like the bitmap line it replaces, so the card keeps its flow; the SDF baseline lands at 13.1, the descenders inside.",
                                     "h": 16.0
                                   }
                                 },
@@ -2935,13 +2981,13 @@
                                           "name": "CostName",
                                           "at": [
                                             8.0,
-                                            1.66
+                                            -1.11
                                           ],
                                           "size": [
                                             280.0,
-                                            15.0
+                                            19.25
                                           ],
-                                          "font": "duty_type15",
+                                          "font": "duty_tb14",
                                           "color": "$duty_txt"
                                         }
                                       },
@@ -2950,13 +2996,13 @@
                                           "name": "CostValue",
                                           "at": [
                                             174.0,
-                                            1.66
+                                            -1.11
                                           ],
                                           "size": [
                                             200.0,
-                                            15.0
+                                            19.25
                                           ],
-                                          "font": "duty_type15",
+                                          "font": "duty_tb14",
                                           "color": "$duty_txt",
                                           "align": "right"
                                         }
@@ -3212,12 +3258,13 @@
                                           "name": "ChipText",
                                           "at": [
                                             9,
-                                            3.6200000000000045
+                                            1.1100000000000136
                                           ],
                                           "w": "auto",
-                                          "h": 14,
-                                          "font": "duty_type14",
-                                          "color": "$duty_txt"
+                                          "h": 17.88,
+                                          "font": "duty_tb13",
+                                          "color": "$duty_txt",
+                                          "note": "Bold typed capitals (.opens a, 13 px bold): SetBold in PaintOpenChip."
                                         }
                                       }
                                     ]
@@ -3313,14 +3360,15 @@
                                     "name": "CardWhy",
                                     "at": [
                                       0.0,
-                                      59.62
+                                      57.11
                                     ],
                                     "size": [
                                       374.0,
-                                      14.0
+                                      17.88
                                     ],
-                                    "font": "duty_type14",
-                                    "color": "$duty_bad"
+                                    "font": "duty_tb13",
+                                    "color": "$duty_bad",
+                                    "note": "Bold typed (.why): SetBold in OnShow."
                                   }
                                 },
                                 {
@@ -3362,7 +3410,7 @@
                             }
                           },
                           {
-                            "frame": {
+                            "panel": {
                               "name": "CardStamp",
                               "at": [
                                 242.0,
@@ -3372,6 +3420,7 @@
                                 150.0,
                                 150.0
                               ],
+                              "color": "$none",
                               "children": [
                                 {
                                   "icon": {
@@ -3403,16 +3452,141 @@
                                     ],
                                     "set": "ozl_duty",
                                     "image": "seal_done_ua",
-                                    "color": "$duty_seal_done",
-                                    "note": "The seal: the menu loads StampOf (SEAL_DONE_IMG / SEAL_WORK_IMG), the skin tints it (OnSelect)."
+                                    "color": "$duty_seal",
+                                    "note": "The seal: the menu loads StampOf (SEAL_DONE_IMG / SEAL_WORK_IMG); both in the --ok ink (the mockup's .c-stamp.on)."
                                   }
                                 }
                               ],
                               "hidden": true,
-                              "note": "The round seal over the button (.c-stamp: right 34, bottom 112, 150x150, -14 degrees, .72), done and researching only."
+                              "note": "The round seal over the button (.c-stamp: right 34, bottom 112, 150x150, -14 degrees, .72), done and researching only. A panel, not a frame: it lies over CardScroll and CardFoot and must not take the mouse (pointer-events none)."
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CloseBox",
+                        "at": [
+                          304.0,
+                          790.0
+                        ],
+                        "size": [
+                          96.0,
+                          26.0
+                        ],
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "CloseHover",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                96.0,
+                                26.0
+                              ],
+                              "color": "$duty_btn_hover",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CloseTop",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                96.0,
+                                1.5
+                              ],
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CloseBottom",
+                              "at": [
+                                0.0,
+                                24.5
+                              ],
+                              "size": [
+                                96.0,
+                                1.5
+                              ],
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CloseLeft",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                1.5,
+                                26.0
+                              ],
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CloseRight",
+                              "at": [
+                                94.5,
+                                0.0
+                              ],
+                              "size": [
+                                1.5,
+                                26.0
+                              ],
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "BtnClose",
+                              "class": "ButtonWidgetClass",
+                              "props": {
+                                "style": "Empty",
+                                "text": ""
+                              },
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                96.0,
+                                26.0
+                              ],
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "BtnCloseText",
+                                    "at": [
+                                      0.0,
+                                      6.0
+                                    ],
+                                    "size": [
+                                      96.0,
+                                      15.0
+                                    ],
+                                    "font": "duty_head15",
+                                    "color": "$duty_txt",
+                                    "text": "#STR_OZL_TREE_CLOSE",
+                                    "align": "center",
+                                    "note": "Upper case and spaced by the skin (OnShow), as the section heads."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "note": "Close the window: a ruled field at the card's foot, right of the signature (not in the mockup -- the owner's request). The menu closes on a click of BtnClose; the skin tints the field red under the mouse."
                       }
                     }
                   ],
@@ -3540,7 +3714,7 @@
                       "row": {
                         "name": "OZL_DutyPoolRow",
                         "h": 26,
-                        "note": "One line of the funds table: name (upper case) | a short rule | the value, right-aligned in at least 60 units.",
+                        "note": "One line of the funds table: name (upper case) | a short rule | the value, right-aligned in at least 60 units; bold type, regular and grey when the line is empty (.prow.zero).",
                         "children": [
                           {
                             "panel": {
@@ -3589,13 +3763,13 @@
                               "name": "PoolName",
                               "at": [
                                 9.5,
-                                4.16
+                                1.39
                               ],
                               "size": [
                                 340.0,
-                                15.0
+                                19.25
                               ],
-                              "font": "duty_type15",
+                              "font": "duty_tb14",
                               "color": "$duty_txt"
                             }
                           },
@@ -3618,13 +3792,13 @@
                               "name": "PoolValue",
                               "at": [
                                 362.0,
-                                2.89
+                                0.67
                               ],
                               "size": [
                                 58.5,
-                                17.0
+                                20.63
                               ],
-                              "font": "duty_type17",
+                              "font": "duty_tb15",
                               "color": "$duty_txt",
                               "align": "right"
                             }

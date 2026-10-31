@@ -12,8 +12,8 @@ FrameWidgetClass OZL_DutyCostRow {
   TextWidgetClass CostName {
    visible 1
    ignorepointer 1
-   position 8 1.66
-   size 280 15
+   position 8 -1.11
+   size 280 19.25
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -21,17 +21,17 @@ FrameWidgetClass OZL_DutyCostRow {
    color 0.118 0.11 0.098 1
    priority 0
    text ""
-   font "OpenZone_Research/gui/fonts/ozl_type30"
+   font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
    "exact text" 1
-   "exact text size" 15
+   "exact text size" 14
    "text halign" left
    "text valign" center
   }
   TextWidgetClass CostValue {
    visible 1
    ignorepointer 1
-   position 174 1.66
-   size 200 15
+   position 174 -1.11
+   size 200 19.25
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -39,9 +39,9 @@ FrameWidgetClass OZL_DutyCostRow {
    color 0.118 0.11 0.098 1
    priority 1
    text ""
-   font "OpenZone_Research/gui/fonts/ozl_type30"
+   font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
    "exact text" 1
-   "exact text size" 15
+   "exact text size" 14
    "text halign" right
    "text valign" center
   }

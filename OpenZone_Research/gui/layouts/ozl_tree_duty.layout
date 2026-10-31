@@ -174,8 +174,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass OrgRefT0 {
          visible 1
          ignorepointer 1
-         position 50.8 0
-         size 200 17
+         position 50.8 -2.46
+         size 200 20.63
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -183,9 +183,9 @@ FrameWidgetClass TreeWindow {
          color 0.118 0.11 0.098 1
          priority 1
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 17
+         "exact text size" 15
          "text halign" left
          "text valign" center
         }
@@ -201,7 +201,7 @@ FrameWidgetClass TreeWindow {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       color 0.647 0.141 0.102 0.85
+       color 0.647 0.141 0.102 0.96
        priority 4
        image0 "set:ozl_duty image:grif_ua"
        mode blend
@@ -279,8 +279,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass ApproveCmdT0 {
          visible 1
          ignorepointer 1
-         position 75 0
-         size 200 17
+         position 75 -2.46
+         size 200 20.63
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -288,9 +288,9 @@ FrameWidgetClass TreeWindow {
          color 0.118 0.11 0.098 1
          priority 1
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 17
+         "exact text size" 15
          "text halign" left
          "text valign" center
         }
@@ -331,8 +331,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass ApproveDateT0 {
          visible 1
          ignorepointer 1
-         position 6.4 0
-         size 100 17
+         position 6.4 -2.46
+         size 100 20.63
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -340,9 +340,9 @@ FrameWidgetClass TreeWindow {
          color 0.118 0.11 0.098 1
          priority 1
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 17
+         "exact text size" 15
          "text halign" left
          "text valign" center
         }
@@ -367,8 +367,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass ApproveDateT1 {
          visible 1
          ignorepointer 1
-         position 34.6 0
-         size 120 17
+         position 34.6 -2.46
+         size 120 20.63
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -376,9 +376,9 @@ FrameWidgetClass TreeWindow {
          color 0.118 0.11 0.098 1
          priority 3
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 17
+         "exact text size" 15
          "text halign" left
          "text valign" center
         }
@@ -421,8 +421,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass ApproveDateT2 {
          visible 0
          ignorepointer 1
-         position 0 0
-         size 100 17
+         position 0 -2.46
+         size 100 20.63
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -430,9 +430,9 @@ FrameWidgetClass TreeWindow {
          color 0.118 0.11 0.098 1
          priority 6
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 17
+         "exact text size" 15
          "text halign" left
          "text valign" center
         }
@@ -473,19 +473,16 @@ FrameWidgetClass TreeWindow {
        "text halign" center
        "text valign" center
       }
-      // 'напрям: <branch> · <faction · досліджено N з M>', centred under the title: the skin lines the four texts up by their measured widths (OnUpdate) with one typed space between them.
-      PanelWidgetClass SubLine {
+      // 'напрям: <branch> · <faction · досліджено N з M>', centred under the title: the skin lines the texts up by their measured widths (OnUpdate), one typed letter apart (SubDot's width). The branch and the faction line are bold typed (.bname, .bsub). With more than one branch a red » follows the branch and DutyBranchNext, laid over the branch and the », opens the next branch (OnClick). A frame, not a panel: a panel ignores the pointer and would hide the button.
+      FrameWidgetClass SubLine {
        visible 1
-       ignorepointer 1
        position 0 166.92
-       size 1104 18
+       size 1104 26
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       color 0 0 0 0
        priority 11
-       style rover_sim_colorable
        {
         TextWidgetClass SubDir {
          visible 1
@@ -508,8 +505,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass BranchName {
          visible 1
          ignorepointer 1
-         position 407.97 0
-         size 600 18
+         position 407.97 -2.47
+         size 600 22
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -517,6 +514,24 @@ FrameWidgetClass TreeWindow {
          color 0.118 0.11 0.098 1
          priority 1
          text ""
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
+         "exact text" 1
+         "exact text size" 16
+         "text halign" left
+         "text valign" center
+        }
+        TextWidgetClass BranchMark {
+         visible 0
+         ignorepointer 1
+         position 520 0
+         size 40 18
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         color 0.647 0.141 0.102 1
+         priority 2
+         text "»"
          font "OpenZone_Research/gui/fonts/ozl_type30"
          "exact text" 1
          "exact text size" 18
@@ -533,7 +548,7 @@ FrameWidgetClass TreeWindow {
          hexactsize 1
          vexactsize 1
          color 0.118 0.11 0.098 1
-         priority 2
+         priority 3
          text "·"
          font "OpenZone_Research/gui/fonts/ozl_type30"
          "exact text" 1
@@ -544,20 +559,33 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass BranchSub {
          visible 1
          ignorepointer 1
-         position 552 0
-         size 700 18
+         position 552 -2.47
+         size 700 22
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
          color 0.118 0.11 0.098 1
-         priority 3
+         priority 4
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 18
+         "exact text size" 16
          "text halign" left
          "text valign" center
+        }
+        // Shown only with more than one branch; placed over BranchName and BranchMark by the skin.
+        ButtonWidgetClass DutyBranchNext {
+         visible 0
+         position 407.97 0
+         size 140 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         priority 5
+         style Empty
+         text ""
         }
        }
       }
@@ -603,7 +631,7 @@ FrameWidgetClass TreeWindow {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         color 0 0 0 0.03
+         color 0 0 0 0.07
          priority 0
          style rover_sim_colorable
         }
@@ -790,7 +818,7 @@ FrameWidgetClass TreeWindow {
         }
        }
       }
-      // The registry rows (max-height 330, then it scrolls); the bar is 10 units right of the table. The skin shrinks it to its rows and moves FundBlock under it (OnSelect).
+      // The registry rows (max-height 330, then it scrolls); the bar is 10 units right of the table. The skin shrinks it to its rows and moves FundBlock under it, reading both places from the widgets (OnUpdate).
       ScrollWidgetClass RegScroll {
        visible 1
        position 40 276
@@ -877,7 +905,7 @@ FrameWidgetClass TreeWindow {
          Margin 0
          "Size To Content V" 1
         }
-        // The table's bottom edge, 1.5 like its sides: the skin puts it over the last row's rule (OnPaint).
+        // The table's bottom edge, 1.5 like its sides: the skin puts it over the last row's rule, read from that row (OnUpdate).
         PanelWidgetClass PoolBottom {
          visible 0
          ignorepointer 1
@@ -1140,11 +1168,12 @@ FrameWidgetClass TreeWindow {
              priority 1
              style rover_sim_colorable
             }
+            // Bold typed (.tip font-weight 700): SetBold in OnShow.
             TextWidgetClass TreeTipText {
              visible 1
              ignorepointer 1
-             position 9 5.62
-             size 600 14
+             position 9 3.11
+             size 600 17.88
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1152,9 +1181,9 @@ FrameWidgetClass TreeWindow {
              color 0.118 0.11 0.098 1
              priority 2
              text ""
-             font "OpenZone_Research/gui/fonts/ozl_type30"
+             font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
              "exact text" 1
-             "exact text size" 14
+             "exact text size" 13
              "text halign" left
              "text valign" center
             }
@@ -1575,8 +1604,8 @@ FrameWidgetClass TreeWindow {
         TextWidgetClass ExecutorT0 {
          visible 1
          ignorepointer 1
-         position 56.88 0
-         size 300 14
+         position 56.88 -2.71
+         size 300 17.88
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1584,9 +1613,9 @@ FrameWidgetClass TreeWindow {
          color 0.42 0.396 0.345 1
          priority 1
          text ""
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 14
+         "exact text size" 13
          "text halign" left
          "text valign" center
         }
@@ -1640,7 +1669,7 @@ FrameWidgetClass TreeWindow {
          visible 1
          ignorepointer 1
          position 26 398
-         size 374 18
+         size 374 22
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1648,17 +1677,17 @@ FrameWidgetClass TreeWindow {
          color 0.42 0.396 0.345 1
          priority 0
          text "#STR_OZL_TREE_PICK"
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 18
+         "exact text size" 16
          "text halign" center
          "text valign" center
         }
         TextWidgetClass CardEmptyHint {
          visible 1
          ignorepointer 1
-         position 26 418
-         size 374 15
+         position 26 422
+         size 374 19.25
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1666,9 +1695,9 @@ FrameWidgetClass TreeWindow {
          color 0.42 0.396 0.345 1
          priority 1
          text "#STR_OZL_TREE_HINT"
-         font "OpenZone_Research/gui/fonts/ozl_type30"
+         font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
          "exact text" 1
-         "exact text size" 15
+         "exact text size" 14
          "text halign" center
          "text valign" center
         }
@@ -2375,6 +2404,7 @@ FrameWidgetClass TreeWindow {
               }
              }
             }
+            // Bold typed (.ctime): SetBold in OnShow. 16 high like the bitmap line it replaces, so the card keeps its flow; the SDF baseline lands at 13.1, the descenders inside.
             TextWidgetClass CardTime {
              visible 1
              ignorepointer 1
@@ -2387,9 +2417,9 @@ FrameWidgetClass TreeWindow {
              color 0.118 0.11 0.098 1
              priority 23
              text ""
-             font "OpenZone_Research/gui/fonts/ozl_type30"
+             font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
              "exact text" 1
-             "exact text size" 15
+             "exact text size" 14
              "text halign" left
              "text valign" center
             }
@@ -2765,7 +2795,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 24
                style rover_sim_colorable
               }
@@ -2778,7 +2808,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 25
                style rover_sim_colorable
               }
@@ -2791,7 +2821,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 26
                style rover_sim_colorable
               }
@@ -2804,7 +2834,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 27
                style rover_sim_colorable
               }
@@ -2817,7 +2847,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 28
                style rover_sim_colorable
               }
@@ -2830,7 +2860,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 29
                style rover_sim_colorable
               }
@@ -2843,7 +2873,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 30
                style rover_sim_colorable
               }
@@ -2856,7 +2886,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 31
                style rover_sim_colorable
               }
@@ -2869,7 +2899,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 32
                style rover_sim_colorable
               }
@@ -2882,7 +2912,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 33
                style rover_sim_colorable
               }
@@ -2895,7 +2925,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 34
                style rover_sim_colorable
               }
@@ -2908,7 +2938,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 35
                style rover_sim_colorable
               }
@@ -2921,7 +2951,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 36
                style rover_sim_colorable
               }
@@ -2934,7 +2964,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 37
                style rover_sim_colorable
               }
@@ -2947,7 +2977,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 38
                style rover_sim_colorable
               }
@@ -2960,7 +2990,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 39
                style rover_sim_colorable
               }
@@ -2973,7 +3003,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 40
                style rover_sim_colorable
               }
@@ -2986,7 +3016,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 41
                style rover_sim_colorable
               }
@@ -2999,7 +3029,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 42
                style rover_sim_colorable
               }
@@ -3012,7 +3042,7 @@ FrameWidgetClass TreeWindow {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               color 0.235 0.22 0.188 0.3
+               color 0.235 0.22 0.188 0.47
                priority 43
                style rover_sim_colorable
               }
@@ -3112,7 +3142,7 @@ FrameWidgetClass TreeWindow {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.647 0.141 0.102 0.1
+           color 0.647 0.141 0.102 0.19
            priority 0
            style rover_sim_colorable
           }
@@ -3165,11 +3195,12 @@ FrameWidgetClass TreeWindow {
             }
            }
           }
+          // Bold typed (.why): SetBold in OnShow.
           TextWidgetClass CardWhy {
            visible 1
            ignorepointer 1
-           position 0 59.62
-           size 374 14
+           position 0 57.11
+           size 374 17.88
            hexactpos 1
            vexactpos 1
            hexactsize 1
@@ -3177,9 +3208,9 @@ FrameWidgetClass TreeWindow {
            color 0.722 0.337 0.059 1
            priority 3
            text ""
-           font "OpenZone_Research/gui/fonts/ozl_type30"
+           font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
            "exact text" 1
-           "exact text size" 14
+           "exact text size" 13
            "text halign" left
            "text valign" center
           }
@@ -3220,16 +3251,19 @@ FrameWidgetClass TreeWindow {
           }
          }
         }
-        // The round seal over the button (.c-stamp: right 34, bottom 112, 150x150, -14 degrees, .72), done and researching only.
-        FrameWidgetClass CardStamp {
+        // The round seal over the button (.c-stamp: right 34, bottom 112, 150x150, -14 degrees, .72), done and researching only. A panel, not a frame: it lies over CardScroll and CardFoot and must not take the mouse (pointer-events none).
+        PanelWidgetClass CardStamp {
          visible 0
+         ignorepointer 1
          position 242 570
          size 150 150
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         color 0 0 0 0
          priority 2
+         style rover_sim_colorable
          {
           // The paper band between the rings, as the mockup's multiply blend leaves it on the card.
           ImageWidgetClass CardStampBand {
@@ -3247,7 +3281,7 @@ FrameWidgetClass TreeWindow {
            mode blend
            "src alpha" 1
           }
-          // The seal: the menu loads StampOf (SEAL_DONE_IMG / SEAL_WORK_IMG), the skin tints it (OnSelect).
+          // The seal: the menu loads StampOf (SEAL_DONE_IMG / SEAL_WORK_IMG); both in the --ok ink (the mockup's .c-stamp.on).
           ImageWidgetClass CardStampImg {
            visible 1
            ignorepointer 1
@@ -3257,11 +3291,122 @@ FrameWidgetClass TreeWindow {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           color 0.227 0.208 0.537 0.72
+           color 0.227 0.208 0.537 0.87
            priority 1
            image0 "set:ozl_duty image:seal_done_ua"
            mode blend
            "src alpha" 1
+          }
+         }
+        }
+       }
+      }
+      // Close the window: a ruled field at the card's foot, right of the signature (not in the mockup -- the owner's request). The menu closes on a click of BtnClose; the skin tints the field red under the mouse.
+      FrameWidgetClass CloseBox {
+       visible 1
+       position 304 790
+       size 96 26
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 2
+       {
+        PanelWidgetClass CloseHover {
+         visible 0
+         ignorepointer 1
+         position 0 0
+         size 96 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         color 0.647 0.141 0.102 0.19
+         priority 0
+         style rover_sim_colorable
+        }
+        PanelWidgetClass CloseTop {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 96 1.5
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         color 0.118 0.11 0.098 1
+         priority 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass CloseBottom {
+         visible 1
+         ignorepointer 1
+         position 0 24.5
+         size 96 1.5
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         color 0.118 0.11 0.098 1
+         priority 2
+         style rover_sim_colorable
+        }
+        PanelWidgetClass CloseLeft {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 1.5 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         color 0.118 0.11 0.098 1
+         priority 3
+         style rover_sim_colorable
+        }
+        PanelWidgetClass CloseRight {
+         visible 1
+         ignorepointer 1
+         position 94.5 0
+         size 1.5 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         color 0.118 0.11 0.098 1
+         priority 4
+         style rover_sim_colorable
+        }
+        ButtonWidgetClass BtnClose {
+         visible 1
+         position 0 0
+         size 96 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         priority 5
+         style Empty
+         text ""
+         {
+          // Upper case and spaced by the skin (OnShow), as the section heads.
+          TextWidgetClass BtnCloseText {
+           visible 1
+           ignorepointer 1
+           position 0 6
+           size 96 15
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           color 0.118 0.11 0.098 1
+           priority 0
+           text "#STR_OZL_TREE_CLOSE"
+           font "OpenZone_Research/gui/fonts/ozl_narrowb36"
+           "exact text" 1
+           "exact text size" 15
+           "text halign" center
+           "text valign" center
           }
          }
         }

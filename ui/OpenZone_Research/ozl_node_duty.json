@@ -1,11 +1,11 @@
 {
   "layout": "ozl_node_duty",
-  "note": "One node of the duty window («Реєстр досліджень»): a form cell 160x50 in a 200x90 cell from (20, 20), so the form's centre is (100, 45) -- the skin's AnchorX/AnchorY. NodeForm is the form picture of the status; NodeShape only the hover ring (slot 0 blank, slot 1 the ring); NodeSel the red outline of the selected node. The number has its own 32-unit cell (NodeNum), the name (upper case, two lines) and the price are right of it, the progress line runs along the bottom, the mark sits above. NodeHit is the style-less button under everything; every other widget ignores the pointer.",
+  "note": "One node of the duty window («Реєстр досліджень»): a form cell 160x50 in a 172x90 cell from (6, 20), so the form's centre is (86, 45) -- the skin's AnchorX/AnchorY. NodeForm is the form picture of the status; NodeShape only the hover ring (slot 0 blank, slot 1 the ring); NodeSel the red outline of the selected node. The number has its own 32-unit cell (NodeNum), the name (upper case, two lines) and the price are right of it, the progress line runs along the bottom, the mark sits above. NodeHit is the style-less button under everything; every other widget ignores the pointer.",
   "root": {
     "frame": {
       "name": "NodeCell",
       "size": [
-        200,
+        172,
         90
       ],
       "children": [
@@ -26,7 +26,7 @@
                     "text": ""
                   },
                   "at": [
-                    20.0,
+                    6.0,
                     20.0
                   ],
                   "size": [
@@ -40,7 +40,7 @@
                 "icon": {
                   "name": "NodeShape",
                   "at": [
-                    18.0,
+                    4.0,
                     18.0
                   ],
                   "size": [
@@ -57,7 +57,7 @@
                 "icon": {
                   "name": "NodeForm",
                   "at": [
-                    20.0,
+                    6.0,
                     20.0
                   ],
                   "size": [
@@ -74,7 +74,7 @@
                 "icon": {
                   "name": "NodeSel",
                   "at": [
-                    14.5,
+                    0.5,
                     14.5
                   ],
                   "size": [
@@ -92,32 +92,32 @@
                 "label": {
                   "name": "NodeNum",
                   "at": [
-                    20.0,
-                    33.89
+                    6.0,
+                    31.67
                   ],
                   "size": [
                     32.0,
-                    17.0
+                    20.63
                   ],
-                  "font": "duty_type17",
+                  "font": "duty_tb15",
                   "color": "$duty_txt",
                   "align": "center",
-                  "note": "Index + 1, two digits, in the number's own 32-unit cell."
+                  "note": "The dense number (menu.NumberOf: visible nodes in display order), two digits, in the number's own 32-unit cell; bold typed, regular when locked (PaintNode)."
                 }
               },
               {
                 "panel": {
                   "name": "NodeName",
                   "at": [
-                    58,
-                    23.62
+                    44,
+                    21.62
                   ],
                   "size": [
                     118,
                     24.32
                   ],
                   "color": "$none",
-                  "note": "The name, upper case (NodeNameText), in two lines 12.32 apart (line-height 1.12): the menu word-wraps it into NodeName0 and NodeName1.",
+                  "note": "The name, upper case (NodeNameText), bold typed (regular when locked), in two lines 12.32 apart (line-height 1.12): the menu word-wraps it into NodeName0 and NodeName1.",
                   "children": [
                     {
                       "label": {
@@ -128,9 +128,9 @@
                         ],
                         "size": [
                           118.0,
-                          12.0
+                          15.13
                         ],
-                        "font": "duty_type12",
+                        "font": "duty_tb11",
                         "color": "$duty_txt"
                       }
                     },
@@ -143,9 +143,9 @@
                         ],
                         "size": [
                           118.0,
-                          12.0
+                          15.13
                         ],
-                        "font": "duty_type12",
+                        "font": "duty_tb11",
                         "color": "$duty_txt",
                         "hidden": true
                       }
@@ -157,7 +157,7 @@
                 "panel": {
                   "name": "NodePrice",
                   "at": [
-                    58.0,
+                    44.0,
                     52.56
                   ],
                   "size": [
@@ -172,7 +172,7 @@
                 "label": {
                   "name": "NodePriceText",
                   "at": [
-                    58.0,
+                    44.0,
                     52.56
                   ],
                   "size": [
@@ -188,7 +188,7 @@
                 "panel": {
                   "name": "NodeBar",
                   "at": [
-                    54,
+                    40,
                     65
                   ],
                   "size": [
@@ -236,7 +236,7 @@
                 "icon": {
                   "name": "NodeMark",
                   "at": [
-                    149.0,
+                    135.0,
                     5.0
                   ],
                   "size": [
@@ -247,7 +247,7 @@
                   "image": "blank",
                   "color": "$duty_ok",
                   "hidden": true,
-                  "note": "Lock / tick / dot of ozl_common (the skin's Marks), above the right part of the form like .mark (left 52, top -40)."
+                  "note": "Lock / tick / dot of ozl_common (the skin's Marks), above the right part of the form like .mark (left 52, top -40); a project's dot blinks (the skin, OnUpdate)."
                 }
               }
             ]

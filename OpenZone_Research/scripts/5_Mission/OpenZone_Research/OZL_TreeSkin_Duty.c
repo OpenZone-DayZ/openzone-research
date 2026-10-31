@@ -2,19 +2,22 @@
 // сукні. На аркуші -- реквізити (Долг, гриф «Для службового користування»,
 // «Форма № 7-Д», «Затверджую»), заголовок розрядкою, «1. Перелік робіт» --
 // реєстр-таблиця, «2. Фонди фракції» -- пул таблицею, «3. Схема послідовності
-// робіт» -- дерево вниз у рамці, внизу рядок виконавця. Праворуч на скріпці --
-// «Картка дослідження» з печаткою (ЗАТВЕРДЖЕНО / В РОБОТІ) і підписом.
+// робіт» -- дерево вниз у рамці, під нею легенда, внизу рядок виконавця.
+// Праворуч на скріпці -- «Картка дослідження» з печаткою (ЗАТВЕРДЖЕНО /
+// В РОБОТІ), підписом і полем «Закрити».
 //
 // Вузол -- графа бланка 160x50: номер у своїй клітинці, назва великими,
 // ціна; закритий -- пунктир без заливки, доступний і в ділі -- подвійна
 // червона рамка, досліджений -- сіріша заливка, вибраний -- червоний контур
-// на 4 одиниці назовні, під мишею -- бліда червона облямівка.
+// на 4 одиниці назовні, під мишею -- бліда червона облямівка; крапка проєкту
+// блимає.
 //
 // Що робить цей клас понад дані: великі літери (CSS uppercase), розрядку
-// (letter-spacing -- пробілами), друкарські вставки бланка (машинопис у
-// рядках «Вих. № 0417/Д», «Командир ___», дата, виконавець), рядок «напрям:»
-// під заголовком, реєстр (сірі рядки, стан у два рядки, висота таблиці) і
-// печатку.
+// (letter-spacing -- пробілами), жирний машинопис (SetBold на SDF-шрифті:
+// на растровому він нічого не робить), друкарські вставки бланка, рядок
+// «напрям:» під заголовком (із перемиканням гілок, коли їх кілька), реєстр
+// (жирні рядки, сірий закритий, стан у два рядки, висота таблиці), край
+// таблиці фондів і поле «Закрити».
 //
 // Розкладки: ozl_tree_duty, ozl_node_duty (ui/OpenZone_Research/);
 // картинки: source/ui/duty/ (набір ozl_duty); кольори й шрифти:
@@ -43,27 +46,35 @@ class OZL_DutyRun
 // ширину (наступні кадри).
 class OZL_DutyLine
 {
-    ref array<TextWidget> Parts;
-    ref array<float>      Gaps;
-    float X;        // лівий край або центр рядка, одиниці контейнера
-    bool  Center;
-    int   Tries;
+    static const float LETTER = -1;   // проміжок завширшки з одну літеру GapRef
 
-    void OZL_DutyLine(float x, bool center)
+    ref array<TextWidget> Parts;      // і порожні (null) -- щоб номери не з'їхали
+    ref array<float>      Gaps;       // одиниці перед написом; LETTER -- одна літера
+    ref array<float>      Trims;      // скільки одиниць зняти з виміряної ширини
+    float      X;                     // лівий край рядка, коли Holder нема
+    Widget     Holder;                // є -- рядок по центру цього контейнера
+    TextWidget GapRef;                // напис з однієї літери: її ширина -- LETTER
+    Widget     Hit;                   // кнопка поверх написів HitFrom..HitTo
+    int        HitFrom;
+    int        HitTo;
+    int        Tries;
+
+    void OZL_DutyLine(float x)
     {
-        Parts  = new array<TextWidget>();
-        Gaps   = new array<float>();
-        X      = x;
-        Center = center;
-        Tries  = 0;
+        Parts   = new array<TextWidget>();
+        Gaps    = new array<float>();
+        Trims   = new array<float>();
+        X       = x;
+        HitFrom = -1;
+        HitTo   = -1;
+        Tries   = 0;
     }
 
-    void Add(TextWidget part, float gap)
+    void Add(TextWidget part, float gap, float trim)
     {
-        if (!part)
-            return;
         Parts.Insert(part);
         Gaps.Insert(gap);
+        Trims.Insert(trim);
     }
 }
 
@@ -72,25 +83,37 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
     static const string SET    = "set:ozl_duty image:";
     static const string COMMON = "set:ozl_common image:";
 
-    // Скільки знаків машинопису влазить у графу «Стан» (106 одиниць, розмір
-    // 12, крок PT Mono 16/30 клітинки = 6.4 одиниці).
-    static const int   STATE_CHARS = 16;
+    // Скільки знаків жирного машинопису влазить у графу «Стан» (106 одиниць,
+    // розмір 11: близько .59 S = 6.5 одиниці на знак).
+    static const int   STATE_CHARS = 14;
     static const float ROW_H       = 24;   // рядок реєстру
     static const float ROW_H2      = 33;   // рядок зі станом у два рядки
-    static const float REG_TOP     = 276;  // реєстр на аркуші (RegScroll)
     static const float REG_MAX     = 330;  // max-height реєстру мокапа
     static const float FUND_GAP    = 18;   // margin-top «2. Фонди фракції»
-    static const float POOL_ROW_H  = 26;
+    // GetTextSize шрифту з полем відстаней дає на знак одну одиницю шрифту
+    // (S / 32) більше, ніж малює (скіл gui-layouts §30): стільки знімаємо з
+    // кожної літери жирного машинопису, коли ставимо написи за шириною.
+    static const float SDF_SLACK   = 0.03125;
+    static const float TYPED_REQ   = 15;   // розмір вставок у реквізитах (tb15)
+    static const float TYPED_FOOT  = 13;   // розмір вставки в рядку виконавця (tb13)
+    static const float TYPED_SUB   = 16;   // розмір гілки й фракції під заголовком (tb16)
 
     int Faint;      // --faint: заглушка «??? невідомо», нуль пулу, замок
+    int Edge;       // --edge: лінійки бланка, рамка чіпа
     int BtnOff;     // рамка неактивної кнопки (#b8b19c)
-    int Glow;       // облямівка під мишею (--acc .25)
-    int SealDone;   // печатка ЗАТВЕРДЖЕНО: чорнило --ok, opacity .72
-    int SealWork;   // печатка В РОБОТІ: те саме чорнило --ok -- мокап так і малює
-                    // (.c-stamp.on { color: var(--ok) !important } бере гору над stCol)
+    int Glow;       // облямівка під мишею: --acc .25 мокапа, у лінійному світлі .42
 
     protected ref array<ref OZL_DutyLine> m_Lines;
     protected ref OZL_DutyLine m_SubLine;
+    protected ref array<Widget> m_Blink;   // мітки проєктів, що блимають
+    protected float m_Clock;
+    protected int   m_BlinkStep;
+    protected bool  m_CloseLit;            // «Закрити» під мишею
+    protected bool  m_RegDirty;            // висота реєстру й місце фондів -- наступним кадром
+    protected int   m_RegTries;
+    protected bool  m_PoolDirty;           // нижній край таблиці фондів -- наступним кадром
+    protected int   m_PoolTries;
+    protected bool  m_RowWarned;           // попередження про чужий рядок -- раз на вікно
 
     void OZL_TreeSkin_Duty()
     {
@@ -102,7 +125,7 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         Col     = 178;
         Top     = 86;
         Side    = 24;
-        AnchorX = 100;   // графа лежить у комірці з (20, 20)
+        AnchorX = 86;    // графа лежить у комірці 172x90 з (6, 20)
         AnchorY = 45;
 
         Txt      = ARGB(255,  30,  28,  25);
@@ -116,10 +139,9 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         Lcd      = ARGB(255, 235, 230, 213);
         FogColor = ARGB(255, 220, 214, 194);
         Faint    = ARGB(255, 138, 133, 118);
+        Edge     = ARGB(255,  60,  56,  48);
         BtnOff   = ARGB(255, 184, 177, 156);
-        Glow     = ARGB( 64, 165,  36,  26);
-        SealDone = ARGB(184,  58,  53, 137);
-        SealWork = ARGB(184,  58,  53, 137);
+        Glow     = ARGB(107, 165,  36,  26);
 
         // NodeShape -- не графа, а лише облямівка під мишею: слот 0 порожній,
         // слот 1 -- облямівка. Саму графу за статусом кладе PaintNode у NodeForm.
@@ -136,8 +158,13 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         SegOn  = Acc;
         SegOff = ARGB(0, 1, 0, 0);
         TipPadX = 9;
+        // Чіп «Відкриває»: текст із 9 одиниць від лівого краю, праворуч мокап
+        // теж дає 9; GetTextSize жирного машинопису вже додає близько S / 32
+        // на знак (SDF_SLACK), тож меню докладає лише 5.
+        OpensPad = 5;
 
         m_Lines = new array<ref OZL_DutyLine>();
+        m_Blink = new array<Widget>();
     }
 
     // ------------------------------------------------------------------
@@ -191,6 +218,25 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
             w.SetColor(color);
     }
 
+    // Жирний машинопис (font-weight 700 мокапа). Працює лише на SDF-шрифті
+    // (ozl_sdf_type32, токени duty_tb*): на растровому SetBold нічого не
+    // робить (виміряно на стенді 2026-10-31).
+    protected static void Bold(Widget root, string name, bool on)
+    {
+        if (!root)
+            return;
+        TextWidget t = TextWidget.Cast(root.FindAnyWidget(name));
+        if (t)
+            t.SetBold(on);
+    }
+
+    protected static void BoldRole(OZL_TreeMenu menu, string role)
+    {
+        TextWidget t = TextWidget.Cast(menu.Role(role));
+        if (t)
+            t.SetBold(true);
+    }
+
     // Назва вузла -- великими (вузол, реєстр, картка): .lbl, .rrow, .cname.
     override string NodeNameText(string name)
     {
@@ -201,6 +247,19 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
     override string SectionText(string key)
     {
         return Spread(OZL_Text.Upper(Words(key)));
+    }
+
+    // Статус у картці -- великими, розрядкою (.cstat); підказка й реєстр
+    // лишаються зі StatusText.
+    override string CardStatusText(string status)
+    {
+        return Spread(OZL_Text.Upper(StatusText(status)));
+    }
+
+    // Слово кнопки -- те саме, що в меню, великими, розрядкою .3em (.go).
+    override string ButtonText(string status, bool enabled)
+    {
+        return Spread(OZL_Text.Upper(super.ButtonText(status, enabled)), 4);
     }
 
     // Підписи тирів -- римські, розрядкою (.tierlab: letter-spacing .2em).
@@ -225,7 +284,8 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         return super.MarkColorOf(status);
     }
 
-    // Графа за статусом (NodeForm) і колір номера; решту робить база.
+    // Графа за статусом (NodeForm), номер і назва жирні (закритий -- звичайні
+    // й сірі, .st-locked), крапка проєкту блимає; решту робить база.
     override void PaintNode(OZL_TreeMenu menu, Widget cell, OZL_NodeView node, string status, bool selected)
     {
         super.PaintNode(menu, cell, node, status, selected);
@@ -242,44 +302,153 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
             if (form.LoadImageFile(0, SET + pic))
                 form.SetImage(0);
         }
+        bool locked = status == "locked";
         TextWidget num = TextWidget.Cast(cell.FindAnyWidget("NodeNum"));
         if (num)
         {
-            if (status == "locked")
+            if (locked)
                 num.SetColor(Dim);
             else
                 num.SetColor(Txt);
+            num.SetBold(!locked);
+        }
+        Bold(cell, "NodeName0", !locked);
+        Bold(cell, "NodeName1", !locked);
+
+        // Крапка проєкту блимає (.st-research .mark: blink 1s steps(2));
+        // решта міток рівні.
+        Widget mark = cell.FindAnyWidget("NodeMark");
+        if (mark)
+        {
+            int at = BlinkIndex(mark);
+            if (status == "researching")
+            {
+                if (at < 0)
+                    m_Blink.Insert(mark);
+            }
+            else
+            {
+                if (at >= 0)
+                    m_Blink.Remove(at);
+                mark.SetAlpha(1);
+            }
         }
     }
 
+    protected int BlinkIndex(Widget w)
+    {
+        for (int i = 0; i < m_Blink.Count(); i++)
+        {
+            if (m_Blink[i] == w)
+                return i;
+        }
+        return -1;
+    }
+
     // ------------------------------------------------------------------
-    // Пул, вартість, «Відкриває», кнопка
+    // Реєстр, пул, вартість, «Відкриває», кнопка
     // ------------------------------------------------------------------
 
-    // Фонди: назва великими; нуль -- сірий рядок, число ще блідіше
-    // (.prow.zero, .prow.zero .pv).
-    override void PaintPoolRow(OZL_TreeMenu menu, Widget row, string line, int have, int need, int color)
+    // Рядок реєстру (лише видимі вузли, щільний номер -- база): усе жирним
+    // машинописом великими; закритий -- сірий і звичайний (.rrow.st-locked);
+    // стан, що не влазить, -- у два рядки (НЕ ВИСТАЧАЄ / РЕСУРСІВ), і тоді
+    // рядок 33 одиниці. Висоту таблиці й місце фондів ставить OnUpdate.
+    override void PaintRegistryRow(OZL_TreeMenu menu, Widget row, OZL_NodeView node, int number, int tier, bool selected)
     {
-        super.PaintPoolRow(menu, row, line, have, need, color);
+        super.PaintRegistryRow(menu, row, node, number, tier, selected);
+        if (!node)
+            return;
+        Expect(row, "RegName", "registry_row");
+        bool locked = node.Status == "locked";
+        int ink = Txt;
+        if (locked)
+            ink = Dim;
+        Tint(row, "RegNum", ink);
+        Tint(row, "RegName", ink);
+        Tint(row, "RegTier", ink);
+        Bold(row, "RegNum", !locked);
+        Bold(row, "RegName", !locked);
+        Bold(row, "RegTier", !locked);
+        Bold(row, "RegState", !locked);
+        Bold(row, "RegState2", !locked);
+
+        string state = OZL_Text.Upper(StatusText(node.Status));
+        string first = state;
+        string second = "";
+        if (state.LengthUtf8() > STATE_CHARS)
+            SplitState(state, first, second);
+        TextWidget st = TextWidget.Cast(row.FindAnyWidget("RegState"));
+        if (st)
+            st.SetText(first);
+        TextWidget st2 = TextWidget.Cast(row.FindAnyWidget("RegState2"));
+        if (st2)
+        {
+            st2.SetText(second);
+            st2.SetColor(StatusColorOf(node.Status));
+            st2.Show(second != "");
+        }
+        float h = ROW_H;
+        if (second != "")
+            h = ROW_H2;
+        // Ширина рядка пропорційна (1 = уся таблиця), висота -- пікселі
+        // екрана (SetSize бере пікселі, SKINS.md "Units").
+        row.SetSize(1, h * menu.Px());
+        m_RegDirty = true;
+        m_RegTries = 0;
+    }
+
+    // Під мишею рядок реєстру тоне блідо-червоним (.rrow:hover), але не
+    // вибраний: у мокапі .rrow.sel перекриває :hover. Рамка чіпа
+    // «Відкриває» під мишею темніє до чорнила (.opens a:hover).
+    override void OnRowHover(OZL_TreeMenu menu, Widget row, string kind, string id, bool on)
+    {
+        if (kind == "reg" && on && id == menu.SelectedId())
+            on = false;
+        super.OnRowHover(menu, row, kind, id, on);
+        if (kind != "open" || !row)
+            return;
+        int chipInk = Edge;
+        if (on)
+            chipInk = Txt;
+        Tint(row, "ChipBoxTop", chipInk);
+        Tint(row, "ChipBoxBottom", chipInk);
+        Tint(row, "ChipBoxLeft", chipInk);
+        Tint(row, "ChipBoxRight", chipInk);
+    }
+
+    // Фонди: назва великими, рядок жирний; нуль -- сірий і звичайний, число
+    // ще блідіше (.prow.zero, .prow.zero .pv).
+    override void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
+    {
+        super.PaintPoolRow(menu, row, index, line, have, color);
+        Expect(row, "PoolName", "pool_row");
         TextWidget name = TextWidget.Cast(row.FindAnyWidget("PoolName"));
         if (name)
-            name.SetText(OZL_Text.Upper(menu.PointName(line)));
+            name.SetText(DataText(OZL_Text.Upper(menu.PointName(line))));
         if (have <= 0)
             Tint(row, "PoolValue", Faint);
+        Bold(row, "PoolName", have > 0);
+        Bold(row, "PoolValue", have > 0);
+        m_PoolDirty = true;
+        m_PoolTries = 0;
     }
 
-    // Рядок вартості -- машинописом великими (.crow).
+    // Рядок вартості -- жирним машинописом великими (.crow).
     override void PaintCostRow(OZL_TreeMenu menu, Widget row, string label, string text, int verdict)
     {
-        super.PaintCostRow(menu, row, OZL_Text.Upper(label), text, verdict);
+        super.PaintCostRow(menu, row, DataText(OZL_Text.Upper(label)), text, verdict);
+        Expect(row, "CostName", "cost_row");
+        Bold(row, "CostName", true);
+        Bold(row, "CostValue", true);
     }
 
-    // Чіп «Відкриває»: великими, у рамці; заглушка туману -- блідо і рамка
-    // пунктиром (.opens a.fogged). Пробіл у кінці -- поле праворуч від тексту:
-    // меню додає до ширини чіпа лише 4 одиниці, а мокап -- 8.
+    // Чіп «Відкриває»: жирні великі в рамці; заглушка туману -- блідо і
+    // рамка пунктиром (.opens a.fogged).
     override void PaintOpenChip(OZL_TreeMenu menu, Widget chip, string text, bool fogged)
     {
-        super.PaintOpenChip(menu, chip, OZL_Text.Upper(text) + " ", fogged);
+        super.PaintOpenChip(menu, chip, DataText(OZL_Text.Upper(text)), fogged);
+        Expect(chip, "ChipText", "opens_chip");
+        Bold(chip, "ChipText", true);
         if (fogged)
             Tint(chip, "ChipText", Faint);
         Widget box = chip.FindAnyWidget("ChipBoxLine");
@@ -294,21 +463,22 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
     override void PaintButton(OZL_TreeMenu menu, Widget btn, bool enabled)
     {
         int text = LineDim;
-        int edge = BtnOff;
+        int frameInk = BtnOff;
         if (enabled)
         {
             text = Acc;
-            edge = Acc;
+            frameInk = Acc;
         }
         TextWidget t = TextWidget.Cast(menu.Role("BtnResearchText"));
         if (t)
             t.SetColor(text);
         Widget frame = menu.Role("BtnResearchFrame");
         if (frame)
-            frame.SetColor(edge);
+            frame.SetColor(frameInk);
     }
 
-    // Печатка: ЗАТВЕРДЖЕНО на дослідженому, В РОБОТІ на тому, що в ділі.
+    // Печатка: ЗАТВЕРДЖЕНО на дослідженому, В РОБОТІ на тому, що в ділі;
+    // обидві чорнилом --ok (колір у розкладці, $duty_seal).
     override string StampOf(string status)
     {
         if (status == "completed")
@@ -318,12 +488,23 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         return "";
     }
 
+    // Рядок, що прийшов без своєї дитини, -- ознака того, що рушій віддав
+    // інший файл розкладки (SKINS.md, "Layout mix-up"): попередження раз на
+    // вікно, з іменем кореня, яке каже, чий файл прийшов.
+    protected void Expect(Widget row, string child, string file)
+    {
+        if (m_RowWarned || !row || row.FindAnyWidget(child))
+            return;
+        m_RowWarned = true;
+        OZL_Log.Warn("tree: " + RowLayout(file) + " gave a row '" + row.GetName() + "' without " + child + " -- the engine may have handed another layout file (SKINS.md, Layout mix-up)");
+    }
+
     // ------------------------------------------------------------------
     // Події
     // ------------------------------------------------------------------
 
     // Статичні тексти бланка: великими й розрядкою, де так у мокапі; картинки
-    // мови гравця; друкарські вставки; легенда рядком.
+    // мови гравця; жирний машинопис; друкарські вставки; легенда рядком.
     override void OnShow(OZL_TreeMenu menu)
     {
         SetTo(menu, "OrgName", Spread(OZL_Text.Upper(Words("STR_OZL_SKIN_DUTY_ORG_NAME"))));
@@ -333,6 +514,10 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         SetTo(menu, "FundHead", Spread(OZL_Text.Upper(Words("STR_OZL_SKIN_DUTY_FUND_HEAD"))));
         SetTo(menu, "DevName", Spread(OZL_Text.Upper(Words("STR_OZL_SKIN_DUTY_SCHEME_HEAD"))));
         SetTo(menu, "CardHeadText", Spread(Words("STR_OZL_SKIN_DUTY_CARD_HEAD")));
+        // «Закрити» (мокап його не має; на прохання власника) -- як шапки
+        // розділів: великими, розрядкою; рамка й слово -- чорнилом.
+        SetTo(menu, "BtnCloseText", Spread(OZL_Text.Upper(Words("STR_OZL_TREE_CLOSE"))));
+        PaintClose(menu, false);
 
         // Шапка реєстру: «№ п/п» мокап ламає після №.
         string num = OZL_Text.Upper(Words("STR_OZL_SKIN_DUTY_COL_NUM"));
@@ -356,9 +541,8 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         sign.Replace("  ", " ");
         SetTo(menu, "CardSign", sign);
 
-        // Гриф -- картинка мови гравця; заголовок -- теж, коли рядок
-        // STR_OZL_SKIN_DUTY_TITLE_IMG уже є (запит до контролера), інакше
-        // живий текст розрядкою.
+        // Гриф і заголовок -- картинки мови гравця (рядки *_IMG); заголовок
+        // живим текстом розрядкою лишається на випадок рядка не "set:...".
         Picture(menu, "Grif", Words("STR_OZL_SKIN_DUTY_GRIF_IMG"));
         string title = Words("STR_OZL_SKIN_DUTY_TITLE_IMG");
         bool pic = false;
@@ -374,185 +558,289 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
             titleText.Show(!pic);
         }
 
+        // Жирний машинопис, який не перемальовується: підказка, «напрям»,
+        // час і причина в картці, порожня картка (рядки -- у своїх гачках).
+        BoldRole(menu, "TreeTipText");
+        BoldRole(menu, "BranchName");
+        BoldRole(menu, "BranchSub");
+        BoldRole(menu, "CardTime");
+        BoldRole(menu, "CardWhy");
+        BoldRole(menu, "CardEmptyText");
+        BoldRole(menu, "CardEmptyHint");
+
         // Друкарські вставки: пробіл бланка -- 6/28 клітинки вузького шрифту.
         float sp17 = 17 * 6.0 / 28.0;
         float sp14 = 14 * 6.0 / 28.0;
-        PutRuns(menu, "OrgRef", SplitLast(Words("STR_OZL_SKIN_DUTY_ORG_REF"), true), sp17);
-        PutRuns(menu, "ApproveCmd", SplitFirst(Words("STR_OZL_SKIN_DUTY_APPROVE_CMD"), true), sp17);
-        PutRuns(menu, "ApproveDate", SplitBlanks(Words("STR_OZL_SKIN_DUTY_APPROVE_DATE"), true), sp17);
-        PutRuns(menu, "Executor", SplitExecutor(Words("STR_OZL_SKIN_DUTY_EXECUTOR")), sp14);
+        PutRuns(menu, "OrgRef", SplitLast(Words("STR_OZL_SKIN_DUTY_ORG_REF"), true), sp17, TYPED_REQ);
+        PutRuns(menu, "ApproveCmd", SplitFirst(Words("STR_OZL_SKIN_DUTY_APPROVE_CMD"), true), sp17, TYPED_REQ);
+        PutRuns(menu, "ApproveDate", SplitBlanks(Words("STR_OZL_SKIN_DUTY_APPROVE_DATE"), true), sp17, TYPED_REQ);
+        PutRuns(menu, "Executor", SplitExecutor(Words("STR_OZL_SKIN_DUTY_EXECUTOR")), sp14, TYPED_FOOT);
 
         // Легенда -- рядом за шириною текстів, 14 одиниць між пунктами.
         menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
+
+        m_Clock = 0;
+        m_BlinkStep = -1;
+        m_Blink.Clear();
+        m_RowWarned = false;
+        m_RegDirty = false;
+        m_PoolDirty = false;
     }
 
     // Після кожного повного малювання: рядок «напрям:» під заголовком (назва
-    // гілки й лічильник -- від меню) і нижній край таблиці фондів.
+    // гілки й лічильник -- від меню; », коли гілок кілька) і край таблиці
+    // фондів (OnUpdate).
     override void OnPaint(OZL_TreeMenu menu)
     {
+        bool many = menu.BranchCount() > 1;
+        Widget mark = menu.Role("BranchMark");
+        if (mark)
+            mark.Show(many);
+        Widget next = menu.Role("DutyBranchNext");
+        if (next)
+            next.Show(many);
+
         if (m_SubLine)
             m_Lines.RemoveItem(m_SubLine);
-        // Один знак машинопису (PT Mono, розмір 18: 16/30 клітинки) між
-        // частинами: "напрям: <гілка> · <фракція · досліджено N з M>".
-        float ch = 18 * 16.0 / 30.0;
-        m_SubLine = new OZL_DutyLine(552, true);
-        m_SubLine.Add(TextWidget.Cast(menu.Role("SubDir")), 0);
-        m_SubLine.Add(TextWidget.Cast(menu.Role("BranchName")), ch);
-        m_SubLine.Add(TextWidget.Cast(menu.Role("SubDot")), ch);
-        m_SubLine.Add(TextWidget.Cast(menu.Role("BranchSub")), ch);
+        // "напрям: <гілка> [»] · <фракція · досліджено N з M>": по одній
+        // літері машинопису між частинами (ширина SubDot), по центру рядка.
+        float nameTrim = 0;
+        OZL_BranchView b = menu.CurrentBranch();
+        if (b)
+            nameTrim = DataText(b.Name).LengthUtf8() * TYPED_SUB * SDF_SLACK;
+        m_SubLine = new OZL_DutyLine(0);
+        m_SubLine.Holder = menu.Role("SubLine");
+        m_SubLine.GapRef = TextWidget.Cast(menu.Role("SubDot"));
+        m_SubLine.Add(TextWidget.Cast(menu.Role("SubDir")), 0, 0);
+        m_SubLine.Add(TextWidget.Cast(menu.Role("BranchName")), OZL_DutyLine.LETTER, nameTrim);
+        m_SubLine.Add(TextWidget.Cast(mark), OZL_DutyLine.LETTER, 0);
+        m_SubLine.Add(TextWidget.Cast(menu.Role("SubDot")), OZL_DutyLine.LETTER, 0);
+        m_SubLine.Add(TextWidget.Cast(menu.Role("BranchSub")), OZL_DutyLine.LETTER, 0);
+        if (many)
+        {
+            m_SubLine.Hit = next;
+            m_SubLine.HitFrom = 1;
+            m_SubLine.HitTo = 2;
+        }
         m_Lines.Insert(m_SubLine);
 
-        PoolEdge(menu);
+        m_PoolDirty = true;
+        m_PoolTries = 0;
     }
 
-    // Меню щойно перемалювало реєстр і картку (PaintRegistry завжди йде перед
-    // PaintCard, а той кличе OnSelect).
+    // Меню щойно перемалювало картку (і перед нею -- реєстр).
     override void OnSelect(OZL_TreeMenu menu, OZL_NodeView node, string status, bool canResearch)
     {
-        FixRegistry(menu);
+        m_RegDirty = true;
+        m_RegTries = 0;
         if (!node)
             return;
-
-        // Статус -- великими, розрядкою (.cstat); колір уже поставило меню.
-        SetTo(menu, "CardStatus", Spread(OZL_Text.Upper(StatusText(status))));
-        // Кнопка: той самий вибір слова, що в меню, -- великими, розрядкою (.go).
-        string key = "STR_OZL_TREE_RESEARCH";
-        if (status == "completed")
-            key = "STR_OZL_TREE_COMPLETED";
-        SetTo(menu, "BtnResearchText", Spread(OZL_Text.Upper(Words(key)), 4));
-
-        ImageWidget seal = ImageWidget.Cast(menu.Role("CardStampImg"));
-        if (seal)
-        {
-            if (status == "researching")
-                seal.SetColor(SealWork);
-            else
-                seal.SetColor(SealDone);
-        }
-
         // Лінійка під «Матеріали» і «Відкриває» -- разом із заголовком, який
         // меню ховає, коли розділ порожній.
         Follow(menu, "CardItemsRule", "CardItemsHead");
         Follow(menu, "CardOpensRule", "CardOpensHead");
-        Widget flow = menu.Role("CardFlow");
-        if (flow)
-            flow.Update();
+        menu.RefreshCard();
+    }
+
+    // «Напрям» із » перемикає гілки по колу, коли їх більше однієї (у мокапі
+    // гілка одна).
+    override bool OnClick(OZL_TreeMenu menu, Widget w)
+    {
+        if (!w || w.GetName() != "DutyBranchNext")
+            return false;
+        OZL_TreeView view = menu.View();
+        OZL_BranchView cur = menu.CurrentBranch();
+        if (!view || !cur || view.Branches.Count() < 2)
+            return true;
+        int count = view.Branches.Count();
+        int at = 0;
+        for (int i = 0; i < count; i++)
+        {
+            if (view.Branches[i] && view.Branches[i].Id == cur.Id)
+                at = i;
+        }
+        int nextAt = (at + 1) % count;
+        if (view.Branches[nextAt])
+            menu.PickBranch(view.Branches[nextAt].Id);
+        return true;
     }
 
     override void OnUpdate(OZL_TreeMenu menu, float dt)
     {
+        m_Clock += dt;
         for (int i = m_Lines.Count() - 1; i >= 0; i--)
         {
             if (LayLine(menu, m_Lines[i]))
                 m_Lines.RemoveOrdered(i);
         }
+        if (m_RegDirty && LayRegistry(menu))
+            m_RegDirty = false;
+        if (m_PoolDirty && LayPoolEdge(menu))
+            m_PoolDirty = false;
+        BlinkTick();
+        CloseHover(menu);
+    }
+
+    // Крапка проєкту: blink 1 s steps(2) мокапа -- 1, .6, .2, .6 по чверті
+    // секунди (як у Чистого неба).
+    protected void BlinkTick()
+    {
+        int step = Math.Floor(Math.ModFloat(m_Clock, 1) * 4);
+        if (step == m_BlinkStep)
+            return;
+        m_BlinkStep = step;
+        float a = 1;
+        if (step == 1 || step == 3)
+            a = 0.6;
+        else if (step == 2)
+            a = 0.2;
+        for (int i = m_Blink.Count() - 1; i >= 0; i--)
+        {
+            Widget w = m_Blink[i];
+            if (!w)
+            {
+                m_Blink.Remove(i);
+                continue;
+            }
+            w.SetAlpha(a);
+        }
+    }
+
+    // Меню не повідомляє, коли миша над BtnClose, тож питаємо щокадру.
+    protected void CloseHover(OZL_TreeMenu menu)
+    {
+        Widget btn = menu.Role("BtnClose");
+        if (!btn)
+            return;
+        bool lit = GetWidgetUnderCursor() == btn;
+        if (lit != m_CloseLit)
+            PaintClose(menu, lit);
+    }
+
+    // Поле «Закрити»: чорнило, під мишею -- червоне з блідою червоною
+    // заливкою, як кнопка «Дослідити» під мишею.
+    protected void PaintClose(OZL_TreeMenu menu, bool lit)
+    {
+        m_CloseLit = lit;
+        Widget closeBox = menu.Role("CloseBox");
+        if (!closeBox)
+            return;
+        int ink = Txt;
+        if (lit)
+            ink = Acc;
+        Tint(closeBox, "CloseTop", ink);
+        Tint(closeBox, "CloseBottom", ink);
+        Tint(closeBox, "CloseLeft", ink);
+        Tint(closeBox, "CloseRight", ink);
+        Tint(closeBox, "BtnCloseText", ink);
+        Widget closeFill = closeBox.FindAnyWidget("CloseHover");
+        if (closeFill)
+            closeFill.Show(lit);
     }
 
     // ------------------------------------------------------------------
-    // Реєстр і фонди
+    // Реєстр і фонди: місця -- з самих віджетів
     // ------------------------------------------------------------------
 
-    // Рядки реєстру після меню: великі літери стану, сірий рядок закритого
-    // вузла (.rrow.st-locked) і прихованого (.fogrow), стан у два рядки, коли
-    // не влазить. Далі -- висота таблиці (до 330, далі прокрутка) і фонди на
-    // 18 одиниць під нею.
-    protected void FixRegistry(OZL_TreeMenu menu)
+    // Таблиця реєстру завширшки як у розкладці, заввишки -- сума рядків (до
+    // 330, далі прокрутка); фонди -- на 18 під нею, на своєму x. Місця читає
+    // з екрана, тож чекає, доки віджети розкладено; true -- готово.
+    protected bool LayRegistry(OZL_TreeMenu menu)
     {
         Widget list = menu.Role("Registry");
-        if (!list)
-            return;
+        Widget scroll = menu.Role("RegScroll");
+        if (!list || !scroll || !scroll.GetParent())
+            return true;
+        float px = menu.Px();
+        float sw;
+        float sh;
+        menu.UnitsOf(scroll, sw, sh);
+        if ((px <= 0 || sw <= 0) && m_RegTries < 60)
+        {
+            m_RegTries++;
+            return false;
+        }
         float total = 0;
         Widget row = list.GetChildren();
         while (row)
         {
-            total += FixRegRow(menu, row);
+            total += ROW_H;
+            Widget two = row.FindAnyWidget("RegState2");
+            if (two && two.IsVisible())
+                total += ROW_H2 - ROW_H;
             row = row.GetSibling();
         }
         list.Update();
-
         float shown = total;
         if (shown > REG_MAX)
             shown = REG_MAX;
-        Widget scroll = menu.Role("RegScroll");
-        if (scroll)
-            menu.SizeUnits(scroll, 440, shown);
+        menu.SizeUnits(scroll, sw, shown);
+
         Widget fund = menu.Role("FundBlock");
-        if (fund)
-            menu.PlaceUnits(fund, 40, REG_TOP + shown + FUND_GAP);
+        if (!fund || px <= 0)
+            return true;
+        float ox;
+        float oy;
+        float sx;
+        float sy;
+        float fx;
+        float fy;
+        scroll.GetParent().GetScreenPos(ox, oy);
+        scroll.GetScreenPos(sx, sy);
+        fund.GetScreenPos(fx, fy);
+        // Ще не розкладено: таблиця стоїть нижче верху аркуша, не на ньому.
+        if (sy <= oy && m_RegTries < 60)
+        {
+            m_RegTries++;
+            return false;
+        }
+        menu.PlaceUnits(fund, (fx - ox) / px, (sy - oy) / px + shown + FUND_GAP);
+        return true;
     }
 
-    // Один рядок; повертає його висоту.
-    protected float FixRegRow(OZL_TreeMenu menu, Widget row)
+    // Нижній край таблиці фондів -- 1.5, як боки, поверх межі останнього
+    // рядка (на одиницю вище його низу); порожній пул -- лише рамка з
+    // написом (PoolEmpty, показує меню). true -- готово.
+    protected bool LayPoolEdge(OZL_TreeMenu menu)
     {
-        string id = TagOf(row, "reg:");
-        OZL_NodeView n = null;
-        if (id != "")
-            n = menu.NodeOf(id);
-        int ink = Txt;
-        int stateInk = Dim;
-        string state = "—";
-        if (n)
-        {
-            if (n.Status == "locked")
-                ink = Dim;
-            state = OZL_Text.Upper(StatusText(n.Status));
-            stateInk = StatusColorOf(n.Status);
-        }
-        else
-        {
-            ink = Dim;
-            TextWidget fogName = TextWidget.Cast(row.FindAnyWidget("RegName"));
-            if (fogName)
-                fogName.SetText(OZL_Text.Upper(Words("STR_OZL_TREE_UNKNOWN_ROW")));
-        }
-        Tint(row, "RegNum", ink);
-        Tint(row, "RegName", ink);
-        Tint(row, "RegTier", ink);
-
-        string first = state;
-        string second = "";
-        if (state.LengthUtf8() > STATE_CHARS)
-            SplitState(state, first, second);
-        TextWidget st = TextWidget.Cast(row.FindAnyWidget("RegState"));
-        if (st)
-        {
-            st.SetText(first);
-            st.SetColor(stateInk);
-        }
-        TextWidget st2 = TextWidget.Cast(row.FindAnyWidget("RegState2"));
-        if (st2)
-        {
-            st2.SetText(second);
-            st2.SetColor(stateInk);
-            st2.Show(second != "");
-        }
-        float h = ROW_H;
-        if (second != "")
-            h = ROW_H2;
-        // Ширина рядка пропорційна (1 = уся таблиця), висота -- пікселі
-        // екрана (SetSize бере пікселі, SKINS.md "Units").
-        row.SetSize(1, h * menu.Px());
-        return h;
-    }
-
-    // Id рядка списку: меню перейменовує його ...Hit (або сам рядок) на
-    // <tag><id> -- reg:; рядок прихованого вузла лишається без
-    // імені -- "".
-    protected static string TagOf(Widget row, string tag)
-    {
-        int n = tag.Length();
-        string own = row.GetName();
-        if (own.IndexOf(tag) == 0)
-            return own.Substring(n, own.Length() - n);
-        Widget c = row.GetChildren();
+        Widget pool = menu.Role("PoolList");
+        Widget bottom = menu.Role("PoolBottom");
+        if (!pool || !bottom || !bottom.GetParent())
+            return true;
+        Widget last = null;
+        Widget c = pool.GetChildren();
         while (c)
         {
-            string nm = c.GetName();
-            if (nm.IndexOf(tag) == 0)
-                return nm.Substring(n, nm.Length() - n);
+            last = c;
             c = c.GetSibling();
         }
-        return "";
+        bottom.Show(last != null);
+        if (!last)
+            return true;
+        float px = menu.Px();
+        float lw;
+        float lh;
+        menu.UnitsOf(last, lw, lh);
+        float ox;
+        float oy;
+        float lx;
+        float ly;
+        float ex;
+        float ey;
+        bottom.GetParent().GetScreenPos(ox, oy);
+        last.GetScreenPos(lx, ly);
+        bottom.GetScreenPos(ex, ey);
+        // Рядок ще не розкладено (нуль заввишки чи на верху блоку, хоча
+        // перший рядок стоїть під шапкою): наступного кадру.
+        if ((px <= 0 || lh <= 0 || ly <= oy) && m_PoolTries < 60)
+        {
+            m_PoolTries++;
+            return false;
+        }
+        if (px <= 0)
+            return true;
+        menu.PlaceUnits(bottom, (ex - ox) / px, (ly - oy) / px + lh - 1);
+        return true;
     }
 
     // Стан у два рядки по словах: скільки слів влазить у перший.
@@ -576,26 +864,6 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
                 second += " ";
             second += parts[i];
         }
-    }
-
-    // Нижній край таблиці фондів -- 1.5, як боки, поверх межі останнього
-    // рядка; порожній пул -- лише рамка з написом (PoolEmpty, показує меню).
-    protected void PoolEdge(OZL_TreeMenu menu)
-    {
-        Widget pool = menu.Role("PoolList");
-        Widget edge = menu.Role("PoolBottom");
-        if (!pool || !edge)
-            return;
-        int rows = 0;
-        Widget c = pool.GetChildren();
-        while (c)
-        {
-            rows++;
-            c = c.GetSibling();
-        }
-        edge.Show(rows > 0);
-        if (rows > 0)
-            menu.PlaceUnits(edge, 0, 25.5 + POOL_ROW_H * rows - 1);
     }
 
     // ------------------------------------------------------------------
@@ -718,16 +986,18 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         return text;
     }
 
-    // Шматки -- у написи контейнера: бланкові в <Line>N0, N1..., друкарські в
-    // <Line>T0, T1...; зайві ховаються; ставить OnUpdate.
-    protected void PutRuns(OZL_TreeMenu menu, string line, array<ref OZL_DutyRun> runs, float space)
+    // Шматки -- у написи контейнера: бланкові в <Line>N0, N1..., друкарські
+    // (жирний машинопис розміру typedSize) в <Line>T0, T1...; зайві
+    // ховаються; ставить OnUpdate.
+    protected void PutRuns(OZL_TreeMenu menu, string line, array<ref OZL_DutyRun> runs, float space, float typedSize)
     {
         Widget box = menu.Role(line);
         if (!box)
             return;
-        OZL_DutyLine job = new OZL_DutyLine(0, false);
+        OZL_DutyLine job = new OZL_DutyLine(0);
         int nextN = 0;
         int nextT = 0;
+        bool placed = false;
         for (int i = 0; i < runs.Count(); i++)
         {
             OZL_DutyRun run = runs[i];
@@ -737,16 +1007,24 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
             TextWidget t = TextWidget.Cast(box.FindAnyWidget(slotName));
             if (!t)
                 continue;
+            float trim = 0;
             if (run.Typed)
+            {
                 nextT++;
+                t.SetBold(true);
+                trim = run.Text.LengthUtf8() * typedSize * SDF_SLACK;
+            }
             else
+            {
                 nextN++;
+            }
             t.SetText(run.Text);
             t.Show(true);
             float gap = 0;
-            if (run.Space && job.Parts.Count() > 0)
+            if (run.Space && placed)
                 gap = space;
-            job.Add(t, gap);
+            job.Add(t, gap, trim);
+            placed = true;
         }
         HideFrom(box, line + "N", nextN);
         HideFrom(box, line + "T", nextT);
@@ -764,20 +1042,49 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
         }
     }
 
-    // Поставити рядок, коли всі його видимі написи мають ширину тексту;
-    // true -- поставлено (чи чекати вже годі).
+    // Поставити рядок, коли всі його видимі написи (і контейнер, і літера
+    // проміжку) мають ширину; true -- поставлено (чи чекати вже годі). Кожен
+    // напис лишається на своїй висоті з розкладки; кнопка Hit лягає на
+    // написи HitFrom..HitTo.
     protected bool LayLine(OZL_TreeMenu menu, OZL_DutyLine line)
     {
         float px = menu.Px();
         if (px <= 0)
             return false;
+        float letter = 0;
+        if (line.GapRef)
+        {
+            int lw;
+            int lh;
+            line.GapRef.GetTextSize(lw, lh);
+            if (lw <= 0 && line.Tries < 60)
+            {
+                line.Tries++;
+                return false;
+            }
+            letter = lw / px;
+        }
+        float boxW = 0;
+        if (line.Holder)
+        {
+            float boxH;
+            menu.UnitsOf(line.Holder, boxW, boxH);
+            if (boxW <= 0 && line.Tries < 60)
+            {
+                line.Tries++;
+                return false;
+            }
+        }
         array<float> widths = new array<float>();
+        array<float> gaps = new array<float>();
         float total = 0;
+        bool first = true;
         int i;
         for (i = 0; i < line.Parts.Count(); i++)
         {
             TextWidget t = line.Parts[i];
             float w = 0;
+            float g = 0;
             if (t && t.IsVisible())
             {
                 float sw;
@@ -791,22 +1098,52 @@ class OZL_TreeSkin_Duty : OZL_TreeSkin
                     line.Tries++;
                     return false;
                 }
-                w = pw / px;
-                total += line.Gaps[i] + w;
+                w = pw / px - line.Trims[i];
+                if (w < 0)
+                    w = 0;
+                if (!first)
+                {
+                    g = line.Gaps[i];
+                    if (g < 0)
+                        g = letter;
+                }
+                first = false;
+                total += g + w;
             }
             widths.Insert(w);
+            gaps.Insert(g);
         }
         float x = line.X;
-        if (line.Center)
-            x = line.X - total / 2;
+        if (line.Holder)
+            x = boxW / 2 - total / 2;
+        float hitL = -1;
+        float hitR = -1;
         for (i = 0; i < line.Parts.Count(); i++)
         {
             TextWidget p = line.Parts[i];
             if (!p || !p.IsVisible())
                 continue;
-            x += line.Gaps[i];
-            menu.PlaceUnits(p, x, 0);
+            x += gaps[i];
+            float ownX;
+            float ownY;
+            p.GetPos(ownX, ownY);
+            menu.PlaceUnits(p, x, ownY / px);
+            if (i == line.HitFrom)
+                hitL = x;
             x += widths[i];
+            if (i == line.HitTo)
+                hitR = x;
+        }
+        if (line.Hit && hitL >= 0 && hitR > hitL)
+        {
+            float hitW;
+            float hitH;
+            menu.UnitsOf(line.Parts[line.HitFrom], hitW, hitH);
+            float hx;
+            float hy;
+            line.Hit.GetPos(hx, hy);
+            menu.PlaceUnits(line.Hit, hitL, hy / px);
+            menu.SizeUnits(line.Hit, hitR - hitL, hitH);
         }
         return true;
     }

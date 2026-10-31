@@ -161,11 +161,12 @@ FrameWidgetClass OZL_DutyOpensChip {
     }
    }
   }
+  // Bold typed capitals (.opens a, 13 px bold): SetBold in PaintOpenChip.
   TextWidgetClass ChipText {
    visible 1
    ignorepointer 1
-   position 9 3.62
-   size 0 14
+   position 9 1.11
+   size 0 17.88
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -173,9 +174,9 @@ FrameWidgetClass OZL_DutyOpensChip {
    color 0.118 0.11 0.098 1
    priority 3
    text ""
-   font "OpenZone_Research/gui/fonts/ozl_type30"
+   font "OpenZone_Research/gui/fonts/ozl_sdf_type32"
    "exact text" 1
-   "exact text size" 14
+   "exact text size" 13
    "text halign" left
    "text valign" center
    "size to text h" 1

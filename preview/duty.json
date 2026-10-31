@@ -8,9 +8,15 @@
       "fixture": "preview/duty-window.json"
     },
     {
+      "name": "duty-work",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_duty.layout",
+      "host": "1600 900",
+      "fixture": "preview/duty-work.json"
+    },
+    {
       "name": "duty-node",
       "layout": "OpenZone_Research/gui/layouts/ozl_node_duty.layout",
-      "host": "200 90",
+      "host": "172 90",
       "fixture": "preview/duty-node.json"
     }
   ]
