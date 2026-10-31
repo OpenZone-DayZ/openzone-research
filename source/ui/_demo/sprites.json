@@ -1,0 +1,44 @@
+{
+  "comment": [
+    "Every manifest feature in one place; copy from it. A folder whose name starts with an underscore is an",
+    "example: --all skips it and it is baked only with --out, so nothing lands in the mod:",
+    "  python source/ui/bake.py _demo --out build/ui/demo-out"
+  ],
+  "scale": 1.5,
+  "gutter": 4,
+  "css": [
+    "demo.css",
+    ":root { --ink: #1e1c19; --accent: #a5241a; }"
+  ],
+  "body": { "data-f": "demo" },
+  "sprites": [
+    {
+      "name": "tag", "w": 48, "h": 20,
+      "html": "<div class='tag'>OK</div>"
+    },
+    {
+      "name": "glow", "w": 12, "h": 12, "pad": 10,
+      "css": "background: #fff; border-radius: 50%; box-shadow: 0 0 8px 2px rgba(255, 255, 255, .9);",
+      "html": ""
+    },
+    {
+      "name": "stamp", "w": 160, "h": 44, "pad": 6,
+      "html_uk": "<div class='stamp'>ЗАТВЕРДЖУЮ</div>",
+      "html_en": "<div class='stamp'>APPROVED</div>"
+    },
+    {
+      "name": "svg_ring", "w": 30, "h": 30,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><defs><linearGradient id='demo-ring' x1='0' x2='1'><stop offset='0' stop-color='#fff'/><stop offset='1' stop-color='#fff' stop-opacity='.15'/></linearGradient></defs><circle cx='15' cy='15' r='12' fill='none' stroke='url(#demo-ring)' stroke-width='4'/></svg>"
+    }
+  ],
+  "textures": [
+    {
+      "name": "frame", "w": 200, "h": 100,
+      "html": "<div class='frame'><b>200 x 100 units, no size: the content is the top-left 300x150 px of a 512x256 canvas</b></div>"
+    },
+    {
+      "name": "window", "w": 300, "h": 170, "size": [512, 256],
+      "html": "<div class='frame'><b>300 x 170 units stretched over the whole 512x256 canvas</b></div>"
+    }
+  ]
+}
