@@ -23,3 +23,7 @@ to `OZ_Factions.json`. A player outside an organisation belongs to the base fact
 
 Every faction of both packs names its own tree window in `OZ_Research_Owners.json`
 (`"Skin"`: the faction's own id).
+
+In both packs a rule's `Purity` of -1 takes the `BasePurity` of its line from
+`OZ_Research_PointTypes.json`; a `Purity` of 0 or no key does the same, and a `BasePurity`
+of 0 or no key is 0.7.

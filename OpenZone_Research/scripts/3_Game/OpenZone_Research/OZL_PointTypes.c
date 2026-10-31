@@ -4,7 +4,8 @@
 // ozlLine проб, носіїв і станків у config.cpp. Тирів і родів немає: рідкість
 // сировини -- це число балів, яке пакувальник пише в пробу. Чистота проби теж
 // на лінії: BasePurity -- з якою чистотою стартує кожна проба лінії, поки
-// правило не задало свою (OZL_Rule.Purity).
+// правило не задало свою (OZL_Rule.Purity). Нуль чи ненаписаний ключ -- «не
+// задано», і лінія стартує з 0,7.
 
 class OZL_PointType
 {
@@ -13,8 +14,10 @@ class OZL_PointType
     string Icon       = "";
     string Color      = "";
     int    SortOrder  = 0;
-    // Початкова чистота кожної проби цієї лінії, 0..1; модулі пакувальника
-    // додають своє зверху. Правило може задати свою (OZL_Rule.Purity).
+    // Початкова чистота кожної проби цієї лінії, понад 0 і до 1; модулі
+    // пакувальника додають своє зверху. Правило може задати свою
+    // (OZL_Rule.Purity). 0 чи ключ, якого немає у файлі (він читається нулем),
+    // -- «не задано»: 0,7, бо проба з чистотою 0 не проходить аналіз ніколи.
     float  BasePurity = OZL_Const.DEFAULT_PURITY;
 
     OZL_PointType Copy()
@@ -46,9 +49,10 @@ class OZL_PointTypes : OZ_ConfigBase
 
     // Версія 1 мала тири й роди: переносити нічого, файл іде в карантин ядра.
     // Версія 2 не знала BasePurity, а серіалізатор не виконує ініціалізаторів
-    // вкладених полів: ненаписаний ключ читається нулем, і кожна лінія
-    // стартувала б з нульовою чистотою. Тому кожна лінія отримує стару
-    // типову, 0,7, -- нічого не змінюється, доки адмін не змінить сам.
+    // вкладених полів: ненаписаний ключ читається нулем. Validate такий нуль
+    // однаково зробив би 0,7, та з попередженням на кожну лінію; міграція
+    // робить те саме тихо: кожна лінія отримує стару типову, 0,7, -- нічого
+    // не змінюється, доки адмін не змінить сам.
     override bool Migrate(int from)
     {
         if (from != 2)
@@ -109,15 +113,25 @@ class OZL_PointTypes : OZ_ConfigBase
                 continue;
             }
 
-            // Чистота поза 0..1 не має сенсу ні як шанс, ні як відсоток у пробі:
-            // стискаємо в межі, одне попередження на тип.
-            if (pt.BasePurity < 0 || pt.BasePurity > 1)
+            // Нуль -- «не задано»: ненаписаний ключ читається нулем, а проба з
+            // чистотою 0 не проходить аналіз ніколи, і таку не ставить ніхто.
+            // Нуль і від'ємне стають типовою, понад 1 стискається до 1; одне
+            // попередження на тип, і файл переписується з виправленим числом.
+            if (pt.BasePurity <= 0)
             {
-                float clamped = Math.Clamp(pt.BasePurity, 0, 1);
-                string said = "PointTypes: type '" + pt.Id + "' BasePurity " + pt.BasePurity.ToString();
-                said += " is outside 0..1, set to " + clamped.ToString();
-                OZL_Log.Warn(said);
-                pt.BasePurity = clamped;
+                float unsetTo = OZL_Const.DEFAULT_PURITY;
+                string unset = "PointTypes: type '" + pt.Id + "' BasePurity " + pt.BasePurity.ToString();
+                unset += " is not set, using " + unsetTo.ToString();
+                OZL_Log.Warn(unset);
+                pt.BasePurity = unsetTo;
+                warnings++;
+            }
+            else if (pt.BasePurity > 1)
+            {
+                string wide = "PointTypes: type '" + pt.Id + "' BasePurity " + pt.BasePurity.ToString();
+                wide += " is above 1, set to 1";
+                OZL_Log.Warn(wide);
+                pt.BasePurity = 1;
                 warnings++;
             }
             seen.Insert(pt.Id);
@@ -143,14 +157,14 @@ class OZL_PointTypes : OZ_ConfigBase
     }
 
     // BasePurity лінії; -1, коли лінії немає (порожній рядок), типу з таким Id
-    // немає чи його значення не з 0..1 (Validate такого не лишає, але відповідь
-    // «-1 -- не знаю» чесніша, ніж від'ємна чистота).
+    // немає чи його значення не з (0..1]: нуль -- «не задано» (Validate такого
+    // не лишає, але відповідь «-1 -- не знаю» чесніша за нульову чистоту).
     float BasePurityOf(string line)
     {
         if (line == "")
             return -1;
         OZL_PointType pt = Find(line);
-        if (!pt || pt.BasePurity < 0 || pt.BasePurity > 1)
+        if (!pt || pt.BasePurity <= 0 || pt.BasePurity > 1)
             return -1;
         return pt.BasePurity;
     }

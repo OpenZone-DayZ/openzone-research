@@ -550,11 +550,12 @@ modded class DZMCP_BridgeCore
 
     // STAND ONLY. The starting purity of a cycle and the two version-2
     // migrations, against objects built in memory: the live configs are not
-    // touched (the clamp of Validate does write two WARNING lines, on purpose).
-    // The cases are the contract of OZL_Rules.StartPurity: an own purity wins; a
-    // negative one takes the BasePurity of the station's line, then of the line
-    // of the sample the rule makes, then the named default; nothing negative
-    // comes out.
+    // touched (Validate does write three WARNING lines, on purpose). The cases
+    // are the contract of OZL_Rules.StartPurity: an own purity above 0 wins; 0,
+    // a negative one and a key left out of the file (which reads as 0) take the
+    // BasePurity of the station's line, then of the line of the sample the rule
+    // makes, then the named default; a BasePurity of 0 is not taken either; the
+    // answer is always above 0.
     protected bool OZL_PuritySelftest(out string detail)
     {
         array<string> fails = new array<string>();
@@ -588,10 +589,22 @@ modded class DZMCP_BridgeCore
         OZL_ExpectFloat(fails, "no point types at all, the named default", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", null), OZL_Const.DEFAULT_PURITY);
         rule.Purity = -0.25;
         OZL_ExpectFloat(fails, "any negative takes the line's", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.5);
+        // A key left out of the file reads as 0: not set, so the line's.
+        rule.Purity = 0;
+        OZL_ExpectFloat(fails, "Purity 0 (a missing key) takes the line's", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.5);
         rule.Purity = 0.9;
         OZL_ExpectFloat(fails, "an own purity wins", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.9);
+        rule.Purity = 0.05;
+        OZL_ExpectFloat(fails, "any Purity above 0 is the rule's own", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.05);
+
+        // The same for the line: a BasePurity left out of the file reads as 0 and is not taken.
+        rule.Purity = -1;
+        bio.BasePurity = 0;
+        OZL_ExpectFloat(fails, "BasePurity 0 (a missing key) gives the named default", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), OZL_Const.DEFAULT_PURITY);
         rule.Purity = 0;
-        OZL_ExpectFloat(fails, "an own zero is a purity, not the line's", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0);
+        OZL_ExpectFloat(fails, "Purity 0 and BasePurity 0 together give the named default", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), OZL_Const.DEFAULT_PURITY);
+        rule.Purity = 0.9;
+        OZL_ExpectFloat(fails, "an own purity wins over a BasePurity of 0", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), 0.9);
 
         // A value that never passed Validate must not come out as the line's.
         rule.Purity = -1;
@@ -601,7 +614,7 @@ modded class DZMCP_BridgeCore
         OZL_ExpectFloat(fails, "BasePurity 3 is not taken", OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts), OZL_Const.DEFAULT_PURITY);
         bio.BasePurity = 0.5;
 
-        // Nothing negative, whatever the rule and the types hold.
+        // Always above zero, whatever the rule and the types hold.
         array<float> sweep = new array<float>();
         sweep.Insert(-5);
         sweep.Insert(-1);
@@ -609,18 +622,25 @@ modded class DZMCP_BridgeCore
         sweep.Insert(0);
         sweep.Insert(0.3);
         sweep.Insert(1);
-        int negative = 0;
+        int notPositive = 0;
         for (int s = 0; s < sweep.Count(); s++)
         {
             rule.Purity = sweep[s];
-            if (OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts) < 0)
-                negative++;
-            if (OZL_Rules.StartPurity(rule, "Rag", other) < 0)
-                negative++;
-            if (OZL_Rules.StartPurity(rule, "", null) < 0)
-                negative++;
+            for (int bi = 0; bi < sweep.Count(); bi++)
+            {
+                bio.BasePurity = sweep[bi];
+                if (OZL_Rules.StartPurity(rule, "OZL_Eco_Pack_Bio", pts) <= 0)
+                    notPositive++;
+                if (OZL_Rules.StartPurity(rule, "Rag", pts) <= 0)
+                    notPositive++;
+            }
+            if (OZL_Rules.StartPurity(rule, "Rag", other) <= 0)
+                notPositive++;
+            if (OZL_Rules.StartPurity(rule, "", null) <= 0)
+                notPositive++;
         }
-        OZL_ExpectTrue(fails, "a negative purity came out " + negative.ToString() + " time(s)", negative == 0);
+        bio.BasePurity = 0.5;
+        OZL_ExpectTrue(fails, "a purity of zero or less came out " + notPositive.ToString() + " time(s)", notPositive == 0);
 
         // Rules, version 2 -> 3: 0.7 (the old default) becomes -1, the rest stays.
         OZL_Rules oldRules = new OZL_Rules();
@@ -669,13 +689,15 @@ modded class DZMCP_BridgeCore
         OZL_ExpectFloat(fails, "point types: first gets 0.7", oldTypes.PointTypes[0].BasePurity, OZL_Const.DEFAULT_PURITY);
         OZL_ExpectFloat(fails, "point types: second gets 0.7", oldTypes.PointTypes[1].BasePurity, OZL_Const.DEFAULT_PURITY);
 
-        // Validate clamps into 0..1, one warning per type.
+        // Validate: above 1 is cut to 1; 0 (a missing key) and below are "not set"
+        // and become 0.7; one warning per type.
         OZL_PointTypes wide = new OZL_PointTypes();
         wide.Version = wide.LatestVersion();
         array<float> widths = new array<float>();
         widths.Insert(1.5);
         widths.Insert(-0.2);
         widths.Insert(0.4);
+        widths.Insert(0);
         for (int v = 0; v < widths.Count(); v++)
         {
             OZL_PointType wt = new OZL_PointType();
@@ -686,10 +708,11 @@ modded class DZMCP_BridgeCore
         }
         int clampWarnings;
         wide.Validate(clampWarnings);
-        OZL_ExpectTrue(fails, "validate: two warnings, got " + clampWarnings.ToString(), clampWarnings == 2);
+        OZL_ExpectTrue(fails, "validate: three warnings, got " + clampWarnings.ToString(), clampWarnings == 3);
         OZL_ExpectFloat(fails, "validate: 1.5 -> 1", wide.PointTypes[0].BasePurity, 1);
-        OZL_ExpectFloat(fails, "validate: -0.2 -> 0", wide.PointTypes[1].BasePurity, 0);
+        OZL_ExpectFloat(fails, "validate: -0.2 -> 0.7", wide.PointTypes[1].BasePurity, OZL_Const.DEFAULT_PURITY);
         OZL_ExpectFloat(fails, "validate: 0.4 stays", wide.PointTypes[2].BasePurity, 0.4);
+        OZL_ExpectFloat(fails, "validate: 0 (a missing key) -> 0.7", wide.PointTypes[3].BasePurity, OZL_Const.DEFAULT_PURITY);
 
         // The defaults carry 0.7 on every line.
         OZL_PointTypes fresh = new OZL_PointTypes();
@@ -703,7 +726,7 @@ modded class DZMCP_BridgeCore
         OZL_ExpectTrue(fails, "defaults: " + off.ToString() + " of " + fresh.PointTypes.Count().ToString() + " line(s) off 0.7", off == 0 && fresh.PointTypes.Count() > 0);
         OZL_ExpectTrue(fails, "defaults: the version is the latest", fresh.Version == fresh.LatestVersion());
 
-        // Problem(): above 1 is refused as a purity; a negative one is not a purity complaint.
+        // Problem(): above 1 is refused as a purity; 0 and a negative one are not a purity complaint.
         OZL_Rule probe = new OZL_Rule();
         probe.Purity = 1.5;
         string why = OZL_Rules.Problem(probe, pts);
@@ -711,6 +734,9 @@ modded class DZMCP_BridgeCore
         probe.Purity = -1;
         why = OZL_Rules.Problem(probe, pts);
         OZL_ExpectTrue(fails, "problem: -1 is not a purity complaint", why.IndexOf("Purity") != 0);
+        probe.Purity = 0;
+        why = OZL_Rules.Problem(probe, pts);
+        OZL_ExpectTrue(fails, "problem: 0 is not a purity complaint", why.IndexOf("Purity") != 0);
         probe.Purity = 1;
         why = OZL_Rules.Problem(probe, pts);
         OZL_ExpectTrue(fails, "problem: 1 is not a purity complaint", why.IndexOf("Purity") != 0);

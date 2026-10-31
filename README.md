@@ -30,9 +30,11 @@ Every sample, carrier, packer, analyzer and module belongs to a line (`ozlLine` 
 1. **Packer.** Takes raw input and gives the line's sample. The rule says how many points
    the sample is worth (`Points`, the rarity of the input). The sample starts at the purity
    of its line, the `BasePurity` of the line's point type (0.7 by default); a rule may name
-   a `Purity` of its own (0 to 1) for that one item, and `-1` means the line's. Every
-   working module of the line in the packer's three slots adds 0.1 to the purity and 10% to
-   the chance that the packer gives two samples instead of one. A rule may require modules
+   a `Purity` of its own (above 0, up to 1) for that one item. A `Purity` of 0, -1 or none
+   at all takes the line's, and a `BasePurity` of 0 or none at all is 0.7: nobody sets a
+   purity of zero on purpose, and a key left out of the file reads as 0. Every working
+   module of the line in the packer's three slots adds 0.1 to the purity and 10% to the
+   chance that the packer gives two samples instead of one. A rule may require modules
    (`RequiredTools`).
 2. **Analyzer.** Takes one sample of its line and gives the line's carrier. The sample's
    purity is the chance that the analysis succeeds; the carrier takes the sample's points.
@@ -90,7 +92,7 @@ Configs live in the server profile, `$profile:OpenZone\`:
 | `OZ_Research_Settings.json` | default owner, the two post names, the fog depth of the tree |
 | `OZ_Research_PointTypes.json` | point types, one per line, each with the line's base purity `BasePurity` (version 3) |
 | `OZ_Research_Owners.json` | per faction: terminals, devices, the tree window (`Skin`) |
-| `OZ_Research_Rules.json` | processing rules in groups; a `Purity` of -1 takes the line's (version 3) |
+| `OZ_Research_Rules.json` | processing rules in groups; a `Purity` of 0 or -1 takes the line's (version 3) |
 | `OZ_Research_Tree.json` | branches with nodes (version 2) |
 | `OZ_Research_Modules.json` | modules: purity bonus and double-output chance (version 2) |
 | `OZ_Research_Statics.json` | static stations to place once |
@@ -99,7 +101,7 @@ A version 1 file of point types, rules, tree or modules is not converted: the co
 it to quarantine and the mod starts on defaults. A version 2 file of point types or rules
 is converted when it is read and written back as version 3, the old file kept in the
 core's backup: every line gets a `BasePurity` of 0.7, and a rule whose `Purity` is 0.7
-gets -1, the line's; any other `Purity` stays as that item's own.
+gets -1, the line's; any other `Purity` stays as it was.
 
 The faction state, `research\<faction>.json`, holds the pool, the completed nodes and the
 running projects. `OZ_Research_Statics_State.json` remembers which statics were placed.
