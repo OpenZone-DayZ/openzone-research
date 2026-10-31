@@ -479,8 +479,9 @@ class OZL_Tree
                 have = st.PointsOf(pt.Id);
             v.Pool.Insert(new OZL_KV(pt.Id, have));
             OZL_PointName pn = new OZL_PointName();
-            pn.Id   = pt.Id;
-            pn.Name = pt.Name;
+            pn.Id    = pt.Id;
+            pn.Name  = pt.Name;
+            pn.Color = OZL_PointTypes.ColorArgb(pt.Color);
             v.Names.Insert(pn);
         }
 

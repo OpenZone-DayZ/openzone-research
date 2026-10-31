@@ -111,6 +111,20 @@ class OZL_PointTypes : OZ_ConfigBase
         return id;
     }
 
+    // "#7CB342" (чи "7CB342") -> ARGB з повною непрозорістю; порожньо чи
+    // криво -- 0, і екран бере свій колір. Для проводу (OZL_PointName.Color).
+    static int ColorArgb(string hex)
+    {
+        string h = hex.Trim();
+        if (h.IndexOf("#") == 0)
+            h = h.Substring(1, h.Length() - 1);
+        if (h.Length() != 6)
+            return 0;
+        string digits = "0x" + h;
+        int v = digits.HexToInt();
+        return ARGB(255, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF);
+    }
+
     OZL_PointTypes Copy()
     {
         OZL_PointTypes c = new OZL_PointTypes();
