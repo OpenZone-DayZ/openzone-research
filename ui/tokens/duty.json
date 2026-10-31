@@ -30,7 +30,6 @@
     "duty_type13": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 13, "fixed": false},
     "duty_type14": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 14, "fixed": false},
     "duty_type15": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 15, "fixed": false},
-    "duty_type17": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 17, "fixed": false},
     "duty_type18": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 18, "fixed": false},
     "duty_tb11": {"face": "OpenZone_Research/gui/fonts/ozl_sdf_type32", "size": 11, "fixed": false},
     "duty_tb13": {"face": "OpenZone_Research/gui/fonts/ozl_sdf_type32", "size": 13, "fixed": false},

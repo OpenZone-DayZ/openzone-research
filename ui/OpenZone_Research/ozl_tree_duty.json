@@ -252,6 +252,21 @@
                               "font": "duty_tb15",
                               "color": "$duty_txt"
                             }
+                          },
+                          {
+                            "panel": {
+                              "name": "ApproveCmdR0",
+                              "at": [
+                                75.0,
+                                16.36
+                              ],
+                              "size": [
+                                96.0,
+                                1.5
+                              ],
+                              "color": "$duty_txt",
+                              "note": "The ruled line of a typed blank: placed and sized under it by the skin."
+                            }
                           }
                         ],
                         "note": "'Командир ___________': the word, then the typed blank (the skin splits at the first space)."
@@ -375,6 +390,52 @@
                               "font": "duty_tb15",
                               "color": "$duty_txt",
                               "hidden": true
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "ApproveDateR0",
+                              "at": [
+                                6.4,
+                                16.36
+                              ],
+                              "size": [
+                                17.5,
+                                1.5
+                              ],
+                              "color": "$duty_txt",
+                              "note": "The ruled line of a typed blank: placed and sized under it by the skin."
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "ApproveDateR1",
+                              "at": [
+                                34.6,
+                                16.36
+                              ],
+                              "size": [
+                                87.5,
+                                1.5
+                              ],
+                              "color": "$duty_txt",
+                              "note": "The ruled line of a typed blank: placed and sized under it by the skin."
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "ApproveDateR2",
+                              "at": [
+                                0.0,
+                                16.36
+                              ],
+                              "size": [
+                                17.5,
+                                1.5
+                              ],
+                              "color": "$duty_txt",
+                              "hidden": true,
+                              "note": "The ruled line of a typed blank: placed and sized under it by the skin."
                             }
                           }
                         ],
@@ -1789,6 +1850,21 @@
                           },
                           {
                             "label": {
+                              "name": "ExecutorT1",
+                              "at": [
+                                140.88,
+                                -2.71
+                              ],
+                              "size": [
+                                300.0,
+                                17.88
+                              ],
+                              "font": "duty_tb13",
+                              "color": "$duty_dim"
+                            }
+                          },
+                          {
+                            "label": {
                               "name": "ExecutorN1",
                               "at": [
                                 212.91,
@@ -1801,9 +1877,40 @@
                               "font": "duty_narrow14",
                               "color": "$duty_dim"
                             }
+                          },
+                          {
+                            "panel": {
+                              "name": "ExecutorR0",
+                              "at": [
+                                56.88,
+                                13.6
+                              ],
+                              "size": [
+                                60.0,
+                                1.0
+                              ],
+                              "color": "$duty_dim",
+                              "hidden": true,
+                              "note": "The ruled line of a typed blank: placed and sized under it by the skin."
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "ExecutorR1",
+                              "at": [
+                                140.88,
+                                13.6
+                              ],
+                              "size": [
+                                60.6,
+                                1.0
+                              ],
+                              "color": "$duty_dim",
+                              "note": "The ruled line of a typed blank: placed and sized under it by the skin."
+                            }
                           }
                         ],
-                        "note": "'Виконавець ст. сержант ________ · тел. 2-14 · прим. № 1': the typed part runs from the second word to the last underscore (ExecutorT0), the rest is the form's (OnShow, OnUpdate)."
+                        "note": "'Виконавець ст. сержант ________ · тел. 2-14 · прим. № 1': the typed part runs from the second word to the last underscore -- the rank (ExecutorT0) and the blank (ExecutorT1, drawn as a ruled line, ExecutorR1) -- the rest is the form's (OnShow, OnUpdate)."
                       }
                     }
                   ],
@@ -3372,7 +3479,7 @@
                                   }
                                 },
                                 {
-                                  "label": {
+                                  "panel": {
                                     "name": "CardSign",
                                     "at": [
                                       0.0,
@@ -3382,10 +3489,71 @@
                                       374.0,
                                       14.0
                                     ],
-                                    "font": "duty_type14",
-                                    "color": "$duty_dim",
-                                    "text": "#STR_OZL_SKIN_DUTY_SIGN",
-                                    "note": "'Підпис ____________ /Командир/' (.c-foot::after); the skin folds the double space as CSS does."
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardSignN0",
+                                          "at": [
+                                            0.0,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            14.0
+                                          ],
+                                          "font": "duty_type14",
+                                          "color": "$duty_dim",
+                                          "text": "#STR_OZL_SKIN_DUTY_SIGN"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardSignT0",
+                                          "at": [
+                                            52.27,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            100.0,
+                                            14.0
+                                          ],
+                                          "font": "duty_type14",
+                                          "color": "$duty_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardSignN1",
+                                          "at": [
+                                            149.33,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            200.0,
+                                            14.0
+                                          ],
+                                          "font": "duty_type14",
+                                          "color": "$duty_dim"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSignR0",
+                                          "at": [
+                                            52.27,
+                                            13.8
+                                          ],
+                                          "size": [
+                                            89.6,
+                                            1.0
+                                          ],
+                                          "color": "$duty_dim",
+                                          "note": "The ruled line of a typed blank: placed and sized under it by the skin."
+                                        }
+                                      }
+                                    ],
+                                    "note": "'Підпис ____________ /Командир/' (.c-foot::after): the skin folds the double space as CSS does and splits it into the words (N) and the blank (T0), which it draws as a ruled line (CardSignR0) like the form's blanks. N0 holds the whole key until then (the static preview)."
                                   }
                                 },
                                 {
