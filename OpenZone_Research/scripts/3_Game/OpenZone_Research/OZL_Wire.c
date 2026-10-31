@@ -21,6 +21,10 @@ class OZL_ItemView
     string Cls  = "";
     string Name = "";
     int    Qty  = 0;
+    // Скільки таких предметів лежить у карго власного термінала поруч із
+    // гравцем (той самий добір, що й при старті); -1 -- невідомо: відповідь
+    // без гравця або без термінала поруч. Невідоме статус `short` не міняє.
+    int    Have = -1;
 }
 
 class OZL_NodeView
@@ -31,7 +35,9 @@ class OZL_NodeView
     // Значок вузла з конфігу дерева ("set:<набір> image:<значок>"); порожньо
     // -- значка немає, картка лишає колонку під нього порожньою.
     string Icon     = "";
-    // "locked" | "available" | "researching" | "completed"
+    // "locked" | "short" | "available" | "researching" | "completed".
+    // `short` -- батьки виконані, а балів фракції чи матеріалів у терміналі
+    // не вистачає. Це підказка екрану, а не дозвіл: старт перевіряє сам.
     string Status   = "locked";
     // Календарні секунди OZL_Clock, коли проєкт завершиться (лише researching).
     int    EndSec   = 0;
@@ -40,6 +46,16 @@ class OZL_NodeView
     // Рівень вузла: рядок екрана. Порядку в рядку немає -- він такий, яким
     // вузли йдуть у масиві, а розкладає їх рушій.
     int    Tier     = 1;
+    // Місце вузла серед вузлів ЦІЄЇ гілки, що належать цьому власникові: з
+    // нуля, у порядку конфігу. Номер "01" у реєстрі Долгу -- це Index + 1.
+    int    Index    = 0;
+    // ParentsMode == "any" (без огляду на регістр): вузол відкривається після
+    // будь-якого з батьків, а не після всіх.
+    bool   Any      = false;
+    // Батьки в порядку конфігу. Id батька, якого цей власник зараз не бачить
+    // (його приховав туман, або він чужий), не їде: на його місці порожній
+    // рядок -- довжина й порядок збережено, щоб картка могла написати
+    // «невідомо», не знаючи, хто це.
     ref array<string>         Parents;
     ref array<ref OZL_KV>     Cost;
     ref array<ref OZL_ItemView> Items;
@@ -52,6 +68,22 @@ class OZL_NodeView
     }
 }
 
+// Вузол, прихований туманом війни. Клієнт знає про нього рівно стільки, скільки
+// треба, щоб показати «невідомо»: місце в гілці (Index, як у OZL_NodeView),
+// рівень і тих батьків, яких бачить сам. Ані id, ані імені, ані опису, ані
+// ціни; id прихованих батьків теж не їдуть -- вони лишаються на сервері.
+class OZL_HiddenView
+{
+    int Index = 0;
+    int Tier  = 1;
+    ref array<string> Parents;
+
+    void OZL_HiddenView()
+    {
+        Parents = new array<string>();
+    }
+}
+
 class OZL_BranchView
 {
     string Id   = "";
@@ -61,10 +93,14 @@ class OZL_BranchView
     // росте, коли туман війни відступає.
     int    Total = 0;
     ref array<ref OZL_NodeView> Nodes;
+    // Вузли гілки, які належать власникові, але туман їх не показав. Разом із
+    // Nodes дають рівно Total записів, а їхні Index -- числа 0..Total-1.
+    ref array<ref OZL_HiddenView> Hidden;
 
     void OZL_BranchView()
     {
-        Nodes = new array<ref OZL_NodeView>();
+        Nodes  = new array<ref OZL_NodeView>();
+        Hidden = new array<ref OZL_HiddenView>();
     }
 }
 

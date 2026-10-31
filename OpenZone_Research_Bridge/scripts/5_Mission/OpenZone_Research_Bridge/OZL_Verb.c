@@ -294,7 +294,7 @@ modded class DZMCP_BridgeCore
                 tuid = pt.GetIdentity().GetPlainId();
             if (OZL_Arg(args, "as", "") == "post")
                 OZL_Pretend(pt);
-            detail = OZL_Tree.ViewJson(OZL_Owner.OfPlayer(pt), tuid);
+            detail = OZL_Tree.ViewJson(OZL_Owner.OfPlayer(pt), tuid, pt);
             return true;
         }
 

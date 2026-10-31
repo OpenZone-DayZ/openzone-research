@@ -27,7 +27,7 @@ class OZL_Service : OZ_ServiceHandler
             ok = true;
             error = "";
             OZL_Log.Dbg("tree for " + uid + " (" + owner + ")");
-            return OZL_Tree.ViewJson(owner, uid);
+            return OZL_Tree.ViewJson(owner, uid, player);
         }
 
         if (op == OZL_Const.OP_RESEARCH)
@@ -49,7 +49,7 @@ class OZL_Service : OZ_ServiceHandler
             // Удача -- свіже дерево: статуси й пул змінились у той самий момент.
             ok = true;
             error = "";
-            return OZL_Tree.ViewJson(owner, uid);
+            return OZL_Tree.ViewJson(owner, uid, player);
         }
 
         return "";
