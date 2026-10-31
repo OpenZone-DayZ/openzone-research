@@ -13,7 +13,16 @@ class OZL_OwnerDef
     string Id = "";
     ref array<string> TerminalClasses;
     ref array<string> DeviceClasses;
+    // Задник полотна дерева: необов'язкова своя картинка, що ЗАМІНЮЄ задник
+    // вікна. Порожньо -- лишається той, що малює вікно.
     string TreeBackground = "";
+    // Вікно дерева, яким фракція дивиться на дерево: ecolog, clearsky, duty,
+    // freedom, sop, bandit або neutral. Id названо за фракцією, для якої вікно
+    // намальовано, але взяти можна будь-яке. Поле необов'язкове: порожньо --
+    // вікно за власним id фракції (фракція duty дивиться вікном duty).
+    // Невідомий id перевірка чистить із попередженням. Що вийшло в кінці,
+    // каже OZL_Owners.SkinOf.
+    string Skin = "";
 
     void OZL_OwnerDef()
     {
@@ -26,6 +35,7 @@ class OZL_OwnerDef
         OZL_OwnerDef c = new OZL_OwnerDef();
         c.Id             = Id;
         c.TreeBackground = TreeBackground;
+        c.Skin           = Skin;
         int i;
         for (i = 0; i < TerminalClasses.Count(); i++)
             c.TerminalClasses.Insert(TerminalClasses[i]);
@@ -81,6 +91,20 @@ class OZL_Owners : OZ_ConfigBase
                 continue;
             }
             seen.Insert(o.Id);
+
+            // Невідоме вікно -- не причина губити власника: поле чиститься, а
+            // адмін отримує рядок у лозі з id власника й тим, що він написав.
+            if (o.Skin != "" && !IsKnownSkin(o.Skin))
+            {
+                OZL_Log.Warn("Owners: '" + o.Id + "': unknown Skin '" + o.Skin + "', cleared");
+                o.Skin = "";
+                warnings++;
+            }
+            // Власник без поля Skin бере вікно за своїм id. Якщо його id не
+            // назва вікна, лишається neutral -- страховка, а не штатний шлях;
+            // нічого не міняється, тож це лише рядок у лозі (як WarnShared).
+            if (o.Skin == "" && !IsKnownSkin(o.Id))
+                OZL_Log.Warn("Owners: owner '" + o.Id + "' has no skin, using neutral");
 
             int j;
             for (j = o.TerminalClasses.Count() - 1; j >= 0; j--)
@@ -228,6 +252,30 @@ class OZL_Owners : OZ_ConfigBase
         if (o)
             return o.TreeBackground;
         return "";
+    }
+
+    // Вікно дерева цього власника, УЖЕ розв'язане: поле Skin, якщо воно
+    // непорожнє й відоме; інакше власний id фракції, якщо це назва вікна;
+    // інакше neutral (страховка -- Validate про такого власника попереджає).
+    // Клієнт нічого не вирішує: що повернулося, те й малюється.
+    string SkinOf(string owner)
+    {
+        OZL_OwnerDef o = Find(owner);
+        if (o && o.Skin != "" && IsKnownSkin(o.Skin))
+            return o.Skin;
+        if (IsKnownSkin(owner))
+            return owner;
+        return "neutral";
+    }
+
+    // Вікна, які вміє намалювати меню дерева: рівно сім.
+    static bool IsKnownSkin(string id)
+    {
+        if (id == "ecolog" || id == "clearsky" || id == "duty" || id == "freedom")
+            return true;
+        if (id == "sop" || id == "bandit" || id == "neutral")
+            return true;
+        return false;
     }
 
     OZL_Owners Copy()

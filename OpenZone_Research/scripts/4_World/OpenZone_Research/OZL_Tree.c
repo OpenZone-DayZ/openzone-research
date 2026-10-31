@@ -372,6 +372,7 @@ class OZL_Tree
         v.OwnerName  = id.FactionName(owner);
         v.OwnerColor = id.FactionColor(owner, 255);
         v.Background = cfg.Owners().BackgroundOf(owner);
+        v.Skin       = cfg.Owners().SkinOf(owner);
         v.MaySpend   = OZL_Access.MaySpend(uid);
         v.Now        = OZL_Clock.NowSec();
 

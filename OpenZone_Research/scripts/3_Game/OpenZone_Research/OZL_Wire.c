@@ -74,6 +74,10 @@ class OZL_TreeView
     string OwnerName  = "";
     int    OwnerColor = 0;
     string Background = "";
+    // Id вікна дерева, УЖЕ розв'язаний сервером (OZL_Owners.SkinOf): рівно
+    // один із ecolog, clearsky, duty, freedom, sop, bandit, neutral. Клієнт
+    // нічого не вирішує і порожнього id не отримує.
+    string Skin       = "";
     bool   MaySpend   = false;
     // Календарна секунда сервера в мить відповіді: клієнт рахує залишок
     // проєктів від неї, а не від власного годинника.
