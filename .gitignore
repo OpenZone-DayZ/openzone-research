@@ -6,6 +6,8 @@ keys/*.biprivatekey
 build/out/
 # the pages, PNGs and previews of the UI bake (source/ui/bake.py)
 build/ui/
+# the mockup's own windows rendered for comparison by the skin authors
+build/ui-ref/
 # MLOD sources of the models, written by the generators in source/models;
 # the folder itself stays, dayz-mcp refuses a profile whose project_root is missing
 build/model-root/*
