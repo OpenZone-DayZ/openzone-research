@@ -245,10 +245,10 @@ Mockup window: neutral -- «Записник сталкера» (the clean noteb
 | key | Ukrainian | English | where it is used |
 |---|---|---|---|
 | `STR_OZL_SKIN_NEUTRAL_DEV` | `Записник сталкера` | `Stalker's notebook` | `DevName`: the handwritten line at the right of the title (mockup `SKINS.loner.dev`) |
-| `STR_OZL_SKIN_NEUTRAL_TITLE` | `Дерево досліджень` | `Research tree` | page title (`.title`); the skin shows TITLE_IMG, this key is the text twin |
-| `STR_OZL_SKIN_NEUTRAL_TITLE_IMG` | `set:ozl_neutral image:title_uk` | `set:ozl_neutral image:title_en` | sprite reference: the handwritten page title |
-| `STR_OZL_SKIN_NEUTRAL_POOL` | `Бали` | `Points` | heading over the pool (`.h`); the skin shows POOL_IMG, this key is the text twin |
-| `STR_OZL_SKIN_NEUTRAL_POOL_IMG` | `set:ozl_neutral image:pool_uk` | `set:ozl_neutral image:pool_en` | sprite reference: the handwritten pool heading |
+| `STR_OZL_SKIN_NEUTRAL_TITLE` | `Дерево досліджень` | `Research tree` | page title (`.title`), drawn as live text in the mod's Caveat face (`ozl_hand72`) |
+| `STR_OZL_SKIN_NEUTRAL_TITLE_IMG` | `set:ozl_neutral image:title_uk` | `set:ozl_neutral image:title_en` | sprite reference: the handwritten page title. Not used: neutral draws the title as live text, and `ozl_neutral` has no `title_uk`/`title_en` sprite |
+| `STR_OZL_SKIN_NEUTRAL_POOL` | `Бали` | `Points` | heading over the pool (`.h`), live text in `ozl_hand72` with an underline sized to the word |
+| `STR_OZL_SKIN_NEUTRAL_POOL_IMG` | `set:ozl_neutral image:pool_uk` | `set:ozl_neutral image:pool_en` | sprite reference: the handwritten pool heading. Not used: neutral draws the heading as live text, and `ozl_neutral` has no `pool_uk`/`pool_en` sprite |
 | `STR_OZL_SKIN_NEUTRAL_SEC_MARK` | `:` | `:` | suffix of every card section head (CSS `.sec::after`) |
 
 ## Dropped glyphs
