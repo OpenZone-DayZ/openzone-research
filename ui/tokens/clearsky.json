@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the clearsky tree window «Польовий КПК» (mockup body[data-f=clearsky]). Every name starts with 'clearsky_' so the seven skin files never collide; only the clearsky skin task edits this file (source/ui/SKINS.md). Colours are the mockup's variables and the color-mix() values its base CSS derives from them (float = screen at 92 %, glow = acc at 20 %, locked_bg = screen 80 % with black, stage = casing 40 % with #0b0b0a, dark = the inner band of the casing). Alphas of light layers over the dark map are solved for the game's LINEAR-light blending so they come out as the mockup's sRGB blend (skill gui-layouts §32): line_dim .6 -> .4, glow .2 -> .063, grid .05 -> .012; float stays .92 (dark over dark: no difference). Fonts are the vanilla etelkatextpro the mockup's howto names, restating face, size and fixed: size = the cell height = round(CSS px x 1.03), Consolas' cap and x-height matched to etelka's; the file is the one nearest to the drawn size on a 1600-row screen (the vanilla atlases have no mipmaps): 16 up to size 12, 22 for 13-16, 28 for 17-24.",
+  "note": "Tokens of the clearsky tree window «Польовий КПК» (mockup body[data-f=clearsky]). Every name starts with 'clearsky_' so the seven skin files never collide; only the clearsky skin task edits this file (source/ui/SKINS.md). Colours are the mockup's variables and the color-mix() values its base CSS derives from them (float = screen at 92 %, glow = acc at 20 %, locked_bg = screen 80 % with black, stage = casing 40 % with #0b0b0a, dark = the inner band of the casing). Alphas of light layers over the dark map are solved for the game's LINEAR-light blending so they come out as the mockup's sRGB blend (skill gui-layouts §32): line_dim .6 -> .4, glow .2 -> .063, grid .05 -> .012 with its colour dimmed to 0.75 in linear light (the final pass measured the line 1.6x the mockup's over the map's dark edge and 1.07x by the glow; now about 1.25x and 0.83x); float stays .92 (dark over dark: no difference). Fonts are the vanilla etelkatextpro the mockup's howto names, restating face, size and fixed: size = the cell height = round(CSS px x 1.03), Consolas' cap and x-height matched to etelka's; the file is the one nearest to the drawn size on a 1600-row screen (the vanilla atlases have no mipmaps): 16 up to size 12, 22 for 13-16, 28 for 17-24.",
   "color": {
     "clearsky_txt": [0.765, 0.875, 0.941, 1.0],
     "clearsky_dim": [0.373, 0.541, 0.651, 1.0],
@@ -26,7 +26,7 @@
     "clearsky_float": [0.043, 0.082, 0.125, 0.92],
     "clearsky_glow": [0.435, 0.757, 1.0, 0.063],
     "clearsky_locked_bg": [0.035, 0.066, 0.1, 1.0],
-    "clearsky_grid": [0.431, 0.706, 0.941, 0.012]
+    "clearsky_grid": [0.38, 0.62, 0.827, 0.012]
   },
   "font": {
     "clearsky_dev": {"face": "gui/fonts/etelkatextpro16", "size": 12, "fixed": false},

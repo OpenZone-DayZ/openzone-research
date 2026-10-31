@@ -111,10 +111,13 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
 
         // Сітка карти (.content .bg мокапа: --grid, --grid-step), лінії від 0;
         // ізолінії й світіння екрана -- непрозора текстура CsMap під канвою.
-        // --grid .05 у лінійному світлі рушія -- .012 (3/255): так на темній
-        // карті вийде той самий відтінок, що в мокапі.
+        // --grid .05 у лінійному світлі рушія -- альфа 3/255. У лінійному
+        // світлі той самий шар яскравіший над темнішим тлом: фінальний прохід
+        // (2026-10-31) виміряв лінію в 1.6 раза яскравішою за мокап на темному
+        // краї карти і в 1.07 -- біля світіння; колір, приглушений у лінійному
+        // світлі до 0.75, дає 1.25 і 0.83 -- найменшу похибку на обох.
         GridStep  = 64;
-        GridColor = ARGB(3, 110, 180, 240);
+        GridColor = ARGB(3, 97, 158, 211);
 
         // Край мітки: суцільний і пунктирний (закрита); заливку фарбує PaintNode.
         Shapes.Insert(SET + "node_ring");        // 0
@@ -209,10 +212,28 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
         return Spread(OZL_Text.Upper(super.ButtonText(status, enabled)));
     }
 
-    // Римська цифра тиру розряджено (.tierlab .2em): «I I».
+    // Римська цифра тиру (.tierlab: Consolas 13px, .2em -- 9.75 одиниці на
+    // літеру). В etelka I вузька (3.55), V, X, L широкі (6.5-7.7), пробіл
+    // 2.95: після I -- два пробіли, після решти -- один, після останньої --
+    // один (letter-spacing мокапа стоїть і після неї), тож «I  I  I» завширшки
+    // як у мокапі. Римські цифри -- ASCII, Substring по байтах тут безпечний.
     override string TierText(int tier)
     {
-        return Spread(super.TierText(tier));
+        string roman = super.TierText(tier);
+        string t = "";
+        int n = roman.Length();
+        for (int i = 0; i < n; i++)
+        {
+            string ch = roman.Substring(i, 1);
+            t += ch;
+            if (i == n - 1)
+                t += " ";
+            else if (ch == "I")
+                t += "  ";
+            else
+                t += " ";
+        }
+        return t;
     }
 
     // Заливка мітки за статусом (.node .cell мокапа).
@@ -357,7 +378,12 @@ class OZL_TreeSkin_Clearsky : OZL_TreeSkin
         // .dev .14em і .bname .1em розрядки не мають: пробіл etelka вдвічі ширший.
         SetRole(menu, "DevName", OZL_Text.Upper(OZL_Text.Words("STR_OZL_SKIN_CLEARSKY_DEV")));
         SetRole(menu, "BtnCloseText", OZL_Text.Upper(OZL_Text.Words("STR_OZL_TREE_CLOSE")));
-        SetRole(menu, "CsLegendHead", Spread(OZL_Text.Upper(OZL_Text.Words("STR_OZL_SKIN_CLEARSKY_LEGEND_POOL"))));
+        // Проміжок між словами («ЛЕГЕНДА  ·  БАЛИ»): у мокапі пробіл -- ціла
+        // літера Consolas з розрядкою (8.5), в etelka -- 3, тож пробіл між
+        // словами після Spread (два) стає чотирма: А--Б 27 одиниць, як у мокапі.
+        string legend = Spread(OZL_Text.Upper(OZL_Text.Words("STR_OZL_SKIN_CLEARSKY_LEGEND_POOL")));
+        legend.Replace("  ", "    ");
+        SetRole(menu, "CsLegendHead", legend);
         // «// » перед заголовками розділів -- теж розряджено (.sec::before
         // успадковує .16em): «/ / », слово стоїть за ним у розкладці.
         string mark = Spread(OZL_Text.Words("STR_OZL_SKIN_CLEARSKY_SEC_MARK"));

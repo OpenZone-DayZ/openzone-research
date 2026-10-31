@@ -93,7 +93,7 @@ FrameWidgetClass TreeWindow {
          "src alpha" 1
          "stretch mode" stretch_w_h
         }
-        // The tier numerals (.tierlab: 13px, dim, letters spread, 44 wide from the map's left edge, centred): the window's OWN rows CsTierRow0..39, not the menu's -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7). The skin (OnPaint) puts row i's corner on (0, the centre of the i-th tier) and shows the rows in use; the numeral's place in the row is the layout's (baseline 4.5 below the corner). A row is a 1-unit frame; the skin lifts its clipping and lets the mouse through it (ClearFlags CLIPCHILDREN, SetFlags IGNOREPOINTER -- what the menu does to its pooled rows): a clipping one shows a pixel slice of its label (skill gui-layouts). 40 rows: a tier is 1..40 (OZL_TreePlan.MAX_TIER); the skin counts the rows and logs a tree that has more tiers.
+        // The tier numerals (.tierlab: 13px, dim, .2em, centred on x = 22 -- the mockup's left 22 and translate -50%; the label is 80 wide, from -18, so a long numeral at the mockup's pitch fits and, like the mockup's, is cut only by the content's left edge): the window's OWN rows CsTierRow0..39, not the menu's -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7). The skin (OnPaint) puts row i's corner on (0, the centre of the i-th tier) and shows the rows in use; the numeral's place in the row is the layout's (baseline 4.5 below the corner). A row is a 1-unit frame; the skin lifts its clipping and lets the mouse through it (ClearFlags CLIPCHILDREN, SetFlags IGNOREPOINTER -- what the menu does to its pooled rows): a clipping one shows a pixel slice of its label (skill gui-layouts). 40 rows: a tier is 1..40 (OZL_TreePlan.MAX_TIER); the skin counts the rows and logs a tree that has more tiers.
         PanelWidgetClass CsTiers {
          visible 1
          ignorepointer 1
@@ -120,8 +120,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier0 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -150,8 +150,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier1 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -180,8 +180,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier2 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -210,8 +210,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier3 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -240,8 +240,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier4 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -270,8 +270,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier5 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -300,8 +300,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier6 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -330,8 +330,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier7 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -360,8 +360,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier8 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -390,8 +390,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier9 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -420,8 +420,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier10 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -450,8 +450,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier11 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -480,8 +480,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier12 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -510,8 +510,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier13 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -540,8 +540,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier14 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -570,8 +570,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier15 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -600,8 +600,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier16 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -630,8 +630,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier17 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -660,8 +660,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier18 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -690,8 +690,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier19 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -720,8 +720,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier20 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -750,8 +750,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier21 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -780,8 +780,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier22 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -810,8 +810,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier23 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -840,8 +840,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier24 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -870,8 +870,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier25 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -900,8 +900,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier26 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -930,8 +930,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier27 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -960,8 +960,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier28 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -990,8 +990,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier29 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1020,8 +1020,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier30 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1050,8 +1050,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier31 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1080,8 +1080,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier32 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1110,8 +1110,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier33 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1140,8 +1140,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier34 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1170,8 +1170,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier35 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1200,8 +1200,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier36 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1230,8 +1230,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier37 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1260,8 +1260,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier38 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1290,8 +1290,8 @@ FrameWidgetClass TreeWindow {
             TextWidgetClass CsTier39 {
              visible 1
              ignorepointer 1
-             position 0 -7.55
-             size 44 17
+             position -18 -7.55
+             size 80 17
              hexactpos 1
              vexactpos 1
              hexactsize 1

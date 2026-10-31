@@ -86,7 +86,7 @@
                               "name": "CsTiers",
                               "size": "fill",
                               "color": "$none",
-                              "note": "The tier numerals (.tierlab: 13px, dim, letters spread, 44 wide from the map's left edge, centred): the window's OWN rows CsTierRow0..39, not the menu's -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7). The skin (OnPaint) puts row i's corner on (0, the centre of the i-th tier) and shows the rows in use; the numeral's place in the row is the layout's (baseline 4.5 below the corner). A row is a 1-unit frame; the skin lifts its clipping and lets the mouse through it (ClearFlags CLIPCHILDREN, SetFlags IGNOREPOINTER -- what the menu does to its pooled rows): a clipping one shows a pixel slice of its label (skill gui-layouts). 40 rows: a tier is 1..40 (OZL_TreePlan.MAX_TIER); the skin counts the rows and logs a tree that has more tiers.",
+                              "note": "The tier numerals (.tierlab: 13px, dim, .2em, centred on x = 22 -- the mockup's left 22 and translate -50%; the label is 80 wide, from -18, so a long numeral at the mockup's pitch fits and, like the mockup's, is cut only by the content's left edge): the window's OWN rows CsTierRow0..39, not the menu's -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7). The skin (OnPaint) puts row i's corner on (0, the centre of the i-th tier) and shows the rows in use; the numeral's place in the row is the layout's (baseline 4.5 below the corner). A row is a 1-unit frame; the skin lifts its clipping and lets the mouse through it (ClearFlags CLIPCHILDREN, SetFlags IGNOREPOINTER -- what the menu does to its pooled rows): a clipping one shows a pixel slice of its label (skill gui-layouts). 40 rows: a tier is 1..40 (OZL_TreePlan.MAX_TIER); the skin counts the rows and logs a tree that has more tiers.",
                               "children": [
                                 {
                                   "frame": {
@@ -105,11 +105,11 @@
                                         "label": {
                                           "name": "CsTier0",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -137,11 +137,11 @@
                                         "label": {
                                           "name": "CsTier1",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -169,11 +169,11 @@
                                         "label": {
                                           "name": "CsTier2",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -201,11 +201,11 @@
                                         "label": {
                                           "name": "CsTier3",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -233,11 +233,11 @@
                                         "label": {
                                           "name": "CsTier4",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -265,11 +265,11 @@
                                         "label": {
                                           "name": "CsTier5",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -297,11 +297,11 @@
                                         "label": {
                                           "name": "CsTier6",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -329,11 +329,11 @@
                                         "label": {
                                           "name": "CsTier7",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -361,11 +361,11 @@
                                         "label": {
                                           "name": "CsTier8",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -393,11 +393,11 @@
                                         "label": {
                                           "name": "CsTier9",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -425,11 +425,11 @@
                                         "label": {
                                           "name": "CsTier10",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -457,11 +457,11 @@
                                         "label": {
                                           "name": "CsTier11",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -489,11 +489,11 @@
                                         "label": {
                                           "name": "CsTier12",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -521,11 +521,11 @@
                                         "label": {
                                           "name": "CsTier13",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -553,11 +553,11 @@
                                         "label": {
                                           "name": "CsTier14",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -585,11 +585,11 @@
                                         "label": {
                                           "name": "CsTier15",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -617,11 +617,11 @@
                                         "label": {
                                           "name": "CsTier16",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -649,11 +649,11 @@
                                         "label": {
                                           "name": "CsTier17",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -681,11 +681,11 @@
                                         "label": {
                                           "name": "CsTier18",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -713,11 +713,11 @@
                                         "label": {
                                           "name": "CsTier19",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -745,11 +745,11 @@
                                         "label": {
                                           "name": "CsTier20",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -777,11 +777,11 @@
                                         "label": {
                                           "name": "CsTier21",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -809,11 +809,11 @@
                                         "label": {
                                           "name": "CsTier22",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -841,11 +841,11 @@
                                         "label": {
                                           "name": "CsTier23",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -873,11 +873,11 @@
                                         "label": {
                                           "name": "CsTier24",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -905,11 +905,11 @@
                                         "label": {
                                           "name": "CsTier25",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -937,11 +937,11 @@
                                         "label": {
                                           "name": "CsTier26",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -969,11 +969,11 @@
                                         "label": {
                                           "name": "CsTier27",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1001,11 +1001,11 @@
                                         "label": {
                                           "name": "CsTier28",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1033,11 +1033,11 @@
                                         "label": {
                                           "name": "CsTier29",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1065,11 +1065,11 @@
                                         "label": {
                                           "name": "CsTier30",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1097,11 +1097,11 @@
                                         "label": {
                                           "name": "CsTier31",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1129,11 +1129,11 @@
                                         "label": {
                                           "name": "CsTier32",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1161,11 +1161,11 @@
                                         "label": {
                                           "name": "CsTier33",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1193,11 +1193,11 @@
                                         "label": {
                                           "name": "CsTier34",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1225,11 +1225,11 @@
                                         "label": {
                                           "name": "CsTier35",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1257,11 +1257,11 @@
                                         "label": {
                                           "name": "CsTier36",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1289,11 +1289,11 @@
                                         "label": {
                                           "name": "CsTier37",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1321,11 +1321,11 @@
                                         "label": {
                                           "name": "CsTier38",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
@@ -1353,11 +1353,11 @@
                                         "label": {
                                           "name": "CsTier39",
                                           "at": [
-                                            0,
+                                            -18,
                                             -7.55
                                           ],
                                           "size": [
-                                            44,
+                                            80,
                                             17
                                           ],
                                           "font": "clearsky_tier",
