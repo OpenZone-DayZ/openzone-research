@@ -1,0 +1,38 @@
+/* The duty window («Реєстр досліджень»): the mockup's body[data-f="duty"] rules, lifted for the bake.
+   Everything here draws one picture of source/ui/duty/sprites.json. Pictures that the game tints
+   (SetColor or the layout's color) are drawn in white; the node forms keep the mockup's colours.
+   url() is relative to this folder: the faces are the mod's own TTFs in source/fonts. */
+@font-face { font-family: "PT Sans Narrow"; font-weight: 400; src: url("../../fonts/ptsansnarrow/PT_Sans-Narrow-Web-Regular.ttf"); }
+@font-face { font-family: "PT Sans Narrow"; font-weight: 700; src: url("../../fonts/ptsansnarrow/PT_Sans-Narrow-Web-Bold.ttf"); }
+
+* { box-sizing: border-box; }
+
+body[data-f="duty"] {
+  --txt: #1e1c19; --dim: #6b6558; --acc: #a5241a; --ok: #3a3589; --bad: #b8560f;
+  --screen: #e8e3d1; --edge: #3c3830; --lcd: #ebe6d5; --paper-hi: #f3efe2;
+  --hfont: "PT Sans Narrow", "Arial Narrow", sans-serif;
+}
+
+/* the node form: the mockup's .node .cell and its ::before (the number's own cell) */
+.cell { position: absolute; inset: 0; background: var(--paper-hi); border: 1.5px solid var(--edge); }
+.cell::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 32px; border-right: 1.5px solid var(--edge); }
+.cell.locked { border-style: dashed; border-color: #8f897a; background: transparent; }
+.cell.locked::before { border-right-style: dashed; border-right-color: #8f897a; }
+.cell.open { border: 3px double var(--acc); }
+.cell.done { background: #e2ddd0; border-color: var(--edge); }
+
+/* the classification stamp (.dsk), white: the layout tints it --acc at .85 */
+.dsk { position: absolute; white-space: nowrap; border: 2px solid #fff; color: #fff; padding: 3px 10px;
+  font-family: var(--hfont); font-weight: 700; font-size: 15px; line-height: normal;
+  letter-spacing: .14em; text-transform: uppercase; transform: rotate(-2deg); }
+
+/* the sheet title (.title), white */
+.ttl { position: absolute; left: 0; right: 0; top: 0; text-align: center; white-space: nowrap; color: #fff;
+  font-family: var(--hfont); font-weight: 700; font-size: 34px; line-height: normal; letter-spacing: .3em; text-transform: uppercase; }
+
+/* the round seal (.c-stamp): the rings and the word in white, turned -14 degrees as a whole; the
+   paper band between the rings is a picture of its own (seal_band) */
+.seal { position: absolute; inset: 0; transform: rotate(-14deg); }
+.seal svg { position: absolute; left: 0; top: 0; }
+.seal-t { position: absolute; inset: 3px; display: grid; place-items: center; text-align: center; color: #fff;
+  font-family: var(--hfont); font-weight: 700; font-size: 17px; line-height: normal; letter-spacing: .08em; text-transform: uppercase; }

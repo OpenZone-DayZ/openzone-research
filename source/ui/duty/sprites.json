@@ -1,6 +1,118 @@
 {
-  "comment": "Placeholder until the skin is drawn: one 8x8 transparent sprite, so the imageset that config.cpp registers exists and loads.",
+  "comment": [
+    "The duty window («Реєстр досліджень», the mockup's body[data-f=duty]): every picture the mockup draws with CSS.",
+    "Sizes are layout units; drawn at 1.5 px per unit. White pictures are tinted in the game (the layout's color or SetColor);",
+    "the four node forms (form_*) and sheet_glow keep their own colours and are shown with color 1 1 1 1.",
+    "Rules (.cell, .dsk, .ttl, .seal) come from duty.css; the rest is inline, with the mockup's values.",
+    "grif, title, seal_done and seal_work hold text, so each has a _ua and an _en picture (STR_OZL_SKIN_DUTY_*_IMG).",
+    "dots, dash_h and dash_v are tiles: 8 units at 2 px per unit fill their 16x16 canvas pixel for pixel, and a layout",
+    "shows them without stretch mode, so they repeat at their own pixel size along a 1-unit line."
+  ],
+  "scale": 1.5,
+  "css": ["duty.css"],
+  "body": { "data-f": "duty" },
   "sprites": [
-    { "name": "blank", "w": 8, "h": 8, "html": "" }
+    { "name": "blank", "w": 8, "h": 8, "html": "" },
+    {
+      "name": "node_glow", "w": 164, "h": 54,
+      "html": "<div style='position:absolute;inset:0;border:2px solid #fff'></div>"
+    },
+    {
+      "name": "node_sel", "w": 171, "h": 61,
+      "html": "<div style='position:absolute;inset:0;border:1.5px solid #fff'></div>"
+    },
+    { "name": "form_plain", "w": 160, "h": 50, "html": "<div class='cell'></div>" },
+    { "name": "form_locked", "w": 160, "h": 50, "html": "<div class='cell locked'></div>" },
+    { "name": "form_open", "w": 160, "h": 50, "html": "<div class='cell open'></div>" },
+    { "name": "form_done", "w": 160, "h": 50, "html": "<div class='cell done'></div>" },
+    {
+      "name": "grif", "w": 300, "h": 48,
+      "html_ua": "<div class='dsk' style='left:11px;top:9.5px'>Для службового користування</div>",
+      "html_en": "<div class='dsk' style='left:11px;top:9.5px'>For official use only</div>"
+    },
+    {
+      "name": "title", "w": 560, "h": 44,
+      "html_ua": "<div class='ttl'>Реєстр досліджень</div>",
+      "html_en": "<div class='ttl'>Research register</div>"
+    },
+    {
+      "name": "seal_done", "w": 150, "h": 150, "pad": 1,
+      "html_ua": "<div class='seal'><svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><circle cx='75' cy='75' r='73.5' fill='none' stroke='#fff' stroke-width='3'/><circle cx='75' cy='75' r='64' fill='none' stroke='#fff' stroke-width='2'/></svg><div class='seal-t'>Затверджено</div></div>",
+      "html_en": "<div class='seal'><svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><circle cx='75' cy='75' r='73.5' fill='none' stroke='#fff' stroke-width='3'/><circle cx='75' cy='75' r='64' fill='none' stroke='#fff' stroke-width='2'/></svg><div class='seal-t'>Approved</div></div>"
+    },
+    {
+      "name": "seal_work", "w": 150, "h": 150, "pad": 1,
+      "html_ua": "<div class='seal'><svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><circle cx='75' cy='75' r='73.5' fill='none' stroke='#fff' stroke-width='3'/><circle cx='75' cy='75' r='64' fill='none' stroke='#fff' stroke-width='2'/></svg><div class='seal-t'>В роботі</div></div>",
+      "html_en": "<div class='seal'><svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><circle cx='75' cy='75' r='73.5' fill='none' stroke='#fff' stroke-width='3'/><circle cx='75' cy='75' r='64' fill='none' stroke='#fff' stroke-width='2'/></svg><div class='seal-t'>In progress</div></div>"
+    },
+    {
+      "name": "seal_band", "w": 150, "h": 150, "pad": 1,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><circle cx='75' cy='75' r='68.5' fill='none' stroke='#fff' stroke-width='7'/></svg>"
+    },
+    {
+      "name": "clip", "w": 22, "h": 64, "pad": 1,
+      "html": "<div style='position:absolute;inset:0;border:3px solid #fff;border-radius:11px'></div>"
+    },
+    {
+      "name": "scribble", "w": 120, "h": 27,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='120' height='27' viewBox='0 0 120 27'><path d='M4 30c10-18 16-24 18-14s-6 16 2 6 12-20 16-10-4 14 4 6 10-12 14-6 2 10 10 2 14-8 22-6 12 2 22-2' fill='none' stroke='#fff' stroke-width='1.6' stroke-linecap='round'/></svg>"
+    },
+    {
+      "name": "btn_frame", "w": 374, "h": 54,
+      "html": "<div style='position:absolute;inset:0;border:4px double #fff'></div>"
+    },
+    {
+      "name": "fade_down", "w": 8, "h": 32,
+      "html": "<div style='position:absolute;inset:0;background:linear-gradient(180deg,#fff,rgba(255,255,255,0))'></div>"
+    },
+    {
+      "name": "fog_edge", "w": 8, "h": 80,
+      "html": "<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0),#fff)'></div>"
+    },
+    {
+      "name": "hatch", "w": 17.6, "h": 10,
+      "html": "<div style='position:absolute;inset:0;background:repeating-linear-gradient(45deg,#fff 0 2px,transparent 2px 5px)'></div>"
+    },
+    {
+      "name": "legend_box", "w": 12, "h": 12,
+      "html": "<div style='position:absolute;inset:0;border:1px dashed #fff'></div>"
+    },
+    {
+      "name": "legend_all", "w": 34, "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='34' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2'/><rect x='26' y='2' width='8' height='8' fill='#fff'/></svg>"
+    },
+    {
+      "name": "legend_any", "w": 38, "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='38' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2' stroke-dasharray='4 3'/><path d='M32 1l5 5-5 5-5-5z' fill='none' stroke='#fff' stroke-width='1.5'/></svg>"
+    }
+  ],
+  "textures": [
+    {
+      "name": "desk_glow", "w": 1600, "h": 900, "size": [512, 256],
+      "html": "<div style='position:absolute;inset:0;background:radial-gradient(ellipse at 40% 40%,#fff,rgba(255,255,255,0) 80%)'></div>"
+    },
+    {
+      "name": "sheet_glow", "w": 1104, "h": 864, "size": [512, 512],
+      "html": "<div style='position:absolute;inset:0;background-image:radial-gradient(ellipse at 70% 20%,rgba(255,255,245,.35),transparent 60%),radial-gradient(ellipse at 15% 90%,rgba(120,100,60,.08),transparent 50%)'></div>"
+    },
+    {
+      "name": "shadow", "w": 1600, "h": 900, "size": [512, 256],
+      "html": [
+        "<div style='position:absolute;left:24px;top:18px;width:1104px;height:864px;box-shadow:0 8px 20px rgba(0,0,0,.6)'></div>",
+        "<div style='position:absolute;left:1148px;top:36px;width:426px;height:832px;box-shadow:0 6px 16px rgba(0,0,0,.55)'></div>"
+      ]
+    },
+    {
+      "name": "dots", "w": 8, "h": 8, "size": [16, 16],
+      "html": "<div style='position:absolute;left:0;top:0;width:1px;height:1px;background:#fff'></div><div style='position:absolute;left:2px;top:0;width:1px;height:1px;background:#fff'></div><div style='position:absolute;left:4px;top:0;width:1px;height:1px;background:#fff'></div><div style='position:absolute;left:6px;top:0;width:1px;height:1px;background:#fff'></div>"
+    },
+    {
+      "name": "dash_h", "w": 8, "h": 8, "size": [16, 16],
+      "html": "<div style='position:absolute;left:0;top:0;width:2px;height:1px;background:#fff'></div><div style='position:absolute;left:4px;top:0;width:2px;height:1px;background:#fff'></div>"
+    },
+    {
+      "name": "dash_v", "w": 8, "h": 8, "size": [16, 16],
+      "html": "<div style='position:absolute;left:0;top:0;width:1px;height:2px;background:#fff'></div><div style='position:absolute;left:0;top:4px;width:1px;height:2px;background:#fff'></div>"
+    }
   ]
 }

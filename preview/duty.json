@@ -1,0 +1,17 @@
+{
+  "note": "Preview gallery of the duty tree window («Реєстр досліджень») for ui_gallery index=preview/duty.json. The window's root is the whole host, the 1600x900 stage centred in it. A fixture only sets texts, adds rows and shows parts: what the skin writes or lines up at run time (upper case and spacing of the form's heads, the typed inserts, the line under the title, the registry's grey and two-line rows, the funds' place under the registry, the seal's picture) needs the live menu -- look at it with world_exec oz_research treeui. A fixture travels to the bridge as one JSON string of at most ~1000 bytes on the wire.",
+  "entries": [
+    {
+      "name": "duty-window",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_duty.layout",
+      "host": "1600 900",
+      "fixture": "preview/duty-window.json"
+    },
+    {
+      "name": "duty-node",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_duty.layout",
+      "host": "200 90",
+      "fixture": "preview/duty-node.json"
+    }
+  ]
+}

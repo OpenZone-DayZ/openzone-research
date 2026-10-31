@@ -1,0 +1,3644 @@
+{
+  "layout": "ozl_tree_duty",
+  "note": "The duty window («Реєстр досліджень», the mockup's body[data-f=duty]): an army form on green cloth. The sheet holds the requisites (Долг, the grif stamp, Форма № 7-Д, ЗАТВЕРДЖУЮ), the spaced title, '1. Перелік робіт' (the registry table), '2. Фонди фракції' (the pool table), '3. Схема послідовності робіт' (the tree in a ruled frame) and the executor's line; «Картка дослідження» is a second sheet on a clip, with the seal and the signature. Positions are the mockup's, measured in Chrome (stage 1600x900); the skin script (OZL_TreeSkin_Duty) writes the upper-case and spaced texts and lines up the typed parts.",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "panel": {
+            "name": "TreeDesk",
+            "size": "fill",
+            "color": "$duty_desk",
+            "note": "The green cloth of the desk."
+          }
+        },
+        {
+          "image": {
+            "name": "TreeDeskGlow",
+            "size": "fill",
+            "file": "OpenZone_Research/gui/textures/tree/duty/desk_glow_ca.paa",
+            "color": "$duty_desk_glow",
+            "note": "The cloth's light: radial-gradient(at 40% 40%, #2f3f36, #18211c 80%) as a white fade tinted #2f3f36."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "size": [
+              1600,
+              900
+            ],
+            "anchor": "center",
+            "children": [
+              {
+                "image": {
+                  "name": "StageShadow",
+                  "file": "OpenZone_Research/gui/textures/tree/duty/shadow_ca.paa",
+                  "color": "$white",
+                  "at": [
+                    0.0,
+                    0.0
+                  ],
+                  "size": [
+                    1600.0,
+                    900.0
+                  ],
+                  "note": "The shadows of the sheet (0 8px 20px .6) and of the card (0 6px 16px .55)."
+                }
+              },
+              {
+                "panel": {
+                  "name": "Sheet",
+                  "at": [
+                    24.0,
+                    18.0
+                  ],
+                  "size": [
+                    1104.0,
+                    864.0
+                  ],
+                  "color": "$duty_screen",
+                  "children": [
+                    {
+                      "image": {
+                        "name": "SheetGlow",
+                        "file": "OpenZone_Research/gui/textures/tree/duty/sheet_glow_ca.paa",
+                        "color": "$white",
+                        "at": [
+                          0.0,
+                          0.0
+                        ],
+                        "size": [
+                          1104.0,
+                          864.0
+                        ],
+                        "note": "The paper's faint light and shade (two radial gradients of .dsheet); its own colours."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "OrgName",
+                        "at": [
+                          40.0,
+                          33.53
+                        ],
+                        "size": [
+                          300.0,
+                          19.0
+                        ],
+                        "font": "duty_head19",
+                        "color": "$duty_txt",
+                        "text": "#STR_OZL_SKIN_DUTY_ORG_NAME",
+                        "note": "Upper case and spaced by the skin (OnShow): <b> of .dorg, 17 px, letter-spacing .12em."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "OrgUnit",
+                        "at": [
+                          40.0,
+                          57.55
+                        ],
+                        "size": [
+                          400.0,
+                          17.0
+                        ],
+                        "font": "duty_narrow17",
+                        "color": "$duty_txt",
+                        "text": "#STR_OZL_SKIN_DUTY_ORG_UNIT",
+                        "note": "Upper case by the skin (OnShow)."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "OrgRef",
+                        "at": [
+                          40.0,
+                          79.3
+                        ],
+                        "size": [
+                          400.0,
+                          17.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "OrgRefN0",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                200.0,
+                                17.0
+                              ],
+                              "font": "duty_narrow17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "OrgRefT0",
+                              "at": [
+                                50.8,
+                                0.0
+                              ],
+                              "size": [
+                                200.0,
+                                17.0
+                              ],
+                              "font": "duty_type17",
+                              "color": "$duty_txt"
+                            }
+                          }
+                        ],
+                        "note": "'Вих. № 0417/Д': the form's words (OrgRefN0) and the typed number (OrgRefT0) after them; the skin splits the key at its last space and lines the two up by their measured widths (OnUpdate)."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "Grif",
+                        "at": [
+                          419.0,
+                          30.5
+                        ],
+                        "size": [
+                          300.0,
+                          48.0
+                        ],
+                        "set": "ozl_duty",
+                        "image": "grif_ua",
+                        "color": "$duty_grif",
+                        "note": "«Для службового користування», tilted -2 degrees, in a red frame: the GRIF_IMG sprite pair, white, tinted --acc at .85 (the mockup's opacity). The skin loads the language's picture (OnShow)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "FormNo",
+                        "at": [
+                          764.0,
+                          16.23
+                        ],
+                        "size": [
+                          300.0,
+                          14.0
+                        ],
+                        "font": "duty_narrow14",
+                        "color": "$duty_dim",
+                        "text": "#STR_OZL_SKIN_DUTY_FORM",
+                        "align": "right"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "ApproveHead",
+                        "at": [
+                          820.0,
+                          33.53
+                        ],
+                        "size": [
+                          250.0,
+                          19.0
+                        ],
+                        "font": "duty_head19",
+                        "color": "$duty_txt",
+                        "text": "#STR_OZL_SKIN_DUTY_APPROVE",
+                        "note": "Upper case and spaced by the skin (OnShow)."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "ApproveCmd",
+                        "at": [
+                          820.0,
+                          57.55
+                        ],
+                        "size": [
+                          260.0,
+                          17.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "ApproveCmdN0",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                200.0,
+                                17.0
+                              ],
+                              "font": "duty_narrow17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveCmdT0",
+                              "at": [
+                                75.0,
+                                0.0
+                              ],
+                              "size": [
+                                200.0,
+                                17.0
+                              ],
+                              "font": "duty_type17",
+                              "color": "$duty_txt"
+                            }
+                          }
+                        ],
+                        "note": "'Командир ___________': the word, then the typed blank (the skin splits at the first space)."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "ApproveDate",
+                        "at": [
+                          820.0,
+                          81.3
+                        ],
+                        "size": [
+                          260.0,
+                          17.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "ApproveDateN0",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                100.0,
+                                17.0
+                              ],
+                              "font": "duty_narrow17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveDateT0",
+                              "at": [
+                                6.4,
+                                0.0
+                              ],
+                              "size": [
+                                100.0,
+                                17.0
+                              ],
+                              "font": "duty_type17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveDateN1",
+                              "at": [
+                                24.4,
+                                0.0
+                              ],
+                              "size": [
+                                100.0,
+                                17.0
+                              ],
+                              "font": "duty_narrow17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveDateT1",
+                              "at": [
+                                34.6,
+                                0.0
+                              ],
+                              "size": [
+                                120.0,
+                                17.0
+                              ],
+                              "font": "duty_type17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveDateN2",
+                              "at": [
+                                124.6,
+                                0.0
+                              ],
+                              "size": [
+                                100.0,
+                                17.0
+                              ],
+                              "font": "duty_narrow17",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveDateN3",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                100.0,
+                                17.0
+                              ],
+                              "font": "duty_narrow17",
+                              "color": "$duty_txt",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ApproveDateT2",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                100.0,
+                                17.0
+                              ],
+                              "font": "duty_type17",
+                              "color": "$duty_txt",
+                              "hidden": true
+                            }
+                          }
+                        ],
+                        "note": "'«__» __________ р.': every run of underscores is typed (T), the rest is the form's (N)."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TitleImg",
+                        "at": [
+                          272.0,
+                          124.0
+                        ],
+                        "size": [
+                          560.0,
+                          44.0
+                        ],
+                        "set": "ozl_duty",
+                        "image": "title_ua",
+                        "color": "$duty_txt",
+                        "note": "«Реєстр досліджень», 34 px, letter-spacing .3em: a picture pair title_ua/title_en, shown when STR_OZL_SKIN_DUTY_TITLE_IMG names it (OnShow); else TitleText."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "TitleText",
+                        "at": [
+                          0.0,
+                          128.85
+                        ],
+                        "size": [
+                          1104.0,
+                          38.0
+                        ],
+                        "font": "duty_title",
+                        "color": "$duty_txt",
+                        "text": "#STR_OZL_SKIN_DUTY_TITLE",
+                        "align": "center",
+                        "hidden": true,
+                        "note": "The live title: upper case, a space between the letters (the .3em letter-spacing as near as a font can)."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "SubLine",
+                        "at": [
+                          0.0,
+                          166.92
+                        ],
+                        "size": [
+                          1104.0,
+                          18.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "SubDir",
+                              "at": [
+                                331.16,
+                                0.0
+                              ],
+                              "size": [
+                                200.0,
+                                18.0
+                              ],
+                              "font": "duty_type18",
+                              "color": "$duty_txt",
+                              "text": "#STR_OZL_SKIN_DUTY_DIRECTION"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "BranchName",
+                              "at": [
+                                407.97,
+                                0.0
+                              ],
+                              "size": [
+                                600.0,
+                                18.0
+                              ],
+                              "font": "duty_type18",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "SubDot",
+                              "at": [
+                                532.77,
+                                0.0
+                              ],
+                              "size": [
+                                40.0,
+                                18.0
+                              ],
+                              "font": "duty_type18",
+                              "color": "$duty_txt",
+                              "text": "·"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "BranchSub",
+                              "at": [
+                                552.0,
+                                0.0
+                              ],
+                              "size": [
+                                700.0,
+                                18.0
+                              ],
+                              "font": "duty_type18",
+                              "color": "$duty_txt"
+                            }
+                          }
+                        ],
+                        "note": "'напрям: <branch> · <faction · досліджено N з M>', centred under the title: the skin lines the four texts up by their measured widths (OnUpdate) with one typed space between them."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "RegHead",
+                        "at": [
+                          40.0,
+                          214.29
+                        ],
+                        "size": [
+                          430.0,
+                          18.0
+                        ],
+                        "font": "duty_head18",
+                        "color": "$duty_txt",
+                        "text": "#STR_OZL_SKIN_DUTY_REGISTRY_HEAD",
+                        "note": "Upper case and spaced by the skin (OnShow)."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "RegHeadRow",
+                        "at": [
+                          40.0,
+                          236.0
+                        ],
+                        "size": [
+                          430.0,
+                          40.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "RegHeadTint",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                430.0,
+                                40.0
+                              ],
+                              "color": "$duty_head_tint"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadTop",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                430.0,
+                                1.5
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadBottom",
+                              "at": [
+                                0.0,
+                                38.5
+                              ],
+                              "size": [
+                                430.0,
+                                1.5
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadLeft",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                1.5,
+                                40.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadRight",
+                              "at": [
+                                428.5,
+                                0.0
+                              ],
+                              "size": [
+                                1.5,
+                                40.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadCol1",
+                              "at": [
+                                39.5,
+                                1.5
+                              ],
+                              "size": [
+                                1.0,
+                                37.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadCol2",
+                              "at": [
+                                270.5,
+                                1.5
+                              ],
+                              "size": [
+                                1.0,
+                                37.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "RegHeadCol3",
+                              "at": [
+                                310.5,
+                                1.5
+                              ],
+                              "size": [
+                                1.0,
+                                37.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ColNum0",
+                              "at": [
+                                1.5,
+                                7.0
+                              ],
+                              "size": [
+                                38.0,
+                                13.0
+                              ],
+                              "font": "duty_narrow13",
+                              "color": "$duty_txt",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ColNum1",
+                              "at": [
+                                1.5,
+                                22.0
+                              ],
+                              "size": [
+                                38.0,
+                                13.0
+                              ],
+                              "font": "duty_narrow13",
+                              "color": "$duty_txt",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ColName",
+                              "at": [
+                                40.5,
+                                7.0
+                              ],
+                              "size": [
+                                230.0,
+                                13.0
+                              ],
+                              "font": "duty_narrow13",
+                              "color": "$duty_txt",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ColTier",
+                              "at": [
+                                271.5,
+                                7.0
+                              ],
+                              "size": [
+                                39.0,
+                                13.0
+                              ],
+                              "font": "duty_narrow13",
+                              "color": "$duty_txt",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ColState",
+                              "at": [
+                                311.5,
+                                7.0
+                              ],
+                              "size": [
+                                117.0,
+                                13.0
+                              ],
+                              "font": "duty_narrow13",
+                              "color": "$duty_txt",
+                              "align": "center"
+                            }
+                          }
+                        ],
+                        "note": "The head row of the table: № п/п | Найменування | Тир | Стан, 1.5-unit frame, 1-unit column rules; the skin writes the upper-case texts (OnShow)."
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "RegScroll",
+                        "at": [
+                          40.0,
+                          276.0
+                        ],
+                        "size": [
+                          440,
+                          330
+                        ],
+                        "stack": "Registry",
+                        "note": "The registry rows (max-height 330, then it scrolls); the bar is 10 units right of the table. The skin shrinks it to its rows and moves FundBlock under it (OnSelect).",
+                        "rows": {
+                          "ozl_duty_registry_row": {
+                            "row": {
+                              "name": "OZL_DutyRegistryRow",
+                              "h": 24,
+                              "note": "One line of the registry: the menu fills RegNum, RegName, RegTier, RegState, renames RegHit reg:<id> and shows RegPick on the selected node; the skin upper-cases, greys a locked or hidden node's line and, when the status needs two lines (НЕ ВИСТАЧАЄ / РЕСУРСІВ), puts the second in RegState2 and makes the line 33 high. The rules are proportional, so they follow that height.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "RegPick",
+                                    "size": "fill",
+                                    "color": "$duty_sel_row",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegHit",
+                                    "class": "ButtonWidgetClass",
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "size": "fill",
+                                    "note": "The click: renamed reg:<id>; hidden on a hidden node's line."
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegRuleL",
+                                    "class": "PanelWidgetClass",
+                                    "at": [
+                                      0.0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1.5,
+                                      1
+                                    ],
+                                    "color": "$duty_edge",
+                                    "props": {
+                                      "vexactsize": 0,
+                                      "style": "rover_sim_colorable",
+                                      "ignorepointer": 1
+                                    }
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegRuleR",
+                                    "class": "PanelWidgetClass",
+                                    "at": [
+                                      0.0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1.5,
+                                      1
+                                    ],
+                                    "color": "$duty_edge",
+                                    "props": {
+                                      "vexactsize": 0,
+                                      "style": "rover_sim_colorable",
+                                      "ignorepointer": 1
+                                    },
+                                    "anchor": "right"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegRuleB",
+                                    "class": "PanelWidgetClass",
+                                    "at": [
+                                      0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      1,
+                                      1.5
+                                    ],
+                                    "color": "$duty_edge",
+                                    "props": {
+                                      "hexactsize": 0,
+                                      "style": "rover_sim_colorable",
+                                      "ignorepointer": 1
+                                    },
+                                    "anchor": "bottom"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegCol1",
+                                    "class": "PanelWidgetClass",
+                                    "at": [
+                                      39.5,
+                                      0
+                                    ],
+                                    "size": [
+                                      1.0,
+                                      1
+                                    ],
+                                    "color": "$duty_edge",
+                                    "props": {
+                                      "vexactsize": 0,
+                                      "style": "rover_sim_colorable",
+                                      "ignorepointer": 1
+                                    }
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegCol2",
+                                    "class": "PanelWidgetClass",
+                                    "at": [
+                                      270.5,
+                                      0
+                                    ],
+                                    "size": [
+                                      1.0,
+                                      1
+                                    ],
+                                    "color": "$duty_edge",
+                                    "props": {
+                                      "vexactsize": 0,
+                                      "style": "rover_sim_colorable",
+                                      "ignorepointer": 1
+                                    }
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "RegCol3",
+                                    "class": "PanelWidgetClass",
+                                    "at": [
+                                      310.5,
+                                      0
+                                    ],
+                                    "size": [
+                                      1.0,
+                                      1
+                                    ],
+                                    "color": "$duty_edge",
+                                    "props": {
+                                      "vexactsize": 0,
+                                      "style": "rover_sim_colorable",
+                                      "ignorepointer": 1
+                                    }
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RegNum",
+                                    "at": [
+                                      1.5,
+                                      3.62
+                                    ],
+                                    "size": [
+                                      38.0,
+                                      14.0
+                                    ],
+                                    "font": "duty_type14",
+                                    "color": "$duty_txt",
+                                    "align": "center"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RegName",
+                                    "at": [
+                                      46.5,
+                                      3.62
+                                    ],
+                                    "size": [
+                                      220.0,
+                                      14.0
+                                    ],
+                                    "font": "duty_type14",
+                                    "color": "$duty_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RegTier",
+                                    "at": [
+                                      271.5,
+                                      3.62
+                                    ],
+                                    "size": [
+                                      39.0,
+                                      14.0
+                                    ],
+                                    "font": "duty_type14",
+                                    "color": "$duty_txt",
+                                    "align": "center"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RegState",
+                                    "at": [
+                                      317.5,
+                                      3.56
+                                    ],
+                                    "size": [
+                                      106.0,
+                                      12.0
+                                    ],
+                                    "font": "duty_type12",
+                                    "color": "$duty_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RegState2",
+                                    "at": [
+                                      317.5,
+                                      15.56
+                                    ],
+                                    "size": [
+                                      106.0,
+                                      12.0
+                                    ],
+                                    "font": "duty_type12",
+                                    "color": "$duty_txt",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "FundBlock",
+                        "at": [
+                          40.0,
+                          504.0
+                        ],
+                        "size": [
+                          430.0,
+                          300.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "FundHead",
+                              "at": [
+                                0.0,
+                                2.29
+                              ],
+                              "size": [
+                                430.0,
+                                18.0
+                              ],
+                              "font": "duty_head18",
+                              "color": "$duty_txt",
+                              "text": "#STR_OZL_SKIN_DUTY_FUND_HEAD"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "PoolTop",
+                              "at": [
+                                0.0,
+                                24.0
+                              ],
+                              "size": [
+                                430.0,
+                                1.5
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "stack": {
+                              "name": "PoolList",
+                              "at": [
+                                0,
+                                25.5
+                              ],
+                              "w": 430,
+                              "note": "The pool rows (ozl_duty_pool_row)."
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "PoolBottom",
+                              "at": [
+                                0.0,
+                                50.0
+                              ],
+                              "size": [
+                                430.0,
+                                1.5
+                              ],
+                              "color": "$duty_edge",
+                              "hidden": true,
+                              "note": "The table's bottom edge, 1.5 like its sides: the skin puts it over the last row's rule (OnPaint)."
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "PoolEmpty",
+                              "at": [
+                                0.0,
+                                25.5
+                              ],
+                              "size": [
+                                430.0,
+                                26.0
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PoolEmptyL",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      1.5,
+                                      26.0
+                                    ],
+                                    "color": "$duty_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "PoolEmptyR",
+                                    "at": [
+                                      428.5,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      1.5,
+                                      26.0
+                                    ],
+                                    "color": "$duty_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "PoolEmptyB",
+                                    "at": [
+                                      0.0,
+                                      24.5
+                                    ],
+                                    "size": [
+                                      430.0,
+                                      1.5
+                                    ],
+                                    "color": "$duty_edge"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolEmptyText",
+                                    "at": [
+                                      9.5,
+                                      4.16
+                                    ],
+                                    "size": [
+                                      400.0,
+                                      15.0
+                                    ],
+                                    "font": "duty_type15",
+                                    "color": "$duty_dim",
+                                    "text": "#STR_OZL_TREE_POOL_EMPTY"
+                                  }
+                                }
+                              ],
+                              "hidden": true,
+                              "note": "No line at all (the menu shows PoolEmpty then): an empty table with one line of text, not in the mockup."
+                            }
+                          }
+                        ],
+                        "note": "'2. Фонди фракції' and the pool table; its top is set by the skin to 18 units under the registry."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeBoxTop",
+                        "at": [
+                          490.0,
+                          212.0
+                        ],
+                        "size": [
+                          576.0,
+                          1.5
+                        ],
+                        "color": "$duty_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeBoxBottom",
+                        "at": [
+                          490.0,
+                          810.5
+                        ],
+                        "size": [
+                          576.0,
+                          1.5
+                        ],
+                        "color": "$duty_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeBoxLeft",
+                        "at": [
+                          490.0,
+                          212.0
+                        ],
+                        "size": [
+                          1.5,
+                          600.0
+                        ],
+                        "color": "$duty_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeBoxRight",
+                        "at": [
+                          1064.5,
+                          212.0
+                        ],
+                        "size": [
+                          1.5,
+                          600.0
+                        ],
+                        "color": "$duty_edge"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "TreeScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          491.5,
+                          213.5
+                        ],
+                        "size": [
+                          573,
+                          597
+                        ],
+                        "color": "$duty_btn_off",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "Scrollbar H": 1,
+                          "style": "blank"
+                        },
+                        "note": "The scheme: the whole frame, the legend sits under it on the sheet. Style blank and the colour make the scrollbars the mockup's thumb (#b8b19c) instead of the engine's white bar.",
+                        "children": [
+                          {
+                            "frame": {
+                              "name": "TreeContent",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                561,
+                                551
+                              ],
+                              "children": [
+                                {
+                                  "frame": {
+                                    "name": "TreeTiers",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill",
+                                    "props": {
+                                      "ignorepointer": 1
+                                    }
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "TreeFogEdge",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      562.0,
+                                      80.0
+                                    ],
+                                    "set": "ozl_duty",
+                                    "image": "fog_edge",
+                                    "color": "$duty_fog",
+                                    "hidden": true,
+                                    "note": "The 80-unit fade into the fog: clear at the top, solid at the bottom (the tree grows down)."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "TreeFog",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      562.0,
+                                      100.0
+                                    ],
+                                    "color": "$duty_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeNodes",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTip",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      300.0,
+                                      27.0
+                                    ],
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipEdge",
+                                          "size": "fill",
+                                          "color": "$duty_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipBg",
+                                          "at": [
+                                            1.0,
+                                            1.0
+                                          ],
+                                          "size": [
+                                            298.0,
+                                            25.0
+                                          ],
+                                          "color": "$duty_paper_hi"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "TreeTipText",
+                                          "at": [
+                                            9.0,
+                                            5.62
+                                          ],
+                                          "size": [
+                                            600.0,
+                                            14.0
+                                          ],
+                                          "font": "duty_type14",
+                                          "color": "$duty_txt"
+                                        }
+                                      }
+                                    ],
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeHeadBand",
+                        "at": [
+                          491.5,
+                          213.5
+                        ],
+                        "size": [
+                          564.0,
+                          32.2
+                        ],
+                        "color": "$duty_screen",
+                        "note": "The head of the scheme (.thead): paper to 70 %, then a fade (TreeHeadFade) over the scrolled content."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeHeadFade",
+                        "at": [
+                          491.5,
+                          245.7
+                        ],
+                        "size": [
+                          564.0,
+                          13.8
+                        ],
+                        "set": "ozl_duty",
+                        "image": "fade_down",
+                        "color": "$duty_screen"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "DevName",
+                        "at": [
+                          505.0,
+                          223.29
+                        ],
+                        "size": [
+                          540.0,
+                          18.0
+                        ],
+                        "font": "duty_head18",
+                        "color": "$duty_txt",
+                        "text": "#STR_OZL_SKIN_DUTY_SCHEME_HEAD",
+                        "note": "'3. Схема послідовності робіт': upper case and spaced by the skin (OnShow)."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeLegend",
+                        "at": [
+                          492.0,
+                          815.0
+                        ],
+                        "size": [
+                          580.0,
+                          34.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "LegendRow",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                580.0,
+                                17.0
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegLocked",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      340.0,
+                                      17.0
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegLockedBox",
+                                          "at": [
+                                            0.0,
+                                            2.5
+                                          ],
+                                          "size": [
+                                            12.0,
+                                            12.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "legend_box",
+                                          "color": "$duty_faint"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegLockedText",
+                                          "at": [
+                                            18.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            320.0,
+                                            13.0
+                                          ],
+                                          "font": "duty_type13",
+                                          "color": "$duty_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_LOCKED"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegShort",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      340.0,
+                                      17.0
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegShortBox",
+                                          "at": [
+                                            0.0,
+                                            2.5
+                                          ],
+                                          "size": [
+                                            12.0,
+                                            12.0
+                                          ],
+                                          "color": "$duty_bad"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegShortText",
+                                          "at": [
+                                            18.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            320.0,
+                                            13.0
+                                          ],
+                                          "font": "duty_type13",
+                                          "color": "$duty_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_SHORT"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegOpen",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      340.0,
+                                      17.0
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegOpenBox",
+                                          "at": [
+                                            0.0,
+                                            2.5
+                                          ],
+                                          "size": [
+                                            12.0,
+                                            12.0
+                                          ],
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegOpenText",
+                                          "at": [
+                                            18.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            320.0,
+                                            13.0
+                                          ],
+                                          "font": "duty_type13",
+                                          "color": "$duty_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_OPEN"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegDone",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      340.0,
+                                      17.0
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegDoneBox",
+                                          "at": [
+                                            0.0,
+                                            2.5
+                                          ],
+                                          "size": [
+                                            12.0,
+                                            12.0
+                                          ],
+                                          "color": "$duty_ok"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegDoneText",
+                                          "at": [
+                                            18.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            320.0,
+                                            13.0
+                                          ],
+                                          "font": "duty_type13",
+                                          "color": "$duty_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_DONE"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegendRow2",
+                              "at": [
+                                0.0,
+                                17.0
+                              ],
+                              "size": [
+                                580.0,
+                                17.0
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegAll",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      340.0,
+                                      17.0
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAllMark",
+                                          "at": [
+                                            0.0,
+                                            2.5
+                                          ],
+                                          "size": [
+                                            34.0,
+                                            12.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "legend_all",
+                                          "color": "$duty_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAllText",
+                                          "at": [
+                                            40.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            320.0,
+                                            13.0
+                                          ],
+                                          "font": "duty_type13",
+                                          "color": "$duty_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_ALL"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAny",
+                                    "at": [
+                                      124.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      340.0,
+                                      17.0
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAnyMark",
+                                          "at": [
+                                            0.0,
+                                            2.5
+                                          ],
+                                          "size": [
+                                            38.0,
+                                            12.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "legend_any",
+                                          "color": "$duty_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAnyText",
+                                          "at": [
+                                            44.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            320.0,
+                                            13.0
+                                          ],
+                                          "font": "duty_type13",
+                                          "color": "$duty_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_ANY"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "note": "The legend, under the scheme's frame on the sheet (the owner's call after the stand: inside the frame the typed legend did not fit and was cut). Two lines: the statuses, lined up by their texts 14 apart (LegendRow, FlowLater in OnShow), then the two kinds of link (LegendRow2, the second item 14 after the longer of 'після всіх' / 'after all'). Clear of the executor's line, which ends near x 360."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "Executor",
+                        "at": [
+                          40.0,
+                          831.62
+                        ],
+                        "size": [
+                          700.0,
+                          14.0
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "ExecutorN0",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                200.0,
+                                14.0
+                              ],
+                              "font": "duty_narrow14",
+                              "color": "$duty_dim"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ExecutorT0",
+                              "at": [
+                                56.88,
+                                0.0
+                              ],
+                              "size": [
+                                300.0,
+                                14.0
+                              ],
+                              "font": "duty_type14",
+                              "color": "$duty_dim"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ExecutorN1",
+                              "at": [
+                                212.91,
+                                0.0
+                              ],
+                              "size": [
+                                400.0,
+                                14.0
+                              ],
+                              "font": "duty_narrow14",
+                              "color": "$duty_dim"
+                            }
+                          }
+                        ],
+                        "note": "'Виконавець ст. сержант ________ · тел. 2-14 · прим. № 1': the typed part runs from the second word to the last underscore (ExecutorT0), the rest is the form's (OnShow, OnUpdate)."
+                      }
+                    }
+                  ],
+                  "note": "The sheet of the form (.dsheet), 1104x864 at (24, 18)."
+                }
+              },
+              {
+                "panel": {
+                  "name": "Card",
+                  "at": [
+                    1148.0,
+                    36.0
+                  ],
+                  "size": [
+                    426.0,
+                    832.0
+                  ],
+                  "color": "$duty_paper_hi",
+                  "children": [
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          0.0,
+                          0.0
+                        ],
+                        "size": [
+                          426.0,
+                          832.0
+                        ],
+                        "children": [
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                26.0,
+                                398.0
+                              ],
+                              "size": [
+                                374.0,
+                                18.0
+                              ],
+                              "font": "duty_type18",
+                              "color": "$duty_dim",
+                              "text": "#STR_OZL_TREE_PICK",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                26.0,
+                                418.0
+                              ],
+                              "size": [
+                                374.0,
+                                15.0
+                              ],
+                              "font": "duty_type15",
+                              "color": "$duty_dim",
+                              "text": "#STR_OZL_TREE_HINT",
+                              "align": "center"
+                            }
+                          }
+                        ],
+                        "hidden": true
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardBody",
+                        "at": [
+                          0.0,
+                          0.0
+                        ],
+                        "size": [
+                          426.0,
+                          832.0
+                        ],
+                        "children": [
+                          {
+                            "list": {
+                              "name": "CardScroll",
+                              "at": [
+                                26,
+                                26
+                              ],
+                              "size": [
+                                384,
+                                653
+                              ],
+                              "stack": "CardFlow",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "CardHeadText",
+                                    "font": "duty_head15",
+                                    "color": "$duty_dim",
+                                    "text": "#STR_OZL_SKIN_DUTY_CARD_HEAD",
+                                    "note": "'КАРТКА ДОСЛІДЖЕННЯ · ФОРМА № 7-Д/2' (.c-head::before), spaced by the skin (OnShow).",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 6.0
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardName",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardName0",
+                                          "font": "duty_head24",
+                                          "color": "$duty_txt",
+                                          "h": 25.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardName1",
+                                          "font": "duty_head24",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 25.3
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 6.0
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardMeta",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardMeta0",
+                                          "font": "duty_type14",
+                                          "color": "$duty_txt",
+                                          "h": 15.0
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardMeta1",
+                                          "font": "duty_type14",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 15.0
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardMeta2",
+                                          "font": "duty_type14",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 15.0
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 6.0
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardStatus",
+                                    "font": "duty_head18",
+                                    "color": "$duty_txt",
+                                    "h": 20.0
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 10.0
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardHeadRule",
+                                    "color": "$duty_edge",
+                                    "h": 2.0
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 12.0
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardDescHead",
+                                    "font": "duty_head15",
+                                    "color": "$duty_txt",
+                                    "text": "#STR_OZL_TREE_DESC",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardDescRule",
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardDescRuleLine",
+                                          "at": [
+                                            0.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      }
+                                    ],
+                                    "h": 9.0
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardDesc",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardDesc0",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc1",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc2",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc3",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc4",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc5",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc6",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc7",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc8",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc9",
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "hidden": true,
+                                          "h": 20.3
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 12.0
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardCostHead",
+                                    "font": "duty_head15",
+                                    "color": "$duty_txt",
+                                    "text": "#STR_OZL_TREE_COST",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardCostRule",
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardCostRuleLine",
+                                          "at": [
+                                            0.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      }
+                                    ],
+                                    "h": 9.0
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardCostList"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardItemsHead",
+                                    "font": "duty_head15",
+                                    "color": "$duty_txt",
+                                    "text": "#STR_OZL_TREE_ITEMS",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardItemsRule",
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardItemsRuleLine",
+                                          "at": [
+                                            0.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      }
+                                    ],
+                                    "h": 9.0
+                                  }
+                                },
+                                {
+                                  "stack": {
+                                    "name": "CardItemList"
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 6.0
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardTimeHead",
+                                    "font": "duty_head15",
+                                    "color": "$duty_txt",
+                                    "text": "#STR_OZL_TREE_TIME",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardTimeRule",
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardTimeRuleLine",
+                                          "at": [
+                                            0.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      }
+                                    ],
+                                    "h": 9.0
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardTime",
+                                    "font": "duty_type15",
+                                    "color": "$duty_txt",
+                                    "h": 16.0
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CardSegs",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardSegsTop",
+                                          "at": [
+                                            0.0,
+                                            6.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegsBottom",
+                                          "at": [
+                                            0.0,
+                                            17.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegsLeft",
+                                          "at": [
+                                            0.0,
+                                            6.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            12.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegsRight",
+                                          "at": [
+                                            373.0,
+                                            6.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            12.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg0",
+                                          "at": [
+                                            1.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg1",
+                                          "at": [
+                                            19.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg2",
+                                          "at": [
+                                            38.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg3",
+                                          "at": [
+                                            56.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg4",
+                                          "at": [
+                                            75.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg5",
+                                          "at": [
+                                            94.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg6",
+                                          "at": [
+                                            112.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg7",
+                                          "at": [
+                                            131.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg8",
+                                          "at": [
+                                            149.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg9",
+                                          "at": [
+                                            168.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg10",
+                                          "at": [
+                                            187.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg11",
+                                          "at": [
+                                            205.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg12",
+                                          "at": [
+                                            224.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg13",
+                                          "at": [
+                                            242.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg14",
+                                          "at": [
+                                            261.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg15",
+                                          "at": [
+                                            280.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg16",
+                                          "at": [
+                                            298.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg17",
+                                          "at": [
+                                            317.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg18",
+                                          "at": [
+                                            335.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "icon": {
+                                          "name": "CardSeg19",
+                                          "at": [
+                                            354.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            17.6,
+                                            10.0
+                                          ],
+                                          "set": "ozl_duty",
+                                          "image": "hatch",
+                                          "color": "$duty_acc"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule0",
+                                          "at": [
+                                            18.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule1",
+                                          "at": [
+                                            37.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule2",
+                                          "at": [
+                                            55.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule3",
+                                          "at": [
+                                            74.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule4",
+                                          "at": [
+                                            93.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule5",
+                                          "at": [
+                                            111.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule6",
+                                          "at": [
+                                            130.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule7",
+                                          "at": [
+                                            148.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule8",
+                                          "at": [
+                                            167.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule9",
+                                          "at": [
+                                            186.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule10",
+                                          "at": [
+                                            204.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule11",
+                                          "at": [
+                                            223.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule12",
+                                          "at": [
+                                            241.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule13",
+                                          "at": [
+                                            260.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule14",
+                                          "at": [
+                                            279.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule15",
+                                          "at": [
+                                            297.6,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule16",
+                                          "at": [
+                                            316.2,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule17",
+                                          "at": [
+                                            334.8,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule18",
+                                          "at": [
+                                            353.4,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegRule19",
+                                          "at": [
+                                            372.0,
+                                            7.0
+                                          ],
+                                          "size": [
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "color": "$duty_seg_rule"
+                                        }
+                                      }
+                                    ],
+                                    "hidden": true,
+                                    "note": "The segmented progress bar (.pbar): 20 cells with hairline rules, a done cell hatched red.",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "gap": {
+                                    "h": 12.0
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardOpensHead",
+                                    "font": "duty_head15",
+                                    "color": "$duty_txt",
+                                    "text": "#STR_OZL_TREE_OPENS",
+                                    "h": 18.0
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardOpensRule",
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardOpensRuleLine",
+                                          "at": [
+                                            0.0,
+                                            2.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "color": "$duty_edge"
+                                        }
+                                      }
+                                    ],
+                                    "h": 9.0
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CardOpensList",
+                                    "note": "The chips of 'Відкриває', lined up and wrapped by the menu.",
+                                    "h": 29.0
+                                  }
+                                }
+                              ],
+                              "rows": {
+                                "ozl_duty_cost_row": {
+                                  "row": {
+                                    "name": "OZL_DutyCostRow",
+                                    "h": 29,
+                                    "note": "One cost line, typed in capitals over a dotted rule (.crow): name, then 'have / need' or 'need' at the right; 6 units under it.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CostName",
+                                          "at": [
+                                            8.0,
+                                            1.66
+                                          ],
+                                          "size": [
+                                            280.0,
+                                            15.0
+                                          ],
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CostValue",
+                                          "at": [
+                                            174.0,
+                                            1.66
+                                          ],
+                                          "size": [
+                                            200.0,
+                                            15.0
+                                          ],
+                                          "font": "duty_type15",
+                                          "color": "$duty_txt",
+                                          "align": "right"
+                                        }
+                                      },
+                                      {
+                                        "image": {
+                                          "name": "CostDots",
+                                          "file": "OpenZone_Research/gui/textures/tree/duty/dots_ca.paa",
+                                          "color": "$duty_edge",
+                                          "at": [
+                                            0.0,
+                                            22.0
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            1.0
+                                          ],
+                                          "stretch": false
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                "ozl_duty_opens_chip": {
+                                  "row": {
+                                    "name": "OZL_DutyOpensChip",
+                                    "h": 29,
+                                    "note": "A chip of 'Відкриває' (.opens a): framed capitals, 23 high, 6 under. ChipBoxLine (solid) and ChipDashLine (dashed, a hidden node) are stretched by the menu to the chip's width with ChipHit; their rules are proportional and follow.",
+                                    "children": [
+                                      {
+                                        "raw": {
+                                          "name": "ChipHit",
+                                          "class": "ButtonWidgetClass",
+                                          "props": {
+                                            "style": "Empty",
+                                            "text": ""
+                                          },
+                                          "at": [
+                                            0.0,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            200.0,
+                                            23.0
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "ChipBoxLine",
+                                          "at": [
+                                            0.0,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            200.0,
+                                            23.0
+                                          ],
+                                          "children": [
+                                            {
+                                              "raw": {
+                                                "name": "ChipBoxTop",
+                                                "class": "PanelWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  0.0
+                                                ],
+                                                "size": [
+                                                  1,
+                                                  1.0
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "hexactsize": 0,
+                                                  "style": "rover_sim_colorable",
+                                                  "ignorepointer": 1
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "ChipBoxBottom",
+                                                "class": "PanelWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  0.0
+                                                ],
+                                                "size": [
+                                                  1,
+                                                  1.0
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "hexactsize": 0,
+                                                  "style": "rover_sim_colorable",
+                                                  "ignorepointer": 1
+                                                },
+                                                "anchor": "bottom"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "ChipBoxLeft",
+                                                "class": "PanelWidgetClass",
+                                                "at": [
+                                                  0.0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  1.0,
+                                                  1
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "vexactsize": 0,
+                                                  "style": "rover_sim_colorable",
+                                                  "ignorepointer": 1
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "ChipBoxRight",
+                                                "class": "PanelWidgetClass",
+                                                "at": [
+                                                  0.0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  1.0,
+                                                  1
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "vexactsize": 0,
+                                                  "style": "rover_sim_colorable",
+                                                  "ignorepointer": 1
+                                                },
+                                                "anchor": "right"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "ChipDashLine",
+                                          "at": [
+                                            0.0,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            200.0,
+                                            23.0
+                                          ],
+                                          "children": [
+                                            {
+                                              "raw": {
+                                                "name": "ChipDashTop",
+                                                "class": "ImageWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  0.0
+                                                ],
+                                                "size": [
+                                                  1,
+                                                  1
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "hexactsize": 0,
+                                                  "image0": "OpenZone_Research/gui/textures/tree/duty/dash_h_ca.paa",
+                                                  "mode": "blend",
+                                                  "src alpha": 1,
+                                                  "ignorepointer": 1
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "ChipDashBottom",
+                                                "class": "ImageWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  0.0
+                                                ],
+                                                "size": [
+                                                  1,
+                                                  1
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "hexactsize": 0,
+                                                  "image0": "OpenZone_Research/gui/textures/tree/duty/dash_h_ca.paa",
+                                                  "mode": "blend",
+                                                  "src alpha": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "anchor": "bottom"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "ChipDashLeft",
+                                                "class": "ImageWidgetClass",
+                                                "at": [
+                                                  0.0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  1,
+                                                  1
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "vexactsize": 0,
+                                                  "image0": "OpenZone_Research/gui/textures/tree/duty/dash_v_ca.paa",
+                                                  "mode": "blend",
+                                                  "src alpha": 1,
+                                                  "ignorepointer": 1
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "ChipDashRight",
+                                                "class": "ImageWidgetClass",
+                                                "at": [
+                                                  0.0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  1,
+                                                  1
+                                                ],
+                                                "color": "$duty_edge",
+                                                "props": {
+                                                  "vexactsize": 0,
+                                                  "image0": "OpenZone_Research/gui/textures/tree/duty/dash_v_ca.paa",
+                                                  "mode": "blend",
+                                                  "src alpha": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "anchor": "right"
+                                              }
+                                            }
+                                          ],
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "ChipText",
+                                          "at": [
+                                            9,
+                                            3.6200000000000045
+                                          ],
+                                          "w": "auto",
+                                          "h": 14,
+                                          "font": "duty_type14",
+                                          "color": "$duty_txt"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "CardFoot",
+                              "at": [
+                                26.0,
+                                691.0
+                              ],
+                              "size": [
+                                374.0,
+                                121.0
+                              ],
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchHover",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      374.0,
+                                      54.0
+                                    ],
+                                    "color": "$duty_btn_hover",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "BtnResearchFrame",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      374.0,
+                                      54.0
+                                    ],
+                                    "set": "ozl_duty",
+                                    "image": "btn_frame",
+                                    "color": "$duty_acc",
+                                    "note": "The 4-unit double border; red, grey when the button is disabled (PaintButton)."
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      374.0,
+                                      54.0
+                                    ],
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchText",
+                                          "at": [
+                                            0.0,
+                                            16.73
+                                          ],
+                                          "size": [
+                                            374.0,
+                                            24.0
+                                          ],
+                                          "font": "duty_head24",
+                                          "color": "$duty_acc",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
+                                          "align": "center",
+                                          "note": "Upper case and spaced by the skin (OnSelect): letter-spacing .3em."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0.0,
+                                      59.62
+                                    ],
+                                    "size": [
+                                      374.0,
+                                      14.0
+                                    ],
+                                    "font": "duty_type14",
+                                    "color": "$duty_bad"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardSign",
+                                    "at": [
+                                      0.0,
+                                      105.62
+                                    ],
+                                    "size": [
+                                      374.0,
+                                      14.0
+                                    ],
+                                    "font": "duty_type14",
+                                    "color": "$duty_dim",
+                                    "text": "#STR_OZL_SKIN_DUTY_SIGN",
+                                    "note": "'Підпис ____________ /Командир/' (.c-foot::after); the skin folds the double space as CSS does."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "CardScribble",
+                                    "at": [
+                                      92.0,
+                                      94.0
+                                    ],
+                                    "size": [
+                                      120.0,
+                                      27.0
+                                    ],
+                                    "set": "ozl_duty",
+                                    "image": "scribble",
+                                    "color": "$duty_ok",
+                                    "note": "The commander's scribble in blue ink over the blank (the ::after background, clipped at the line's foot)."
+                                  }
+                                }
+                              ],
+                              "note": "The button, the reason under it, the signature: at the foot of the card (.c-foot, margin-top auto)."
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "CardStamp",
+                              "at": [
+                                242.0,
+                                570.0
+                              ],
+                              "size": [
+                                150.0,
+                                150.0
+                              ],
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "CardStampBand",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      150.0,
+                                      150.0
+                                    ],
+                                    "set": "ozl_duty",
+                                    "image": "seal_band",
+                                    "color": "$duty_seal_band",
+                                    "note": "The paper band between the rings, as the mockup's multiply blend leaves it on the card."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "CardStampImg",
+                                    "at": [
+                                      0.0,
+                                      0.0
+                                    ],
+                                    "size": [
+                                      150.0,
+                                      150.0
+                                    ],
+                                    "set": "ozl_duty",
+                                    "image": "seal_done_ua",
+                                    "color": "$duty_seal_done",
+                                    "note": "The seal: the menu loads StampOf (SEAL_DONE_IMG / SEAL_WORK_IMG), the skin tints it (OnSelect)."
+                                  }
+                                }
+                              ],
+                              "hidden": true,
+                              "note": "The round seal over the button (.c-stamp: right 34, bottom 112, 150x150, -14 degrees, .72), done and researching only."
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "note": "«Картка дослідження» (.dcard), a second sheet, 426x832 at (1148, 36)."
+                }
+              },
+              {
+                "icon": {
+                  "name": "Clip",
+                  "at": [
+                    1507.0,
+                    19.0
+                  ],
+                  "size": [
+                    24.0,
+                    66.0
+                  ],
+                  "set": "ozl_duty",
+                  "image": "clip",
+                  "color": "$duty_clip",
+                  "note": "The paper clip over the card's top edge (.clip: 360, -16 of the card, 22x64, 3-unit grey wire)."
+                }
+              },
+              {
+                "list": {
+                  "name": "TreeTemplates",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    100,
+                    20
+                  ],
+                  "hidden": true,
+                  "stack": "TreeTemplateList",
+                  "note": "Never shown: it only declares the rows that live outside lists.",
+                  "rows": {
+                    "ozl_duty_tier_label": {
+                      "row": {
+                        "name": "OZL_DutyTierLabel",
+                        "h": 1,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "TierText",
+                              "at": [
+                                -30.0,
+                                -6.27
+                              ],
+                              "size": [
+                                60.0,
+                                14.0
+                              ],
+                              "font": "duty_narrow14",
+                              "color": "$duty_dim",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_duty_or_label": {
+                      "row": {
+                        "name": "OZL_DutyOrLabel",
+                        "h": 1,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "OrText",
+                              "at": [
+                                12.0,
+                                -5.6
+                              ],
+                              "size": [
+                                60.0,
+                                12.0
+                              ],
+                              "font": "duty_type12",
+                              "color": "$duty_txt",
+                              "text": "#STR_OZL_TREE_OR"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_duty_price_chip": {
+                      "row": {
+                        "name": "OZL_DutyPriceChip",
+                        "h": 12,
+                        "children": [
+                          {
+                            "icon": {
+                              "name": "PriceChip",
+                              "at": [
+                                0,
+                                3
+                              ],
+                              "size": [
+                                6,
+                                6
+                              ],
+                              "set": "ozl_common",
+                              "image": "chip",
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PriceText",
+                              "at": [
+                                9,
+                                0
+                              ],
+                              "w": "auto",
+                              "h": 12,
+                              "font": "duty_type12",
+                              "color": "$duty_dim"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_duty_pool_row": {
+                      "row": {
+                        "name": "OZL_DutyPoolRow",
+                        "h": 26,
+                        "note": "One line of the funds table: name (upper case) | a short rule | the value, right-aligned in at least 60 units.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "PoolRuleL",
+                              "at": [
+                                0.0,
+                                0.0
+                              ],
+                              "size": [
+                                1.5,
+                                26.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "PoolRuleR",
+                              "at": [
+                                428.5,
+                                0.0
+                              ],
+                              "size": [
+                                1.5,
+                                26.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "PoolRuleB",
+                              "at": [
+                                0.0,
+                                25.0
+                              ],
+                              "size": [
+                                430.0,
+                                1.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolName",
+                              "at": [
+                                9.5,
+                                4.16
+                              ],
+                              "size": [
+                                340.0,
+                                15.0
+                              ],
+                              "font": "duty_type15",
+                              "color": "$duty_txt"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "PoolValueRule",
+                              "at": [
+                                361.0,
+                                4.0
+                              ],
+                              "size": [
+                                1.0,
+                                17.0
+                              ],
+                              "color": "$duty_edge"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolValue",
+                              "at": [
+                                362.0,
+                                2.89
+                              ],
+                              "size": [
+                                58.5,
+                                17.0
+                              ],
+                              "font": "duty_type17",
+                              "color": "$duty_txt",
+                              "align": "right"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

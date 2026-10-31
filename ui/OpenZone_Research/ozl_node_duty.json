@@ -1,0 +1,259 @@
+{
+  "layout": "ozl_node_duty",
+  "note": "One node of the duty window («Реєстр досліджень»): a form cell 160x50 in a 200x90 cell from (20, 20), so the form's centre is (100, 45) -- the skin's AnchorX/AnchorY. NodeForm is the form picture of the status; NodeShape only the hover ring (slot 0 blank, slot 1 the ring); NodeSel the red outline of the selected node. The number has its own 32-unit cell (NodeNum), the name (upper case, two lines) and the price are right of it, the progress line runs along the bottom, the mark sits above. NodeHit is the style-less button under everything; every other widget ignores the pointer.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        200,
+        90
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "color": "$none",
+            "click": true,
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it is under it and only sees the cell's margins.",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "at": [
+                    20.0,
+                    20.0
+                  ],
+                  "size": [
+                    160.0,
+                    50.0
+                  ],
+                  "note": "The node's only pointer target: a button with style Empty under the form."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    18.0,
+                    18.0
+                  ],
+                  "size": [
+                    164.0,
+                    54.0
+                  ],
+                  "set": "ozl_duty",
+                  "image": "blank",
+                  "color": "$duty_glow",
+                  "note": "Not the form: the hover ring of the mockup (box-shadow 0 0 0 2px of --acc at .25). Slot 0 is blank, slot 1 the ring (OZL_TreeSkin_Duty.Shapes, ShapeHover 1): the menu swaps the slot under the mouse and the form below stays as it is."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeForm",
+                  "at": [
+                    20.0,
+                    20.0
+                  ],
+                  "size": [
+                    160.0,
+                    50.0
+                  ],
+                  "set": "ozl_duty",
+                  "image": "form_plain",
+                  "color": "$white",
+                  "note": "The form itself, by status (PaintNode): form_plain (short), form_locked (dashed, no fill), form_open (available and researching: the 3-unit double red border), form_done (the greyer fill). Its own colours, so color stays white."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    14.5,
+                    14.5
+                  ],
+                  "size": [
+                    171.0,
+                    61.0
+                  ],
+                  "set": "ozl_duty",
+                  "image": "node_sel",
+                  "color": "$duty_acc",
+                  "hidden": true,
+                  "note": "The selected node: a 1.5-unit red outline 4 units out (outline-offset 4)."
+                }
+              },
+              {
+                "label": {
+                  "name": "NodeNum",
+                  "at": [
+                    20.0,
+                    33.89
+                  ],
+                  "size": [
+                    32.0,
+                    17.0
+                  ],
+                  "font": "duty_type17",
+                  "color": "$duty_txt",
+                  "align": "center",
+                  "note": "Index + 1, two digits, in the number's own 32-unit cell."
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    58,
+                    23.62
+                  ],
+                  "size": [
+                    118,
+                    24.32
+                  ],
+                  "color": "$none",
+                  "note": "The name, upper case (NodeNameText), in two lines 12.32 apart (line-height 1.12): the menu word-wraps it into NodeName0 and NodeName1.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0.0,
+                          0.0
+                        ],
+                        "size": [
+                          118.0,
+                          12.0
+                        ],
+                        "font": "duty_type12",
+                        "color": "$duty_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0.0,
+                          12.32
+                        ],
+                        "size": [
+                          118.0,
+                          12.0
+                        ],
+                        "font": "duty_type12",
+                        "color": "$duty_txt",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    58.0,
+                    52.56
+                  ],
+                  "size": [
+                    118.0,
+                    12.0
+                  ],
+                  "color": "$none",
+                  "note": "The price chips (ozl_duty_price_chip) go here in a row."
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    58.0,
+                    52.56
+                  ],
+                  "size": [
+                    118.0,
+                    12.0
+                  ],
+                  "font": "duty_type12",
+                  "color": "$duty_dim",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    54,
+                    65
+                  ],
+                  "size": [
+                    124,
+                    2
+                  ],
+                  "color": "$none",
+                  "hidden": true,
+                  "note": "While researching: the red progress line over a dotted rule (.bar: 2 high, border-bottom 1px dotted).",
+                  "children": [
+                    {
+                      "image": {
+                        "name": "NodeBarTrack",
+                        "file": "OpenZone_Research/gui/textures/tree/duty/dots_ca.paa",
+                        "color": "$duty_edge",
+                        "at": [
+                          0.0,
+                          1.0
+                        ],
+                        "size": [
+                          124.0,
+                          1.0
+                        ],
+                        "stretch": false
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "NodeBarFill",
+                        "at": [
+                          0.0,
+                          0.0
+                        ],
+                        "size": [
+                          0.0,
+                          1.0
+                        ],
+                        "color": "$duty_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    149.0,
+                    5.0
+                  ],
+                  "size": [
+                    16.0,
+                    16.0
+                  ],
+                  "set": "ozl_duty",
+                  "image": "blank",
+                  "color": "$duty_ok",
+                  "hidden": true,
+                  "note": "Lock / tick / dot of ozl_common (the skin's Marks), above the right part of the form like .mark (left 52, top -40)."
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

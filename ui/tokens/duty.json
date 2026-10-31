@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the duty tree window «Реєстр досліджень» (mockup body[data-f=duty]). Every name starts with 'duty_' so the seven skin files never collide; only the duty skin task edits this file (source/ui/SKINS.md).",
+  "note": "Tokens of the duty tree window «Реєстр досліджень» (mockup body[data-f=duty]). Every name starts with 'duty_' so the seven skin files never collide; only the duty skin task edits this file (source/ui/SKINS.md). Fonts: 'exact text size' = round(CSS px x 1.1; 1.104 for the bold narrow face) -- typed text (Courier New in the mockup) is PT Mono (ozl_type30), the form's words PT Sans Narrow (ozl_narrow28), its heads PT Sans Narrow Bold (ozl_narrowb36, the title ozl_narrowb60). Keep the colours equal to the ARGB numbers of OZL_TreeSkin_Duty.",
   "color": {
     "duty_txt": [0.118, 0.11, 0.098, 1.0],
     "duty_dim": [0.42, 0.396, 0.345, 1.0],
@@ -20,6 +20,35 @@
     "duty_res_edge": [0.765, 0.478, 0.425, 1.0],
     "duty_line_dim": [0.639, 0.612, 0.541, 1.0],
     "duty_fog": [0.863, 0.839, 0.761, 1.0],
-    "duty_paper_hi": [0.953, 0.937, 0.886, 1.0]
+    "duty_paper_hi": [0.953, 0.937, 0.886, 1.0],
+    "duty_desk": [0.094, 0.129, 0.11, 1.0],
+    "duty_desk_glow": [0.184, 0.247, 0.212, 1.0],
+    "duty_head_tint": [0.0, 0.0, 0.0, 0.03],
+    "duty_sel_row": [0.647, 0.141, 0.102, 0.12],
+    "duty_btn_hover": [0.647, 0.141, 0.102, 0.1],
+    "duty_btn_off": [0.722, 0.694, 0.612, 1.0],
+    "duty_seg_rule": [0.235, 0.22, 0.188, 0.3],
+    "duty_grif": [0.647, 0.141, 0.102, 0.85],
+    "duty_glow": [0.647, 0.141, 0.102, 0.25],
+    "duty_clip": [0.604, 0.604, 0.588, 1.0],
+    "duty_seal_band": [0.91, 0.878, 0.784, 0.72],
+    "duty_seal_done": [0.227, 0.208, 0.537, 0.72],
+    "duty_seal_work": [0.227, 0.208, 0.537, 0.72]
+  },
+  "font": {
+    "duty_type12": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 12, "fixed": false},
+    "duty_type13": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 13, "fixed": false},
+    "duty_type14": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 14, "fixed": false},
+    "duty_type15": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 15, "fixed": false},
+    "duty_type17": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 17, "fixed": false},
+    "duty_type18": {"face": "OpenZone_Research/gui/fonts/ozl_type30", "size": 18, "fixed": false},
+    "duty_narrow13": {"face": "OpenZone_Research/gui/fonts/ozl_narrow28", "size": 13, "fixed": false},
+    "duty_narrow14": {"face": "OpenZone_Research/gui/fonts/ozl_narrow28", "size": 14, "fixed": false},
+    "duty_narrow17": {"face": "OpenZone_Research/gui/fonts/ozl_narrow28", "size": 17, "fixed": false},
+    "duty_head15": {"face": "OpenZone_Research/gui/fonts/ozl_narrowb36", "size": 15, "fixed": false},
+    "duty_head18": {"face": "OpenZone_Research/gui/fonts/ozl_narrowb36", "size": 18, "fixed": false},
+    "duty_head19": {"face": "OpenZone_Research/gui/fonts/ozl_narrowb36", "size": 19, "fixed": false},
+    "duty_head24": {"face": "OpenZone_Research/gui/fonts/ozl_narrowb36", "size": 24, "fixed": false},
+    "duty_title": {"face": "OpenZone_Research/gui/fonts/ozl_narrowb60", "size": 38, "fixed": false}
   }
 }
