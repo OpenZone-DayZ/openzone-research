@@ -131,8 +131,10 @@ bridge that knows the kind asks for it with a poll item `{op:"hello"}`.
 
 The bridge's admin site edits the configs as tables and canvases, checks them the way the
 game will, keeps every version with restore, and shows the factions with their pools, the
-statics and a journal. Until the site learns the version 2 and 3 configs, edit them in the
-VPP editor: the mod refuses a file of an older version from the site. The console client
+statics and a journal. Since bridge commit 959ad7d it knows the seven configs at their
+current versions (point types and rules 3, tree and modules 2) and converts version-2 files
+the way the game does; a bridge older than that writes files the mod refuses, so edit in
+the VPP editor there. The console client
 `scripts/research.mjs` of the bridge does the same from a terminal. Without the bridge
 nothing changes: the mod writes one line, `bridge: boot refused`, and the VPP editor
 remains the way to edit. The shared secret of the bridge is the whole authority of its
