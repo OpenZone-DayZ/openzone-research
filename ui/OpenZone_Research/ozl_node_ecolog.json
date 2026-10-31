@@ -1,0 +1,246 @@
+{
+  "layout": "ozl_node_ecolog",
+  "note": "One node of the ecolog window: a hexagonal sensor 60 x 60 (.node .cell, clip-path) with the icon in it, the name centred UNDER it in two lines, the price under the name, the progress bar just under the hexagon and the mark above-right. The cell is 150 x 120 with the node's point (the hexagon's centre) at (75, 36), the skin's AnchorX/AnchorY. NodeHit is the style-less button under the hexagon and the texts; every other widget ignores the pointer.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        150,
+        120
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "color": "$none",
+            "click": true,
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it is under it and only sees the cell's margins.",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    0,
+                    6
+                  ],
+                  "size": [
+                    150,
+                    112
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "The node's only pointer target (style Empty), under the hexagon: the hexagon and the name and price under it -- the parts of the mockup's node that take the mouse."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    45,
+                    6
+                  ],
+                  "size": [
+                    60,
+                    60
+                  ],
+                  "set": "ozl_ecolog",
+                  "image": "hex_edge",
+                  "color": "$ecolog_cell_edge",
+                  "note": "The hexagon (.node .cell), tinted by status: its 2-unit rim is what shows round NodeFill."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeFill",
+                  "at": [
+                    45,
+                    6
+                  ],
+                  "size": [
+                    60,
+                    60
+                  ],
+                  "set": "ozl_ecolog",
+                  "image": "hex_fill",
+                  "color": "$ecolog_cell",
+                  "note": "The inner hexagon 2 in (.cell::before): cell, or done-bg for a researched node; the skin tints it."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    37,
+                    -2
+                  ],
+                  "size": [
+                    76,
+                    76
+                  ],
+                  "set": "ozl_ecolog",
+                  "image": "hex_sel",
+                  "color": "$ecolog_txt",
+                  "hidden": true,
+                  "note": "The selected node: a 1.5-unit ring 5 outside the hexagon, clear of the progress bar (the mockup underlines the name instead)."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeIcon",
+                  "at": [
+                    62,
+                    23
+                  ],
+                  "size": [
+                    26,
+                    26
+                  ],
+                  "set": "ozl_common",
+                  "image": "mark_dot",
+                  "color": "$ecolog_dim",
+                  "hidden": true,
+                  "note": "The node's own icon (the menu loads it into slot 0; the skin falls back to the mockup's gear)."
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    49,
+                    65
+                  ],
+                  "size": [
+                    52,
+                    3
+                  ],
+                  "color": "$ecolog_track",
+                  "hidden": true,
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "NodeBarFill",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          0,
+                          3
+                        ],
+                        "color": "$ecolog_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    0,
+                    69.07
+                  ],
+                  "size": [
+                    150,
+                    30
+                  ],
+                  "color": "$none",
+                  "note": "The name UNDER the hexagon, centred, two lines at most (14.95 apart), wrapped by the menu.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          150,
+                          15
+                        ],
+                        "font": "ecolog_node",
+                        "color": "$ecolog_txt",
+                        "align": "center"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0,
+                          14.94
+                        ],
+                        "size": [
+                          150,
+                          15
+                        ],
+                        "font": "ecolog_node",
+                        "color": "$ecolog_txt",
+                        "align": "center",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    0,
+                    103.32
+                  ],
+                  "size": [
+                    150,
+                    14
+                  ],
+                  "color": "$none",
+                  "note": "The menu puts the price chips (ozl_ecolog_price_chip) in a row here; the skin centres the row."
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    0,
+                    103.32
+                  ],
+                  "size": [
+                    150,
+                    14
+                  ],
+                  "font": "ecolog_price",
+                  "color": "$ecolog_dim",
+                  "align": "center",
+                  "hidden": true
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    91,
+                    2
+                  ],
+                  "size": [
+                    16,
+                    16
+                  ],
+                  "set": "ozl_common",
+                  "image": "mark_check",
+                  "color": "$ecolog_ok",
+                  "hidden": true,
+                  "note": "Above-right of the hexagon: lock / check / dot (blinking while researching)."
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

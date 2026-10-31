@@ -1,0 +1,75 @@
+/* The ecolog window («Науковий термінал», the Scientists' lab terminal): the CSS of the owner's
+   mockup that draws its pictures, lifted as it is (body[data-f="ecolog"] and the base rules it
+   builds on). Every picture of sprites.json is a box on the bake page; the classes below are the
+   mockup's own rules with the box in place of the mockup's element. Colours are the mockup's
+   tokens; what the game tints is drawn in white. */
+
+* { box-sizing: border-box; }
+
+body[data-f="ecolog"] {
+  --font: "Bahnschrift", "Segoe UI", sans-serif; --hfont: "Bahnschrift", "Segoe UI", sans-serif;
+  --txt: #d4ecf5; --dim: #6f93a3; --acc: #49c2f0; --ok: #72dba0; --bad: #ff7b6b;
+  --screen: #0c161c; --edge: #24414e; --lcd: #0b1a22;
+  --casing: #c6ccd0; --casing-hi: #eef2f4; --dev-r: 6px;
+  font-family: var(--font);
+}
+
+/* .node .cell: the hexagon "sensor", 60 x 60 (the status colour: SetColor in the game) */
+.eco-hex {
+  position: absolute; inset: 0; background: #fff;
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%);
+}
+/* .node .cell::before: the inner hexagon 2 in (cell / done-bg) */
+.eco-hex-in {
+  position: absolute; inset: 2px; background: #fff;
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%);
+}
+
+/* .readouts .lab: "Бали" written upwards (writing-mode vertical-rl turned 180 degrees), the box
+   13 x 58 the flex row stretches it to */
+.eco-lab {
+  position: absolute; inset: 0; writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 11px; letter-spacing: .2em; color: #fff; text-transform: uppercase; white-space: nowrap;
+}
+
+/* .sec::before: the "◆ " of a card section head -- the glyph only, in the head's own line box
+   (12 px, letter-spacing .16em); the text after it is a label of its own */
+.eco-sec-glyph {
+  position: absolute; left: 0; top: 0; font-family: var(--hfont); font-size: 12px;
+  letter-spacing: .16em; color: #fff; white-space: nowrap;
+}
+
+/* #stage::before: the light lab casing -- 10 of casing with the outer corners rounded 6. Only
+   the four corners are pictures; the straight runs, the highlight and the dark rim are panels */
+.eco-case { position: absolute; inset: 0; background: #fff; }
+.eco-case.tl { border-top-left-radius: var(--dev-r); }
+.eco-case.tr { border-top-right-radius: var(--dev-r); }
+.eco-case.bl { border-bottom-left-radius: var(--dev-r); }
+.eco-case.br { border-bottom-right-radius: var(--dev-r); }
+
+/* .content .bg: the glow of the tree's screen over the screen itself, baked OPAQUE. The game blends
+   in linear light (skill gui-layouts §32): the mockup's 6 % light layer drew several times brighter
+   there (a pale blob mid-tree on the stand, 2026-10-31), so the picture carries the mockup's
+   composited colours and blends nothing. The 24-unit grid is drawn on the canvas. */
+.eco-tree-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--txt) 6%, transparent), rgba(0,0,0,.35) 90%), var(--lcd);
+}
+
+/* the fade at the start of the fog (linear-gradient(90deg, transparent, var(--fog) 80px)):
+   clear on the left, the tree grows right */
+.eco-fog-edge { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0), #fff); }
+
+/* the stripes of the fog as a 32 x 32 pixel tile: 135deg -- the game repeats a picture shown
+   without stretching at one texel per screen pixel, so the tile is drawn in pixels (1 px = 2/3 of a
+   CSS px of this page) and the period fits the tile. The mockup's txt at 4 % over the screen, in
+   linear light: alpha 2/255 gives (23, 35, 42) against the mockup's (19, 34, 42). */
+.eco-fog-stripes {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(212,236,245,.0078) 0 7.5424723px, transparent 7.5424723px 15.0849447px);
+}
+
+/* .opens a.fogged: the dashed 1-unit border of the chip of a hidden node, as a 16 x 16 pixel
+   tile -- dashes of 4 px with gaps of 4 along the top two rows and down the left two columns
+   (an svg in pixels, crisp edges); a 1-unit strip of the tile shows one of them */
+.eco-dash { position: absolute; left: 0; top: 0; }

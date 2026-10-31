@@ -1,0 +1,3980 @@
+{
+  "layout": "ozl_tree_ecolog",
+  "note": "The ecolog window («Науковий термінал», the Scientists' lab terminal): a light lab casing round a dark screen of four plates -- the header, a row of instruments showing the pool, the tree growing right with hexagonal sensors on a 24-unit grid, and at the bottom the node's protocol in five columns. Root TreeWindow fills the screen; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome on its own window (build/ui-ref/ecolog.png).",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "panel": {
+            "name": "TreeOutside",
+            "size": "fill",
+            "color": "$ecolog_outside",
+            "note": "Around the stage on screens wider than 16:9: the mockup page's ground."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "anchor": "center",
+            "size": [
+              1600,
+              900
+            ],
+            "children": [
+              {
+                "panel": {
+                  "name": "EcoCaseBg",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "color": "$ecolog_case_bg",
+                  "note": "#stage: the inside of the casing between the plates (casing 40 % with #0b0b0a)."
+                }
+              },
+              {
+                "panel": {
+                  "name": "EcoHeadPlate",
+                  "at": [
+                    16,
+                    12
+                  ],
+                  "size": [
+                    1568,
+                    62
+                  ],
+                  "color": "$ecolog_edge",
+                  "note": ".ehead: title, device name; on the right the branch and its line.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "EcoHeadPlateIn",
+                        "at": [
+                          1,
+                          1
+                        ],
+                        "size": [
+                          1566,
+                          60
+                        ],
+                        "color": "$ecolog_screen"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoTitleRow",
+                        "at": [
+                          21,
+                          0
+                        ],
+                        "size": [
+                          1000,
+                          62
+                        ],
+                        "color": "$none",
+                        "note": "The title, then the device name 18 after it: lined up by the menu (FlowLater from the skin's OnShow) by the width of each TEXT -- the title is wider in Ukrainian than in English.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "EcoTitleBox",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                700,
+                                62
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "EcoTitle",
+                                    "at": [
+                                      0,
+                                      18.2
+                                    ],
+                                    "size": [
+                                      700,
+                                      23
+                                    ],
+                                    "font": "ecolog_title",
+                                    "color": "$ecolog_txt",
+                                    "text": "#STR_OZL_SKIN_ECOLOG_TITLE",
+                                    "note": "Upper-cased and spaced by the skin (.title)."
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoDevBox",
+                              "at": [
+                                279,
+                                0
+                              ],
+                              "size": [
+                                700,
+                                62
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "DevName",
+                                    "at": [
+                                      0,
+                                      23.32
+                                    ],
+                                    "size": [
+                                      700,
+                                      14
+                                    ],
+                                    "font": "ecolog_dev",
+                                    "color": "$ecolog_dim",
+                                    "text": "#STR_OZL_SKIN_ECOLOG_DEV",
+                                    "note": "Upper-cased and spaced by the skin (.dev)."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchName",
+                        "at": [
+                          547,
+                          11.48
+                        ],
+                        "size": [
+                          1000,
+                          21
+                        ],
+                        "font": "ecolog_bname",
+                        "color": "$ecolog_txt",
+                        "align": "right",
+                        "note": "Upper-cased by the skin (.bname); right-aligned to the plate's padding like the mockup."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchSub",
+                        "at": [
+                          547,
+                          33.18
+                        ],
+                        "size": [
+                          1000,
+                          15
+                        ],
+                        "font": "ecolog_bsub",
+                        "color": "$ecolog_dim",
+                        "align": "right"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoBranchMark",
+                        "at": [
+                          1300,
+                          17
+                        ],
+                        "size": [
+                          8,
+                          10
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "branch_next",
+                        "color": "$ecolog_dim",
+                        "hidden": true,
+                        "note": "Not in the mockup (one branch per faction there): shown before the branch name when there are several."
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "EcoBranchNext",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          1300,
+                          8
+                        ],
+                        "size": [
+                          247,
+                          46
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "note": "Several branches: a click on the branch name opens the next one (the skin sizes it to the text).",
+                        "hidden": true
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "BtnClose",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          1150,
+                          20
+                        ],
+                        "size": [
+                          96,
+                          22
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "note": "Not in the mockup (a browser page closes itself): a key in the header's free middle, its right edge 30 left of the wider branch line; the skin sizes it to its word and places it (OnUpdate).",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "EcoCloseTop",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                96,
+                                1
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoCloseBottom",
+                              "at": [
+                                0,
+                                21
+                              ],
+                              "size": [
+                                96,
+                                1
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoCloseLeft",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1,
+                                22
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoCloseRight",
+                              "at": [
+                                95,
+                                0
+                              ],
+                              "size": [
+                                1,
+                                22
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "BtnCloseText",
+                              "at": [
+                                10,
+                                3.3
+                              ],
+                              "size": [
+                                300,
+                                14
+                              ],
+                              "font": "ecolog_close",
+                              "color": "$ecolog_dim",
+                              "text": "#STR_OZL_TREE_CLOSE"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "EcoReadPlate",
+                  "at": [
+                    16,
+                    84
+                  ],
+                  "size": [
+                    1568,
+                    76
+                  ],
+                  "color": "$ecolog_edge",
+                  "note": ".readouts: the row of instruments showing the pool.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "EcoReadPlateIn",
+                        "at": [
+                          1,
+                          1
+                        ],
+                        "size": [
+                          1566,
+                          74
+                        ],
+                        "color": "$ecolog_screen"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoPoolLabel",
+                        "at": [
+                          17,
+                          9
+                        ],
+                        "size": [
+                          13,
+                          58
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "pool_vertical_ua",
+                        "color": "$ecolog_dim",
+                        "note": "The vertical 'Бали' (.readouts .lab): a picture per language, the skin loads STR_OZL_SKIN_ECOLOG_POOL_VERTICAL_IMG into it."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "PoolList",
+                        "at": [
+                          46,
+                          9
+                        ],
+                        "size": [
+                          10,
+                          10
+                        ],
+                        "color": "$none",
+                        "hidden": true,
+                        "note": "HIDDEN on purpose: the menu still creates one ozl_ecolog_pool_row per line here and hands each to PaintPoolRow (which lines, in which order), but the skin draws the line in its own instrument EcoPool<n> below. On the stand (2026-10-31) the engine handed this path another skin's file (OZL_DutyRegistryRow: SKINS.md, Layout mix-up); a row that is never shown cannot show the wrong widgets."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoPools",
+                        "at": [
+                          46,
+                          9
+                        ],
+                        "size": [
+                          1505,
+                          58
+                        ],
+                        "color": "$none",
+                        "note": "The pool as a row of instruments (.pool / .prow): the line's name in capitals (dim), its number big, its colour chip top-right -- no gauge (owner, 2026-10-31). Eight instruments; the skin fills one per line from PaintPoolRow and shares the width out equally, 10 apart (OnPaint).",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "EcoPool0",
+                              "at": [
+                                0.0,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool0Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool0EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool0EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool0EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool0EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool0Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool0Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool0Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool1",
+                              "at": [
+                                378.75,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool1Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool1EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool1EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool1EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool1EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool1Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool1Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool1Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool2",
+                              "at": [
+                                757.5,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool2Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool2EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool2EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool2EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool2EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool2Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool2Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool2Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool3",
+                              "at": [
+                                1136.25,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool3Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool3EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool3EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool3EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool3EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool3Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool3Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool3Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool4",
+                              "at": [
+                                1515.0,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool4Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool4EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool4EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool4EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool4EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool4Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool4Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool4Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool5",
+                              "at": [
+                                1893.75,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool5Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool5EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool5EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool5EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool5EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool5Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool5Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool5Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool6",
+                              "at": [
+                                2272.5,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool6Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool6EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool6EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool6EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool6EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool6Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool6Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool6Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoPool7",
+                              "at": [
+                                2651.25,
+                                0
+                              ],
+                              "size": [
+                                368.75,
+                                58
+                              ],
+                              "color": "$none",
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoPool7Bg",
+                                    "size": "fill",
+                                    "color": "$ecolog_lcd"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool7EdgeT",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool7EdgeB",
+                                    "at": [
+                                      0,
+                                      57
+                                    ],
+                                    "size": [
+                                      368.75,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool7EdgeL",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool7EdgeR",
+                                    "at": [
+                                      367.75,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      58
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoPool7Chip",
+                                    "at": [
+                                      347.75,
+                                      11
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool7Name",
+                                    "at": [
+                                      13,
+                                      8.32
+                                    ],
+                                    "size": [
+                                      300,
+                                      14
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "EcoPool7Value",
+                                    "at": [
+                                      13,
+                                      22.92
+                                    ],
+                                    "size": [
+                                      300,
+                                      25
+                                    ],
+                                    "font": "ecolog_pool_value",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "PoolEmpty",
+                        "at": [
+                          46,
+                          30.5
+                        ],
+                        "size": [
+                          1505,
+                          15
+                        ],
+                        "font": "ecolog_pool_empty",
+                        "color": "$ecolog_dim",
+                        "text": "#STR_OZL_TREE_POOL_EMPTY",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "EcoTreeBox",
+                  "at": [
+                    16,
+                    170
+                  ],
+                  "size": [
+                    1568,
+                    510
+                  ],
+                  "color": "$ecolog_edge",
+                  "note": ".tree: the tree on its 24-unit grid, the legend along its foot.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "EcoTreeBoxIn",
+                        "at": [
+                          1,
+                          1
+                        ],
+                        "size": [
+                          1566,
+                          508
+                        ],
+                        "color": "$ecolog_lcd"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "TreeScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          1,
+                          1
+                        ],
+                        "size": [
+                          1566,
+                          474
+                        ],
+                        "color": "$ecolog_cell_edge",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "Scrollbar H": 1,
+                          "style": "blank"
+                        },
+                        "note": "The tree, growing right: drag it or the wheel. The menu sizes TreeContent. The bars: the thumb in cell-edge, the track at half of it (color + style blank, SKINS.md) -- the mockup's cell-edge thumb on the screen track.",
+                        "children": [
+                          {
+                            "frame": {
+                              "name": "TreeContent",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1554,
+                                470
+                              ],
+                              "children": [
+                                {
+                                  "image": {
+                                    "name": "TreeGlow",
+                                    "size": "fill",
+                                    "file": "OpenZone_Research/gui/textures/tree/ecolog/tree_glow_ca.paa",
+                                    "color": "$white",
+                                    "note": "The glow of the tree's screen (.content .bg) with the screen under it, baked opaque (the engine blends in linear light: a 6 % light layer would come out several times brighter), stretched over the content: the gradient is relative to the box, so the stretch is exact."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoTiers",
+                                    "size": "fill",
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "EcoTier0",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier1",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier2",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier3",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier4",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier5",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier6",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier7",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier8",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "EcoTier9",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            120,
+                                            15
+                                          ],
+                                          "font": "ecolog_tier",
+                                          "color": "$ecolog_dim",
+                                          "align": "center",
+                                          "hidden": true
+                                        }
+                                      }
+                                    ],
+                                    "note": "The tier labels 'тир I' (.tierlab) -- the skin's own, placed by it (OnPaint) on the tier's point, 22 from the top. No TreeTiers role: the engine's tier_label rows came back as another skin's file on the stand (OZL_DutyPriceChip, SKINS.md Layout mix-up)."
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill",
+                                    "props": {
+                                      "ignorepointer": 1
+                                    },
+                                    "note": "The 24-unit grid and every link, drawn by the menu."
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "EcoFogStripes",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      80,
+                                      470
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/ecolog/fog_stripes_ca.paa",
+                                    "color": "$white",
+                                    "stretch": false,
+                                    "hidden": true,
+                                    "note": "The 135-degree stripes of the fog, a pixel tile: the skin lays them on TreeFogEdge's box, so they show only through the fade, as in the mockup."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "TreeFogEdge",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      80,
+                                      470
+                                    ],
+                                    "set": "ozl_ecolog",
+                                    "image": "fog_edge",
+                                    "color": "$ecolog_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "TreeFog",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      100,
+                                      470
+                                    ],
+                                    "color": "$ecolog_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeNodes",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTip",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      300,
+                                      28
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipEdge",
+                                          "size": "fill",
+                                          "color": "$ecolog_txt"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipBg",
+                                          "at": [
+                                            1,
+                                            1
+                                          ],
+                                          "size": [
+                                            298,
+                                            26
+                                          ],
+                                          "color": "$ecolog_screen"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "TreeTipText",
+                                          "at": [
+                                            10,
+                                            5.57
+                                          ],
+                                          "size": [
+                                            600,
+                                            15
+                                          ],
+                                          "font": "ecolog_tip",
+                                          "color": "$ecolog_txt",
+                                          "note": "Wider than any tip on purpose: the menu sizes TreeTip from the text and TreeTip clips the rest."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "TreeLegend",
+                        "at": [
+                          1,
+                          475
+                        ],
+                        "size": [
+                          1566,
+                          34
+                        ],
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "LegendRule",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1566,
+                                1
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegendRow",
+                              "at": [
+                                16,
+                                1
+                              ],
+                              "size": [
+                                1550,
+                                33
+                              ],
+                              "color": "$none",
+                              "note": "Lined up by the menu (FlowLater from the skin's OnShow) by the width of each item's TEXT, 14 apart.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegLocked",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      33
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegLockedBox",
+                                          "at": [
+                                            0,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "set": "ozl_ecolog",
+                                          "image": "legend_box",
+                                          "color": "$ecolog_faint"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegLockedText",
+                                          "at": [
+                                            18,
+                                            8.82
+                                          ],
+                                          "size": [
+                                            300,
+                                            14
+                                          ],
+                                          "font": "ecolog_legend",
+                                          "color": "$ecolog_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_LOCKED"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegShort",
+                                    "at": [
+                                      75.41,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      33
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegShortBox",
+                                          "at": [
+                                            0,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$ecolog_bad"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegShortText",
+                                          "at": [
+                                            18,
+                                            8.82
+                                          ],
+                                          "size": [
+                                            300,
+                                            14
+                                          ],
+                                          "font": "ecolog_legend",
+                                          "color": "$ecolog_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_SHORT"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegOpen",
+                                    "at": [
+                                      174.38,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      33
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegOpenBox",
+                                          "at": [
+                                            0,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$ecolog_acc"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegOpenText",
+                                          "at": [
+                                            18,
+                                            8.82
+                                          ],
+                                          "size": [
+                                            300,
+                                            14
+                                          ],
+                                          "font": "ecolog_legend",
+                                          "color": "$ecolog_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_OPEN"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegDone",
+                                    "at": [
+                                      327.17,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      33
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegDoneBox",
+                                          "at": [
+                                            0,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$ecolog_ok"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegDoneText",
+                                          "at": [
+                                            18,
+                                            8.82
+                                          ],
+                                          "size": [
+                                            300,
+                                            14
+                                          ],
+                                          "font": "ecolog_legend",
+                                          "color": "$ecolog_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_DONE"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAll",
+                                    "at": [
+                                      424.39,
+                                      0
+                                    ],
+                                    "size": [
+                                      340,
+                                      33
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAllMark",
+                                          "at": [
+                                            0,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            34,
+                                            12
+                                          ],
+                                          "set": "ozl_ecolog",
+                                          "image": "legend_all",
+                                          "color": "$ecolog_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAllText",
+                                          "at": [
+                                            40,
+                                            8.82
+                                          ],
+                                          "size": [
+                                            300,
+                                            14
+                                          ],
+                                          "font": "ecolog_legend",
+                                          "color": "$ecolog_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_ALL"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAny",
+                                    "at": [
+                                      532.09,
+                                      0
+                                    ],
+                                    "size": [
+                                      344,
+                                      33
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAnyMark",
+                                          "at": [
+                                            0,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            38,
+                                            12
+                                          ],
+                                          "set": "ozl_ecolog",
+                                          "image": "legend_any",
+                                          "color": "$ecolog_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAnyText",
+                                          "at": [
+                                            44,
+                                            8.82
+                                          ],
+                                          "size": [
+                                            300,
+                                            14
+                                          ],
+                                          "font": "ecolog_legend",
+                                          "color": "$ecolog_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_ANY"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "TreeTemplates",
+                        "stack": "TreeTemplateList",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          100,
+                          20
+                        ],
+                        "hidden": true,
+                        "rows": {
+                          "ozl_ecolog_or_label": {
+                            "row": {
+                              "name": "OZL_EcologOrLabel",
+                              "h": 1,
+                              "note": "The 'АБО' over an 'any' diamond (horizontal trees: centred 14 above it); the menu puts the row's corner on the diamond and colours the word like its line.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "OrText",
+                                    "at": [
+                                      -30,
+                                      -24.5
+                                    ],
+                                    "size": [
+                                      60,
+                                      13
+                                    ],
+                                    "font": "ecolog_or",
+                                    "color": "$ecolog_dim",
+                                    "text": "#STR_OZL_TREE_OR",
+                                    "align": "center"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_ecolog_price_chip": {
+                            "row": {
+                              "name": "OZL_EcologPriceChip",
+                              "h": 14,
+                              "note": "One line of a node's price: its 7-unit square and the amount, 3 apart (.price b); the skin lines the chips up and centres them under the node.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PriceChip",
+                                    "at": [
+                                      0,
+                                      4.68
+                                    ],
+                                    "size": [
+                                      7,
+                                      7
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PriceText",
+                                    "at": [
+                                      10,
+                                      0
+                                    ],
+                                    "size": [
+                                      140,
+                                      14
+                                    ],
+                                    "font": "ecolog_price",
+                                    "color": "$ecolog_dim"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_ecolog_pool_row": {
+                            "row": {
+                              "name": "OZL_EcologPoolRow",
+                              "h": 20,
+                              "note": "The row the menu creates per pool line into the HIDDEN PoolList: never shown -- the skin draws the line in its instrument EcoPool<n> (see PoolList). The menu's roles are here so the base hook finds them.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PoolChip",
+                                    "at": [
+                                      0,
+                                      5
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolName",
+                                    "at": [
+                                      16,
+                                      0
+                                    ],
+                                    "size": [
+                                      200,
+                                      20
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolValue",
+                                    "at": [
+                                      220,
+                                      0
+                                    ],
+                                    "size": [
+                                      60,
+                                      20
+                                    ],
+                                    "font": "ecolog_pool",
+                                    "color": "$ecolog_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_ecolog_cost_row": {
+                            "row": {
+                              "name": "OZL_EcologCostRow",
+                              "h": 32,
+                              "note": "A cost line of the protocol (.crow): chip, name, 'have / need' right-aligned, a 3-unit bar under name and value; 8 under it are the column's gap.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "CostChip",
+                                    "at": [
+                                      0,
+                                      3.5
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CostName",
+                                    "at": [
+                                      20,
+                                      0
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "ecolog_crow",
+                                    "color": "$ecolog_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CostValue",
+                                    "at": [
+                                      20,
+                                      0
+                                    ],
+                                    "size": [
+                                      291,
+                                      16
+                                    ],
+                                    "font": "ecolog_crow",
+                                    "color": "$ecolog_txt",
+                                    "align": "right"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CostBar",
+                                    "at": [
+                                      20,
+                                      21
+                                    ],
+                                    "size": [
+                                      291,
+                                      3
+                                    ],
+                                    "color": "$ecolog_track",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CostBarFill",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            0,
+                                            3
+                                          ],
+                                          "color": "$ecolog_ok"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_ecolog_opens_chip": {
+                            "row": {
+                              "name": "OZL_EcologOpensChip",
+                              "h": 24,
+                              "note": "A node this one opens (.opens a): the word in a 1-unit frame, 8 + text + 8; a hidden node's chip ('??? невідомо') is faint in a dashed frame. The skin lines the chips up and sizes the frames.",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "ChipHit",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      200,
+                                      24
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: a style-less button paints a light box under the mouse."
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "ChipText",
+                                    "at": [
+                                      9,
+                                      3.07
+                                    ],
+                                    "size": [
+                                      600,
+                                      15
+                                    ],
+                                    "font": "ecolog_opens",
+                                    "color": "$ecolog_txt"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "ChipTop",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      200,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "ChipBottom",
+                                    "at": [
+                                      0,
+                                      23
+                                    ],
+                                    "size": [
+                                      200,
+                                      1
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "ChipLeft",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      24
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "ChipRight",
+                                    "at": [
+                                      199,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      24
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "ChipDashTop",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      200,
+                                      1
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/ecolog/dash_ca.paa",
+                                    "color": "$ecolog_edge",
+                                    "stretch": false,
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "ChipDashBottom",
+                                    "at": [
+                                      0,
+                                      23
+                                    ],
+                                    "size": [
+                                      200,
+                                      1
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/ecolog/dash_ca.paa",
+                                    "color": "$ecolog_edge",
+                                    "stretch": false,
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "ChipDashLeft",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      24
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/ecolog/dash_ca.paa",
+                                    "color": "$ecolog_edge",
+                                    "stretch": false,
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "ChipDashRight",
+                                    "at": [
+                                      199,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      24
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/ecolog/dash_ca.paa",
+                                    "color": "$ecolog_edge",
+                                    "stretch": false,
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "note": "Holds no rows: it only declares the row files the menu creates outside the lists."
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "EcoCardPlate",
+                  "at": [
+                    16,
+                    690
+                  ],
+                  "size": [
+                    1568,
+                    194
+                  ],
+                  "color": "$ecolog_edge",
+                  "note": "The bottom plate: the node's protocol.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "EcoCardPlateIn",
+                        "at": [
+                          1,
+                          1
+                        ],
+                        "size": [
+                          1566,
+                          192
+                        ],
+                        "color": "$ecolog_screen"
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          21,
+                          17
+                        ],
+                        "size": [
+                          320,
+                          160
+                        ],
+                        "hidden": true,
+                        "note": "No node selected (.empty): the two lines centred in the first column, a 1-unit rule at the left of their block (the skin sizes the block to the hint, FitLater).",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "EcoEmptyBox",
+                              "at": [
+                                22.88,
+                                58
+                              ],
+                              "size": [
+                                274.25,
+                                44
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "EcoEmptyLine",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      1,
+                                      44
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                9.5,
+                                56.76
+                              ],
+                              "size": [
+                                320,
+                                18
+                              ],
+                              "font": "ecolog_empty",
+                              "color": "$ecolog_dim",
+                              "text": "#STR_OZL_TREE_PICK",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                9.5,
+                                84.13
+                              ],
+                              "size": [
+                                320,
+                                15
+                              ],
+                              "font": "ecolog_empty_hint",
+                              "color": "$ecolog_dim",
+                              "text": "#STR_OZL_TREE_HINT",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardBody",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1568,
+                          194
+                        ],
+                        "note": ".card: the protocol of the selected node in five columns 320 | rest | 330 | 300 | 230.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "EcoDivider0",
+                              "at": [
+                                363,
+                                17
+                              ],
+                              "size": [
+                                1,
+                                160
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoDivider1",
+                              "at": [
+                                643,
+                                17
+                              ],
+                              "size": [
+                                1,
+                                160
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoDivider2",
+                              "at": [
+                                995,
+                                17
+                              ],
+                              "size": [
+                                1,
+                                160
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "EcoDivider3",
+                              "at": [
+                                1317,
+                                17
+                              ],
+                              "size": [
+                                1,
+                                160
+                              ],
+                              "color": "$ecolog_edge"
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "EcoColHead",
+                              "at": [
+                                21,
+                                15
+                              ],
+                              "size": [
+                                320,
+                                162
+                              ],
+                              "note": "Column 1 of the protocol (.c-head), clipped like the mockup's overflow: hidden.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "CardFlow",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 320,
+                                    "note": "Name (two lines), meta (three), status, 8 apart; the stack starts 2 above the mockup's line box so the Metron caps sit where the mockup's do.",
+                                    "children": [
+                                      {
+                                        "stack": {
+                                          "name": "CardName",
+                                          "note": "Word-wrapped by the menu into its lines.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardName0",
+                                                "h": 24.15,
+                                                "font": "ecolog_cname",
+                                                "color": "$ecolog_txt"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardName1",
+                                                "h": 24.15,
+                                                "font": "ecolog_cname",
+                                                "color": "$ecolog_txt",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 8
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardMeta",
+                                          "note": "Word-wrapped by the menu into its lines.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardMeta0",
+                                                "h": 16,
+                                                "font": "ecolog_cmeta",
+                                                "color": "$ecolog_soft"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta1",
+                                                "h": 16,
+                                                "font": "ecolog_cmeta",
+                                                "color": "$ecolog_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta2",
+                                                "h": 16,
+                                                "font": "ecolog_cmeta",
+                                                "color": "$ecolog_soft",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 8
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardStatus",
+                                          "h": 17,
+                                          "font": "ecolog_cstat",
+                                          "color": "$ecolog_acc"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "EcoColDesc",
+                              "at": [
+                                382,
+                                15
+                              ],
+                              "size": [
+                                239,
+                                162
+                              ],
+                              "note": "Column 2 (.c-desc): '◆ ОПИС' and the description.",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "EcoDescMark",
+                                    "at": [
+                                      0,
+                                      2
+                                    ],
+                                    "size": [
+                                      10,
+                                      15
+                                    ],
+                                    "set": "ozl_ecolog",
+                                    "image": "sec_diamond",
+                                    "color": "$ecolog_acc"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardDescHead",
+                                    "at": [
+                                      17.08,
+                                      1.32
+                                    ],
+                                    "size": [
+                                      260,
+                                      14
+                                    ],
+                                    "font": "ecolog_sec",
+                                    "color": "$ecolog_acc"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CardDesc",
+                                    "at": [
+                                      0,
+                                      23.2
+                                    ],
+                                    "size": [
+                                      239,
+                                      137.2
+                                    ],
+                                    "color": "$none",
+                                    "note": "Word-wrapped by the menu into its lines, 19.6 apart (line-height 1.4): a distance-field MultilineTextWidget would set them a font size apart, 14.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CardDesc0",
+                                          "at": [
+                                            0,
+                                            0.0
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc1",
+                                          "at": [
+                                            0,
+                                            19.6
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc2",
+                                          "at": [
+                                            0,
+                                            39.2
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc3",
+                                          "at": [
+                                            0,
+                                            58.8
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc4",
+                                          "at": [
+                                            0,
+                                            78.4
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc5",
+                                          "at": [
+                                            0,
+                                            98.0
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardDesc6",
+                                          "at": [
+                                            0,
+                                            117.6
+                                          ],
+                                          "size": [
+                                            239,
+                                            19.6
+                                          ],
+                                          "font": "ecolog_cdesc",
+                                          "color": "$ecolog_soft",
+                                          "hidden": true
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "EcoColCost",
+                              "at": [
+                                662,
+                                15
+                              ],
+                              "size": [
+                                311,
+                                162
+                              ],
+                              "note": "Column 3 (.c-cost): cost lines, then the materials.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "EcoCostStack",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 311,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "EcoCostHeadRow",
+                                          "h": 25,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "EcoCostMark",
+                                                "at": [
+                                                  0,
+                                                  2
+                                                ],
+                                                "size": [
+                                                  10,
+                                                  15
+                                                ],
+                                                "set": "ozl_ecolog",
+                                                "image": "sec_diamond",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardCostHead",
+                                                "at": [
+                                                  17.08,
+                                                  1.32
+                                                ],
+                                                "size": [
+                                                  260,
+                                                  14
+                                                ],
+                                                "font": "ecolog_sec",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardCostList"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoItemsHeadRow",
+                                          "h": 23,
+                                          "color": "$none",
+                                          "note": "Shown and hidden with CardItemsHead (the skin follows the menu).",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "EcoItemsMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  10,
+                                                  15
+                                                ],
+                                                "set": "ozl_ecolog",
+                                                "image": "sec_diamond",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardItemsHead",
+                                                "at": [
+                                                  17.08,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  260,
+                                                  14
+                                                ],
+                                                "font": "ecolog_sec",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardItemList"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "EcoColTime",
+                              "at": [
+                                1014,
+                                15
+                              ],
+                              "size": [
+                                281,
+                                162
+                              ],
+                              "note": "Column 4 (.c-time): the duration or the running project with its 20 segments, then what the node opens -- in this column, the ecolog window has no column of its own for it.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "EcoTimeStack",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 281,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "EcoTimeHeadRow",
+                                          "h": 24,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "EcoTimeMark",
+                                                "at": [
+                                                  0,
+                                                  2
+                                                ],
+                                                "size": [
+                                                  10,
+                                                  15
+                                                ],
+                                                "set": "ozl_ecolog",
+                                                "image": "sec_diamond",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardTimeHead",
+                                                "at": [
+                                                  17.08,
+                                                  1.32
+                                                ],
+                                                "size": [
+                                                  260,
+                                                  14
+                                                ],
+                                                "font": "ecolog_sec",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoTimeRow",
+                                          "h": 26,
+                                          "color": "$none",
+                                          "note": "'Тривалість: 1 хв 00 с' (CardTime), or while researching 'Лишилось' + the clock in bold + 'з 1 хв 00 с', placed by the skin.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardTime",
+                                                "at": [
+                                                  0,
+                                                  0.04
+                                                ],
+                                                "size": [
+                                                  281,
+                                                  16
+                                                ],
+                                                "font": "ecolog_ctime",
+                                                "color": "$ecolog_txt"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "EcoTimeLeft",
+                                                "at": [
+                                                  0,
+                                                  0.04
+                                                ],
+                                                "size": [
+                                                  200,
+                                                  16
+                                                ],
+                                                "font": "ecolog_ctime",
+                                                "color": "$ecolog_txt",
+                                                "text": "#STR_OZL_TREE_LEFT",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardTimer",
+                                                "at": [
+                                                  77,
+                                                  0.04
+                                                ],
+                                                "size": [
+                                                  100,
+                                                  16
+                                                ],
+                                                "font": "ecolog_timer",
+                                                "color": "$ecolog_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "EcoTimeTail",
+                                                "at": [
+                                                  110,
+                                                  0.04
+                                                ],
+                                                "size": [
+                                                  240,
+                                                  16
+                                                ],
+                                                "font": "ecolog_ctime",
+                                                "color": "$ecolog_txt",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardSegs",
+                                          "h": 18,
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg0",
+                                                "at": [
+                                                  0.0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg1",
+                                                "at": [
+                                                  14.15,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg2",
+                                                "at": [
+                                                  28.3,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg3",
+                                                "at": [
+                                                  42.45,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg4",
+                                                "at": [
+                                                  56.6,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg5",
+                                                "at": [
+                                                  70.75,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg6",
+                                                "at": [
+                                                  84.9,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg7",
+                                                "at": [
+                                                  99.05,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg8",
+                                                "at": [
+                                                  113.2,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg9",
+                                                "at": [
+                                                  127.35,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg10",
+                                                "at": [
+                                                  141.5,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg11",
+                                                "at": [
+                                                  155.65,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg12",
+                                                "at": [
+                                                  169.8,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg13",
+                                                "at": [
+                                                  183.95,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg14",
+                                                "at": [
+                                                  198.1,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg15",
+                                                "at": [
+                                                  212.25,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg16",
+                                                "at": [
+                                                  226.4,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg17",
+                                                "at": [
+                                                  240.55,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg18",
+                                                "at": [
+                                                  254.7,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg19",
+                                                "at": [
+                                                  268.85,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  12.15,
+                                                  10
+                                                ],
+                                                "color": "$ecolog_track"
+                                              }
+                                            }
+                                          ],
+                                          "note": "The 20 segments of a running project (.pbar), 2 apart; 8 under them are the gap."
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "EcoOpensHeadRow",
+                                          "h": 23,
+                                          "color": "$none",
+                                          "note": "Shown and hidden with CardOpensHead (the skin follows the menu).",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "EcoOpensMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  10,
+                                                  15
+                                                ],
+                                                "set": "ozl_ecolog",
+                                                "image": "sec_diamond",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardOpensHead",
+                                                "at": [
+                                                  17.08,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  260,
+                                                  14
+                                                ],
+                                                "font": "ecolog_sec",
+                                                "color": "$ecolog_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardOpensList",
+                                          "w": 281,
+                                          "h": 24,
+                                          "note": "The chips of the nodes this one opens; exact width, so the menu's flow can size it."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "EcoColFoot",
+                              "at": [
+                                1336,
+                                15
+                              ],
+                              "size": [
+                                211,
+                                162
+                              ],
+                              "note": "Column 5 (.c-foot): the button and the reason under it, held to the bottom (the skin lifts them when the reason takes two lines).",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      86
+                                    ],
+                                    "size": [
+                                      211,
+                                      50
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: the skin draws the frame, the menu the hover."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoBtnTop",
+                                    "at": [
+                                      0,
+                                      86
+                                    ],
+                                    "size": [
+                                      211,
+                                      2
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoBtnBottom",
+                                    "at": [
+                                      0,
+                                      134
+                                    ],
+                                    "size": [
+                                      211,
+                                      2
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoBtnLeft",
+                                    "at": [
+                                      0,
+                                      86
+                                    ],
+                                    "size": [
+                                      2,
+                                      50
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "EcoBtnRight",
+                                    "at": [
+                                      209,
+                                      86
+                                    ],
+                                    "size": [
+                                      2,
+                                      50
+                                    ],
+                                    "color": "$ecolog_edge"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "BtnResearchText",
+                                    "at": [
+                                      0,
+                                      99.2
+                                    ],
+                                    "size": [
+                                      211,
+                                      21
+                                    ],
+                                    "font": "ecolog_button",
+                                    "color": "$ecolog_faint",
+                                    "text": "#STR_OZL_TREE_RESEARCH",
+                                    "align": "center"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchHover",
+                                    "at": [
+                                      2,
+                                      88
+                                    ],
+                                    "size": [
+                                      207,
+                                      46
+                                    ],
+                                    "color": "$ecolog_acc",
+                                    "hidden": true,
+                                    "note": "Under the mouse while enabled (.go:hover): acc fill, the word in the screen colour.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "EcoBtnHoverText",
+                                          "at": [
+                                            -2,
+                                            11.2
+                                          ],
+                                          "size": [
+                                            211,
+                                            21
+                                          ],
+                                          "font": "ecolog_button",
+                                          "color": "$ecolog_screen",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "text": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0,
+                                      142.5
+                                    ],
+                                    "w": 211,
+                                    "h": 19.5,
+                                    "font": "ecolog_why",
+                                    "color": "$ecolog_bad",
+                                    "plain": true,
+                                    "note": "The reason the button is off (.why), wrapped by the engine: a distance-field font."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "EcoBezel",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "color": "$none",
+                  "note": "#stage::before: the light lab casing over the whole window -- 10 of casing (outer corners rounded 6: the four corner pictures), a 2-unit highlight and the 10-unit dark rim the plates' edges run under. Last child, so it is drawn above the screen; a transparent panel, so the mouse goes through.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "EcoCaseTop",
+                        "at": [
+                          10,
+                          0
+                        ],
+                        "size": [
+                          1580,
+                          10
+                        ],
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoCaseBottom",
+                        "at": [
+                          10,
+                          890
+                        ],
+                        "size": [
+                          1580,
+                          10
+                        ],
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoCaseLeft",
+                        "at": [
+                          0,
+                          10
+                        ],
+                        "size": [
+                          10,
+                          880
+                        ],
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoCaseRight",
+                        "at": [
+                          1590,
+                          10
+                        ],
+                        "size": [
+                          10,
+                          880
+                        ],
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoCaseTL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          10,
+                          10
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "case_tl",
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoCaseTR",
+                        "at": [
+                          1590,
+                          0
+                        ],
+                        "size": [
+                          10,
+                          10
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "case_tr",
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoCaseBL",
+                        "at": [
+                          0,
+                          890
+                        ],
+                        "size": [
+                          10,
+                          10
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "case_bl",
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "EcoCaseBR",
+                        "at": [
+                          1590,
+                          890
+                        ],
+                        "size": [
+                          10,
+                          10
+                        ],
+                        "set": "ozl_ecolog",
+                        "image": "case_br",
+                        "color": "$ecolog_casing"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoHiTop",
+                        "at": [
+                          10,
+                          10
+                        ],
+                        "size": [
+                          1580,
+                          2
+                        ],
+                        "color": "$ecolog_casing_hi"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoHiBottom",
+                        "at": [
+                          10,
+                          888
+                        ],
+                        "size": [
+                          1580,
+                          2
+                        ],
+                        "color": "$ecolog_casing_hi"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoHiLeft",
+                        "at": [
+                          10,
+                          12
+                        ],
+                        "size": [
+                          2,
+                          876
+                        ],
+                        "color": "$ecolog_casing_hi"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoHiRight",
+                        "at": [
+                          1588,
+                          12
+                        ],
+                        "size": [
+                          2,
+                          876
+                        ],
+                        "color": "$ecolog_casing_hi"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoRimTop",
+                        "at": [
+                          12,
+                          12
+                        ],
+                        "size": [
+                          1576,
+                          10
+                        ],
+                        "color": "$ecolog_rim"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoRimBottom",
+                        "at": [
+                          12,
+                          878
+                        ],
+                        "size": [
+                          1576,
+                          10
+                        ],
+                        "color": "$ecolog_rim"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoRimLeft",
+                        "at": [
+                          12,
+                          22
+                        ],
+                        "size": [
+                          10,
+                          856
+                        ],
+                        "color": "$ecolog_rim"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "EcoRimRight",
+                        "at": [
+                          1578,
+                          22
+                        ],
+                        "size": [
+                          10,
+                          856
+                        ],
+                        "color": "$ecolog_rim"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

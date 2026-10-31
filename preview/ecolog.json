@@ -1,0 +1,23 @@
+{
+  "note": "Preview gallery of the ecolog tree window («Науковий термінал») for ui_gallery index=preview/ecolog.json. The window's root is the whole host, the 1600x900 stage centred in it. Fixtures only set texts and show the skin's hidden parts (capitals with the Latin I, as OZL_Text.Upper writes them for the vanilla Metron): ecolog-window -- the header and three pool instruments (the live window shares the row's width out by the number of lines; here they keep the four-line width); ecolog-card -- the protocol of a node being researched (bold clock, 20 segments); ecolog-node -- a selected node being researched. What the skin lays out at run time (tier labels, the price under a node, the opens chips, the close key) needs the live menu: world_exec oz_research treeui. A fixture travels to the bridge as one JSON string of at most ~1000 bytes on the wire.",
+  "entries": [
+    {
+      "name": "ecolog-window",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_ecolog.layout",
+      "host": "1600 900",
+      "fixture": "preview/ecolog-window.json"
+    },
+    {
+      "name": "ecolog-card",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_ecolog.layout",
+      "host": "1600 900",
+      "fixture": "preview/ecolog-card.json"
+    },
+    {
+      "name": "ecolog-node",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_ecolog.layout",
+      "host": "150 120",
+      "fixture": "preview/ecolog-node.json"
+    }
+  ]
+}
