@@ -1,0 +1,96 @@
+/* The bandit window («Записи братви»): the mockup's CSS for what the bake draws.
+   Lifted from the owner's mockup -- the shared paper block (bandit + loner), the bandit block
+   and the base rules they build on -- and cut down to the pictures: the page spread with its
+   ruling, squares, crumple, warp and torn edges, the spine with its staples. Live text and the
+   tree itself are widgets in the game, so their rules are not here. */
+
+@font-face {
+  font-family: "Caveat";
+  src: url("../../fonts/caveat/Caveat%5Bwght%5D.ttf");
+  font-weight: 100 900;
+}
+
+* { box-sizing: border-box; }
+
+body[data-f="bandit"] {
+  --font: "Caveat", cursive;
+  --txt: #2a2018; --dim: #6f5c42; --acc: #1f3f86; --ok: #2f6a2a; --bad: #b02a1a;
+  --screen: #ddd0ad; --edge: #a08a62; --lcd: #d6c7a0;
+  --pattern: radial-gradient(circle at 78% 14%, transparent 34px, rgba(110,70,30,.18) 35px 40px, transparent 41px),
+             radial-gradient(circle at 22% 80%, rgba(90,60,25,.16), transparent 70px),
+             radial-gradient(ellipse at 60% 55%, rgba(255,250,230,.25), transparent 60%);
+  --paper-hi: #e8dcbc; --fog: #c9b88f;
+  --faint: color-mix(in srgb, var(--dim) 75%, var(--screen));
+  font-family: var(--font);
+}
+
+/* ---- the spread: left page ruled, right page squared, spine on staples ---- */
+body[data-f="bandit"] .spread { position: absolute; left: 0; top: 0; width: 1544px; height: 852px; }
+body[data-f="bandit"] .pg { position: absolute; top: 0; height: 100%; background: var(--screen); }
+/* the ruling, the squares and the margin line "walk" with the paper: the mockup's #bwarp, which
+   the spread texture defines as #spread_warp (every picture of a page owns its ids) */
+body[data-f="bandit"] .pg { filter: url(#spread_warp); }
+body[data-f="bandit"] .pg-l { left: 0; width: 760px;
+  background: var(--screen) repeating-linear-gradient(0deg, transparent 0 31px, rgba(60,90,150,.24) 31px 32px); background-position: 0 14px;
+  /* torn left edge and the torn top corner */
+  clip-path: polygon(3% 0, 100% 0, 100% 100%, 1% 100%, 0 96%, 1.2% 91%, 0.2% 86%, 1.4% 79%, 0 72%, 1% 64%, 0.3% 57%, 1.5% 49%, 0 42%, 1.1% 35%,
+    0.2% 27%, 1.3% 20%, 0 13%, 2.4% 9%, 1% 5%); }
+body[data-f="bandit"] .pg-l::before { content: ""; position: absolute; left: 56px; top: 0; bottom: 0; border-left: 2px solid rgba(176,42,26,.45); }
+body[data-f="bandit"] .pg-r { left: 784px; width: 760px; background: #e2d6b6;
+  /* torn right edge and the torn-off lower corner */
+  clip-path: polygon(0 0, 98.6% 0, 100% 2.5%, 99.1% 8%, 100% 14%, 99.2% 22%, 100% 31%, 99% 41%, 100% 52%, 99.3% 62%, 100% 71%, 99% 79%,
+    100% 85%, 97% 88%, 95.5% 92%, 93% 94.5%, 91.5% 98%, 89% 100%, 0 100%); }
+/* the squares of a school exercise book: the tree's view (.tree .content .bg), 748 x 806 inside the
+   760 x 818 scroll, the rest of the scroll is its scrollbars */
+body[data-f="bandit"] .pg-r .bg { position: absolute; left: 0; top: 0; width: 748px; height: 806px;
+  background-image: linear-gradient(rgba(38,92,196,.45) 0 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(38,92,196,.45) 0 1.5px, transparent 1.5px),
+    var(--pattern);
+  background-size: 20px 20px, 20px 20px, auto; background-position: 0 6px, 6px 0, 0 0; }
+/* the dashed line over the legend (.legend: the bottom 34 units of the tree) */
+body[data-f="bandit"] .pg-r .legend { position: absolute; left: 0; right: 0; bottom: 0; height: 34px; border-top: 1px dashed var(--edge); }
+body[data-f="bandit"] .spine { position: absolute; left: 760px; top: 0; width: 24px; height: 100%;
+  background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(0,0,0,.05) 40%, rgba(0,0,0,.05) 60%, rgba(0,0,0,.28)), var(--screen); }
+body[data-f="bandit"] .spine::before, body[data-f="bandit"] .spine::after { content: ""; position: absolute; left: 6px; width: 12px; height: 34px;
+  border: 2px solid #8a8a86; border-left: none; border-right: none; }
+body[data-f="bandit"] .spine::before { top: 24%; }
+body[data-f="bandit"] .spine::after { top: 70%; }
+
+/* crumpled paper over the whole page, soft light: light and dark facets and small creases */
+body[data-f="bandit"] .crumple { position: absolute; inset: 0; pointer-events: none; z-index: 4; mix-blend-mode: soft-light; }
+body[data-f="bandit"] .crumple svg { width: 100%; height: 100%; display: block; }
+
+/* ---- texts drawn as pictures: the title with its struck word, the pool heading ---- */
+body[data-f="bandit"] .title { position: absolute; font-family: var(--font); font-size: 40px; line-height: 1; white-space: nowrap; color: var(--txt); }
+body[data-f="bandit"] .title s { text-decoration-thickness: 3px; color: var(--dim); }
+body[data-f="bandit"] .h { position: absolute; font-family: var(--font); font-size: 30px; white-space: nowrap; color: var(--txt);
+  text-decoration: underline wavy; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+
+/* ---- the research button, circled in ink ---- */
+body[data-f="bandit"] .go { position: absolute; width: 657px; height: 58px; border: 3px solid #fff;
+  border-radius: 46% 54% 50% 50% / 60% 45% 55% 40%; }
+body[data-f="bandit"] .go.fill { border-color: transparent; background: #fff; }
+
+/* ---- the margin doodles and the ink blots ----
+   The alphas are the mockup's raised for the game's linear-light blending (mockup: doodles .85;
+   blot circles .85 .8 .75 .7 .6), solved over the paper: the game then shows the mockup's ink. */
+body[data-f="bandit"] .doodle { position: absolute; color: #24306e; opacity: .94; }
+body[data-f="bandit"] .doodle svg { width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+body[data-f="bandit"] .doodle.txt { font-family: var(--font); font-size: 34px; line-height: 1; white-space: nowrap; }
+body[data-f="bandit"] .blot { position: absolute;
+  background: radial-gradient(circle at 40% 45%, rgba(24,30,80,.955) 0 38%, transparent 40%),
+              radial-gradient(circle at 66% 58%, rgba(24,30,80,.933) 0 22%, transparent 24%),
+              radial-gradient(circle at 22% 70%, rgba(24,30,80,.908) 0 12%, transparent 14%),
+              radial-gradient(circle at 85% 22%, rgba(24,30,80,.879) 0 7%, transparent 9%),
+              radial-gradient(circle at 10% 20%, rgba(24,30,80,.809) 0 5%, transparent 7%); }
+
+/* ---- the pool counted in tally marks (tally()): white, tinted in the game ---- */
+body[data-f="bandit"] .tally { position: absolute; left: 0; top: 0; font-family: var(--font); font-size: 26px; line-height: 33px;
+  letter-spacing: -2px; color: #fff; white-space: nowrap; }
+body[data-f="bandit"] .tally i { position: absolute; left: -3px; right: -3px; top: 50%; border-top: 2px solid #fff; transform: rotate(-24deg); }
+body[data-f="bandit"] .t10 { position: absolute; left: 0; top: 0; width: 20px; height: 20px; border: 2px solid #fff;
+  background: linear-gradient(45deg, transparent calc(50% - 1px), #fff calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+              linear-gradient(-45deg, transparent calc(50% - 1px), #fff calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)); }
+
+/* ---- wavy underlines exactly as Chrome draws text-decoration: wavy (the glyphs transparent) ---- */
+body[data-f="bandit"] .wave { position: absolute; left: 0; font-family: var(--font); white-space: nowrap; color: transparent;
+  text-decoration-line: underline; text-decoration-style: wavy; text-decoration-color: #fff; }

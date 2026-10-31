@@ -1,0 +1,2722 @@
+{
+  "layout": "ozl_tree_bandit",
+  "note": "The bandit window («Записи братви»): the neutral notebook's messy twin -- the same spread on the desk, crumpled, bent and torn. Left page ruled: the title with a struck word, the pot counted in tally marks, the entry of the selected node; right page squared: the tree of torn scraps growing down, links from the hand. Root TreeWindow fills the screen with the desk; TreeStage is the mockup's 1600x900 stage, centred. The pages are one picture (Spread) under the live widgets; roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome.",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "image": {
+            "name": "TreeDesk",
+            "size": "fill",
+            "file": "OpenZone_Research/gui/textures/tree/bandit/desk_ca.paa",
+            "stretch": false,
+            "color": "$white",
+            "note": "Wood, tiled at its own size over the whole screen."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "size": [
+              1600,
+              900
+            ],
+            "children": [
+              {
+                "image": {
+                  "name": "SpreadShadow",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/bandit/shadow_ca.paa",
+                  "color": "$white",
+                  "note": "The notebook's shadow on the desk, along its torn edges."
+                }
+              },
+              {
+                "image": {
+                  "name": "Spread",
+                  "at": [
+                    28,
+                    24
+                  ],
+                  "size": [
+                    1544,
+                    852
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/bandit/spread_ca.paa",
+                  "color": "$white",
+                  "note": "The spread as the mockup draws it: the ruled left page and the squared right one, crumpled (soft light), bent (the page warp), torn, the spine on its staples."
+                }
+              },
+              {
+                "panel": {
+                  "name": "PageL",
+                  "at": [
+                    28,
+                    24
+                  ],
+                  "size": [
+                    760,
+                    852
+                  ],
+                  "note": "The left page: everything on it is live; the page itself (ruled, crumpled, torn) is in the Spread picture under it.",
+                  "children": [
+                    {
+                      "icon": {
+                        "name": "TitleImg",
+                        "at": [
+                          70,
+                          18
+                        ],
+                        "size": [
+                          430,
+                          54
+                        ],
+                        "set": "ozl_bandit",
+                        "image": "title_ua",
+                        "color": "$white",
+                        "note": "«Дерево ~~знань~~ досліджень» with the struck word, bent with the page: the skin loads the picture of the player's language (STR_OZL_SKIN_BANDIT_TITLE_IMG) in OnShow."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "TitleText",
+                        "at": [
+                          74,
+                          23
+                        ],
+                        "size": [
+                          440,
+                          46
+                        ],
+                        "font": "bandit_title",
+                        "color": "$bandit_txt",
+                        "hidden": true,
+                        "note": "Shown only if the title picture can not be loaded: the title without the struck word."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "DevName",
+                        "at": [
+                          380,
+                          40
+                        ],
+                        "size": [
+                          349,
+                          26
+                        ],
+                        "text": "#STR_OZL_SKIN_BANDIT_DEV",
+                        "font": "bandit_dev",
+                        "color": "$bandit_dim",
+                        "align": "right",
+                        "note": "3 units past the mockup's right edge, so the slanted last glyph is not cut by the box."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "PoolHeadImg",
+                        "at": [
+                          70,
+                          66
+                        ],
+                        "size": [
+                          180,
+                          50
+                        ],
+                        "set": "ozl_bandit",
+                        "image": "pool_ua",
+                        "color": "$white",
+                        "note": "«Общак» with its wavy underline, bent with the page: the skin loads STR_OZL_SKIN_BANDIT_POOL_IMG in OnShow."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "PoolHeadText",
+                        "at": [
+                          74,
+                          72
+                        ],
+                        "size": [
+                          300,
+                          38
+                        ],
+                        "text": "#STR_OZL_SKIN_BANDIT_POOL",
+                        "font": "bandit_heading",
+                        "color": "$bandit_txt",
+                        "hidden": true,
+                        "note": "Shown only if the heading picture can not be loaded."
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "PoolScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          74,
+                          116
+                        ],
+                        "size": [
+                          662,
+                          172
+                        ],
+                        "color": "$bandit_dim",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "style": "blank"
+                        },
+                        "note": "Five lines on the ruling, with room under the last one for the double underline of a big number; a faction with more lines scrolls, its bar in pencil (colour + style blank: thumb in the colour, track at half). The row template is declared on TreeTemplates.",
+                        "children": [
+                          {
+                            "stack": {
+                              "name": "PoolList",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "w": 652
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          74,
+                          284
+                        ],
+                        "size": [
+                          652,
+                          560
+                        ],
+                        "hidden": true,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                0,
+                                230
+                              ],
+                              "size": [
+                                652,
+                                34
+                              ],
+                              "text": "#STR_OZL_TREE_PICK",
+                              "font": "bandit_empty",
+                              "color": "$bandit_dim",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                0,
+                                266
+                              ],
+                              "size": [
+                                652,
+                                26
+                              ],
+                              "text": "#STR_OZL_TREE_HINT",
+                              "font": "bandit_empty_hint",
+                              "color": "$bandit_dim",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "CardBody",
+                        "class": "FrameWidgetClass",
+                        "at": [
+                          74,
+                          284
+                        ],
+                        "size": [
+                          652,
+                          560
+                        ],
+                        "props": {
+                          "clipchildren": 0
+                        },
+                        "note": "Does not clip: the button moves 5 units left of it, and its ink ring sticks out.",
+                        "children": [
+                          {
+                            "raw": {
+                              "name": "CardScroll",
+                              "class": "ScrollWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                662,
+                                464
+                              ],
+                              "color": "$bandit_dim",
+                              "props": {
+                                "clipchildren": 1,
+                                "Scrollbar V": 1,
+                                "style": "blank"
+                              },
+                              "note": "The node's entry, top to bottom; the engine stacks it and a long entry scrolls above the button, its bar in pencil. The rows of CardCostList, CardItemList and CardOpensList are declared on TreeTemplates.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "CardFlow",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 652,
+                                    "children": [
+                                      {
+                                        "gap": {
+                                          "h": 4
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardNameRow",
+                                          "h": 46,
+                                          "note": "The name and its wavy underline (wave_name, clipped to the name by CardNameWave, which the skin sizes).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardName",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  652,
+                                                  46
+                                                ],
+                                                "font": "bandit_cname",
+                                                "color": "$bandit_txt"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "CardNameWave",
+                                                "class": "FrameWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  38.3
+                                                ],
+                                                "size": [
+                                                  200,
+                                                  6
+                                                ],
+                                                "props": {
+                                                  "clipchildren": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "children": [
+                                                  {
+                                                    "icon": {
+                                                      "name": "CardNameWaveImg",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        660,
+                                                        6
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "wave_name",
+                                                      "color": "$bandit_txt"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardMeta",
+                                          "note": "Word-wrapped by the menu into its lines (bitmap fonts: no MultilineTextWidget).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardMeta0",
+                                                "h": 25,
+                                                "font": "bandit_cmeta",
+                                                "color": "$bandit_dim"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta1",
+                                                "h": 25,
+                                                "font": "bandit_cmeta",
+                                                "color": "$bandit_dim",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 2
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardStatus",
+                                          "h": 30,
+                                          "font": "bandit_cstat",
+                                          "color": "$bandit_txt"
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 4
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardDesc",
+                                          "note": "Word-wrapped by the menu into CardDesc0..9, 32 apart like the ruling, 9 units in (.card > div:nth-child(2n)): each line sits in a holder CardDescRow<i>, which the skin shows and hides with its line (a stack can not move a child sideways).",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow0",
+                                                "h": 32,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc0",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt"
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow1",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc1",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow2",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc2",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow3",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc3",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow4",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc4",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow5",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc5",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow6",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc6",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow7",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc7",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow8",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc8",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardDescRow9",
+                                                "h": 32,
+                                                "hidden": true,
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardDesc9",
+                                                      "at": [
+                                                        9,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        643,
+                                                        32
+                                                      ],
+                                                      "font": "bandit_cdesc",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ],
+                                                "color": "$none"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 4
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardCostHeadRow",
+                                          "h": 30,
+                                          "note": "The cost block sits 5 units left in the mockup, which cuts the first letter there (the card clips); here the heads stay at 0 and only the cost lines move.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardCostHead",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  652,
+                                                  28
+                                                ],
+                                                "font": "bandit_sec",
+                                                "color": "$bandit_acc"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "CardCostHeadWave",
+                                                "class": "FrameWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  25
+                                                ],
+                                                "size": [
+                                                  100,
+                                                  8
+                                                ],
+                                                "props": {
+                                                  "clipchildren": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "children": [
+                                                  {
+                                                    "icon": {
+                                                      "name": "CardCostHeadWaveImg",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        300,
+                                                        8
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "wave_sec",
+                                                      "color": "$bandit_acc"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardCostList"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardItemsHeadRow",
+                                          "h": 30,
+                                          "note": "Shown with CardItemsHead (the skin follows the menu).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardItemsHead",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  652,
+                                                  28
+                                                ],
+                                                "font": "bandit_sec",
+                                                "color": "$bandit_acc"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "CardItemsHeadWave",
+                                                "class": "FrameWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  25
+                                                ],
+                                                "size": [
+                                                  100,
+                                                  8
+                                                ],
+                                                "props": {
+                                                  "clipchildren": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "children": [
+                                                  {
+                                                    "icon": {
+                                                      "name": "CardItemsHeadWaveImg",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        300,
+                                                        8
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "wave_sec",
+                                                      "color": "$bandit_acc"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardItemList"
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 2
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardTimeHeadRow",
+                                          "h": 30,
+                                          "note": "The time block sits 9 units in (.card > div:nth-child(2n)).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardTimeHead",
+                                                "at": [
+                                                  9,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  643,
+                                                  28
+                                                ],
+                                                "font": "bandit_sec",
+                                                "color": "$bandit_acc"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "CardTimeHeadWave",
+                                                "class": "FrameWidgetClass",
+                                                "at": [
+                                                  9,
+                                                  25
+                                                ],
+                                                "size": [
+                                                  100,
+                                                  8
+                                                ],
+                                                "props": {
+                                                  "clipchildren": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "children": [
+                                                  {
+                                                    "icon": {
+                                                      "name": "CardTimeHeadWaveImg",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        300,
+                                                        8
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "wave_sec",
+                                                      "color": "$bandit_acc"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardTimeRow",
+                                          "h": 26,
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardTime",
+                                                "at": [
+                                                  9,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  643,
+                                                  26
+                                                ],
+                                                "font": "bandit_crow",
+                                                "color": "$bandit_txt"
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardSegs",
+                                          "h": 12,
+                                          "hidden": true,
+                                          "note": "The 20 segments of a running project: an underline each, red when done (.pbar of the paper block), 9 units in.",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg0",
+                                                "at": [
+                                                  9.0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg1",
+                                                "at": [
+                                                  41.25,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg2",
+                                                "at": [
+                                                  73.5,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg3",
+                                                "at": [
+                                                  105.75,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg4",
+                                                "at": [
+                                                  138.0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg5",
+                                                "at": [
+                                                  170.25,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg6",
+                                                "at": [
+                                                  202.5,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg7",
+                                                "at": [
+                                                  234.75,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg8",
+                                                "at": [
+                                                  267.0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg9",
+                                                "at": [
+                                                  299.25,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg10",
+                                                "at": [
+                                                  331.5,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg11",
+                                                "at": [
+                                                  363.75,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg12",
+                                                "at": [
+                                                  396.0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg13",
+                                                "at": [
+                                                  428.25,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg14",
+                                                "at": [
+                                                  460.5,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg15",
+                                                "at": [
+                                                  492.75,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg16",
+                                                "at": [
+                                                  525.0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg17",
+                                                "at": [
+                                                  557.25,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg18",
+                                                "at": [
+                                                  589.5,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg19",
+                                                "at": [
+                                                  621.75,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  30.25,
+                                                  3
+                                                ],
+                                                "color": "$bandit_edge"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 4
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardOpensHeadRow",
+                                          "h": 30,
+                                          "note": "Shown with CardOpensHead (the skin follows the menu).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardOpensHead",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  652,
+                                                  28
+                                                ],
+                                                "font": "bandit_sec",
+                                                "color": "$bandit_acc"
+                                              }
+                                            },
+                                            {
+                                              "raw": {
+                                                "name": "CardOpensHeadWave",
+                                                "class": "FrameWidgetClass",
+                                                "at": [
+                                                  0,
+                                                  25
+                                                ],
+                                                "size": [
+                                                  100,
+                                                  8
+                                                ],
+                                                "props": {
+                                                  "clipchildren": 1,
+                                                  "ignorepointer": 1
+                                                },
+                                                "children": [
+                                                  {
+                                                    "icon": {
+                                                      "name": "CardOpensHeadWaveImg",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        300,
+                                                        8
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "wave_sec",
+                                                      "color": "$bandit_acc"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardOpensList",
+                                          "h": 25,
+                                          "note": "The menu lines the 'opens' chips up here (ozl_bandit_opens_chip) and sets the height to what they take."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "CardFoot",
+                              "class": "FrameWidgetClass",
+                              "at": [
+                                0,
+                                468
+                              ],
+                              "size": [
+                                657,
+                                90
+                              ],
+                              "props": {
+                                "clipchildren": 0
+                              },
+                              "note": "The button and the reason under it; the skin moves it 5 units left when the card has its 'opens' block (.card > div:nth-child(3n)). Does not clip: the ink ring sticks out.",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "BtnResearchHover",
+                                    "at": [
+                                      -6,
+                                      -6
+                                    ],
+                                    "size": [
+                                      669,
+                                      70
+                                    ],
+                                    "set": "ozl_bandit",
+                                    "image": "btn_fill",
+                                    "color": "$bandit_hover",
+                                    "hidden": true,
+                                    "note": "The pale ink inside the drawn ring under an enabled button the mouse is over."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "BtnResearchRing",
+                                    "at": [
+                                      -6,
+                                      -6
+                                    ],
+                                    "size": [
+                                      669,
+                                      70
+                                    ],
+                                    "set": "ozl_bandit",
+                                    "image": "btn_ring",
+                                    "color": "$bandit_acc",
+                                    "note": "Circled in ink: shown while the button is enabled."
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      657,
+                                      58
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: a style-less button paints a light box under the mouse.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchText",
+                                          "size": "fill",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
+                                          "font": "bandit_button",
+                                          "color": "$bandit_acc",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchStrike",
+                                    "at": [
+                                      0,
+                                      30
+                                    ],
+                                    "size": [
+                                      10,
+                                      2
+                                    ],
+                                    "hidden": true,
+                                    "note": "Strikes the words of a disabled button; the skin sizes it to the words.",
+                                    "color": "$bandit_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0,
+                                      61
+                                    ],
+                                    "size": [
+                                      657,
+                                      26
+                                    ],
+                                    "font": "bandit_why",
+                                    "color": "$bandit_bad"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "panel": {
+                  "name": "PageR",
+                  "at": [
+                    812,
+                    24
+                  ],
+                  "size": [
+                    760,
+                    852
+                  ],
+                  "note": "The right page: the tree; the page itself (squared, crumpled, torn) is in the Spread picture under it.",
+                  "children": [
+                    {
+                      "raw": {
+                        "name": "TreeScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          760,
+                          818
+                        ],
+                        "color": "$bandit_dim",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "Scrollbar H": 1,
+                          "style": "blank"
+                        },
+                        "note": "The tree: drag it, or the wheel. The menu sizes TreeContent. Colour + style blank draw the bars in pencil (thumb in the colour, track at half), like neutral's.",
+                        "children": [
+                          {
+                            "frame": {
+                              "name": "TreeContent",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                748,
+                                806
+                              ],
+                              "children": [
+                                {
+                                  "frame": {
+                                    "name": "TreeTiers",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill",
+                                    "props": {
+                                      "ignorepointer": 1
+                                    },
+                                    "note": "Every link, drawn by the menu from the hand (LineStyle sketch); the squares are in the page picture."
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "TreeFogEdge",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      748,
+                                      80
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/bandit/fog_edge_ca.paa",
+                                    "color": "$white",
+                                    "hidden": true,
+                                    "note": "The fade into the fog, crumpled like the page; its own colours (the skin's FogColor is white)."
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "TreeFog",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      748,
+                                      100
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/bandit/fog_ca.paa",
+                                    "color": "$white",
+                                    "hidden": true,
+                                    "note": "The fog, crumpled like the page; its own colours."
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeNodes",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTip",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      300,
+                                      30
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipEdge",
+                                          "size": "fill",
+                                          "color": "$bandit_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipBg",
+                                          "at": [
+                                            1,
+                                            1
+                                          ],
+                                          "size": [
+                                            298,
+                                            28
+                                          ],
+                                          "color": "$bandit_paper_hi"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "TreeTipText",
+                                          "at": [
+                                            9,
+                                            0
+                                          ],
+                                          "w": 600,
+                                          "h": 30,
+                                          "font": "bandit_tip",
+                                          "color": "$bandit_txt",
+                                          "note": "Wider than any tip on purpose: the menu sizes TreeTip from the text (GetTextSize) and TreeTip clips the rest; a label sized to its text would clip the top of a slanted last letter."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "image": {
+                        "name": "TearR",
+                        "at": [
+                          676,
+                          0
+                        ],
+                        "size": [
+                          84,
+                          818
+                        ],
+                        "file": "OpenZone_Research/gui/textures/tree/bandit/tear_r_ca.paa",
+                        "color": "$white",
+                        "note": "The desk where the torn right edge and the torn-off corner took the paper away: over the tree's right end, so its fog, scraps and scrollbars end at the tear as the mockup's clip-path ends them."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchName",
+                        "at": [
+                          20,
+                          12
+                        ],
+                        "size": [
+                          710,
+                          47
+                        ],
+                        "font": "bandit_bname",
+                        "color": "$bandit_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchSub",
+                        "at": [
+                          20,
+                          63
+                        ],
+                        "size": [
+                          710,
+                          24
+                        ],
+                        "font": "bandit_bsub",
+                        "color": "$bandit_dim"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "BtnClose",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          610,
+                          26
+                        ],
+                        "size": [
+                          120,
+                          28
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "note": "Not in the mockup: the paper has no frame to close, so a pencilled word in the corner, under the tape.",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "BtnCloseText",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                117,
+                                28
+                              ],
+                              "text": "#STR_OZL_TREE_CLOSE",
+                              "font": "bandit_legend",
+                              "color": "$bandit_dim",
+                              "align": "right",
+                              "note": "3 units short of the button's edge: the slanted last letter must not reach it."
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "BranchScroll",
+                        "stack": "BranchList",
+                        "at": [
+                          600,
+                          58
+                        ],
+                        "size": [
+                          160,
+                          58
+                        ],
+                        "hidden": true,
+                        "note": "Only when the faction has more than one branch (the skin shows it).",
+                        "rows": {
+                          "ozl_bandit_branch_row": {
+                            "row": {
+                              "name": "OZL_BanditBranchRow",
+                              "h": 26,
+                              "note": "A branch: RowHit is clicked (the menu renames it branch:<id>); the open one is underlined in red.",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "RowHit",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      150,
+                                      26
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    }
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RowName",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      110,
+                                      26
+                                    ],
+                                    "font": "bandit_branch",
+                                    "color": "$bandit_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RowCount",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": "fill",
+                                    "h": 26,
+                                    "font": "bandit_branch",
+                                    "color": "$bandit_dim",
+                                    "align": "right"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "RowPick",
+                                    "at": [
+                                      0,
+                                      23
+                                    ],
+                                    "size": [
+                                      150,
+                                      1.5
+                                    ],
+                                    "hidden": true,
+                                    "color": "$bandit_bad"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "TreeLegend",
+                        "at": [
+                          0,
+                          818
+                        ],
+                        "size": [
+                          760,
+                          34
+                        ],
+                        "note": "The dashed line over it is in the page picture.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "LegendRow",
+                              "at": [
+                                16,
+                                6
+                              ],
+                              "size": [
+                                744,
+                                22
+                              ],
+                              "note": "Lined up by the skin (FlowLater from OnShow) by the width of each item's TEXT plus 14: the labels are wider than their text, because a label sized to its text clips the top of a slanted last letter.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegLocked",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegLockedBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "set": "ozl_bandit",
+                                          "image": "legend_box",
+                                          "color": "$bandit_faint"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegLockedText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_LOCKED",
+                                          "font": "bandit_legend",
+                                          "color": "$bandit_dim"
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegShort",
+                                    "at": [
+                                      92,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegShortBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$bandit_bad"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegShortText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_SHORT",
+                                          "font": "bandit_legend",
+                                          "color": "$bandit_dim"
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegOpen",
+                                    "at": [
+                                      232,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegOpenBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$bandit_acc"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegOpenText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_OPEN",
+                                          "font": "bandit_legend",
+                                          "color": "$bandit_dim"
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegDone",
+                                    "at": [
+                                      470,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegDoneBox",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$bandit_ok"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegDoneText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_DONE",
+                                          "font": "bandit_legend",
+                                          "color": "$bandit_dim"
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAll",
+                                    "at": [
+                                      600,
+                                      0
+                                    ],
+                                    "size": [
+                                      280,
+                                      22
+                                    ],
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAllMark",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            34,
+                                            12
+                                          ],
+                                          "set": "ozl_bandit",
+                                          "image": "legend_all",
+                                          "color": "$bandit_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAllText",
+                                          "at": [
+                                            40,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_ALL",
+                                          "font": "bandit_legend",
+                                          "color": "$bandit_dim"
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAny",
+                                    "at": [
+                                      712,
+                                      0
+                                    ],
+                                    "size": [
+                                      284,
+                                      22
+                                    ],
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAnyMark",
+                                          "at": [
+                                            0,
+                                            5
+                                          ],
+                                          "size": [
+                                            38,
+                                            12
+                                          ],
+                                          "set": "ozl_bandit",
+                                          "image": "legend_any",
+                                          "color": "$bandit_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAnyText",
+                                          "at": [
+                                            44,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_ANY",
+                                          "font": "bandit_legend",
+                                          "color": "$bandit_dim"
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                }
+                              ],
+                              "color": "$none"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "TreeTemplates",
+                        "stack": "TreeTemplateList",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          100,
+                          20
+                        ],
+                        "hidden": true,
+                        "note": "Holds no rows: it only declares the row files of the lists that are raw scrolls (pool, card) and those the menu creates outside the lists.",
+                        "rows": {
+                          "ozl_bandit_pool_row": {
+                            "row": {
+                              "name": "OZL_BanditPoolRow",
+                              "h": 32,
+                              "note": "One line of the pot (.prow of the paper block): the name, the tally marks, the number at the right. The skin (PaintPoolRow) puts the marks (TallyMark0..7: tens as crossed squares, a five as four struck bars, the rest as bars) into PoolTally, shifts the line as the mockup's nth-child margins do, strikes a zero through, and shows a number over 60 big and double-underlined (PoolValueBig, PoolValueLine1/2) instead of marks.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PoolLine",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      652,
+                                      32
+                                    ],
+                                    "note": "Everything of the line; the skin moves it down by the margins of the rows above (2 units every third row).",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "PoolName",
+                                          "at": [
+                                            0,
+                                            1
+                                          ],
+                                          "size": [
+                                            300,
+                                            30
+                                          ],
+                                          "font": "bandit_pool",
+                                          "color": "$bandit_txt",
+                                          "note": "Wider than the 190 of the mockup's .pn: a TextWidget clips its text at its box."
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "PoolNameStrike",
+                                          "at": [
+                                            0,
+                                            17
+                                          ],
+                                          "size": [
+                                            10,
+                                            1
+                                          ],
+                                          "hidden": true,
+                                          "color": "$bandit_dim"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "PoolTally",
+                                          "at": [
+                                            200,
+                                            0
+                                          ],
+                                          "size": [
+                                            420,
+                                            32
+                                          ],
+                                          "note": "The marks, placed by the skin: x from the mockup's flex row (gap 10, a ten 20 wide with 2 of margin each side).",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark0",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark1",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark2",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark3",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark4",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark5",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark6",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "TallyMark7",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  24,
+                                                  24
+                                                ],
+                                                "set": "ozl_bandit",
+                                                "image": "tally_ten",
+                                                "color": "$bandit_txt",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ],
+                                          "color": "$none"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "PoolValue",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            649,
+                                            33
+                                          ],
+                                          "font": "bandit_pool_value",
+                                          "color": "$bandit_txt",
+                                          "align": "right",
+                                          "note": "Ends 3 units short of the line: the list clips at the line's end (stand 2026-10-31: a 0 there lost its right half), and Caveat's last digit reaches past its advance."
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "PoolValueBig",
+                                          "at": [
+                                            0,
+                                            -5
+                                          ],
+                                          "size": [
+                                            649,
+                                            43
+                                          ],
+                                          "font": "bandit_pool_many",
+                                          "color": "$bandit_txt",
+                                          "align": "right",
+                                          "hidden": true,
+                                          "note": "A number over 60 (.prow.many .pv): 34 px instead of 26."
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "PoolValueStrike",
+                                          "at": [
+                                            3,
+                                            17
+                                          ],
+                                          "anchor": "right",
+                                          "size": [
+                                            10,
+                                            1
+                                          ],
+                                          "color": "$bandit_dim",
+                                          "hidden": true
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "PoolValueLine1",
+                                          "at": [
+                                            3,
+                                            32
+                                          ],
+                                          "anchor": "right",
+                                          "size": [
+                                            10,
+                                            2.5
+                                          ],
+                                          "color": "$bandit_txt",
+                                          "hidden": true,
+                                          "note": "The double underline of a big number (underline double, 4 px below), sized to it by the skin."
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "PoolValueLine2",
+                                          "at": [
+                                            3,
+                                            36
+                                          ],
+                                          "anchor": "right",
+                                          "size": [
+                                            10,
+                                            2.5
+                                          ],
+                                          "color": "$bandit_txt",
+                                          "hidden": true
+                                        }
+                                      }
+                                    ],
+                                    "color": "$none"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_bandit_cost_row": {
+                            "row": {
+                              "name": "OZL_BanditCostRow",
+                              "h": 28,
+                              "note": "A cost line of the card: the name and 'have / need' (or 'need' alone when paid or not known); what is short is underlined. 26 high plus the 2 the mockup leaves between the lines of a block. The cost block of the card sits 5 units left (.card > div:nth-child(3n)), so the name starts at 3, not 8, and the number ends 5 units short of the edge.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "CostName",
+                                    "at": [
+                                      3,
+                                      0
+                                    ],
+                                    "size": [
+                                      540,
+                                      26
+                                    ],
+                                    "font": "bandit_crow",
+                                    "color": "$bandit_txt"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CostValue",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      650,
+                                      26
+                                    ],
+                                    "font": "bandit_crow",
+                                    "color": "$bandit_txt",
+                                    "align": "right",
+                                    "note": "Ends 2 units short of the edge (5 for the block's shift, 3 back so the slanted last glyph is not cut by the box)."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CostValueLine",
+                                    "at": [
+                                      2,
+                                      24
+                                    ],
+                                    "anchor": "right",
+                                    "size": [
+                                      10,
+                                      2
+                                    ],
+                                    "color": "$bandit_bad",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_bandit_opens_chip": {
+                            "row": {
+                              "name": "OZL_BanditOpensChip",
+                              "h": 25,
+                              "note": "A node this one opens: a word with a dashed underline. The menu lines the chips up and stretches ChipHit and ChipLine to each chip's width; a hidden node's chip has no ChipHit.",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "ChipHit",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      200,
+                                      25
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: a style-less button paints a light box under the mouse."
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "ChipText",
+                                    "at": [
+                                      4,
+                                      0
+                                    ],
+                                    "w": 600,
+                                    "h": 25,
+                                    "font": "bandit_opens",
+                                    "color": "$bandit_txt",
+                                    "note": "Wider than any chip text on purpose: a label sized to its text clips the slanted last letter; FlowLater lines the chips up by GetTextSize, not by this box."
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "ChipLine",
+                                    "at": [
+                                      0,
+                                      24
+                                    ],
+                                    "size": [
+                                      200,
+                                      1
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/bandit/dash_ca.paa",
+                                    "stretch": false,
+                                    "color": "$bandit_dim"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_bandit_tier_label": {
+                            "row": {
+                              "name": "OZL_BanditTierLabel",
+                              "h": 1,
+                              "note": "A tier label; the menu puts the row's corner on the label's centre.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "TierText",
+                                    "at": [
+                                      -40,
+                                      -15
+                                    ],
+                                    "size": [
+                                      80,
+                                      30
+                                    ],
+                                    "font": "bandit_tier",
+                                    "color": "$bandit_dim",
+                                    "align": "center"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_bandit_or_label": {
+                            "row": {
+                              "name": "OZL_BanditOrLabel",
+                              "h": 1,
+                              "note": "The 'АБО' beside an 'any' diamond; the menu puts the row's corner on the diamond and colours the word like its line.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "OrText",
+                                    "at": [
+                                      12,
+                                      -8
+                                    ],
+                                    "size": [
+                                      60,
+                                      16
+                                    ],
+                                    "text": "#STR_OZL_TREE_OR",
+                                    "font": "bandit_or",
+                                    "color": "$bandit_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_bandit_price_chip": {
+                            "row": {
+                              "name": "OZL_BanditPriceChip",
+                              "h": 22,
+                              "note": "One line of a node's price: its coloured dot and the amount. The menu lines them up in NodePrice.",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "PriceChip",
+                                    "at": [
+                                      0,
+                                      9
+                                    ],
+                                    "size": [
+                                      6,
+                                      6
+                                    ],
+                                    "set": "ozl_bandit",
+                                    "image": "dot",
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PriceText",
+                                    "at": [
+                                      9,
+                                      0
+                                    ],
+                                    "w": 140,
+                                    "h": 22,
+                                    "font": "bandit_price",
+                                    "color": "$bandit_dim",
+                                    "note": "Wider than any amount on purpose (the slanted last digit); FlowLater lines the chips up by GetTextSize and NodePrice clips the rest."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "icon": {
+                  "name": "BlotA",
+                  "at": [
+                    600,
+                    92
+                  ],
+                  "size": [
+                    58,
+                    46
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "blot_a",
+                  "color": "$white",
+                  "note": "The ink blots, the doodles of the margins and the tape lie over everything and take no mouse."
+                }
+              },
+              {
+                "icon": {
+                  "name": "BlotB",
+                  "at": [
+                    1320,
+                    552
+                  ],
+                  "size": [
+                    56,
+                    50
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "blot_b",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "BlotC",
+                  "at": [
+                    96,
+                    806
+                  ],
+                  "size": [
+                    30,
+                    26
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "blot_c",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "DoodleSkull",
+                  "at": [
+                    650,
+                    696
+                  ],
+                  "size": [
+                    92,
+                    92
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "doodle_skull",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "DoodleKnife",
+                  "at": [
+                    690,
+                    350
+                  ],
+                  "size": [
+                    80,
+                    80
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "doodle_knife",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "DoodleArrow",
+                  "at": [
+                    466,
+                    731
+                  ],
+                  "size": [
+                    128,
+                    68
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "doodle_arrow",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "DoodleBang",
+                  "at": [
+                    552,
+                    682
+                  ],
+                  "size": [
+                    37.4,
+                    50
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "doodle_bang",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "DoodleSpiral",
+                  "at": [
+                    1436,
+                    116
+                  ],
+                  "size": [
+                    78,
+                    78
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "doodle_spiral",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "DoodleStar",
+                  "at": [
+                    854,
+                    144
+                  ],
+                  "size": [
+                    58,
+                    58
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "doodle_star",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "Tape",
+                  "at": [
+                    1448,
+                    2
+                  ],
+                  "size": [
+                    120,
+                    46
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "tape",
+                  "color": "$white",
+                  "note": "A strip of tape over the corner of the right page."
+                }
+              }
+            ],
+            "anchor": "center"
+          }
+        }
+      ]
+    }
+  }
+}

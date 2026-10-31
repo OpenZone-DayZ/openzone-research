@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the bandit tree window «Записи братви» (mockup: the shared paper block plus body[data-f=bandit]). Every name starts with 'bandit_' so the seven skin files never collide; only the bandit skin task edits this file (source/ui/SKINS.md).",
+  "note": "Tokens of the bandit tree window «Записи братви» (mockup: the shared paper block plus body[data-f=bandit]). Every name starts with 'bandit_' so the seven skin files never collide; only the bandit skin task edits this file (source/ui/SKINS.md). The pages, the scraps, the fog and the margin drawings carry their own colours (source/ui/bandit/); these are the colours of the live widgets over them. Font sizes are the mockup's CSS px x 1.156 (Caveat's cell, source/fonts/README.md). Alphas are the mockup's raised for the game's linear-light blending, solved over the paper (line_dim .6 -> .72, hover .12 -> .2).",
   "color": {
     "bandit_txt": [0.165, 0.125, 0.094, 1.0],
     "bandit_dim": [0.435, 0.361, 0.259, 1.0],
@@ -18,8 +18,40 @@
     "bandit_done_bg": [0.771, 0.76, 0.607, 1.0],
     "bandit_done_edge": [0.525, 0.616, 0.422, 1.0],
     "bandit_res_edge": [0.457, 0.503, 0.594, 1.0],
-    "bandit_line_dim": [0.435, 0.361, 0.259, 0.6],
+    "bandit_line_dim": [0.435, 0.361, 0.259, 0.72],
     "bandit_fog": [0.788, 0.722, 0.561, 1.0],
-    "bandit_paper_hi": [0.91, 0.863, 0.737, 1.0]
+    "bandit_paper_hi": [0.91, 0.863, 0.737, 1.0],
+    "bandit_page_r": [0.886, 0.839, 0.714, 1.0],
+    "bandit_hover": [0.122, 0.247, 0.525, 0.2]
+  },
+  "font": {
+    "bandit_title": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 46, "fixed": false},
+    "bandit_dev": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 21, "fixed": false},
+    "bandit_heading": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 35, "fixed": false},
+    "bandit_pool": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 28, "fixed": false},
+    "bandit_pool_value": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 30, "fixed": false},
+    "bandit_pool_many": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 39, "fixed": false},
+    "bandit_cname": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 42, "fixed": false},
+    "bandit_cmeta": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 23, "fixed": false},
+    "bandit_cstat": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 28, "fixed": false},
+    "bandit_cdesc": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 24, "fixed": false},
+    "bandit_sec": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 25, "fixed": false},
+    "bandit_crow": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 24, "fixed": false},
+    "bandit_opens": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 23, "fixed": false},
+    "bandit_button": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 37, "fixed": false},
+    "bandit_why": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 24, "fixed": false},
+    "bandit_bname": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 44, "fixed": false},
+    "bandit_bsub": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 22, "fixed": false},
+    "bandit_tier": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 25, "fixed": false},
+    "bandit_legend": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 20, "fixed": false},
+    "bandit_tip": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 22, "fixed": false},
+    "bandit_node": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 23, "fixed": false},
+    "bandit_price": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 21, "fixed": false},
+    "bandit_mark": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 39, "fixed": false},
+    "bandit_mark_small": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 18, "fixed": false},
+    "bandit_or": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 13, "fixed": false},
+    "bandit_empty": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 28, "fixed": false},
+    "bandit_empty_hint": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 22, "fixed": false},
+    "bandit_branch": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 23, "fixed": false}
   }
 }

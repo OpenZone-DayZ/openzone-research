@@ -1,0 +1,1 @@
+{"ops":[{"op":"text","name":"NodeName0","nth":1,"text":"Навідка"},{"op":"show","name":"NodeSel","nth":1},{"op":"text","name":"NodePriceText","nth":1,"text":"Досліджено"},{"op":"show","name":"NodePriceText","nth":1},{"op":"show","name":"NodeMark","nth":1}]}

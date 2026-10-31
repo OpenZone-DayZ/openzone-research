@@ -1,0 +1,269 @@
+{
+  "layout": "ozl_node_bandit",
+  "note": "One node of the bandit window: a torn scrap of paper 176x64 lying in a 216x104 cell from (20, 20), so the scrap's centre is (108, 52) -- the skin's AnchorX/AnchorY. NodeShape is the scrap picture with 12 units of room for its turn; its five turned variants are the skin's Shapes, picked per node by ShapeOfNode (from the node's id, so a scrap keeps its turn when the fog moves), tinted paler when locked. NodeRing (the blue ink ring of an available node) and NodeSel (the red dashed one of the selected node) are drawn round it, turned -3 degrees. Name in two lines, price line (chips placed by the menu from ozl_bandit_price_chip, or NodePriceText for 'Досліджено' / 'Лишилось m:ss'), the dashed progress line under the scrap while researching, and the mark above the right corner: a green tick (NodeMark), 'в ділі' (NodeMarkText), or a small '?' for a locked node (NodeMarkQuery). NodeHit is the style-less button UNDER the scrap: the menu renames it node:<id>. Every other widget ignores the pointer (containers are transparent panels for that: a frame takes the pointer), except NodeBody, which holds NodeHit and so lies under it.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        216,
+        104
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it is under it and only sees the cell's margins. EVERY other widget of the node ignores the pointer -- a frame does not by default and swallowed the hover in the middle of the card (stand, 2026-10-31).",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    20,
+                    20
+                  ],
+                  "size": [
+                    176,
+                    64
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "The node's only pointer target: a button with style Empty (a style-less one paints a light box under the mouse), under the scrap picture."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    8,
+                    8
+                  ],
+                  "size": [
+                    200,
+                    88
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "scrap_1",
+                  "color": "$white",
+                  "note": "The scrap with 12 units of room for its turn; the skin's Shapes (scrap_0..4) go into the slots and ShapeOfNode picks one per node."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeRing",
+                  "at": [
+                    2,
+                    4
+                  ],
+                  "size": [
+                    212,
+                    96
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "ring",
+                  "color": "$bandit_acc",
+                  "hidden": true
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    2,
+                    4
+                  ],
+                  "size": [
+                    212,
+                    96
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "ring_dash",
+                  "color": "$bandit_bad",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    30,
+                    24
+                  ],
+                  "size": [
+                    150,
+                    44
+                  ],
+                  "note": "The name in two lines, 19 apart (line-height .95): the menu word-wraps it into NodeName0 and NodeName1 (a MultilineTextWidget ignores the exact text size with the mod's bitmap fonts).",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          150,
+                          23
+                        ],
+                        "font": "bandit_node",
+                        "color": "$bandit_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0,
+                          19
+                        ],
+                        "size": [
+                          150,
+                          23
+                        ],
+                        "font": "bandit_node",
+                        "color": "$bandit_txt",
+                        "hidden": true
+                      }
+                    }
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    30,
+                    62
+                  ],
+                  "size": [
+                    150,
+                    22
+                  ],
+                  "note": "The menu puts the price chips (ozl_bandit_price_chip) in a row here.",
+                  "color": "$none"
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    30,
+                    62
+                  ],
+                  "size": [
+                    150,
+                    22
+                  ],
+                  "font": "bandit_price",
+                  "color": "$bandit_dim",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    30,
+                    86
+                  ],
+                  "size": [
+                    150,
+                    3
+                  ],
+                  "hidden": true,
+                  "children": [
+                    {
+                      "image": {
+                        "name": "NodeBarTrack",
+                        "at": [
+                          0,
+                          2
+                        ],
+                        "size": [
+                          150,
+                          1
+                        ],
+                        "file": "OpenZone_Research/gui/textures/tree/bandit/dash_ca.paa",
+                        "stretch": false,
+                        "color": "$bandit_edge",
+                        "note": "A dashed line: the tile repeats, it is not stretched."
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "NodeBarFill",
+                        "size": [
+                          0,
+                          2
+                        ],
+                        "color": "$bandit_bad"
+                      }
+                    }
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    172,
+                    4
+                  ],
+                  "size": [
+                    26,
+                    30
+                  ],
+                  "set": "ozl_bandit",
+                  "image": "tick",
+                  "color": "$bandit_ok",
+                  "hidden": true
+                }
+              },
+              {
+                "label": {
+                  "name": "NodeMarkText",
+                  "at": [
+                    170,
+                    0
+                  ],
+                  "size": [
+                    120,
+                    46
+                  ],
+                  "font": "bandit_mark",
+                  "color": "$bandit_bad",
+                  "hidden": true
+                }
+              },
+              {
+                "label": {
+                  "name": "NodeMarkQuery",
+                  "at": [
+                    170,
+                    21
+                  ],
+                  "size": [
+                    20,
+                    20
+                  ],
+                  "text": "?",
+                  "font": "bandit_mark_small",
+                  "color": "$bandit_faint",
+                  "hidden": true
+                }
+              }
+            ],
+            "color": "$none",
+            "click": true
+          }
+        }
+      ]
+    }
+  }
+}

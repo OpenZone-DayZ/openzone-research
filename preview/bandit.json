@@ -1,0 +1,23 @@
+{
+  "note": "Preview gallery of the bandit tree window («Записи братви») for ui_gallery index=preview/bandit.json. The window's root is the whole host, the 1600x900 stage centred in it. A fixture only sets texts, adds rows and shows parts: what the skin does at run time (the title and the pot heading of the player's language, the tally marks and the shifts of the pool lines, the turned scraps (ShapeOfNode), the wavy underlines sized to their words, the description lines in their holders, the button moved by the 'opens' block) needs the live menu -- look at it with world_exec oz_research treeui owner=bandit. A fixture travels to the bridge as one JSON string of at most ~1000 bytes on the wire.",
+  "entries": [
+    {
+      "name": "bandit-window",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_bandit.layout",
+      "host": "1600 900",
+      "fixture": "preview/bandit-window.json"
+    },
+    {
+      "name": "bandit-node",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_bandit.layout",
+      "host": "216 104",
+      "fixture": "preview/bandit-node.json"
+    },
+    {
+      "name": "bandit-node-work",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_bandit.layout",
+      "host": "216 104",
+      "fixture": "preview/bandit-node-work.json"
+    }
+  ]
+}
