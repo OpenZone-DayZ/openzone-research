@@ -1,0 +1,6 @@
+{
+  "comment": "Placeholder until the skin is drawn: one 8x8 transparent sprite, so the imageset that config.cpp registers exists and loads.",
+  "sprites": [
+    { "name": "blank", "w": 8, "h": 8, "html": "" }
+  ]
+}
