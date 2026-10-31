@@ -15,20 +15,8 @@ the CSS `content:` texts) and the design `E:\openzone\docs\specs\2026-10-31-rese
   Ukrainian text; `english` holds the English one (the series' rule).
 - Ukrainian text uses the LATIN capital I (U+0049) wherever a Cyrillic capital І
   (U+0406) would stand: the vanilla fonts draw U+0406 as a missing glyph (skill,
-  gui-layouts section 25). Lower-case і ї є and capital Ї Є Ґ are fine, except in a
-  name the game upper-cases (the next point). The tables below show every value
-  exactly as it is stored.
-- Names the game upper-cases take the Latin i for the lower-case і. The `displayName` of
-  every item, station, module, sample and carrier in `config.cpp`, and the `name` of an
-  attachment group, reach the screen upper-cased: the vanilla inventory runs
-  `GetDisplayName()` through `ToUpper` before a header (skill, gui-layouts section 25), and
-  an upper-casing that knows Cyrillic -- OpenZone Storage's `OZS_Case` is one -- makes і
-  (U+0456) the capital І (U+0406), a box in the Metron faces. So those keys store the LATIN
-  i (U+0069) for every і, in `original` and in every non-English column (`english` is
-  untouched): it looks the same and upper-cases to the Latin I. Descriptions (`..._desc`)
-  are not upper-cased and keep the Cyrillic і; so does any key that only our own windows
-  show, because their `OZL_Text.Upper` makes the Latin I itself. The price: a name matched
-  by its Cyrillic spelling (a search box, a sort key) no longer equals the stored one.
+  gui-layouts section 25). Lower-case і ї є and capital Ї Є Ґ are fine. The tables
+  below show every value exactly as it is stored.
 - A value never holds an ASCII double quote (English uses 'single quotes'), a line
   break, or a glyph outside Latin, Cyrillic, `«»` `—` `·` `№` `©` and plain
   punctuation. Where the mockup used something else, the glyph is dropped or replaced;
