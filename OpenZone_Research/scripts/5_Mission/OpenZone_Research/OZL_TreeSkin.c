@@ -1,12 +1,12 @@
-// Вікно дерева однієї фракції ("скин"): дані й гачки.
+// Вікно дерева однієї фракції ("скін"): дані й гачки.
 //
 // Меню одне на всі сім вікон (OZL_TreeMenu): воно знаходить віджети за
 // ролями (TreeScroll, CardName, BtnResearch...), розкладає дерево
 // (OZL_TreePlan), малює зв'язки (OZL_TreeLines) і заповнює картку. Чим вікна
 // відрізняються -- розкладкою, формою вузла, напрямком дерева, палітрою,
 // мітками, -- тим і є цей клас: поля з даними і віртуальні гачки, які
-// працюють і без перекриття. Скин перекриває лише те, що в нього інакше.
-// Повний опис ролей і гачків для авторів скинів -- source/ui/SKINS.md.
+// працюють і без перекриття. Скін перекриває лише те, що в нього інакше.
+// Повний опис ролей і гачків для авторів скінів -- source/ui/SKINS.md.
 //
 // Сервер шле вже розв'язаний id (OZL_TreeView.Skin), один із семи. Id, якого
 // клієнт не знає, -- помилка в лозі й тетрадь neutral (захист, а не режим).
@@ -56,6 +56,8 @@ class OZL_TreeSkin
     int LineLit  = ARGB(255, 185, 214, 162);   // зазвичай = Txt
     int LineHl   = ARGB(255, 228, 163,  60);   // зазвичай = Acc
     int Lcd      = ARGB(255,  15,  26,  18);   // тло дерева: заливка ромба "АБО"
+    // Колір туману: меню фарбує ним TreeFog і TreeFogEdge (SetColor), тож
+    // колір у розкладці для них не важить.
     int FogColor = ARGB(255,  14,  24,  17);
 
     // --- зв'язки
@@ -120,7 +122,7 @@ class OZL_TreeSkin
     }
 
     // ------------------------------------------------------------------
-    // Гачки. Кожен працює й так; скин перекриває тільки своє.
+    // Гачки. Кожен працює й так; скін перекриває тільки своє.
     // ------------------------------------------------------------------
 
     // Слот NodeShape для статусу (locked / short / available / researching /
@@ -187,7 +189,9 @@ class OZL_TreeSkin
 
     // Мітка вузла: слот картинки в NodeMark (-1 -- нема) і текст у
     // NodeMarkText ("" -- нема). Типово: замок / галка / крапка ozl_common,
-    // якщо скин поклав їх у Marks у порядку lock, check, dot.
+    // і лише якщо в Marks щонайменше три слоти в порядку lock, check, dot;
+    // менше -- типово -1 завжди, тож скін із однією-двома мітками перекриває
+    // MarkOf сам (neutral: одна галка).
     int MarkOf(string status)
     {
         if (Marks.Count() < 3)
@@ -403,6 +407,23 @@ class OZL_TreeSkin
         return "";
     }
 
+    // Чіп "Відкриває" (рядок opens_chip): текст у ChipText і вигляд. fogged --
+    // заглушка туману "??? невідомо": меню вже сховало її ChipHit, вона не
+    // клацається. Типово: Txt, заглушка -- Dim; решту (підкреслення ChipLine,
+    // рамку) скін вирішує сам -- у мокапі папір прибирає заглушці підкреслення,
+    // а базовий стиль робить його пунктиром.
+    void PaintOpenChip(OZL_TreeMenu menu, Widget chip, string text, bool fogged)
+    {
+        TextWidget t = TextWidget.Cast(chip.FindAnyWidget("ChipText"));
+        if (!t)
+            return;
+        t.SetText(text);
+        if (fogged)
+            t.SetColor(Dim);
+        else
+            t.SetColor(Txt);
+    }
+
     // Кнопка "Дослідити": доступна чи ні. Під мишею меню показує
     // BtnResearchHover, якщо такий є.
     void PaintButton(OZL_TreeMenu menu, Widget btn, bool enabled)
@@ -481,7 +502,7 @@ class OZL_TreeSkin
         if (LineStyle == "sketch")
         {
             Sketch(canvas, xs, ys, width * 0.85, color, seed, dashed);
-            int faint = (((color >> 24) & 0xFF) * 45 / 100) << 24 | (color & 0x00FFFFFF);
+            int faint = ((((color >> 24) & 0xFF) * 45 / 100) << 24) | (color & 0x00FFFFFF);
             Sketch(canvas, xs, ys, width * 0.45, faint, seed + "~", false);
             return;
         }
@@ -616,7 +637,7 @@ class OZL_TreeSkin
     // Події. Меню кличе їх у свій час; типово нічого не роблять.
     // ------------------------------------------------------------------
 
-    // Вікно щойно створене і ролі знайдені: тут скин ставить свої статичні
+    // Вікно щойно створене і ролі знайдені: тут скін ставить свої статичні
     // тексти, запускає свої частини (бігучий рядок, помічник).
     void OnShow(OZL_TreeMenu menu)
     {
@@ -627,7 +648,8 @@ class OZL_TreeSkin
     {
     }
 
-    // Після кожного повного малювання (нова відповідь, інша гілка, вибір).
+    // Після кожного повного малювання: нова відповідь сервера, інша гілка.
+    // Вибір вузла повного малювання не робить -- на нього OnSelect.
     void OnPaint(OZL_TreeMenu menu)
     {
     }
@@ -648,11 +670,6 @@ class OZL_TreeSkin
 class OZL_TreeSkins
 {
     static const string FALLBACK = "neutral";
-
-    static bool Known(string id)
-    {
-        return id == "ecolog" || id == "clearsky" || id == "duty" || id == "freedom" || id == "sop" || id == "bandit" || id == "neutral";
-    }
 
     static OZL_TreeSkin Make(string id)
     {

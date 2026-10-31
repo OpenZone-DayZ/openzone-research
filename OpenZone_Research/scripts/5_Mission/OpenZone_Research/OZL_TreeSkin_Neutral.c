@@ -23,6 +23,7 @@ class OZL_TreeSkin_Neutral : OZL_TreeSkin
     int CardLocked;
     int Edge;
     int DimSoft;   // тьмяне з прозорістю .7: назва й ціна закритого вузла
+    int Faint;     // --faint: "??? невідомо" серед "Відкриває"
 
     void OZL_TreeSkin_Neutral()
     {
@@ -51,6 +52,7 @@ class OZL_TreeSkin_Neutral : OZL_TreeSkin
         CardColor  = ARGB(255, 246, 241, 226);
         CardLocked = ARGB(255, 241, 234, 216);
         DimSoft    = ARGB(179, 111,  92,  66);
+        Faint      = ARGB(255, 142, 126, 100);
 
         // Клітинка 20 одиниць, лінії від (6, 6), синя (.content .bg мокапа).
         GridStep  = 20;
@@ -173,6 +175,22 @@ class OZL_TreeSkin_Neutral : OZL_TreeSkin
             if (verdict < 0)
                 menu.FitLater(TextWidget.Cast(row.FindAnyWidget("CostValue")), line, 0, 1);
         }
+    }
+
+    // Заглушка туману серед "Відкриває" -- блідим (--faint) і без пунктиру:
+    // мокап для паперу пише .opens a.fogged { border: none }.
+    override void PaintOpenChip(OZL_TreeMenu menu, Widget chip, string text, bool fogged)
+    {
+        super.PaintOpenChip(menu, chip, text, fogged);
+        if (fogged)
+        {
+            TextWidget t = TextWidget.Cast(chip.FindAnyWidget("ChipText"));
+            if (t)
+                t.SetColor(Faint);
+        }
+        Widget line = chip.FindAnyWidget("ChipLine");
+        if (line)
+            line.Show(!fogged);
     }
 
     // Обведена ручкою кнопка; неактивна -- без обведення, тьмяна й закреслена.
