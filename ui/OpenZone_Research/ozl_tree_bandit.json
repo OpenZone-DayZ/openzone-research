@@ -1262,7 +1262,7 @@
                               "name": "CardFoot",
                               "class": "FrameWidgetClass",
                               "at": [
-                                0,
+                                -5,
                                 468
                               ],
                               "size": [
@@ -1272,7 +1272,7 @@
                               "props": {
                                 "clipchildren": 0
                               },
-                              "note": "The button and the reason under it; the skin moves it 5 units left when the card has its 'opens' block (.card > div:nth-child(3n)). Does not clip: the ink ring sticks out.",
+                              "note": "The button and the reason under it, from 5 units left of the card to its right end: the mockup's foot is the card's 6th block when the node opens something (.card > div:nth-child(3n) { margin-left: -5px }), the usual case; a node that opens nothing has it 5 narrower on the left there. Does not clip: the ink ring sticks out.",
                               "children": [
                                 {
                                   "icon": {
@@ -1549,12 +1549,12 @@
                           0
                         ],
                         "size": [
-                          84,
+                          86,
                           818
                         ],
                         "file": "OpenZone_Research/gui/textures/tree/bandit/tear_r_ca.paa",
                         "color": "$white",
-                        "note": "The desk where the torn right edge and the torn-off corner took the paper away: over the tree's right end, so its fog, scraps and scrollbars end at the tear as the mockup's clip-path ends them."
+                        "note": "The desk where the torn right edge and the torn-off corner took the paper away: over the tree's right end, so its fog, scraps and scrollbars end at the tear as the mockup's clip-path ends them. 2 units wider than the page's rest (760): the picture's last 2 columns are clear, so the texture's wrap leaves no seam on its first; they lie past the tree's 760, over the same desk."
                       }
                     },
                     {
@@ -2049,7 +2049,7 @@
                             "row": {
                               "name": "OZL_BanditPoolRow",
                               "h": 32,
-                              "note": "One line of the pot (.prow of the paper block): the name, the tally marks, the number at the right. The skin (PaintPoolRow) puts the marks (TallyMark0..7: tens as crossed squares, a five as four struck bars, the rest as bars) into PoolTally, shifts the line as the mockup's nth-child margins do, strikes a zero through, and shows a number over 60 big and double-underlined (PoolValueBig, PoolValueLine1/2) instead of marks.",
+                              "note": "One line of the pot (.prow of the paper block): the name, the tally marks, the number at the right. The skin (PaintPoolRow) puts the marks (TallyMark0..7: tens as crossed squares, a five as four struck bars, the rest as bars) into PoolTally, shifts the line as the mockup's nth-child margins do (PoolLine down, PoolShift sideways: the number stays at the right), strikes a zero through, and shows a number over 60 big and double-underlined (PoolValueBig, PoolValueLine1/2) instead of marks.",
                               "children": [
                                 {
                                   "panel": {
@@ -2065,183 +2065,200 @@
                                     "note": "Everything of the line; the skin moves it down by the margins of the rows above (2 units every third row).",
                                     "children": [
                                       {
-                                        "label": {
-                                          "name": "PoolName",
+                                        "panel": {
+                                          "name": "PoolShift",
                                           "at": [
                                             0,
-                                            1
-                                          ],
-                                          "size": [
-                                            300,
-                                            30
-                                          ],
-                                          "font": "bandit_pool",
-                                          "color": "$bandit_txt",
-                                          "note": "Wider than the 190 of the mockup's .pn: a TextWidget clips its text at its box."
-                                        }
-                                      },
-                                      {
-                                        "panel": {
-                                          "name": "PoolNameStrike",
-                                          "at": [
-                                            0,
-                                            17
-                                          ],
-                                          "size": [
-                                            10,
-                                            1
-                                          ],
-                                          "hidden": true,
-                                          "color": "$bandit_dim"
-                                        }
-                                      },
-                                      {
-                                        "panel": {
-                                          "name": "PoolTally",
-                                          "at": [
-                                            200,
                                             0
                                           ],
                                           "size": [
-                                            420,
+                                            652,
                                             32
                                           ],
-                                          "note": "The marks, placed by the skin: x from the mockup's flex row (gap 10, a ten 20 wide with 2 of margin each side).",
+                                          "note": "The name, its strike and the marks: what the mockup's padding-left moves; the skin moves only this.",
                                           "children": [
                                             {
-                                              "icon": {
-                                                "name": "TallyMark0",
+                                              "label": {
+                                                "name": "PoolName",
                                                 "at": [
                                                   0,
-                                                  0
+                                                  1
                                                 ],
                                                 "size": [
-                                                  24,
-                                                  24
+                                                  300,
+                                                  30
                                                 ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
+                                                "font": "bandit_pool",
                                                 "color": "$bandit_txt",
-                                                "hidden": true
+                                                "note": "Wider than the 190 of the mockup's .pn: a TextWidget clips its text at its box."
                                               }
                                             },
                                             {
-                                              "icon": {
-                                                "name": "TallyMark1",
+                                              "panel": {
+                                                "name": "PoolNameStrike",
                                                 "at": [
                                                   0,
-                                                  0
+                                                  17
                                                 ],
                                                 "size": [
-                                                  24,
-                                                  24
+                                                  10,
+                                                  1
                                                 ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
+                                                "hidden": true,
+                                                "color": "$bandit_dim"
                                               }
                                             },
                                             {
-                                              "icon": {
-                                                "name": "TallyMark2",
+                                              "panel": {
+                                                "name": "PoolTally",
                                                 "at": [
-                                                  0,
+                                                  200,
                                                   0
                                                 ],
                                                 "size": [
-                                                  24,
-                                                  24
+                                                  420,
+                                                  32
                                                 ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
-                                              }
-                                            },
-                                            {
-                                              "icon": {
-                                                "name": "TallyMark3",
-                                                "at": [
-                                                  0,
-                                                  0
+                                                "note": "The marks, placed by the skin: x from the mockup's flex row (gap 10, a ten 20 wide with 2 of margin each side).",
+                                                "children": [
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark0",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark1",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark2",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark3",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark4",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark5",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark6",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "TallyMark7",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        24,
+                                                        24
+                                                      ],
+                                                      "set": "ozl_bandit",
+                                                      "image": "tally_ten",
+                                                      "color": "$bandit_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
                                                 ],
-                                                "size": [
-                                                  24,
-                                                  24
-                                                ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
-                                              }
-                                            },
-                                            {
-                                              "icon": {
-                                                "name": "TallyMark4",
-                                                "at": [
-                                                  0,
-                                                  0
-                                                ],
-                                                "size": [
-                                                  24,
-                                                  24
-                                                ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
-                                              }
-                                            },
-                                            {
-                                              "icon": {
-                                                "name": "TallyMark5",
-                                                "at": [
-                                                  0,
-                                                  0
-                                                ],
-                                                "size": [
-                                                  24,
-                                                  24
-                                                ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
-                                              }
-                                            },
-                                            {
-                                              "icon": {
-                                                "name": "TallyMark6",
-                                                "at": [
-                                                  0,
-                                                  0
-                                                ],
-                                                "size": [
-                                                  24,
-                                                  24
-                                                ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
-                                              }
-                                            },
-                                            {
-                                              "icon": {
-                                                "name": "TallyMark7",
-                                                "at": [
-                                                  0,
-                                                  0
-                                                ],
-                                                "size": [
-                                                  24,
-                                                  24
-                                                ],
-                                                "set": "ozl_bandit",
-                                                "image": "tally_ten",
-                                                "color": "$bandit_txt",
-                                                "hidden": true
+                                                "color": "$none"
                                               }
                                             }
                                           ],

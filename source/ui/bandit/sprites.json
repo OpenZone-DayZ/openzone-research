@@ -63,9 +63,10 @@
     },
     {
       "name": "tick",
-      "w": 26,
-      "h": 30,
-      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'><path d='M1.5 16.6L4.6 14.4L10.2 22.6L22.2 1.2L25.2 2.8L11.2 28.6Z' fill='#fff' stroke='#fff' stroke-width='.6' stroke-linejoin='round'/></svg>"
+      "w": 24,
+      "h": 26,
+      "pad": 2,
+      "html": "<div style='position:absolute;left:-1px;top:-11px;font-family:Caveat,\"Segoe Print\",\"Ink Free\",cursive;font-size:34px;line-height:normal;white-space:nowrap;color:#fff'>✓</div>"
     },
     {
       "name": "dot",
@@ -285,13 +286,13 @@
     },
     {
       "name": "tear_r",
-      "w": 84,
+      "w": 86,
       "h": 818,
       "size": [
         128,
         1024
       ],
-      "html": "<div style=\"position:absolute;left:0;top:0;width:84px;height:818px;overflow:hidden;clip-path:polygon(evenodd, -2px -2px, 86px -2px, 86px 820px, -2px 820px, -2px -2px, -676px 0px, 73.36px 0px, 84px 21.3px, 77.16px 68.16px, 84px 119.28px, 77.92px 187.44px, 84px 264.12px, 76.4px 349.32px, 84px 443.04px, 78.68px 528.24px, 84px 604.92px, 76.4px 673.08px, 84px 724.2px, 61.2px 749.76px, 49.8px 783.84px, 30.8px 805.14px, 19.4px 834.96px, 0.4px 852px, -676px 852px)\"><div style=\"position:absolute;inset:0;background:#2b1b10\"></div><div style=\"position:absolute;left:-1488px;top:-24px;width:1600px;height:900px\"><div style=\"position:absolute;left:28px;top:24px;width:1544px;height:852px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.6))\"><div style=\"position:absolute;left:0;top:0;width:760px;height:852px;background:#000;clip-path:polygon(3% 0, 100% 0, 100% 100%, 1% 100%, 0 96%, 1.2% 91%, 0.2% 86%, 1.4% 79%, 0 72%, 1% 64%, 0.3% 57%, 1.5% 49%, 0 42%, 1.1% 35%, 0.2% 27%, 1.3% 20%, 0 13%, 2.4% 9%, 1% 5%)\"></div><div style=\"position:absolute;left:760px;top:0;width:24px;height:852px;background:#000\"></div><div style=\"position:absolute;left:784px;top:0;width:760px;height:852px;background:#000;clip-path:polygon(0 0, 98.6% 0, 100% 2.5%, 99.1% 8%, 100% 14%, 99.2% 22%, 100% 31%, 99% 41%, 100% 52%, 99.3% 62%, 100% 71%, 99% 79%, 100% 85%, 97% 88%, 95.5% 92%, 93% 94.5%, 91.5% 98%, 89% 100%, 0 100%)\"></div></div></div></div>"
+      "html": "<div style=\"position:absolute;left:0;top:0;width:84px;height:818px;overflow:hidden\"><div style=\"position:absolute;left:0;top:0;width:84px;height:818px;clip-path:polygon(evenodd, -2px -2px, 86px -2px, 86px 820px, -2px 820px, -2px -2px, -676px 0px, 73.36px 0px, 84px 21.3px, 77.16px 68.16px, 84px 119.28px, 77.92px 187.44px, 84px 264.12px, 76.4px 349.32px, 84px 443.04px, 78.68px 528.24px, 84px 604.92px, 76.4px 673.08px, 84px 724.2px, 61.2px 749.76px, 49.8px 783.84px, 30.8px 805.14px, 19.4px 834.96px, 0.4px 852px, -676px 852px)\"><div style=\"position:absolute;inset:0;background:#2b1b10\"></div><div style=\"position:absolute;left:-1488px;top:-24px;width:1600px;height:900px\"><div style=\"position:absolute;left:28px;top:24px;width:1544px;height:852px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.6))\"><div style=\"position:absolute;left:0;top:0;width:760px;height:852px;background:#000;clip-path:polygon(3% 0, 100% 0, 100% 100%, 1% 100%, 0 96%, 1.2% 91%, 0.2% 86%, 1.4% 79%, 0 72%, 1% 64%, 0.3% 57%, 1.5% 49%, 0 42%, 1.1% 35%, 0.2% 27%, 1.3% 20%, 0 13%, 2.4% 9%, 1% 5%)\"></div><div style=\"position:absolute;left:760px;top:0;width:24px;height:852px;background:#000\"></div><div style=\"position:absolute;left:784px;top:0;width:760px;height:852px;background:#000;clip-path:polygon(0 0, 98.6% 0, 100% 2.5%, 99.1% 8%, 100% 14%, 99.2% 22%, 100% 31%, 99% 41%, 100% 52%, 99.3% 62%, 100% 71%, 99% 79%, 100% 85%, 97% 88%, 95.5% 92%, 93% 94.5%, 91.5% 98%, 89% 100%, 0 100%)\"></div></div></div></div></div>"
     },
     {
       "name": "desk",

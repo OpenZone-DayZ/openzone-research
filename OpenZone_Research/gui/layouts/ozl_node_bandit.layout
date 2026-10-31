@@ -137,7 +137,7 @@ FrameWidgetClass NodeCell {
     PanelWidgetClass NodePrice {
      visible 1
      ignorepointer 1
-     position 30 62
+     position 30 65
      size 150 22
      hexactpos 1
      vexactpos 1
@@ -150,7 +150,7 @@ FrameWidgetClass NodeCell {
     TextWidgetClass NodePriceText {
      visible 0
      ignorepointer 1
-     position 30 62
+     position 30 65
      size 150 22
      hexactpos 1
      vexactpos 1
@@ -209,11 +209,12 @@ FrameWidgetClass NodeCell {
       }
      }
     }
+    // The mockup's ✓ glyph (sprite tick, 24x26 + pad 2): its ink lies where the mockup's does, 1..22 and 12..36 into the .mark box at (170, 6).
     ImageWidgetClass NodeMark {
      visible 0
      ignorepointer 1
-     position 172 4
-     size 26 30
+     position 169 15
+     size 28 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -224,17 +225,36 @@ FrameWidgetClass NodeCell {
      mode blend
      "src alpha" 1
     }
+    // The first word of the mark; the mockup's .mark has no width, so «в ділі» wraps there into two lines -- the rest goes into NodeMarkText2 (the skin splits it).
     TextWidgetClass NodeMarkText {
      visible 0
      ignorepointer 1
-     position 170 0
-     size 120 46
+     position 170 7
+     size 120 43
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      color 0.69 0.165 0.102 1
      priority 9
+     text ""
+     font "OpenZone_Research/gui/fonts/ozl_hand72"
+     "exact text" 1
+     "exact text size" 39
+     "text halign" left
+     "text valign" center
+    }
+    TextWidgetClass NodeMarkText2 {
+     visible 0
+     ignorepointer 1
+     position 170 50
+     size 120 43
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     color 0.69 0.165 0.102 1
+     priority 10
      text ""
      font "OpenZone_Research/gui/fonts/ozl_hand72"
      "exact text" 1
@@ -252,7 +272,7 @@ FrameWidgetClass NodeCell {
      hexactsize 1
      vexactsize 1
      color 0.543 0.475 0.364 1
-     priority 10
+     priority 11
      text "?"
      font "OpenZone_Research/gui/fonts/ozl_hand48"
      "exact text" 1

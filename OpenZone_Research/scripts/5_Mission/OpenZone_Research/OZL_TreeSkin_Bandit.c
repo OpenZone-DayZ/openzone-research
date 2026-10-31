@@ -29,12 +29,6 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
     int DimSoft;   // тьмяне з прозорістю .8 (.7): назва й ціна закритого вузла
     int Faint;     // --faint: нуль у пулі, "??? невідомо" серед "Відкриває"
 
-    // Рядки пулу, які скін зробив сам замість чужих (SKINS.md, "Layout
-    // mix-up"): їх прибирає наступне малювання пулу.
-    protected ref array<Widget> m_Spares;
-    protected bool m_PoolPainted = false;
-    protected bool m_MixWarned = false;
-
     void OZL_TreeSkin_Bandit()
     {
         Named("bandit");
@@ -85,8 +79,6 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
         SegOn  = Bad;
         SegOff = Edge;
         TipPadX = 9;
-
-        m_Spares = new array<Widget>();
     }
 
     override int MarkOf(string status)
@@ -169,20 +161,43 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
     }
 
     // Знак питання закритого вузла -- менший і нижчий за інші мітки, тож має
-    // власний віджет (NodeMarkQuery).
+    // власний віджет (NodeMarkQuery). Слово мітки («в ділі») у мокапі стоїть
+    // у .mark без ширини, тож переноситься на кожному пробілі: перше слово --
+    // у NodeMarkText, решта -- рядком нижче, у NodeMarkText2. Різати рядок
+    // можна лише на пробілі: Substring рахує байти, пробіл -- один байт.
     override void PaintNode(OZL_TreeMenu menu, Widget cell, OZL_NodeView node, string status, bool selected)
     {
         super.PaintNode(menu, cell, node, status, selected);
         Widget query = cell.FindAnyWidget("NodeMarkQuery");
         if (query)
             query.Show(status == "locked");
+        TextWidget first = TextWidget.Cast(cell.FindAnyWidget("NodeMarkText"));
+        TextWidget second = TextWidget.Cast(cell.FindAnyWidget("NodeMarkText2"));
+        if (!first || !second)
+            return;
+        string mark = MarkTextOf(status);
+        int cut = mark.IndexOf(" ");
+        if (cut <= 0)
+        {
+            second.Show(false);
+            return;
+        }
+        first.SetText(mark.Substring(0, cut));
+        second.SetText(mark.Substring(cut + 1, mark.Length() - cut - 1));
+        second.SetColor(MarkColorOf(status));
+        second.Show(true);
     }
 
     // Зв'язок від руки (sketch() мокапа): штрих 0.85 ширини, а поверх тонкий
     // 0.45 з прозорістю .45 -- у лінійному світлі гри це 166 для повного
-    // кольору і 94 для тьмяного (мокапові .6 x .45).
+    // кольору і 94 для тьмяного (мокапові .6 x .45). Не "sketch" -- як у базі.
     override void DrawStroke(CanvasWidget canvas, array<float> xs, array<float> ys, float width, int color, bool dashed, string seed)
     {
+        if (LineStyle != "sketch")
+        {
+            super.DrawStroke(canvas, xs, ys, width, color, dashed, seed);
+            return;
+        }
         Sketch(canvas, xs, ys, width * 0.85, color, seed, dashed);
         int alpha = 166;
         if (color == LineDim)
@@ -198,22 +213,27 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
     // Рядок пулу: назва, палички, число. Нуль закреслено й бліде, понад 60 --
     // лише число, велике й двічі підкреслене. Рядки «гуляють» по відступах, як
     // у мокапа: кожен парний -- на 7 праворуч, кожен третій -- на 2 праворуч і
-    // на 2 нижче (і все, що під ним, теж).
+    // на 2 нижче (і все, що під ним, теж). Зсуваються лише рамки, що стоять у
+    // (0, 0): PoolLine униз, PoolShift (назва, її риска, палички) убік -- число
+    // праворуч лишається на місці, як від padding-left мокапа.
     override void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
     {
-        if (index == 0)
-            DropSpares();
-        m_PoolPainted = true;
-        Widget r = MineOrAgain(row);
-        if (!r)
+        // Чужий файл замість рядка (SKINS.md, "Layout mix-up"): меню вже
+        // пробувало вдруге й попередило в лозі; такий рядок не показуємо.
+        if (!row.FindAnyWidget("PoolLine"))
+        {
+            row.Show(false);
             return;
-        super.PaintPoolRow(menu, r, index, line, have, color);
-        // Велике число підкреслене під рядком, а рядки зсунуті донизу: рамка
-        // рядка не обрізає того, що виходить за її 32 одиниці.
-        r.ClearFlags(WidgetFlags.CLIPCHILDREN);
-        Widget lineBox = r.FindAnyWidget("PoolLine");
-        if (lineBox)
-            lineBox.ClearFlags(WidgetFlags.CLIPCHILDREN);
+        }
+        super.PaintPoolRow(menu, row, index, line, have, color);
+        // Велике число підкреслене під рядком, а рядки зсунуті донизу: рамки
+        // рядка не обрізають того, що виходить за його 32 одиниці.
+        row.ClearFlags(WidgetFlags.CLIPCHILDREN);
+        Widget lineBox = row.FindAnyWidget("PoolLine");
+        Widget shift = row.FindAnyWidget("PoolShift");
+        Unclip(lineBox);
+        Unclip(shift);
+        Unclip(row.FindAnyWidget("PoolTally"));
 
         int k = index + 1;
         float dx = 0;
@@ -223,14 +243,12 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
             dx = 7;
         int down = 2 * (k / 3);
         menu.PlaceUnits(lineBox, 0, down);
-        menu.PlaceUnits(r.FindAnyWidget("PoolName"), dx, 1);
-        menu.PlaceUnits(r.FindAnyWidget("PoolNameStrike"), dx, 17);
-        menu.PlaceUnits(r.FindAnyWidget("PoolTally"), 200 + dx, 0);
+        menu.PlaceUnits(shift, dx, 0);
 
         bool zero = have <= 0;
         bool many = have > 60;
-        TextWidget value = TextWidget.Cast(r.FindAnyWidget("PoolValue"));
-        TextWidget big = TextWidget.Cast(r.FindAnyWidget("PoolValueBig"));
+        TextWidget value = TextWidget.Cast(row.FindAnyWidget("PoolValue"));
+        TextWidget big = TextWidget.Cast(row.FindAnyWidget("PoolValueBig"));
         if (value)
         {
             value.Show(!many);
@@ -249,14 +267,14 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
 
         // Нуль закреслено -- окремо назву і число, як text-decoration мокапа;
         // довжину рисок міряє меню, коли текст уже розкладено.
-        Widget nameStrike = r.FindAnyWidget("PoolNameStrike");
+        Widget nameStrike = row.FindAnyWidget("PoolNameStrike");
         if (nameStrike)
         {
             nameStrike.Show(zero);
             if (zero)
-                menu.FitLater(TextWidget.Cast(r.FindAnyWidget("PoolName")), nameStrike, 0, 0);
+                menu.FitLater(TextWidget.Cast(row.FindAnyWidget("PoolName")), nameStrike, 0, 0);
         }
-        Widget valueStrike = r.FindAnyWidget("PoolValueStrike");
+        Widget valueStrike = row.FindAnyWidget("PoolValueStrike");
         if (valueStrike)
         {
             valueStrike.Show(zero);
@@ -265,7 +283,7 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
         }
         for (int u = 1; u <= 2; u++)
         {
-            Widget under = r.FindAnyWidget("PoolValueLine" + u.ToString());
+            Widget under = row.FindAnyWidget("PoolValueLine" + u.ToString());
             if (!under)
                 continue;
             under.Show(many);
@@ -273,50 +291,13 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
                 menu.FitLater(big, under, 0, 1);
         }
 
-        Tally(menu, r, have);
+        Tally(menu, row, have);
     }
 
-    // Рушій інколи віддає на шлях рядка віджети ІНШОГО файлу (SKINS.md,
-    // "Layout mix-up"; стенд 2026-10-31: другий рядок общаку прийшов рамкою
-    // чіпа clearsky). Чужий рядок ховається, а наш робиться ще раз поруч --
-    // до трьох спроб; не вийшло -- рядка нема (й один рядок у лозі).
-    protected Widget MineOrAgain(Widget row)
+    protected static void Unclip(Widget w)
     {
-        if (!row || row.FindAnyWidget("PoolLine"))
-            return row;
-        row.Show(false);
-        Widget list = row.GetParent();
-        Widget mine = null;
-        for (int t = 0; t < 3 && list && !mine; t++)
-        {
-            mine = GetGame().GetWorkspace().CreateWidgets(RowLayout("pool_row"), list);
-            if (mine && !mine.FindAnyWidget("PoolLine"))
-            {
-                mine.Unlink();
-                mine = null;
-            }
-        }
-        if (!m_MixWarned)
-        {
-            m_MixWarned = true;
-            string got = "made again";
-            if (!mine)
-                got = "NOT made again";
-            OZL_Log.Warn("tree: bandit pool row came back as '" + row.GetName() + "' (Layout mix-up); " + got);
-        }
-        if (mine)
-            m_Spares.Insert(mine);
-        return mine;
-    }
-
-    protected void DropSpares()
-    {
-        for (int i = 0; i < m_Spares.Count(); i++)
-        {
-            if (m_Spares[i])
-                m_Spares[i].Unlink();
-        }
-        m_Spares.Clear();
+        if (w)
+            w.ClearFlags(WidgetFlags.CLIPCHILDREN);
     }
 
     // Десятки -- перехрещені квадрати, п'ятірка -- чотири палички навскіс
@@ -352,12 +333,13 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
             Mark(menu, row, slot, "tally_" + rest.ToString(), x, -0.5, 6.6 * rest, 33, 8);
             slot++;
         }
-        while (slot < 8)
+        // Решту знаків рядка (скільки їх у розкладці) сховати.
+        Widget spare = row.FindAnyWidget("TallyMark" + slot.ToString());
+        while (spare)
         {
-            Widget spare = row.FindAnyWidget("TallyMark" + slot.ToString());
-            if (spare)
-                spare.Show(false);
+            spare.Show(false);
             slot++;
+            spare = row.FindAnyWidget("TallyMark" + slot.ToString());
         }
     }
 
@@ -426,9 +408,7 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
 
     // Хвилясті риски під назвою і під заголовками розділів -- завдовжки з
     // текст (рамка, що їх обрізає, стає шириною тексту); тримачі заголовків
-    // "Матеріали" й "Відкриває" -- видимі разом із ними; кнопка -- на 5
-    // одиниць ліворуч, коли в картці є блок "Відкриває" (тоді вона шоста
-    // дитина картки, .card > div:nth-child(3n)).
+    // "Матеріали" й "Відкриває" -- видимі разом із ними.
     override void OnSelect(OZL_TreeMenu menu, OZL_NodeView node, string status, bool canResearch)
     {
         if (!node)
@@ -440,15 +420,10 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
         Fit(menu, "CardOpensHead", "CardOpensHeadWave");
         Follow(menu, "CardItemsHeadRow", "CardItemsHead");
         Follow(menu, "CardOpensHeadRow", "CardOpensHead");
-        float dx = 0;
-        Widget opens = menu.Role("CardOpensHead");
-        if (opens && opens.IsVisible())
-            dx = -5;
-        menu.PlaceUnits(menu.Role("CardFoot"), dx, 468);
         menu.RefreshCard();
     }
 
-    // Опис щойно перенесено по рядках: тримачі рядків (CardDescRow0..9 --
+    // Опис щойно перенесено по рядках: тримачі рядків (CardDescRow0, 1, ... --
     // стос не зсуває дитину вбік, тож рядки на 9 одиниць углиб сидять у
     // тримачах) видимі разом зі своїми рядками, а тоді стос і прокрутка.
     override void OnWrapped(OZL_TreeMenu menu, Widget box)
@@ -456,13 +431,15 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
         Widget desc = menu.Role("CardDesc");
         if (!box || box != desc)
             return;
-        for (int i = 0; i < 10; i++)
+        int i = 0;
+        Widget holder = menu.Role("CardDescRow0");
+        Widget text = menu.Role("CardDesc0");
+        while (holder && text)
         {
-            Widget holder = menu.Role("CardDescRow" + i.ToString());
-            Widget text = menu.Role("CardDesc" + i.ToString());
-            if (!holder || !text)
-                break;
             holder.Show(text.IsVisible());
+            i++;
+            holder = menu.Role("CardDescRow" + i.ToString());
+            text = menu.Role("CardDesc" + i.ToString());
         }
         desc.Update();
         menu.RefreshCard();
@@ -491,8 +468,14 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
     // Легенда -- рядом за шириною текстів: її написи ширші за текст, бо
     // напис, що сам міряє себе по тексту, зрізає верхівку похилої останньої
     // літери.
+    // Хвиля під заголовком розділу виходить нижче за його 30-одиничного
+    // тримача (стенд 2026-10-31: тримач-панель її зрізав до верхніх дужок).
     override void OnShow(OZL_TreeMenu menu)
     {
+        Unclip(menu.Role("CardCostHeadRow"));
+        Unclip(menu.Role("CardItemsHeadRow"));
+        Unclip(menu.Role("CardTimeHeadRow"));
+        Unclip(menu.Role("CardOpensHeadRow"));
         bool title = Picture(menu, "TitleImg", OZL_Text.Words("STR_OZL_SKIN_BANDIT_TITLE_IMG"));
         Shown(menu, "TitleImg", title);
         TextWidget titleText = TextWidget.Cast(menu.Role("TitleText"));
@@ -507,16 +490,17 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
         menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
     }
 
-    // Список гілок -- лише коли їх більше однієї. Пул без жодного рядка не
-    // кличе PaintPoolRow -- тоді й прибрати зроблені скіном рядки.
+    // Список гілок -- лише коли їх більше однієї. Прокрутка пулу -- сира
+    // ScrollWidget, а меню оновлює лише стос PoolList: прокрутка сама не
+    // бачить, що рядків стало більше (скіл gui-layouts §31), тож оновити її тут.
     override void OnPaint(OZL_TreeMenu menu)
     {
         Widget branches = menu.Role("BranchScroll");
         if (branches)
             branches.Show(menu.BranchCount() > 1);
-        if (!m_PoolPainted)
-            DropSpares();
-        m_PoolPainted = false;
+        Widget pool = menu.Role("PoolScroll");
+        if (pool)
+            pool.Update();
     }
 
     // ------------------------------------------------------------------

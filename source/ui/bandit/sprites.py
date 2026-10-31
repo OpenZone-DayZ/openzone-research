@@ -192,11 +192,15 @@ def button() -> list[dict]:
 
 
 def marks() -> list[dict]:
-    """The tick of a completed node and the dot of a price chip, white (the neutral notebook's)."""
+    """The tick of a completed node and the dot of a price chip, white.
+
+    The tick is the mockup's own glyph: .node .mark is ✓ at 34 px in the paper font stack, which
+    has no ✓, so Chrome draws its fallback -- drawn here the same way. The sprite's box starts 1
+    unit right of and 11 below the .mark box (its ink, measured in the mockup, lies 1..22.5 and
+    12..36 inside that box): the node shows it at (170 + 1, 6 + 11) of the cell, pad 2."""
     return [
-        sprite("tick", 26, 30, "<svg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'>"
-               "<path d='M1.5 16.6L4.6 14.4L10.2 22.6L22.2 1.2L25.2 2.8L11.2 28.6Z' fill='#fff' stroke='#fff' "
-               "stroke-width='.6' stroke-linejoin='round'/></svg>"),
+        sprite("tick", 24, 26, "<div style='position:absolute;left:-1px;top:-11px;font-family:Caveat,\"Segoe Print\",\"Ink Free\",cursive;"
+               "font-size:34px;line-height:normal;white-space:nowrap;color:#fff'>\u2713</div>", pad=2),
         sprite("dot", 6, 6, "<div style='position:absolute;inset:0;border-radius:50%;background:#fff'></div>"),
     ]
 
@@ -268,16 +272,23 @@ def textures() -> list[dict]:
     # clips to a torn outline, so this lies over the tree's right end (page x 676..760, y 0..818)
     # and draws the desk with the notebook's shadow wherever the paper is gone. The desk's faint
     # stripes are left out: their tiling depends on the screen.
-    tear = ('<div style="position:absolute;left:0;top:0;width:84px;height:818px;overflow:hidden;'
+    # The texture repeats: its last texel column is sampled into its first (stand 2026-10-31: a
+    # 1-px dark seam along the patch's left edge, where the paper shows through). So the picture
+    # is 2 units wider than the patch and those 2 stay clear, like its first column (the shadow
+    # layer runs past the clip box, so the patch is cut at 84 first); TearR is as
+    # wide, its last 2 units lie past the page's 760 over the same desk, and the patch still
+    # covers the tree's scrollbar to the page's edge as before.
+    tear = ('<div style="position:absolute;left:0;top:0;width:84px;height:818px;overflow:hidden">'
+            '<div style="position:absolute;left:0;top:0;width:84px;height:818px;'
             f'clip-path:polygon(evenodd, -2px -2px, 86px -2px, 86px 820px, -2px 820px, -2px -2px, {tear_hole(676)})">'
             '<div style="position:absolute;inset:0;background:#2b1b10"></div>'
-            f'<div style="position:absolute;left:-1488px;top:-24px;width:1600px;height:900px">{spread_shadow()}</div></div>')
+            f'<div style="position:absolute;left:-1488px;top:-24px;width:1600px;height:900px">{spread_shadow()}</div></div></div>')
     return [
         {"name": "spread", "w": 1544, "h": 852, "size": [2048, 1024], "html": spread},
         {"name": "shadow", "w": 1600, "h": 900, "size": [1024, 512], "html": shadow},
         {"name": "fog_edge", "w": 748, "h": 80, "size": [512, 64], "html": fog_edge},
         {"name": "fog", "w": 748, "h": 250, "size": [512, 256], "html": fog},
-        {"name": "tear_r", "w": 84, "h": 818, "size": [128, 1024], "html": tear},
+        {"name": "tear_r", "w": 86, "h": 818, "size": [128, 1024], "html": tear},
         # The desk under the notebook (#stage of the paper skins), tiled at its own size; the
         # mockup's stripes run at 92 degrees, a tile needs them square.
         {"name": "desk", "w": 120, "h": 120, "size": [128, 128],

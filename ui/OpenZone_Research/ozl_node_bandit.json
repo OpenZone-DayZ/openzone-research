@@ -138,7 +138,7 @@
                   "name": "NodePrice",
                   "at": [
                     30,
-                    62
+                    65
                   ],
                   "size": [
                     150,
@@ -153,7 +153,7 @@
                   "name": "NodePriceText",
                   "at": [
                     30,
-                    62
+                    65
                   ],
                   "size": [
                     150,
@@ -212,17 +212,18 @@
                 "icon": {
                   "name": "NodeMark",
                   "at": [
-                    172,
-                    4
+                    169,
+                    15
                   ],
                   "size": [
-                    26,
+                    28,
                     30
                   ],
                   "set": "ozl_bandit",
                   "image": "tick",
                   "color": "$bandit_ok",
-                  "hidden": true
+                  "hidden": true,
+                  "note": "The mockup's ✓ glyph (sprite tick, 24x26 + pad 2): its ink lies where the mockup's does, 1..22 and 12..36 into the .mark box at (170, 6)."
                 }
               },
               {
@@ -230,11 +231,28 @@
                   "name": "NodeMarkText",
                   "at": [
                     170,
-                    0
+                    7
                   ],
                   "size": [
                     120,
-                    46
+                    43
+                  ],
+                  "font": "bandit_mark",
+                  "color": "$bandit_bad",
+                  "hidden": true,
+                  "note": "The first word of the mark; the mockup's .mark has no width, so «в ділі» wraps there into two lines -- the rest goes into NodeMarkText2 (the skin splits it)."
+                }
+              },
+              {
+                "label": {
+                  "name": "NodeMarkText2",
+                  "at": [
+                    170,
+                    50
+                  ],
+                  "size": [
+                    120,
+                    43
                   ],
                   "font": "bandit_mark",
                   "color": "$bandit_bad",

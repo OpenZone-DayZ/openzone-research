@@ -53,8 +53,8 @@ ImageSetClass {
   }
   ImageSetDefClass tick {
    Name "tick"
-   Pos 869 802
-   Size 39 45
+   Pos 976 802
+   Size 42 45
    Flags 0
   }
   ImageSetDefClass dot {
@@ -149,7 +149,7 @@ ImageSetClass {
   }
   ImageSetDefClass legend_box {
    Name "legend_box"
-   Pos 1002 802
+   Pos 1002 855
    Size 18 18
    Flags 0
   }
@@ -185,7 +185,7 @@ ImageSetClass {
   }
   ImageSetDefClass blot_c {
    Name "blot_c"
-   Pos 4 977
+   Pos 869 802
    Size 45 39
    Flags 0
   }

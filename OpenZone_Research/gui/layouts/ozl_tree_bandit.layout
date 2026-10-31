@@ -1449,10 +1449,10 @@ FrameWidgetClass TreeWindow {
           }
          }
         }
-        // The button and the reason under it; the skin moves it 5 units left when the card has its 'opens' block (.card > div:nth-child(3n)). Does not clip: the ink ring sticks out.
+        // The button and the reason under it, from 5 units left of the card to its right end: the mockup's foot is the card's 6th block when the node opens something (.card > div:nth-child(3n) { margin-left: -5px }), the usual case; a node that opens nothing has it 5 narrower on the left there. Does not clip: the ink ring sticks out.
         FrameWidgetClass CardFoot {
          visible 1
-         position 0 468
+         position -5 468
          size 657 90
          hexactpos 1
          vexactpos 1
@@ -1731,12 +1731,12 @@ FrameWidgetClass TreeWindow {
         }
        }
       }
-      // The desk where the torn right edge and the torn-off corner took the paper away: over the tree's right end, so its fog, scraps and scrollbars end at the tear as the mockup's clip-path ends them.
+      // The desk where the torn right edge and the torn-off corner took the paper away: over the tree's right end, so its fog, scraps and scrollbars end at the tear as the mockup's clip-path ends them. 2 units wider than the page's rest (760): the picture's last 2 columns are clear, so the texture's wrap leaves no seam on its first; they lie past the tree's 760, over the same desk.
       ImageWidgetClass TearR {
        visible 1
        ignorepointer 1
        position 676 0
-       size 84 818
+       size 86 818
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -1812,7 +1812,7 @@ FrameWidgetClass TreeWindow {
          text "#STR_OZL_TREE_CLOSE"
          font "OpenZone_Research/gui/fonts/ozl_hand48"
          "exact text" 1
-         "exact text size" 20
+         "exact text size" 19
          "text halign" right
          "text valign" center
         }
@@ -1913,7 +1913,7 @@ FrameWidgetClass TreeWindow {
              text "#STR_OZL_TREE_LEGEND_LOCKED"
              font "OpenZone_Research/gui/fonts/ozl_hand48"
              "exact text" 1
-             "exact text size" 20
+             "exact text size" 19
              "text halign" left
              "text valign" center
             }
@@ -1959,7 +1959,7 @@ FrameWidgetClass TreeWindow {
              text "#STR_OZL_TREE_LEGEND_SHORT"
              font "OpenZone_Research/gui/fonts/ozl_hand48"
              "exact text" 1
-             "exact text size" 20
+             "exact text size" 19
              "text halign" left
              "text valign" center
             }
@@ -2005,7 +2005,7 @@ FrameWidgetClass TreeWindow {
              text "#STR_OZL_TREE_LEGEND_OPEN"
              font "OpenZone_Research/gui/fonts/ozl_hand48"
              "exact text" 1
-             "exact text size" 20
+             "exact text size" 19
              "text halign" left
              "text valign" center
             }
@@ -2051,7 +2051,7 @@ FrameWidgetClass TreeWindow {
              text "#STR_OZL_TREE_LEGEND_DONE"
              font "OpenZone_Research/gui/fonts/ozl_hand48"
              "exact text" 1
-             "exact text size" 20
+             "exact text size" 19
              "text halign" left
              "text valign" center
             }
@@ -2099,7 +2099,7 @@ FrameWidgetClass TreeWindow {
              text "#STR_OZL_TREE_LEGEND_ALL"
              font "OpenZone_Research/gui/fonts/ozl_hand48"
              "exact text" 1
-             "exact text size" 20
+             "exact text size" 19
              "text halign" left
              "text valign" center
             }
@@ -2147,7 +2147,7 @@ FrameWidgetClass TreeWindow {
              text "#STR_OZL_TREE_LEGEND_ANY"
              font "OpenZone_Research/gui/fonts/ozl_hand48"
              "exact text" 1
-             "exact text size" 20
+             "exact text size" 19
              "text halign" left
              "text valign" center
             }
