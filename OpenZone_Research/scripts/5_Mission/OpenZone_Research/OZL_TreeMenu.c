@@ -136,6 +136,10 @@ class OZL_TreeMenu : UIScriptedMenu
     private float m_Tick     = 0;
     private float m_AskAgain = 0;
     private bool  m_Closing  = false;
+    // OnShow узяв ввід і HUD (виключення "menu", прапорці HUD, свій
+    // LockControls): OnHide повертає лише взяте. OnShow, що закрився рано (без
+    // розкладки), нічого не бере -- і нічого не повертається.
+    private bool  m_Claimed  = false;
 
     // --- виміряне
     private Widget m_Probe;
@@ -278,11 +282,13 @@ class OZL_TreeMenu : UIScriptedMenu
         super.OnShow();
         if (!layoutRoot)
         {
+            // Нічого ще не взято: OnHide (m_Claimed) нічого й не поверне.
             OZL_Log.Error("tree menu: no layout, closing");
             GetGame().GetUIManager().CloseMenu(OZL_Const.MENU_TREE);
             return;
         }
         s_Open = this;
+        m_Claimed = true;
         SetFocus(layoutRoot);
         LockControls();
         array<string> excludes = new array<string>();
@@ -323,20 +329,28 @@ class OZL_TreeMenu : UIScriptedMenu
     override void OnHide()
     {
         super.OnHide();
-        array<string> excludes = new array<string>();
-        excludes.Insert("menu");
-        Mission mission = GetGame().GetMission();
-        if (mission)
+        // Повертаємо лише те, що взяв OnShow: OnShow, що закрився рано (без
+        // розкладки), не ставив виключень вводу й прапорців HUD, і знімати їх
+        // тут -- значить зняти чужі; зайвий UnlockControls відніме ще й фокус,
+        // якого не додавали.
+        if (m_Claimed)
         {
-            mission.RemoveActiveInputExcludes(excludes, true);
-            Hud hud = mission.GetHud();
-            if (hud)
+            m_Claimed = false;
+            array<string> excludes = new array<string>();
+            excludes.Insert("menu");
+            Mission mission = GetGame().GetMission();
+            if (mission)
             {
-                hud.ShowHudUI(true);
-                hud.ShowQuickbarUI(true);
+                mission.RemoveActiveInputExcludes(excludes, true);
+                Hud hud = mission.GetHud();
+                if (hud)
+                {
+                    hud.ShowHudUI(true);
+                    hud.ShowQuickbarUI(true);
+                }
             }
+            UnlockControls();
         }
-        UnlockControls();
         if (s_Open == this)
             s_Open = null;
     }
