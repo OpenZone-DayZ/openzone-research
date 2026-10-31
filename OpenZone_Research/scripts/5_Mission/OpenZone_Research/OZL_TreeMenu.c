@@ -107,6 +107,9 @@ class OZL_TreeMenu : UIScriptedMenu
     static const string HOST_LAYOUT = "OpenZone_Research/gui/layouts/ozl_tree_host.layout";
     // Стільки кадрів відкладене чекає, поки віджет розкладеться.
     static const int    LATER_TRIES = 12;
+    // Смуга прокрутки ScrollWidget: 10 одиниць розкладки (виміряно
+    // 2026-09-04 і 2026-10-31, вертикальна й горизонтальна).
+    static const float  SCROLLBAR_UNITS = 10;
 
     private static OZL_TreeMenu s_Open;
 
@@ -463,6 +466,10 @@ class OZL_TreeMenu : UIScriptedMenu
     // ширина (hexactsize 0, як у списку "Відкриває" в стосі картки) -- це
     // частка батька: абсолютне число в неї робило віджет у сотні разів
     // ширшим (звіт автора sop), тож вона йде назад часткою. Висота -- точна.
+    // Частка рахується раз на віджет і пам'ятається (m_WidthFrac): дитина
+    // ScrollWidget зі смугою має ширину прокрутки мінус 10 одиниць (виміряно
+    // 2026-09-04, генератор), і частка від повної ширини батька щоразу
+    // звужувала б її ще. Ширина 0 (ще не розкладено) частки не дає: тоді 1.
     void HeightUnits(Widget w, float height)
     {
         if (!w)
@@ -478,19 +485,34 @@ class OZL_TreeMenu : UIScriptedMenu
         float width = sw;
         int flags = w.GetFlags();
         if ((flags & WidgetFlags.HEXACTSIZE) == 0)
-        {
-            width = 1;
-            Widget parent = w.GetParent();
-            if (parent)
-            {
-                float pw;
-                float ph;
-                parent.GetScreenSize(pw, ph);
-                if (pw > 0)
-                    width = sw / pw;
-            }
-        }
+            width = WidthFrac(w, sw);
         w.SetSize(width, height * k);
+    }
+
+    // Пропорційна ширина віджета: частка від того, що батько йому дає.
+    private float WidthFrac(Widget w, float sw)
+    {
+        float frac;
+        if (m_WidthFrac.Find(w, frac))
+            return frac;
+        frac = 1;
+        Widget parent = w.GetParent();
+        if (parent && sw > 0)
+        {
+            float pw;
+            float ph;
+            parent.GetScreenSize(pw, ph);
+            // Дитині прокрутки рушій дає ширину без смуги (10 одиниць).
+            if (ScrollWidget.Cast(parent))
+                pw -= SCROLLBAR_UNITS * m_Px;
+            if (pw > 0)
+                frac = sw / pw;
+        }
+        if (frac <= 0 || frac > 1)
+            frac = 1;
+        if (sw > 0)
+            m_WidthFrac.Set(w, frac);
+        return frac;
     }
 
     // Розмір віджета на екрані, одиниці.
@@ -816,6 +838,7 @@ class OZL_TreeMenu : UIScriptedMenu
         m_Bars.Clear();
         m_Wraps.Clear();
         m_WrapShown.Clear();
+        m_WidthFrac.Clear();
         m_Hover = "";
         m_RowHover = null;
         m_RowKind = "";
@@ -2473,11 +2496,13 @@ class OZL_TreeMenu : UIScriptedMenu
             m_ProbeStep = 2;
             return;
         }
-        // Рамка-проба могла зникнути між кадрами -- тоді теж пікселі.
+        // Рамка-проба могла зникнути між кадрами -- тоді теж пікселі, і так
+        // само вголос, як на кроці 1.
         if (!m_Probe)
         {
             m_K = m_Px;
             m_ProbeStep = 0;
+            OZL_Log.Warn("tree: TreeProbe vanished during the probe, taking SetPos/SetSize in screen pixels (measured 2026-10-31)");
             return;
         }
         if (m_ProbeStep == 2)
@@ -2562,7 +2587,9 @@ class OZL_TreeMenu : UIScriptedMenu
     }
 
     // Чи натиск на самому TreeScroll припав на його смугу (нижні чи праві
-    // 10 одиниць).
+    // 10 одиниць) -- і лише на ту, яку рушій справді малює: смуга є, коли
+    // вміст (TreeContent) не влазить у вид. Без цього край вигляду, де смуги
+    // нема, не тягнув дерево.
     private bool OnScrollbar(Widget w)
     {
         Widget scroll = Role("TreeScroll");
@@ -2577,10 +2604,27 @@ class OZL_TreeMenu : UIScriptedMenu
         float sh;
         scroll.GetScreenPos(sx, sy);
         scroll.GetScreenSize(sw, sh);
-        float bar = 10 * m_Px;
-        if (mx >= sx + sw - bar)
+        float bar = SCROLLBAR_UNITS * m_Px;
+        bool barV = true;
+        bool barH = true;
+        Widget content = Role("TreeContent");
+        if (content)
+        {
+            float cw;
+            float ch;
+            content.GetScreenSize(cw, ch);
+            barV = ch > sh;
+            barH = cw > sw;
+            // Одна смуга забирає 10 одиниць у другого виміру -- і може
+            // покликати другу.
+            if (barH && !barV && ch > sh - bar)
+                barV = true;
+            if (barV && !barH && cw > sw - bar)
+                barH = true;
+        }
+        if (barV && mx >= sx + sw - bar)
             return true;
-        if (my >= sy + sh - bar)
+        if (barH && my >= sy + sh - bar)
             return true;
         return false;
     }
