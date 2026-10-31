@@ -1458,7 +1458,7 @@
                                     "file": "OpenZone_Research/gui/textures/tree/bandit/fog_edge_ca.paa",
                                     "color": "$white",
                                     "hidden": true,
-                                    "note": "The fade into the fog, crumpled like the page; its own colours (the skin's FogColor is white)."
+                                    "note": "The fade into the fog, crumpled like the page, with the mockup's faint 135-degree stripes showing through it; its own colours (the skin's FogColor is white)."
                                   }
                                 },
                                 {

@@ -131,11 +131,15 @@ def scraps() -> list[dict]:
 
 
 def rings() -> list[dict]:
-    # .node::after: the ink ring of an available node, dashed red round the selected one.
+    # .node::after: the ink ring of an available node, dashed red round the selected one. A
+    # pseudo-element is not matched by the mockup's `* { box-sizing: border-box }`, so its 2-px
+    # border lies OUTSIDE its 200 x 84: the ring is 204 x 88 from (-100, -42), turned about its
+    # own centre (stand 2026-10-31: drawn 200 x 84, it came 4 units short on the right and at
+    # the bottom). This div is matched by bandit.css's `*`, so it is given the outer size.
     out = []
     for name, style in (("ring", "solid"), ("ring_dash", "dashed")):
-        out.append(sprite(name, 200, 84, (
-            f'<div style="position:absolute;left:0;top:0;width:200px;height:84px;border:2px {style} #fff;'
+        out.append(sprite(name, 204, 88, (
+            f'<div style="position:absolute;left:0;top:0;width:204px;height:88px;border:2px {style} #fff;'
             'border-radius:48% 52% 46% 54% / 55% 45% 55% 45%;transform:rotate(-3deg)"></div>'), pad=6))
     return out
 
@@ -262,7 +266,12 @@ def textures() -> list[dict]:
     # The fog of the tree: the mockup's --fog under the page's crumple. TreeFog and TreeFogEdge
     # show these as they are (the skin's FogColor is white). fog_edge is the 80-unit fade, clear
     # at the top; fog the rest -- one strip of the right page's crumple, 476..806.
-    fog_edge = (f'<div style="position:absolute;left:0;top:0;width:748px;height:80px;isolation:isolate;background:{FOG};'
+    # Under the fade lie the mockup's stripes (`repeating-linear-gradient(135deg, txt 4 % 0 8px,
+    # transparent 8px 16px)` under the fog's gradient), so they show only through the fade;
+    # 4 % -> 7.5 % in linear light (over the squared paper).
+    fog_edge = ('<div style="position:absolute;left:0;top:0;width:748px;height:80px;'
+                'background:repeating-linear-gradient(135deg,rgba(42,32,24,.075) 0 8px,transparent 8px 16px)"></div>'
+                f'<div style="position:absolute;left:0;top:0;width:748px;height:80px;isolation:isolate;background:{FOG};'
                 '-webkit-mask-image:linear-gradient(180deg,transparent,#000);mask-image:linear-gradient(180deg,transparent,#000)">'
                 + crumple_window("fog_edge_cf", "r", 0, 476, 748, 80) + '</div>')
     fog = (f'<div style="position:absolute;left:0;top:0;width:748px;height:250px;isolation:isolate;background:{FOG}">'

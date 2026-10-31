@@ -49,17 +49,17 @@
     },
     {
       "name": "ring",
-      "w": 200,
-      "h": 84,
+      "w": 204,
+      "h": 88,
       "pad": 6,
-      "html": "<div style=\"position:absolute;left:0;top:0;width:200px;height:84px;border:2px solid #fff;border-radius:48% 52% 46% 54% / 55% 45% 55% 45%;transform:rotate(-3deg)\"></div>"
+      "html": "<div style=\"position:absolute;left:0;top:0;width:204px;height:88px;border:2px solid #fff;border-radius:48% 52% 46% 54% / 55% 45% 55% 45%;transform:rotate(-3deg)\"></div>"
     },
     {
       "name": "ring_dash",
-      "w": 200,
-      "h": 84,
+      "w": 204,
+      "h": 88,
       "pad": 6,
-      "html": "<div style=\"position:absolute;left:0;top:0;width:200px;height:84px;border:2px dashed #fff;border-radius:48% 52% 46% 54% / 55% 45% 55% 45%;transform:rotate(-3deg)\"></div>"
+      "html": "<div style=\"position:absolute;left:0;top:0;width:204px;height:88px;border:2px dashed #fff;border-radius:48% 52% 46% 54% / 55% 45% 55% 45%;transform:rotate(-3deg)\"></div>"
     },
     {
       "name": "tick",
@@ -272,7 +272,7 @@
         512,
         64
       ],
-      "html": "<div style=\"position:absolute;left:0;top:0;width:748px;height:80px;isolation:isolate;background:#c9b88f;-webkit-mask-image:linear-gradient(180deg,transparent,#000);mask-image:linear-gradient(180deg,transparent,#000)\"><svg style=\"position:absolute;left:0;top:0;width:748px;height:80px;display:block;mix-blend-mode:soft-light\" viewBox=\"0 476 748 80\" preserveAspectRatio=\"none\"><defs><filter id=\"fog_edge_cf\" filterUnits=\"userSpaceOnUse\" x=\"0\" y=\"476\" width=\"748\" height=\"80\" color-interpolation-filters=\"sRGB\"><feTurbulence type=\"fractalNoise\" baseFrequency=\".0042 .005\" numOctaves=\"4\" seed=\"19\" result=\"big\"/><feTurbulence type=\"turbulence\" baseFrequency=\".011 .013\" numOctaves=\"2\" seed=\"5\" result=\"fine\"/><feComposite in=\"big\" in2=\"fine\" operator=\"arithmetic\" k2=\".8\" k3=\".22\" result=\"h\"/><feDiffuseLighting in=\"h\" surfaceScale=\"9\" lighting-color=\"#fff\" result=\"lit\"><feDistantLight azimuth=\"235\" elevation=\"50\"/></feDiffuseLighting><feComponentTransfer><feFuncR type=\"linear\" slope=\"1.7\" intercept=\"-.8\"/><feFuncG type=\"linear\" slope=\"1.7\" intercept=\"-.8\"/><feFuncB type=\"linear\" slope=\"1.7\" intercept=\"-.8\"/></feComponentTransfer></filter></defs><rect x=\"0\" y=\"476\" width=\"748\" height=\"80\" filter=\"url(#fog_edge_cf)\"/></svg></div>"
+      "html": "<div style=\"position:absolute;left:0;top:0;width:748px;height:80px;background:repeating-linear-gradient(135deg,rgba(42,32,24,.075) 0 8px,transparent 8px 16px)\"></div><div style=\"position:absolute;left:0;top:0;width:748px;height:80px;isolation:isolate;background:#c9b88f;-webkit-mask-image:linear-gradient(180deg,transparent,#000);mask-image:linear-gradient(180deg,transparent,#000)\"><svg style=\"position:absolute;left:0;top:0;width:748px;height:80px;display:block;mix-blend-mode:soft-light\" viewBox=\"0 476 748 80\" preserveAspectRatio=\"none\"><defs><filter id=\"fog_edge_cf\" filterUnits=\"userSpaceOnUse\" x=\"0\" y=\"476\" width=\"748\" height=\"80\" color-interpolation-filters=\"sRGB\"><feTurbulence type=\"fractalNoise\" baseFrequency=\".0042 .005\" numOctaves=\"4\" seed=\"19\" result=\"big\"/><feTurbulence type=\"turbulence\" baseFrequency=\".011 .013\" numOctaves=\"2\" seed=\"5\" result=\"fine\"/><feComposite in=\"big\" in2=\"fine\" operator=\"arithmetic\" k2=\".8\" k3=\".22\" result=\"h\"/><feDiffuseLighting in=\"h\" surfaceScale=\"9\" lighting-color=\"#fff\" result=\"lit\"><feDistantLight azimuth=\"235\" elevation=\"50\"/></feDiffuseLighting><feComponentTransfer><feFuncR type=\"linear\" slope=\"1.7\" intercept=\"-.8\"/><feFuncG type=\"linear\" slope=\"1.7\" intercept=\"-.8\"/><feFuncB type=\"linear\" slope=\"1.7\" intercept=\"-.8\"/></feComponentTransfer></filter></defs><rect x=\"0\" y=\"476\" width=\"748\" height=\"80\" filter=\"url(#fog_edge_cf)\"/></svg></div>"
     },
     {
       "name": "fog",

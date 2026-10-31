@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the bandit tree window «Записи братви» (mockup: the shared paper block plus body[data-f=bandit]). Every name starts with 'bandit_' so the seven skin files never collide; only the bandit skin task edits this file (source/ui/SKINS.md). The pages, the scraps, the fog and the margin drawings carry their own colours (source/ui/bandit/); these are the colours of the live widgets over them. Font sizes are the mockup's CSS px x 1.156 (Caveat's cell, source/fonts/README.md). The legend is 19, not 20: the engine's Caveat at 20 runs ~5 % wider than Chrome's at 17 px and pushed «після будь-якого» into the torn edge (stand 2026-10-31). Alphas are the mockup's raised for the game's linear-light blending, solved over the paper (line_dim .6 -> .72, hover .12 -> .2).",
+  "note": "Tokens of the bandit tree window «Записи братви» (mockup: the shared paper block plus body[data-f=bandit]). Every name starts with 'bandit_' so the seven skin files never collide; only the bandit skin task edits this file (source/ui/SKINS.md). The pages, the scraps, the fog and the margin drawings carry their own colours (source/ui/bandit/); these are the colours of the live widgets over them. Font sizes are the mockup's CSS px x 1.156 (Caveat's cell, source/fonts/README.md). The legend is 20 (Chrome's 17 px); its items are flowed 13 apart, not the mockup's 14: the engine's Caveat at 20 runs ~1 unit longer per item, which over six items pushed «після будь-якого» into the torn edge, while 19 fell 16 units short (stand 2026-10-31). Alphas are the mockup's raised for the game's linear-light blending, solved over the paper (line_dim .6 -> .72, hover .12 -> .2).",
   "color": {
     "bandit_txt": [0.165, 0.125, 0.094, 1.0],
     "bandit_dim": [0.435, 0.361, 0.259, 1.0],
@@ -32,7 +32,7 @@
     "bandit_bname": {"face": "OpenZone_Research/gui/fonts/ozl_hand72", "size": 44, "fixed": false},
     "bandit_bsub": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 22, "fixed": false},
     "bandit_tier": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 25, "fixed": false},
-    "bandit_legend": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 19, "fixed": false},
+    "bandit_legend": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 20, "fixed": false},
     "bandit_tip": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 22, "fixed": false},
     "bandit_node": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 23, "fixed": false},
     "bandit_price": {"face": "OpenZone_Research/gui/fonts/ozl_hand48", "size": 21, "fixed": false},

@@ -55,7 +55,7 @@ FrameWidgetClass NodeCell {
      visible 0
      ignorepointer 1
      position 2 4
-     size 212 96
+     size 216 100
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -70,7 +70,7 @@ FrameWidgetClass NodeCell {
      visible 0
      ignorepointer 1
      position 2 4
-     size 212 96
+     size 216 100
      hexactpos 1
      vexactpos 1
      hexactsize 1

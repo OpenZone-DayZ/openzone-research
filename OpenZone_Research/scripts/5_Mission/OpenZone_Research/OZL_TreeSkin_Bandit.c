@@ -467,7 +467,9 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
     // завантажились -- живий текст (заголовок тоді без закресленого слова).
     // Легенда -- рядом за шириною текстів: її написи ширші за текст, бо
     // напис, що сам міряє себе по тексту, зрізає верхівку похилої останньої
-    // літери.
+    // літери. Проміжок 13, не мокапові 14: Caveat гри на 20 довший за
+    // Chrome на ~1 одиницю на пункт, і шість пунктів упиралися в рваний край
+    // (стенд 2026-10-31); так кожен пункт починається в межах 2 від мокапа.
     // Хвиля під заголовком розділу виходить нижче за його 30-одиничного
     // тримача (стенд 2026-10-31: тримач-панель її зрізав до верхніх дужок).
     override void OnShow(OZL_TreeMenu menu)
@@ -487,7 +489,7 @@ class OZL_TreeSkin_Bandit : OZL_TreeSkin
         bool head = Picture(menu, "PoolHeadImg", OZL_Text.Words("STR_OZL_SKIN_BANDIT_POOL_IMG"));
         Shown(menu, "PoolHeadImg", head);
         Shown(menu, "PoolHeadText", !head);
-        menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
+        menu.FlowLater(menu.Role("LegendRow"), 13, 0, false);
     }
 
     // Список гілок -- лише коли їх більше однієї. Прокрутка пулу -- сира
