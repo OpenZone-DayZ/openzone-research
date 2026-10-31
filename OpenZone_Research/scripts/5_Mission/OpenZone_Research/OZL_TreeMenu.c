@@ -725,7 +725,10 @@ class OZL_TreeMenu : UIScriptedMenu
 
         OZL_TreeSkin skin = OZL_TreeSkins.Make(id);
         Widget win = null;
-        if (skin.WindowLayout != "")
+        // FileExist бачить і файли в pbo (ванільний ParticleList так перевіряє
+        // .ptc): без перевірки рушій пише два рядки SCRIPT (E) "Cannot load
+        // layout" на кожне відкриття вікна, чия розкладка ще не намальована.
+        if (skin.WindowLayout != "" && FileExist(skin.WindowLayout))
             win = GetGame().GetWorkspace().CreateWidgets(skin.WindowLayout, layoutRoot);
         if (!win && skin.Id != OZL_TreeSkins.FALLBACK)
         {
