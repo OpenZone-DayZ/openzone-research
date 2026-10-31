@@ -166,12 +166,12 @@ button is disabled, a refusal of the server, "Запит надіслано...")
 updated after the card changes) if the card scrolls.
 
 **Wrapped text.** `CardName`, `CardMeta`, `CardDesc` and the node's `NodeName` may each be ONE
-TextWidget, or a container holding labels `<Name>0`, `<Name>1`, … — then the menu word-wraps the
+text widget (a `TextWidget` for one line, or a `MultilineTextWidget` with an SDF font that the
+engine wraps), or a container holding labels `<Name>0`, `<Name>1`, … — then the menu word-wraps the
 text into those labels (measured with the first one), hides the unused ones and gives the last one
-the rest. Use the container form with the mod's own fonts: a `MultilineTextWidget` or
-`RichTextWidget` ignores `"exact text size"` with them and draws at the atlas cell (48 or 72 units),
-measured 2026-10-31. Labels in a `stack` take no room when hidden. The same text in the same colour
-is not wrapped a second time.
+the rest. Which to pick is the rule in "Fonts" below: wrapped text is an SDF face or these line
+labels. Labels in a `stack` take no room when hidden. The same text in the same colour is not
+wrapped a second time.
 
 ## Roles of the node (`ozl_node_<skin>.layout`, root `NodeCell`)
 
@@ -279,10 +279,26 @@ is rotated or styled; then two sprites `_ua`/`_en` and a `*_IMG` key (STRINGS.md
 
 ## Fonts
 
-The mod's bitmap fonts are in `OpenZone_Research/gui/fonts/` (see `source/fonts/README.md`): in a
-layout `font "OpenZone_Research/gui/fonts/ozl_hand48"` with `"exact text size"` = the CELL height in
-units = round(CSS px x the face's cell ratio). Put them in the skin's tokens as fonts. They work in
-TextWidget labels; for wrapped text use line labels (above).
+The mod's fonts are in `OpenZone_Research/gui/fonts/` (see `source/fonts/README.md`): in a layout
+`font "OpenZone_Research/gui/fonts/ozl_hand48"` with `"exact text size"` = the CELL height in units
+= round(CSS px x the face's cell ratio). Put them in the skin's tokens as fonts.
+
+**The rule for wrapped text: an SDF face, or the menu's line labels.** A `MultilineTextWidget` or
+`RichTextWidget` draws every BITMAP (FNT3) font at its atlas's own pixel size, whatever
+`"exact text size"` asks and on every screen — the vanilla bitmap fonts too (skill gui-layouts
+§30, measured 2026-10-31 at 1920x1080 and 3840x1600); only SDF (FNT5) fonts scale there. So:
+
+- a text the ENGINE wraps (`MultilineTextWidget`, `RichTextWidget`) uses one of the SDF faces:
+  `ozl_sdf_hand32`, `ozl_sdf_type32`, `ozl_sdf_serif32`, `ozl_sdf_sans32`, `ozl_sdf_comic32`,
+  `ozl_sdf_oswald32`, `ozl_sdf_oswaldb32`. Give its box 1.375–1.625 x the text size per line (an
+  SDF line measures more than the size it is drawn at);
+- with a bitmap face (`ozl_hand48`, `ozl_hand72`, …) the text is a container of line labels that
+  the MENU wraps (`PutText`, above) — neutral does this;
+- a `WrapSpacer` with `"Size To Content V"` does NOT grow when its multiline children wrap: it keeps
+  the sum of their one-line heights and clips the rest. A multiline text inside the card's stack
+  (`CardFlow`) needs a height of its own, or the line labels.
+
+Bitmap faces are fine in every one-line `TextWidget`.
 
 **A TextWidget clips its own text at its box, and `"w": "auto"` (`"size to text h"`) makes the box
 the sum of the glyphs' advances** (measured 2026-10-31). The last letter of a slanted face reaches
