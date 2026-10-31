@@ -2184,10 +2184,10 @@ class OZL_TreeMenu : UIScriptedMenu
             TextWidget t = FirstText(item);
             if (t && item.IsVisible())
             {
-                float w;
-                float h;
-                t.GetScreenSize(w, h);
-                if (w <= 0)
+                int pw;
+                int ph;
+                t.GetTextSize(pw, ph);
+                if (pw <= 0)
                     return false;
             }
             item = item.GetSibling();
@@ -2209,7 +2209,11 @@ class OZL_TreeMenu : UIScriptedMenu
     }
 
     // Ширина елемента в одиницях: від його лівого краю до правого краю
-    // тексту; висота -- його власна.
+    // ТЕКСТУ (GetTextSize, текст -- від лівого краю напису), а не напису;
+    // висота -- його власна. TextWidget обрізає свій текст своїм краєм, а
+    // "size to text h" дає суму кроків гліфів: похилий останній гліф
+    // рукописного шрифту (d, l у Caveat) втрачає верхівку (виміряно
+    // 2026-10-31). Напис ширший за текст її зберігає, і ряд лягає так само.
     private void ItemExtent(Widget item, out float w, out float h)
     {
         float ix;
@@ -2225,11 +2229,11 @@ class OZL_TreeMenu : UIScriptedMenu
             return;
         float tx;
         float ty;
-        float tw;
-        float th;
         t.GetScreenPos(tx, ty);
-        t.GetScreenSize(tw, th);
-        w = (tx + tw - ix) / m_Px;
+        int pw;
+        int ph;
+        t.GetTextSize(pw, ph);
+        w = (tx + pw - ix) / m_Px;
     }
 
     private void StretchParts(Widget item, float w, float h)

@@ -1725,11 +1725,12 @@ FrameWidgetClass TreeWindow {
              priority 1
              style rover_sim_colorable
             }
+            // Wider than any tip on purpose: the menu sizes TreeTip from the text (GetTextSize) and TreeTip clips the rest; a label sized to its text would clip the top of a slanted last letter.
             TextWidgetClass TreeTipText {
              visible 1
              ignorepointer 1
              position 9 0
-             size 0 30
+             size 600 30
              hexactpos 1
              vexactpos 1
              hexactsize 1
@@ -1742,7 +1743,6 @@ FrameWidgetClass TreeWindow {
              "exact text size" 22
              "text halign" left
              "text valign" center
-             "size to text h" 1
             }
            }
           }
@@ -1872,31 +1872,32 @@ FrameWidgetClass TreeWindow {
          mode blend
          "src alpha" 1
         }
-        GridSpacerWidgetClass LegendRow {
+        // Lined up by the menu (FlowLater from the skin's OnShow) by the width of each item's TEXT plus 14: the labels are wider than their text, because a label sized to its text clips the top of a slanted last letter.
+        PanelWidgetClass LegendRow {
          visible 1
+         ignorepointer 1
          position 16 6
-         size 0 0
+         size 744 22
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         color 0 0 0 0
          priority 1
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         Columns 23
-         Rows 1
+         style rover_sim_colorable
          {
-          FrameWidgetClass LegLocked {
+          PanelWidgetClass LegLocked {
            visible 1
+           ignorepointer 1
            position 0 0
-           size 12 22
+           size 258 22
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           color 0 0 0 0
            priority 0
+           style rover_sim_colorable
            {
             ImageWidgetClass LegLockedBox {
              visible 1
@@ -1913,13 +1914,31 @@ FrameWidgetClass TreeWindow {
              mode blend
              "src alpha" 1
             }
+            TextWidgetClass LegLockedText {
+             visible 1
+             ignorepointer 1
+             position 18 0
+             size 240 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.435 0.361 0.259 1
+             priority 1
+             text "#STR_OZL_TREE_LEGEND_LOCKED"
+             font "OpenZone_Research/gui/fonts/ozl_hand48"
+             "exact text" 1
+             "exact text size" 20
+             "text halign" left
+             "text valign" center
+            }
            }
           }
-          PanelWidgetClass Gap5 {
+          PanelWidgetClass LegShort {
            visible 1
            ignorepointer 1
-           position 0 0
-           size 6 22
+           position 92 0
+           size 258 22
            hexactpos 1
            vexactpos 1
            hexactsize 1
@@ -1927,48 +1946,6 @@ FrameWidgetClass TreeWindow {
            color 0 0 0 0
            priority 1
            style rover_sim_colorable
-          }
-          TextWidgetClass LegLockedText {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 0 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0.435 0.361 0.259 1
-           priority 2
-           text "#STR_OZL_TREE_LEGEND_LOCKED"
-           font "OpenZone_Research/gui/fonts/ozl_hand48"
-           "exact text" 1
-           "exact text size" 20
-           "text halign" left
-           "text valign" center
-           "size to text h" 1
-          }
-          PanelWidgetClass Gap6 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 14 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0 0 0 0
-           priority 3
-           style rover_sim_colorable
-          }
-          FrameWidgetClass LegShort {
-           visible 1
-           position 0 0
-           size 12 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           priority 4
            {
             PanelWidgetClass LegShortBox {
              visible 1
@@ -1983,62 +1960,38 @@ FrameWidgetClass TreeWindow {
              priority 0
              style rover_sim_colorable
             }
+            TextWidgetClass LegShortText {
+             visible 1
+             ignorepointer 1
+             position 18 0
+             size 240 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.435 0.361 0.259 1
+             priority 1
+             text "#STR_OZL_TREE_LEGEND_SHORT"
+             font "OpenZone_Research/gui/fonts/ozl_hand48"
+             "exact text" 1
+             "exact text size" 20
+             "text halign" left
+             "text valign" center
+            }
            }
           }
-          PanelWidgetClass Gap7 {
+          PanelWidgetClass LegOpen {
            visible 1
            ignorepointer 1
-           position 0 0
-           size 6 22
+           position 232 0
+           size 258 22
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
            color 0 0 0 0
-           priority 5
+           priority 2
            style rover_sim_colorable
-          }
-          TextWidgetClass LegShortText {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 0 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0.435 0.361 0.259 1
-           priority 6
-           text "#STR_OZL_TREE_LEGEND_SHORT"
-           font "OpenZone_Research/gui/fonts/ozl_hand48"
-           "exact text" 1
-           "exact text size" 20
-           "text halign" left
-           "text valign" center
-           "size to text h" 1
-          }
-          PanelWidgetClass Gap8 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 14 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0 0 0 0
-           priority 7
-           style rover_sim_colorable
-          }
-          FrameWidgetClass LegOpen {
-           visible 1
-           position 0 0
-           size 12 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           priority 8
            {
             PanelWidgetClass LegOpenBox {
              visible 1
@@ -2053,62 +2006,38 @@ FrameWidgetClass TreeWindow {
              priority 0
              style rover_sim_colorable
             }
+            TextWidgetClass LegOpenText {
+             visible 1
+             ignorepointer 1
+             position 18 0
+             size 240 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.435 0.361 0.259 1
+             priority 1
+             text "#STR_OZL_TREE_LEGEND_OPEN"
+             font "OpenZone_Research/gui/fonts/ozl_hand48"
+             "exact text" 1
+             "exact text size" 20
+             "text halign" left
+             "text valign" center
+            }
            }
           }
-          PanelWidgetClass Gap9 {
+          PanelWidgetClass LegDone {
            visible 1
            ignorepointer 1
-           position 0 0
-           size 6 22
+           position 470 0
+           size 258 22
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
            color 0 0 0 0
-           priority 9
+           priority 3
            style rover_sim_colorable
-          }
-          TextWidgetClass LegOpenText {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 0 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0.435 0.361 0.259 1
-           priority 10
-           text "#STR_OZL_TREE_LEGEND_OPEN"
-           font "OpenZone_Research/gui/fonts/ozl_hand48"
-           "exact text" 1
-           "exact text size" 20
-           "text halign" left
-           "text valign" center
-           "size to text h" 1
-          }
-          PanelWidgetClass Gap10 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 14 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0 0 0 0
-           priority 11
-           style rover_sim_colorable
-          }
-          FrameWidgetClass LegDone {
-           visible 1
-           position 0 0
-           size 12 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           priority 12
            {
             PanelWidgetClass LegDoneBox {
              visible 1
@@ -2123,62 +2052,38 @@ FrameWidgetClass TreeWindow {
              priority 0
              style rover_sim_colorable
             }
+            TextWidgetClass LegDoneText {
+             visible 1
+             ignorepointer 1
+             position 18 0
+             size 240 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.435 0.361 0.259 1
+             priority 1
+             text "#STR_OZL_TREE_LEGEND_DONE"
+             font "OpenZone_Research/gui/fonts/ozl_hand48"
+             "exact text" 1
+             "exact text size" 20
+             "text halign" left
+             "text valign" center
+            }
            }
           }
-          PanelWidgetClass Gap11 {
+          PanelWidgetClass LegAll {
            visible 1
            ignorepointer 1
-           position 0 0
-           size 6 22
+           position 600 0
+           size 280 22
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
            color 0 0 0 0
-           priority 13
+           priority 4
            style rover_sim_colorable
-          }
-          TextWidgetClass LegDoneText {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 0 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0.435 0.361 0.259 1
-           priority 14
-           text "#STR_OZL_TREE_LEGEND_DONE"
-           font "OpenZone_Research/gui/fonts/ozl_hand48"
-           "exact text" 1
-           "exact text size" 20
-           "text halign" left
-           "text valign" center
-           "size to text h" 1
-          }
-          PanelWidgetClass Gap12 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 14 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0 0 0 0
-           priority 15
-           style rover_sim_colorable
-          }
-          FrameWidgetClass LegAll {
-           visible 1
-           position 0 0
-           size 34 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           priority 16
            {
             ImageWidgetClass LegAllMark {
              visible 1
@@ -2195,62 +2100,38 @@ FrameWidgetClass TreeWindow {
              mode blend
              "src alpha" 1
             }
+            TextWidgetClass LegAllText {
+             visible 1
+             ignorepointer 1
+             position 40 0
+             size 240 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.435 0.361 0.259 1
+             priority 1
+             text "#STR_OZL_TREE_LEGEND_ALL"
+             font "OpenZone_Research/gui/fonts/ozl_hand48"
+             "exact text" 1
+             "exact text size" 20
+             "text halign" left
+             "text valign" center
+            }
            }
           }
-          PanelWidgetClass Gap13 {
+          PanelWidgetClass LegAny {
            visible 1
            ignorepointer 1
-           position 0 0
-           size 6 22
+           position 712 0
+           size 284 22
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
            color 0 0 0 0
-           priority 17
+           priority 5
            style rover_sim_colorable
-          }
-          TextWidgetClass LegAllText {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 0 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0.435 0.361 0.259 1
-           priority 18
-           text "#STR_OZL_TREE_LEGEND_ALL"
-           font "OpenZone_Research/gui/fonts/ozl_hand48"
-           "exact text" 1
-           "exact text size" 20
-           "text halign" left
-           "text valign" center
-           "size to text h" 1
-          }
-          PanelWidgetClass Gap14 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 14 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0 0 0 0
-           priority 19
-           style rover_sim_colorable
-          }
-          FrameWidgetClass LegAny {
-           visible 1
-           position 0 0
-           size 38 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           priority 20
            {
             ImageWidgetClass LegAnyMark {
              visible 1
@@ -2267,39 +2148,25 @@ FrameWidgetClass TreeWindow {
              mode blend
              "src alpha" 1
             }
+            TextWidgetClass LegAnyText {
+             visible 1
+             ignorepointer 1
+             position 44 0
+             size 240 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.435 0.361 0.259 1
+             priority 1
+             text "#STR_OZL_TREE_LEGEND_ANY"
+             font "OpenZone_Research/gui/fonts/ozl_hand48"
+             "exact text" 1
+             "exact text size" 20
+             "text halign" left
+             "text valign" center
+            }
            }
-          }
-          PanelWidgetClass Gap15 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 6 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0 0 0 0
-           priority 21
-           style rover_sim_colorable
-          }
-          TextWidgetClass LegAnyText {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 0 22
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           color 0.435 0.361 0.259 1
-           priority 22
-           text "#STR_OZL_TREE_LEGEND_ANY"
-           font "OpenZone_Research/gui/fonts/ozl_hand48"
-           "exact text" 1
-           "exact text size" 20
-           "text halign" left
-           "text valign" center
-           "size to text h" 1
           }
          }
         }

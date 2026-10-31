@@ -108,8 +108,8 @@ The root may be the whole screen (neutral: the desk, tiled, and a centred 1600x9
 | `TreeFogEdge` | image, optional | the 80-unit fade at the start of the fog; the menu places and sizes it along the skin's direction |
 | `TreeFog` | panel or image | the rest of the fog, after the fade |
 | `TreeNodes` | frame, fill | node cells; the `АБО` labels (rows `or_label`, child `OrText`) with the row's corner on the diamond |
-| `TreeTip` | frame, hidden | above the hovered node, as wide as `TreeTipText` + 2 x `TipPadX`; children `TreeTipEdge` (fill), `TreeTipBg` (inset 1, resized), `TreeTipText` (self-sized, `w: auto`, at `TipPadX`) |
-| `TreeLegend` | anything | static: the six legend items are in the layout |
+| `TreeTip` | frame, hidden | above the hovered node, as wide as the TEXT of `TreeTipText` + 2 x `TipPadX`; children `TreeTipEdge` (fill), `TreeTipBg` (inset 1, resized), `TreeTipText` (at `TipPadX`, a fixed width wider than any tip — see Fonts — the frame clips the rest) |
+| `TreeLegend` | anything | static: the six legend items are in the layout. Neutral lines them up by their texts: the items sit in a container `LegendRow` and its `OnShow` calls `menu.FlowLater(menu.Role("LegendRow"), 14, 0, false)` |
 
 ### Header
 
@@ -232,7 +232,9 @@ Hooks — each works without an override:
 Helpers on the menu for hooks: `Role(name)`, `PlaceUnits`, `SizeUnits`, `UnitsOf`, `Px()`,
 `PutText(w, text, color)` (a text role, wrapped if it is a container), `FitLater(text, target, pad,
 mode)` (next frame: `target` as wide as the text — underlines, strikes; mode 0 keep x, 1 right-anchored,
-2 centred in the parent), `BarLater(track, fill, fraction)`, `FlowLater(box, gap, pad, wrap)`,
+2 centred in the parent), `BarLater(track, fill, fraction)`, `FlowLater(box, gap, pad, wrap)` (next
+frame: the box's children left to right, each as wide as from its left edge to the right end of its
+first visible text — `GetTextSize`, the text left-aligned — plus `pad`, then `gap`),
 `PointName(line)`, `PointColor(line)`, `PoolOf(line)`, `ItemLabel(item)`, `LeftOf(node)`,
 `View()`, `CurrentBranch()`, `BranchCount()`, `SelectedId()`, `HoveredId()`, `NodeIdAt(widget)`.
 Strings: `OZL_Text.Words(key)`, `OZL_Text.Upper(text)` (Latin and Ukrainian Cyrillic; `і` becomes
@@ -258,6 +260,15 @@ The mod's bitmap fonts are in `OpenZone_Research/gui/fonts/` (see `source/fonts/
 layout `font "OpenZone_Research/gui/fonts/ozl_hand48"` with `"exact text size"` = the CELL height in
 units = round(CSS px x the face's cell ratio). Put them in the skin's tokens as fonts. They work in
 TextWidget labels; for wrapped text use line labels (above).
+
+**A TextWidget clips its own text at its box, and `"w": "auto"` (`"size to text h"`) makes the box
+the sum of the glyphs' advances** (measured 2026-10-31). The last letter of a slanted face reaches
+past its advance and loses its top: in Caveat the English `locked` drew as `lockea` and `after all`
+as `after alı`, in a GridSpacer, a WrapSpacer and a plain frame alike. Ukrainian words mostly end in
+letters without that reach, so look at English. Give such a label a box wider than any text it gets
+and size or line up the rest by the text (`FitLater`, `FlowLater` and the tooltip measure with
+`GetTextSize`, not the box): neutral's legend and `TreeTipText` do. A fixed-width label ending far
+from its right edge is safe as it is.
 
 ## Checking a skin
 

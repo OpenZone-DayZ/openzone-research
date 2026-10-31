@@ -1592,10 +1592,11 @@
                                             9,
                                             0
                                           ],
-                                          "w": "auto",
+                                          "w": 600,
                                           "h": 30,
                                           "font": "neutral_tip",
-                                          "color": "$neutral_txt"
+                                          "color": "$neutral_txt",
+                                          "note": "Wider than any tip on purpose: the menu sizes TreeTip from the text (GetTextSize) and TreeTip clips the rest; a label sized to its text would clip the top of a slanted last letter."
                                         }
                                       }
                                     ]
@@ -1786,19 +1787,31 @@
                             }
                           },
                           {
-                            "hrow": {
+                            "panel": {
                               "name": "LegendRow",
                               "at": [
                                 16,
                                 6
                               ],
-                              "h": 22,
+                              "size": [
+                                744,
+                                22
+                              ],
+                              "color": "$none",
+                              "note": "Lined up by the menu (FlowLater from the skin's OnShow) by the width of each item's TEXT plus 14: the labels are wider than their text, because a label sized to its text clips the top of a slanted last letter.",
                               "children": [
                                 {
-                                  "frame": {
+                                  "panel": {
                                     "name": "LegLocked",
-                                    "w": 12,
-                                    "h": 22,
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "color": "$none",
                                     "children": [
                                       {
                                         "icon": {
@@ -1815,35 +1828,38 @@
                                           "image": "legend_box",
                                           "color": "$neutral_faint"
                                         }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegLockedText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_LOCKED",
+                                          "font": "neutral_legend",
+                                          "color": "$neutral_dim"
+                                        }
                                       }
                                     ]
                                   }
                                 },
                                 {
-                                  "gap": {
-                                    "w": 6
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "LegLockedText",
-                                    "w": "auto",
-                                    "h": 22,
-                                    "text": "#STR_OZL_TREE_LEGEND_LOCKED",
-                                    "font": "neutral_legend",
-                                    "color": "$neutral_dim"
-                                  }
-                                },
-                                {
-                                  "gap": {
-                                    "w": 14
-                                  }
-                                },
-                                {
-                                  "frame": {
+                                  "panel": {
                                     "name": "LegShort",
-                                    "w": 12,
-                                    "h": 22,
+                                    "at": [
+                                      92,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "color": "$none",
                                     "children": [
                                       {
                                         "panel": {
@@ -1858,35 +1874,38 @@
                                           ],
                                           "color": "$neutral_bad"
                                         }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegShortText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_SHORT",
+                                          "font": "neutral_legend",
+                                          "color": "$neutral_dim"
+                                        }
                                       }
                                     ]
                                   }
                                 },
                                 {
-                                  "gap": {
-                                    "w": 6
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "LegShortText",
-                                    "w": "auto",
-                                    "h": 22,
-                                    "text": "#STR_OZL_TREE_LEGEND_SHORT",
-                                    "font": "neutral_legend",
-                                    "color": "$neutral_dim"
-                                  }
-                                },
-                                {
-                                  "gap": {
-                                    "w": 14
-                                  }
-                                },
-                                {
-                                  "frame": {
+                                  "panel": {
                                     "name": "LegOpen",
-                                    "w": 12,
-                                    "h": 22,
+                                    "at": [
+                                      232,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "color": "$none",
                                     "children": [
                                       {
                                         "panel": {
@@ -1901,35 +1920,38 @@
                                           ],
                                           "color": "$neutral_acc"
                                         }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegOpenText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_OPEN",
+                                          "font": "neutral_legend",
+                                          "color": "$neutral_dim"
+                                        }
                                       }
                                     ]
                                   }
                                 },
                                 {
-                                  "gap": {
-                                    "w": 6
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "LegOpenText",
-                                    "w": "auto",
-                                    "h": 22,
-                                    "text": "#STR_OZL_TREE_LEGEND_OPEN",
-                                    "font": "neutral_legend",
-                                    "color": "$neutral_dim"
-                                  }
-                                },
-                                {
-                                  "gap": {
-                                    "w": 14
-                                  }
-                                },
-                                {
-                                  "frame": {
+                                  "panel": {
                                     "name": "LegDone",
-                                    "w": 12,
-                                    "h": 22,
+                                    "at": [
+                                      470,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      22
+                                    ],
+                                    "color": "$none",
                                     "children": [
                                       {
                                         "panel": {
@@ -1944,35 +1966,38 @@
                                           ],
                                           "color": "$neutral_ok"
                                         }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegDoneText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_DONE",
+                                          "font": "neutral_legend",
+                                          "color": "$neutral_dim"
+                                        }
                                       }
                                     ]
                                   }
                                 },
                                 {
-                                  "gap": {
-                                    "w": 6
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "LegDoneText",
-                                    "w": "auto",
-                                    "h": 22,
-                                    "text": "#STR_OZL_TREE_LEGEND_DONE",
-                                    "font": "neutral_legend",
-                                    "color": "$neutral_dim"
-                                  }
-                                },
-                                {
-                                  "gap": {
-                                    "w": 14
-                                  }
-                                },
-                                {
-                                  "frame": {
+                                  "panel": {
                                     "name": "LegAll",
-                                    "w": 34,
-                                    "h": 22,
+                                    "at": [
+                                      600,
+                                      0
+                                    ],
+                                    "size": [
+                                      280,
+                                      22
+                                    ],
+                                    "color": "$none",
                                     "children": [
                                       {
                                         "icon": {
@@ -1989,35 +2014,38 @@
                                           "image": "legend_all",
                                           "color": "$neutral_dim"
                                         }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAllText",
+                                          "at": [
+                                            40,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_ALL",
+                                          "font": "neutral_legend",
+                                          "color": "$neutral_dim"
+                                        }
                                       }
                                     ]
                                   }
                                 },
                                 {
-                                  "gap": {
-                                    "w": 6
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "LegAllText",
-                                    "w": "auto",
-                                    "h": 22,
-                                    "text": "#STR_OZL_TREE_LEGEND_ALL",
-                                    "font": "neutral_legend",
-                                    "color": "$neutral_dim"
-                                  }
-                                },
-                                {
-                                  "gap": {
-                                    "w": 14
-                                  }
-                                },
-                                {
-                                  "frame": {
+                                  "panel": {
                                     "name": "LegAny",
-                                    "w": 38,
-                                    "h": 22,
+                                    "at": [
+                                      712,
+                                      0
+                                    ],
+                                    "size": [
+                                      284,
+                                      22
+                                    ],
+                                    "color": "$none",
                                     "children": [
                                       {
                                         "icon": {
@@ -2034,23 +2062,24 @@
                                           "image": "legend_any",
                                           "color": "$neutral_dim"
                                         }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAnyText",
+                                          "at": [
+                                            44,
+                                            0
+                                          ],
+                                          "size": [
+                                            240,
+                                            22
+                                          ],
+                                          "text": "#STR_OZL_TREE_LEGEND_ANY",
+                                          "font": "neutral_legend",
+                                          "color": "$neutral_dim"
+                                        }
                                       }
                                     ]
-                                  }
-                                },
-                                {
-                                  "gap": {
-                                    "w": 6
-                                  }
-                                },
-                                {
-                                  "label": {
-                                    "name": "LegAnyText",
-                                    "w": "auto",
-                                    "h": 22,
-                                    "text": "#STR_OZL_TREE_LEGEND_ANY",
-                                    "font": "neutral_legend",
-                                    "color": "$neutral_dim"
                                   }
                                 }
                               ]

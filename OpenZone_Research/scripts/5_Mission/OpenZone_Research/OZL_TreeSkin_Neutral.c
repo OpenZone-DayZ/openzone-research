@@ -208,11 +208,15 @@ class OZL_TreeSkin_Neutral : OZL_TreeSkin
     }
 
     // Риска під «Бали» -- завдовжки з напис, якою б мовою він не був.
+    // Легенда -- рядом за шириною текстів: її написи ширші за текст, бо
+    // напис, що сам міряє себе по тексту, зрізає верхівку похилої останньої
+    // літери (англійське "locked" ставало "lockea").
     override void OnShow(OZL_TreeMenu menu)
     {
         Widget line = menu.Role("PoolHeadLine");
         if (line)
             menu.FitLater(TextWidget.Cast(menu.Role("PoolHead")), line, 0, 0);
+        menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
     }
 }
 
