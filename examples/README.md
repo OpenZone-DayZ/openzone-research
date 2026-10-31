@@ -20,5 +20,6 @@ Both packs use the faction `sop`, which is not among the factions mod's defaults
 to `OZ_Factions.json`. A player outside an organisation belongs to the base faction
 `stalker`, and neither pack lists devices for it.
 
-The tree background textures the packs refer to
-(`OpenZone_Research/gui/textures/tree/*.paa`) ship inside the mod.
+Every faction of both packs names its own tree window in `OZ_Research_Owners.json`
+(`"Skin"`: the faction's own id). The packs name no tree backdrop (`TreeBackground`), so each
+window draws its own.

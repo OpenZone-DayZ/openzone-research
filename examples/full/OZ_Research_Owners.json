@@ -15,7 +15,7 @@
                 "OZL_Eco_Pack_Electro",
                 "OZL_Eco_Proc_Electro"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_ecolog.paa"
+            "Skin": "ecolog"
         },
         {
             "Id": "clearsky",
@@ -31,7 +31,7 @@
                 "OZL_Sky_Pack_Electro",
                 "OZL_Sky_Proc_Electro"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_clearsky.paa"
+            "Skin": "clearsky"
         },
         {
             "Id": "duty",
@@ -45,7 +45,7 @@
                 "OZL_Dty_Pack_Prot",
                 "OZL_Dty_Proc_Prot"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_duty.paa"
+            "Skin": "duty"
         },
         {
             "Id": "freedom",
@@ -59,7 +59,7 @@
                 "OZL_Frd_Pack_Prot",
                 "OZL_Frd_Proc_Prot"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_freedom.paa"
+            "Skin": "freedom"
         },
         {
             "Id": "sop",
@@ -73,7 +73,7 @@
                 "OZL_Sop_Pack_Prot",
                 "OZL_Sop_Proc_Prot"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_sop.paa"
+            "Skin": "sop"
         },
         {
             "Id": "bandit",
@@ -87,7 +87,7 @@
                 "OZL_Bnd_Pack_Trail",
                 "OZL_Bnd_Proc_Trail"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_bandit.paa"
+            "Skin": "bandit"
         },
         {
             "Id": "neutral",
@@ -101,7 +101,7 @@
                 "OZL_Lnr_Pack_Trail",
                 "OZL_Lnr_Proc_Trail"
             ],
-            "TreeBackground": "OpenZone_Research/gui/textures/tree/tree_bg_loner.paa"
+            "Skin": "neutral"
         }
     ]
 }

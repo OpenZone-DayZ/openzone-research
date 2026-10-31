@@ -53,15 +53,39 @@ Terminals and stations are listed per faction in `OZ_Research_Owners.json`. If a
 faction lists devices, a faction without a list gets none; if nobody lists any, every
 device is everyone's.
 
+## The tree screen
+
+Each faction looks at its tree through a window of its own, a skin: `ecolog`, `clearsky`,
+`duty`, `freedom`, `sop`, `bandit` or `neutral`. The window changes the layout, the shape of a
+node, the direction the tree grows and the look of the node panel; the data and the actions are
+the same in all of them. The skin is the optional field `Skin` of a faction in
+`OZ_Research_Owners.json`. Left out, it is the faction's own id (a member of `duty` looks through
+the `duty` window), and a faction whose id is none of the seven gets `neutral`. Any faction may
+name any skin; an unknown name is cleared with a warning in the log. The server resolves the skin
+and sends the id, so the client decides nothing. `TreeBackground`, also optional, replaces the
+backdrop of the tree canvas that the skin draws with a picture of your own.
+
+A node has one of five statuses: `locked` (the parents are not done), `short` ("not enough": the
+parents are done, but the faction pool or the materials in the cargo of its own terminal near the
+player do not cover the cost), `available`, `researching` and `completed`. `short` is a hint: the
+start checks the cost itself. With no terminal near the player the materials are unknown, and
+unknown materials do not make a node `short`.
+
+The fog of war is counted by the server. A node is shown when it is a root, completed or running,
+or when it lies within `TreeVisibilityDepth` steps of a completed node: 1, the default, shows the
+next step only; 0 shows nothing beyond the completed nodes. Every other node of the branch reaches
+the client as a nameless stub that carries only its place, its tier and the parents that are shown;
+the counter of the branch still counts them all.
+
 ## Files
 
 Configs live in the server profile, `$profile:OpenZone\`:
 
 | file | holds |
 |---|---|
-| `OZ_Research_Settings.json` | default owner, the two post names, tree visibility depth |
+| `OZ_Research_Settings.json` | default owner, the two post names, the fog depth of the tree |
 | `OZ_Research_PointTypes.json` | point types, one per line (version 2) |
-| `OZ_Research_Owners.json` | per faction: terminals, devices, tree background |
+| `OZ_Research_Owners.json` | per faction: terminals, devices, the tree window (`Skin`), an optional tree backdrop |
 | `OZ_Research_Rules.json` | processing rules in groups (version 2) |
 | `OZ_Research_Tree.json` | branches with nodes (version 2) |
 | `OZ_Research_Modules.json` | modules: purity bonus and double-output chance (version 2) |
