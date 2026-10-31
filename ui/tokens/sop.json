@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the sop tree window «Тактичний планшет» (mockup body[data-f=sop]). Every name starts with 'sop_' so the seven skin files never collide; only the sop skin task edits this file (source/ui/SKINS.md). Colours are the mockup's variables and the color-mix() values its base CSS derives from them; fonts restate face, size and fixed, and the size is the cell height = round(CSS px x 1.236 for Oswald 400, x 1.238 for Oswald 600; source/fonts/README.md). The 7-segment timer is the vanilla 7segment family's 48-pixel file (cell 40 px, digit ink 87 % of it). The game blends in linear light: sop_roll (.05 in the mockup) is .0075 so the band shows as faintly as in the browser on the dark window.",
+  "note": "Tokens of the sop tree window «Тактичний планшет» (mockup body[data-f=sop]). Every name starts with 'sop_' so the seven skin files never collide; only the sop skin task edits this file (source/ui/SKINS.md). Colours are the mockup's variables and the color-mix() values its base CSS derives from them; fonts restate face, size and fixed, and the size is the cell height = round(CSS px x 1.236 for Oswald 400, x 1.238 for Oswald 600; source/fonts/README.md). The 7-segment timer is the vanilla 7segment family's 48-pixel file (cell 40 px, digit ink 87 % of it). The game blends in linear light: sop_roll (.05 in the mockup) is .0075 so the band shows as faintly as in the browser on the dark window; sop_glare is the widget colour of the full-alpha glare picture (crt_glare): alpha 4/255 lifts the upper-left HUD plate from (16,15,8) to the reference's (35,34,26), and blue .9 keeps it as warm as the reference (with 1.0 linear blending gives 29 for 26). The colours the skin class paints at run time -- node fills and edges, the dim link, the grid -- are ARGB constants in OZL_TreeSkin_Sop.c with their own linear-light corrections, not tokens.",
   "color": {
     "sop_txt": [0.925, 0.875, 0.682, 1.0],
     "sop_dim": [0.604, 0.553, 0.361, 1.0],
@@ -14,19 +14,10 @@
     "sop_track": [0.155, 0.147, 0.101, 1.0],
     "sop_cell": [0.121, 0.115, 0.075, 1.0],
     "sop_cell_edge": [0.265, 0.251, 0.184, 1.0],
-    "sop_pick": [0.171, 0.14, 0.06, 1.0],
-    "sop_done_bg": [0.166, 0.185, 0.095, 1.0],
-    "sop_done_edge": [0.392, 0.469, 0.229, 1.0],
-    "sop_res_edge": [0.585, 0.433, 0.134, 1.0],
-    "sop_avail_bg": [0.207, 0.166, 0.066, 1.0],
-    "sop_locked_bg": [0.063, 0.06, 0.035, 1.0],
-    "sop_line_dim": [0.604, 0.553, 0.361, 0.6],
     "sop_fog": [0.065, 0.061, 0.032, 1.0],
-    "sop_casing": [0.235, 0.227, 0.173, 1.0],
-    "sop_casing_hi": [0.361, 0.345, 0.259, 1.0],
-    "sop_grid": [1.0, 0.784, 0.431, 0.07],
     "sop_stage": [0.02, 0.02, 0.016, 1.0],
-    "sop_roll": [1.0, 0.902, 0.627, 0.0075]
+    "sop_roll": [1.0, 0.902, 0.627, 0.0075],
+    "sop_glare": [1.0, 1.0, 0.9, 0.0157]
   },
   "font": {
     "sop_dev": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 19, "fixed": false},

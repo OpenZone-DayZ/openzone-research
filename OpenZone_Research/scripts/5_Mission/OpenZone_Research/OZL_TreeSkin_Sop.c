@@ -1,17 +1,19 @@
 // Вікно sop -- «Тактичний планшет»: старий ламповий монітор. Товста округла
-// рамка кінескопа, рядки розгортки, RGB-сітка, темні кути, відблиск на склі,
-// мерехтіння і смуга, що біжить згори вниз; на екрані -- армійський HUD:
-// позивний гілки і пул шкалами-боєкомплектом під попереджувальною смугою,
-// дерево вправо великими ромбами на бурштиновій сітці, праворуч рамка цілі з
-// даними вузла і великим 7-сегментним годинником проєкту.
+// рамка кінескопа, рядки розгортки, темні кути, відблиск на склі, мерехтіння
+// і смуга, що біжить згори вниз; на екрані -- армійський HUD: позивний гілки
+// і пул (назва лінії над її числом) під попереджувальною смугою, дерево
+// вправо великими ромбами на бурштиновій сітці, праворуч рамка цілі з даними
+// вузла і великим 7-сегментним годинником проєкту.
 //
 // Розкладки: ozl_tree_sop, ozl_node_sop (ui/OpenZone_Research/); картинки:
 // source/ui/sop/ (набір ozl_sop і текстури gui/textures/tree/sop/); кольори й
-// шрифти: ui/tokens/sop.json. Числа нижче -- ті самі токени в ARGB.
+// шрифти: ui/tokens/sop.json. Числа нижче -- ті самі токени в ARGB, а там, де
+// клас малює сам (заливки й краї ромбів, тьмяна лінія, сітка), -- з поправкою
+// на лінійне змішування.
 //
 // Понад дані клас робить:
-// - кінескоп: альфа скла (CrtGlow, CrtLines) крокує, як crt-flicker мокапа;
-//   смуга CrtRoll їде згори вниз за 7 с;
+// - кінескоп: альфа скла (CrtGlow, CrtLines, CrtGlare) крокує, як
+//   crt-flicker мокапа; смуга CrtRoll їде згори вниз за 7 с;
 // - вузол: заливку ромба за статусом (NodeFill), край вузла під мишею -- txt,
 //   мітку проєкту, що блимає, ціну по центру під вузлом;
 // - великі літери (OZL_Text.Upper) і розрядку пробілами там, де мокап пише
@@ -27,14 +29,21 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
     static const string SET    = "set:ozl_sop image:";
     static const string COMMON = "set:ozl_common image:";
 
-    // Світіння тексту (text-shadow мокапа: бурштиновий ореол 7 px). Рушій
-    // малює тінь TextWidget лише шрифтам SDF (FNT5): ozl_sdf_oswald32 і
-    // ванільний sdf_MetronBook24 дають м'який ореол, а бітмапові шрифти мода
-    // (FNT3, ними написано все вікно) -- нічого (стенд 2026-10-31). Тож
-    // вимкнено; true має сенс лише разом із переходом написів на SDF.
-    static const bool  GLOW         = false;
-    static const int   GLOW_SIZE    = 4;
-    static const float GLOW_OPACITY = 0.45;
+    // Світіння тексту мокапа (text-shadow, бурштиновий ореол) тут нема: рушій
+    // малює тінь TextWidget лише шрифтам SDF, а вікно написане бітмаповими
+    // (скіл gui-layouts.md §32, стенд 2026-10-31).
+
+    // Чіп «Відкриває» (.opens a мокапа): поле 12 від рамки до тексту, рамка 2,
+    // проміжок між чіпами 6 -- і вбік, і між рядками. Висоту чіпа й ширину
+    // ряду ChipTick бере з самих віджетів (ozl_sop_opens_chip, CardOpensList).
+    static const float CHIP_PAD  = 12;
+    static const float CHIP_EDGE = 2;
+    static const float CHIP_GAP  = 6;
+
+    // Чіп ціни під вузлом (ozl_sop_price_chip, .price b мокапа): квадрат 7 і 3
+    // до числа -- PriceText стоїть на 10; між чіпами 6 (FlowLater меню).
+    static const float PRICE_LEAD = 10;
+    static const float PRICE_GAP  = 6;
 
     // Крок цифри годинника: ванільний 7segment48 моноширинний, 24 px на
     // клітинку 40, тож при "exact text size" 26 цифра -- 15.6 одиниці.
@@ -48,7 +57,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
 
     // Кольори мокапа, яких нема в базовому класі (color-mix його CSS).
     int Faint;       // --faint: закритий вузол, неактивна кнопка
-    int Soft;        // --soft: мета й опис картки
     int Track;       // --track: порожні сегменти, доріжки смуг
     int EdgeColor;   // --edge: рамка кнопки, чіпів
     int Cell;        // --cell: ромб, на який не вистачає
@@ -80,7 +88,11 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
     private float m_FogX;
     private float m_FogW;
     private float m_FogH;
-    private int   m_TierSeen;
+    // Сила відблиску -- альфа кольору CrtGlare з розкладки ($sop_glare, ~4/255),
+    // прочитана один раз: SetAlpha ЗАМІНЮЄ альфу кольору (ванільний
+    // bleedingdrop.c ставить колір з альфою 0, а тоді SetAlpha), тож
+    // мерехтіння множить її тут, а не кличе SetAlpha(alpha).
+    private float m_GlareAlpha;
 
     void OZL_TreeSkin_Sop()
     {
@@ -108,7 +120,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         Lcd       = ARGB(255,  18,  17,   9);
         FogColor  = ARGB(255,  17,  16,   8);
         Faint     = ARGB(255, 121, 110,  72);
-        Soft      = ARGB(255, 211, 198, 149);
         Track     = ARGB(255,  39,  37,  26);
         EdgeColor = ARGB(255,  90,  82,  50);
         Cell      = ARGB(255,  31,  29,  19);
@@ -150,7 +161,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         m_FlickerShown = -1;
         m_BlinkStep  = -1;
         m_TimerLeft  = -1;
-        m_TierSeen   = -1;
         m_HoverSeen  = "";
     }
 
@@ -266,20 +276,17 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
             m_Prices.Insert(cell);
             m_PriceTries.Insert(0);
         }
-        GlowAll(cell);
     }
 
     // ------------------------------------------------------------------
     // Пул, картка, кнопка
     // ------------------------------------------------------------------
 
-    // Рядок пулу в HUD: назва великими, розряджена, тьмяна; число -- txt; порожній
-    // сегмент -- доріжка (.pseg i), а не тьмяна лінія. Розставляє рядки OnUpdate.
     // Рядок пулу в HUD: назва лінії великими й число під нею, без шкали
     // (рішення власника 2026-10-31: сегменти читались як щось окреме від
     // числа). Базовий метод не кличемо і need не беремо: рушій прибере
     // сегменти й, мабуть, сам need, а тут тоді зміниться лише список
-    // параметрів.
+    // параметрів. Розставляє рядки PoolTick.
     override void PaintPoolRow(OZL_TreeMenu menu, Widget row, string line, int have, int need, int color)
     {
         TextWidget name = TextWidget.Cast(row.FindAnyWidget("PoolName"));
@@ -294,15 +301,8 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
             value.SetText(have.ToString());
             value.SetColor(Txt);
         }
-        GlowAll(row);
         m_PoolDirty = true;
         m_PoolTries = 0;
-    }
-
-    override void PaintCostRow(OZL_TreeMenu menu, Widget row, string label, string text, int verdict)
-    {
-        super.PaintCostRow(menu, row, label, text, verdict);
-        GlowAll(row);
     }
 
     // Чіп «Відкриває» в рамці 2 (.opens a); заглушка туману -- faint (у мокапі
@@ -319,7 +319,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
                 t.SetColor(Faint);
         }
         TintChip(chip, edge);
-        GlowAll(chip);
         m_ChipsDirty = true;
         m_ChipTries = 0;
         m_ChipPasses = 2;
@@ -372,7 +371,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         TextWidget target = TextWidget.Cast(menu.Role("SopTargetText"));
         if (target)
             target.SetText(Spread(OZL_Text.Words("STR_OZL_SKIN_SOP_TARGET")));
-        GlowAll(menu.Role("TreeStage"));
 
         // Легенда -- рядом за шириною текстів (англійські слова довші).
         menu.FlowLater(menu.Role("LegendRow"), 14, 0, false);
@@ -382,7 +380,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         m_FlickerShown = -1;
         m_HudDirty = true;
         m_HudTries = 0;
-        m_TierSeen = -1;
         m_HoverSeen = "";
         m_Blink.Clear();
         m_Prices.Clear();
@@ -420,7 +417,7 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         float h = 34;
         if (going)
             h = 47;
-        // Рядок стосу пропорційний ушир: HeightUnits лишає ширину часткою.
+        // Лише висота: HeightUnits лишає ширину рядка стосу (370) як є.
         menu.HeightUnits(menu.Role("SopTimeRow"), h);
         m_TimerLeft = -1;
         m_TimerTries = 0;
@@ -471,8 +468,9 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
 
     // Мерехтіння: crt-flicker мокапа, 3.2 с, steps(1) -- 1 до 47 %, .86 до 48 %,
     // 1 до 81 %, .93 до 82 %, далі 1. Провал -- 32 мс, тож кадр, що перескочив
-    // його, однаково показує провал. Смуга розгортки: crt-roll, від -160 до 900
-    // за 7 с.
+    // його, однаково показує провал. Мерехтить усе скло (#stage::after):
+    // кути, рядки й відблиск -- відблиску множимо його власну слабку альфу.
+    // Смуга розгортки: crt-roll, від -160 до 900 за 7 с.
     private void CrtTick(OZL_TreeMenu menu)
     {
         float t = Math.ModFloat(m_Clock, 3.2);
@@ -495,6 +493,13 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
             Widget lines = menu.Role("CrtLines");
             if (lines)
                 lines.SetAlpha(alpha);
+            Widget glare = menu.Role("CrtGlare");
+            if (glare)
+            {
+                if (m_GlareAlpha <= 0)
+                    m_GlareAlpha = glare.GetAlpha();
+                glare.SetAlpha(m_GlareAlpha * alpha);
+            }
         }
         Widget roll = menu.Role("CrtRoll");
         if (roll)
@@ -605,12 +610,14 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
     }
 
     // Ціна по центру під вузлом (.price text-align: center): меню кладе чіпи
-    // зліва в NodePrice (чіп 7 + 3 до числа, 6 між чіпами), тож посередині стає
-    // сам контейнер. false -- текст ще не розкладено.
+    // зліва в NodePrice (чіп 7 + 3 до числа, 6 між чіпами -- PRICE_LEAD і
+    // PRICE_GAP), тож посередині стає сам контейнер. Висота -- та, що дала
+    // розкладка (ozl_node_sop: .price мокапа, 96 під точкою вузла); зсуваємо
+    // лише вбік. false -- текст ще не розкладено.
     private bool CenterPrice(OZL_TreeMenu menu, Widget cell, bool force)
     {
         Widget box = cell.FindAnyWidget("NodePrice");
-        if (!box || !box.IsVisible())
+        if (!box || !box.IsVisible() || !box.GetParent())
             return true;
         float px = menu.Px();
         float total = 0;
@@ -626,15 +633,20 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
                 t.GetTextSize(pw, ph);
                 if (pw <= 0 && !force)
                     return false;
-                total += 10 + pw / px;
+                total += PRICE_LEAD + pw / px;
                 count++;
-                GlowText(t);
             }
             chip = chip.GetSibling();
         }
         if (count > 1)
-            total += 6 * (count - 1);
-        menu.PlaceUnits(box, AnchorX - total / 2, AnchorY + 96);
+            total += PRICE_GAP * (count - 1);
+        float bx;
+        float by;
+        float ox;
+        float oy;
+        box.GetScreenPos(bx, by);
+        box.GetParent().GetScreenPos(ox, oy);
+        menu.PlaceUnits(box, AnchorX - total / 2, (by - oy) / px);
         return true;
     }
 
@@ -694,7 +706,8 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         float gapW = 32;
         if (count > 1 && sum + gapW * (count - 1) > boxW)
             gapW = Math.Max(6, (boxW - sum) / (count - 1));
-        float x = boxW - sum - gapW * (count - 1);
+        // Не влізли й з 6: від лівого краю PoolList, а не поверх позивного.
+        float x = Math.Max(0, boxW - sum - gapW * (count - 1));
         for (int i = 0; i < count; i++)
         {
             menu.PlaceUnits(rows[i], x, 0);
@@ -751,9 +764,12 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         menu.PlaceUnits(menu.Role("BranchSub"), 27 + callW + 30, 40.5);
     }
 
-    // «Відкриває» (.opens): чіпи зліва направо через 6 з переносом (рядок 38 + 6),
-    // кожен -- 12 + текст + 12 у рамці 2. Меню розкладає їх своїм кроком (текст
-    // + 4); тут -- за мокапом, після нього (OnUpdate іде після RunFlows).
+    // «Відкриває» (.opens): чіпи зліва направо через CHIP_GAP з переносом на
+    // ширині CardOpensList, кожен -- CHIP_PAD + текст + CHIP_PAD у рамці
+    // CHIP_EDGE, заввишки зі свій рядок (ozl_sop_opens_chip). Меню розкладає їх
+    // своїм кроком (текст + 4) і тягне кнопку open:<id> лише на свою ширину;
+    // тут -- за мокапом, після нього (OnUpdate іде після RunFlows), і кнопку теж,
+    // бо інакше праві 8 одиниць рамки не клацались і не світились.
     private void ChipTick(OZL_TreeMenu menu)
     {
         if (!m_ChipsDirty)
@@ -780,11 +796,14 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
                 if (tw <= 0)
                     ready = false;
                 chips.Insert(chip);
-                widths.Insert(24 + tw / px);
+                widths.Insert(2 * CHIP_PAD + tw / px);
             }
             chip = chip.GetSibling();
         }
-        if (!ready && m_ChipTries < TRIES)
+        float rowW;
+        float listH;
+        menu.UnitsOf(list, rowW, listH);
+        if ((!ready || rowW <= 0) && m_ChipTries < TRIES)
         {
             m_ChipTries++;
             return;
@@ -796,30 +815,54 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
             m_ChipsDirty = false;
         float x = 0;
         float y = 0;
+        float chipH = 0;
         for (int i = 0; i < chips.Count(); i++)
         {
+            Widget c = chips[i];
+            float cw;
+            float ch;
+            menu.UnitsOf(c, cw, ch);
+            if (ch > chipH)
+                chipH = ch;
             float w = widths[i];
-            if (x > 0 && x + w > 370)
+            if (x > 0 && x + w > rowW)
             {
                 x = 0;
-                y += 44;
+                y += chipH + CHIP_GAP;
             }
-            Widget c = chips[i];
             menu.PlaceUnits(c, x, y);
-            Resize(menu, c, "ChipHit", w, 38);
-            Resize(menu, c, "ChipTopLine", w, 2);
-            Resize(menu, c, "ChipBottomLine", w, 2);
+            Widget hit = HitOf(c);
+            if (hit)
+                menu.SizeUnits(hit, w, ch);
+            Resize(menu, c, "ChipTopLine", w, CHIP_EDGE);
+            Resize(menu, c, "ChipBottomLine", w, CHIP_EDGE);
             Widget right = c.FindAnyWidget("ChipRightEdge");
             if (right)
-                menu.PlaceUnits(right, w - 2, 0);
-            x += w + 6;
+                menu.PlaceUnits(right, w - CHIP_EDGE, 0);
+            x += w + CHIP_GAP;
         }
         float h = 0;
         if (chips.Count() > 0)
-            h = y + 38;
-        // Рядок стосу пропорційний ушир: HeightUnits лишає ширину часткою.
+            h = y + chipH;
+        // Лише висота: HeightUnits лишає ширину рядка стосу (370) як є.
         menu.HeightUnits(list, h);
         RefreshCard(menu);
+    }
+
+    // Кнопка чіпа: меню перейменовує ChipHit на open:<id> ще до PaintOpenChip
+    // (OZL_TreeMenu.OpenChip), тож шукаємо за початком імені серед дітей; у
+    // заглушки туману вона лишається ChipHit (схована).
+    private static Widget HitOf(Widget chip)
+    {
+        Widget c = chip.GetChildren();
+        while (c)
+        {
+            string nm = c.GetName();
+            if (nm.IndexOf("open:") == 0)
+                return c;
+            c = c.GetSibling();
+        }
+        return chip.FindAnyWidget("ChipHit");
     }
 
     // Годинник проєкту (.tmr): у 7segment нема двокрапки, тож групи
@@ -925,30 +968,16 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         stripes.Show(true);
     }
 
-    // Підписи, що меню робить зі своїх шаблонів: тири (розрядку дає TierText) і
-    // «АБО». Рядок «АБО» -- прямий нащадок TreeNodes із власним OrText. Рушій
-    // віддавав за шляхом ozl_sop_or_label розкладку чіпа ціни (стенд 2026-10-31,
-    // копія під іншою назвою вантажилась правильно), тож обидві розкладки несуть
-    // обидві частини, а тут рядок «АБО» показує напис і ховає квадрат із числом
-    // -- байдуже, яку з двох розкладок дав рушій. Чіпи цін лежать глибше, у
-    // NodePrice комірки, і їхній OrText лишається схованим.
+    // WORKAROUND (скіл gui-layouts.md §32; прибрати, коли рушій виправлять --
+    // разом зі спільними частинами ozl_sop_or_label / ozl_sop_price_chip у
+    // make-описі). Рушій віддавав за шляхом ozl_sop_or_label розкладку чіпа ціни
+    // (стенд 2026-10-31, двічі на свіжому клієнті; копія під іншою назвою
+    // вантажилась правильно), тож обидві розкладки несуть обидві частини, а тут
+    // рядок «АБО» -- прямий нащадок TreeNodes із власним OrText -- показує напис
+    // і ховає квадрат із числом, байдуже, яку з двох розкладок дав рушій. Чіпи
+    // цін лежать глибше, у NodePrice комірки, і їхній OrText лишається схованим.
     private void LabelTick(OZL_TreeMenu menu)
     {
-        Widget tiers = menu.Role("TreeTiers");
-        if (tiers)
-        {
-            int count = Kids(tiers);
-            if (count != m_TierSeen)
-            {
-                m_TierSeen = count;
-                Widget lab = tiers.GetChildren();
-                while (lab)
-                {
-                    GlowText(TextWidget.Cast(lab.FindAnyWidget("TierText")));
-                    lab = lab.GetSibling();
-                }
-            }
-        }
         Widget nodes = menu.Role("TreeNodes");
         if (!nodes)
             return;
@@ -965,7 +994,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
                 Widget amount = ChildNamed(c, "PriceText");
                 if (amount)
                     amount.Show(false);
-                GlowText(TextWidget.Cast(orText));
             }
             c = c.GetSibling();
         }
@@ -1017,26 +1045,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
         return t;
     }
 
-    private void GlowText(TextWidget t)
-    {
-        if (GLOW && t)
-            t.SetShadow(GLOW_SIZE, Acc, GLOW_OPACITY, 0, 0);
-    }
-
-    // Світіння всім написам у віджеті й під ним.
-    private void GlowAll(Widget w)
-    {
-        if (!GLOW || !w)
-            return;
-        GlowText(TextWidget.Cast(w));
-        Widget c = w.GetChildren();
-        while (c)
-        {
-            GlowAll(c);
-            c = c.GetSibling();
-        }
-    }
-
     private static int IndexIn(array<Widget> list, Widget w)
     {
         for (int i = 0; i < list.Count(); i++)
@@ -1045,18 +1053,6 @@ class OZL_TreeSkin_Sop : OZL_TreeSkin
                 return i;
         }
         return -1;
-    }
-
-    private static int Kids(Widget w)
-    {
-        int n = 0;
-        Widget c = w.GetChildren();
-        while (c)
-        {
-            n++;
-            c = c.GetSibling();
-        }
-        return n;
     }
 
     private static void Tint(Widget root, string name, int color)

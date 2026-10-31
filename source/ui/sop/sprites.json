@@ -2,7 +2,8 @@
   "comment": [
     "The sop window («Тактичний планшет», the tube-monitor tablet): every picture the mockup draws with CSS.",
     "Sizes are layout units; drawn at 1.5 px per unit. White shapes are tinted in the game (the layout's color or SetColor);",
-    "the textures with their own colours (bezel, glow, hud, tree_glow, crt_lines, fog_stripes) are shown with color 1 1 1 1.",
+    "the textures with their own colours (bezel, glow, hud, tree_glow, crt_lines, fog_stripes) are shown with color 1 1 1 1;",
+    "crt_glare has the full alpha range and is weakened by its widget's colour ($sop_glare, alpha about 4/255).",
     "The rules are the mockup's own CSS (body[data-f=sop] and the base it builds on), lifted into sop.css.",
     "crt_lines and fog_stripes are pixel tiles: the game repeats a picture shown without stretching at one texel per",
     "screen pixel, so they are drawn at exactly 16 and 32 pixels (w x 1.5 = size) and keep the mockup's pattern in",
@@ -56,6 +57,7 @@
   "textures": [
     { "name": "bezel", "w": 1600, "h": 900, "size": [2048, 1024], "html": "<div class='sop-bezel'></div>" },
     { "name": "crt_glow", "w": 1600, "h": 900, "size": [1024, 512], "html": "<div class='sop-glow'></div>" },
+    { "name": "crt_glare", "w": 1600, "h": 900, "size": [1024, 512], "html": "<div class='sop-glare'></div>" },
     { "name": "crt_lines", "w": 10.666666, "h": 10.666666, "size": [16, 16], "html": "<div class='sop-lines'></div>" },
     { "name": "hud", "w": 1472, "h": 92, "size": [2048, 128], "html": "<div class='sop-hud'></div>" },
     { "name": "tree_glow", "w": 1172, "h": 630, "size": [512, 256], "html": "<div class='sop-tree-glow'></div>" },

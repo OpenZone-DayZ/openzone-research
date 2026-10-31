@@ -1,6 +1,6 @@
 {
   "layout": "ozl_tree_sop",
-  "note": "The sop window («Тактичний планшет»): an old tube monitor -- a thick rounded bezel, scanlines, an RGB mask, dark corners, a glare on the glass, a flicker and a rolling band -- showing a military HUD: the call sign of the branch and the pool as ammo gauges under a hazard stripe, the tree growing right in diamonds on an amber grid, and the target frame with the node's data. Root TreeWindow fills the screen; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome (build/ui/sop/reference.png).",
+  "note": "The sop window («Тактичний планшет»): an old tube monitor -- a thick rounded bezel, scanlines, dark corners, a glare on the glass, a flicker and a rolling band -- showing a military HUD: the call sign of the branch and the pool (each line's name over its number) under a hazard stripe, the tree growing right in diamonds on an amber grid, and the target frame with the node's data. Root TreeWindow fills the screen; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome (build/ui/sop/reference.png).",
   "root": {
     "frame": {
       "name": "TreeWindow",
@@ -31,7 +31,7 @@
                     92
                   ],
                   "color": "$sop_screen",
-                  "note": "The HUD plate (.hud): the call sign block (DevName over BranchName), the sub, and on the right the pool as ammo gauges. The skin puts BranchSub after the wider of the two call-sign lines and lines the pool rows up from the right edge (their widths are their texts').",
+                  "note": "The HUD plate (.hud): the call sign block (DevName over BranchName), the sub, and on the right the pool, each line's name over its number (the owner dropped the mockup's gauges). The skin puts BranchSub after the wider of the two call-sign lines and lines the pool rows up from the right edge (their widths are their texts').",
                   "children": [
                     {
                       "image": {
@@ -126,7 +126,7 @@
                           52
                         ],
                         "color": "$none",
-                        "note": "The menu creates the pool rows (ozl_sop_pool_row) here; the skin places them right to left from this box's right edge, 18 apart."
+                        "note": "The menu creates the pool rows (ozl_sop_pool_row) here; the skin places them right to left from this box's right edge, 32 apart (6 when they do not fit), never left of this box."
                       }
                     },
                     {
@@ -732,7 +732,7 @@
                             "row": {
                               "name": "OZL_SopOrLabel",
                               "h": 22,
-                              "note": "АБО centred above the diamond of an any-of knot, its baseline 14 above the knot (the mockup's svg text). The SAME widgets as ozl_sop_price_chip: the engine handed this path the price chip's layout (stand 2026-10-31, on two fresh clients; a byte-identical copy under another name loaded right), so both files hold the same parts at the same size and the skin shows the right ones (LabelTick): whichever file the engine hands over, the row works.",
+                              "note": "АБО centred above the diamond of an any-of knot, its baseline 14 above the knot (the mockup's svg text). WORKAROUND (skill gui-layouts.md §32; remove when the engine defect is fixed): the SAME widgets as ozl_sop_price_chip -- the engine handed this path the price chip's layout (stand 2026-10-31, on two fresh clients; a byte-identical copy under another name loaded right), so both files hold the same parts at the same size and the skin shows the right ones (LabelTick): whichever file the engine hands over, the row works.",
                               "children": [
                                 {
                                   "panel": {
@@ -825,7 +825,7 @@
                             "row": {
                               "name": "OZL_SopPriceChip",
                               "h": 22,
-                              "note": "A price chip of a node: the 7-unit square of the line (sitting on the baseline) and the amount; the skin centres the row under the node. Holds the hidden OrText of ozl_sop_or_label too (see there).",
+                              "note": "A price chip of a node: the 7-unit square of the line (sitting on the baseline) and the amount; the skin centres the row under the node. Holds the hidden OrText of ozl_sop_or_label too: a WORKAROUND, see there.",
                               "children": [
                                 {
                                   "panel": {
@@ -2388,7 +2388,7 @@
                   ],
                   "file": "OpenZone_Research/gui/textures/tree/sop/crt_glow_ca.paa",
                   "color": "$white",
-                  "note": "The glass (#stage::after): the glare and the dark corners. Its alpha flickers like crt-flicker (OnUpdate)."
+                  "note": "The glass (#stage::after): the dark corners. Its alpha flickers like crt-flicker (OnUpdate)."
                 }
               },
               {
@@ -2406,6 +2406,22 @@
                   "stretch": false,
                   "color": "$white",
                   "note": "Scanlines 2 of 4: a 16-pixel tile repeated at one texel per screen pixel. Flickers with CrtGlow."
+                }
+              },
+              {
+                "image": {
+                  "name": "CrtGlare",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/sop/crt_glare_ca.paa",
+                  "color": "$sop_glare",
+                  "note": "The glare on the glass (#stage::after's first layer, so above the scanlines): a full-alpha ellipse weakened by this widget's colour ($sop_glare, about 4/255). Flickers with CrtGlow: the skin multiplies this alpha, read once from the widget."
                 }
               },
               {
