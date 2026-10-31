@@ -370,14 +370,15 @@ class OZL_TreeSkin
             num.SetText(OZL_Text.Two(node.Index + 1));
     }
 
-    // Рядок пулу: назва лінії, скільки є, і чим заповнити сегменти
-    // (need -- найбільша ціна одного вузла по цій лінії).
-    void PaintPoolRow(OZL_TreeMenu menu, Widget row, string line, int have, int need, int color)
+    // Рядок пулу: назва лінії і скільки є -- лише це (смуги-сегменти рішенням
+    // власника 2026-10-31 прибрано). index -- номер рядка згори (0, 1, ...);
+    // color -- колір лінії для PoolChip.
+    void PaintPoolRow(OZL_TreeMenu menu, Widget row, int index, string line, int have, int color)
     {
         TextWidget name = TextWidget.Cast(row.FindAnyWidget("PoolName"));
         if (name)
         {
-            name.SetText(menu.PointName(line));
+            name.SetText(DataText(menu.PointName(line)));
             if (have > 0)
                 name.SetColor(Txt);
             else

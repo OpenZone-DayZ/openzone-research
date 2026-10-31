@@ -976,15 +976,16 @@ class OZL_TreeMenu : UIScriptedMenu
     }
 
     // Пул: кожна лінія, яку витрачають видимі вузли гілок фракції або яка
-    // є в пулі (renderPool() мокапа). need -- найбільша ціна одного вузла по
-    // лінії, для сегментів.
+    // є в пулі (renderPool() мокапа) -- назва й число, і все. Смуги-сегменти
+    // прибрано рішенням власника 2026-10-31: частка від найдорожчого вузла
+    // "не залежить від чисел", тож меню її більше не рахує.
     private void PaintPool()
     {
         Unlink(m_PoolRows);
         Widget list = Role("PoolList");
         if (!list)
             return;
-        map<string, int> need = new map<string, int>();
+        map<string, bool> spends = new map<string, bool>();
         int b;
         int i;
         for (b = 0; b < m_View.Branches.Count(); b++)
@@ -1000,12 +1001,8 @@ class OZL_TreeMenu : UIScriptedMenu
                 for (int c = 0; c < n.Cost.Count(); c++)
                 {
                     OZL_KV kv = n.Cost[c];
-                    if (!kv)
-                        continue;
-                    int had = 0;
-                    need.Find(kv.Key, had);
-                    if (kv.Value > had)
-                        need.Set(kv.Key, kv.Value);
+                    if (kv && kv.Value > 0)
+                        spends.Set(kv.Key, true);
                 }
             }
         }
@@ -1016,14 +1013,12 @@ class OZL_TreeMenu : UIScriptedMenu
             if (!pn)
                 continue;
             int have = PoolOf(pn.Id);
-            int most = 0;
-            bool spent = need.Find(pn.Id, most);
-            if (have <= 0 && !spent)
+            if (have <= 0 && !spends.Contains(pn.Id))
                 continue;
             Widget row = Row("pool_row", list);
             if (!row)
                 break;
-            m_Skin.PaintPoolRow(this, row, pn.Id, have, most, PointColor(pn.Id));
+            m_Skin.PaintPoolRow(this, row, shown, pn.Id, have, PointColor(pn.Id));
             m_PoolRows.Insert(row);
             shown++;
         }
