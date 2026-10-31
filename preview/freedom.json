@@ -1,0 +1,23 @@
+{
+  "note": "Preview gallery of the freedom tree window («ВОЛЯ.narod») for ui_gallery index=preview/freedom.json. The window's root is the whole host, the 1600x900 stage centred in it. A fixture only sets texts, shows parts and adds rows (freedom-rows: one branch row in BranchList, two pool rows with LED digits in PoolList -- no skin script runs there, so no bold, glow or row colouring): what the skin lays out at run time (the marquee, the spinning peace sign, the WordArt of the player's language, the footer row, the helper bubble, the LED digits of the pool, the price chips) needs the live menu -- look at it with world_exec oz_research treeui. A fixture travels to the bridge as one JSON string of at most ~1000 bytes on the wire.",
+  "entries": [
+    {
+      "name": "freedom-window",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_freedom.layout",
+      "host": "1600 900",
+      "fixture": "preview/freedom-window.json"
+    },
+    {
+      "name": "freedom-node",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_freedom.layout",
+      "host": "220 112",
+      "fixture": "preview/freedom-node.json"
+    },
+    {
+      "name": "freedom-rows",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_freedom.layout",
+      "host": "1600 900",
+      "fixture": "preview/freedom-rows.json"
+    }
+  ]
+}

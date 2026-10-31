@@ -1,0 +1,43 @@
+/* The freedom window («ВОЛЯ.narod»): rules lifted from the owner's mockup (base CSS + the
+   body[data-f="freedom"] block), only what the baked pictures use. The bake page has
+   body data-f="freedom", so the selectors are the mockup's own.
+   Half-transparent colours are corrected for the game's LINEAR-light blending (skill gui-layouts
+   section 32): a black layer of alpha a is drawn with 1 - (1 - a)^2.2, a light one over this dark
+   window with about a quarter of a; the mockup's value is in the comment next to each. */
+* { box-sizing: border-box; }
+
+body[data-f="freedom"] .wordart { font-family: Impact, "Arial Black", sans-serif; font-size: 60px; letter-spacing: .02em; transform: skewX(-8deg) rotate(-1deg);
+  background: linear-gradient(90deg, #ff2a2a, #ff9a00, #ffee00, #33ff33, #00e5ff, #3a5bff, #ff33ff); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-stroke: 1.5px #000; filter: drop-shadow(4px 4px 0 #000) drop-shadow(0 0 10px rgba(255,255,255,.065)); /* mockup .25 */
+  white-space: nowrap; line-height: normal; }
+
+body[data-f="freedom"] .fbar { background: linear-gradient(#4c8f1d, #1d4a08); border-bottom: 2px solid #99ff33; }
+
+body[data-f="freedom"] .uc { background: #ffde00; border: 6px solid transparent;
+  border-image: repeating-linear-gradient(-45deg, #000 0 8px, #ffde00 8px 16px) 6; }
+
+body[data-f="freedom"] .fbubble { position: relative; width: 262px; background: #ffffe1; border: 1px solid #000; border-radius: 10px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,.78); } /* mockup .5 */
+body[data-f="freedom"] .fbubble::after { content: ""; position: absolute; right: 56px; bottom: -14px; border: 7px solid transparent; border-top: 8px solid #ffffe1;
+  filter: drop-shadow(0 1px 0 #000); }
+
+body[data-f="freedom"] .fleaf { width: 112px; height: 124px; filter: drop-shadow(3px 4px 0 rgba(0,0,0,.87)); } /* mockup .6 */
+body[data-f="freedom"] .fleaf svg { width: 100%; height: 100%; display: block; overflow: visible; }
+body[data-f="freedom"] .fleaf .eye { transform-box: fill-box; transform-origin: center; }
+
+body[data-f="freedom"] .ftitle { display: flex; justify-content: flex-end; align-items: center; height: 28px; padding: 0 6px; color: #fff; font: bold 14px Verdana, Tahoma, sans-serif;
+  background: linear-gradient(90deg, #000080, #1084d0); }
+body[data-f="freedom"] .ftitle i { font-style: normal; display: inline-block; width: 20px; height: 18px; margin-left: 3px; background: #c0c0c0; color: #000; text-align: center; font-size: 12px;
+  line-height: 16px; border: 2px solid; border-color: #fff #404040 #404040 #fff; }
+
+/* Windows 98 faces: the node (one per status), the research button, the inset bars */
+.w98 { position: absolute; inset: 0; border: 3px solid; border-color: #fff #404040 #404040 #fff; background: #c0c0c0; }
+.w98.locked { background: #a8a8a8; border-color: #ddd #555 #555 #ddd; }
+.w98.short { background: #ffc6dc; }
+.w98.available { background: #ffff66; border-color: #ffffcc #807000 #807000 #ffffcc; }
+.w98.researching { background: #b8f4ff; border-color: #e8fdff #2c6f7a #2c6f7a #e8fdff; }
+.w98.completed { background: #8dff8d; border-color: #e0ffe0 #1c6d1c #1c6d1c #e0ffe0; }
+.w98.down { border-color: #404040 #fff #fff #404040; }
+.hover { filter: brightness(1.08); }
+.inset2 { position: absolute; inset: 0; background: #fff; border: 2px solid; border-color: #808080 #fff #fff #808080; }
+.led { position: absolute; inset: 0; background: #000; border: 2px inset #777; }

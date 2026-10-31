@@ -1,0 +1,366 @@
+{
+  "layout": "ozl_node_freedom",
+  "note": "One node of the freedom window: a Windows 98 button 180x64 lying in a 220x112 cell from (20, 36), so its centre is (110, 68) -- the skin's AnchorX/AnchorY. NodeShape takes the face of the status (slots 0..4 of OZL_TreeSkin_Freedom.Shapes); NodeHoverFace is the same face 8 % brighter, shown by the skin under the mouse. The icon, the bold Comic name in two lines (over its light emboss when locked), the price chips, the white bar with navy dashes while researching, the dotted yellow outline 5 units out when selected, and the mark above the right corner: the padlock, the check or the hourglass (NodeMark), or the blinking red 'NEW!' tag of an available node. NodeHit is the style-less button under the face: the menu renames it node:<id>; every other widget ignores the pointer.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        220,
+        112
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "color": "$none",
+            "click": true,
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it lies under it and only sees the cell's margins. Every other widget of the node ignores the pointer.",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    20,
+                    36
+                  ],
+                  "size": [
+                    180,
+                    64
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "The node's only pointer target (style Empty), under the face."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    20,
+                    36
+                  ],
+                  "size": [
+                    180,
+                    64
+                  ],
+                  "set": "ozl_freedom",
+                  "image": "face_available",
+                  "color": "$white"
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeHoverFace",
+                  "at": [
+                    20,
+                    36
+                  ],
+                  "size": [
+                    180,
+                    64
+                  ],
+                  "set": "ozl_freedom",
+                  "image": "face_available_hover",
+                  "color": "$white",
+                  "hidden": true
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    12,
+                    28
+                  ],
+                  "size": [
+                    196,
+                    80
+                  ],
+                  "set": "ozl_freedom",
+                  "image": "sel_ring",
+                  "color": "$freedom_acc",
+                  "hidden": true
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeIcon",
+                  "at": [
+                    28,
+                    45
+                  ],
+                  "size": [
+                    22,
+                    22
+                  ],
+                  "set": "dayz_gui",
+                  "image": "gear",
+                  "color": "$freedom_black",
+                  "note": "The node's own icon (the menu loads it), black on the face."
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeNameShadow",
+                  "at": [
+                    55,
+                    43
+                  ],
+                  "size": [
+                    140,
+                    34
+                  ],
+                  "color": "$none",
+                  "hidden": true,
+                  "note": "The light emboss of a locked name (text-shadow 1px 1px 0 #e8e8e8), wrapped like the name.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeNameShadow0",
+                        "at": [
+                          0,
+                          -5.99
+                        ],
+                        "size": [
+                          140,
+                          24.38
+                        ],
+                        "font": "freedom_node",
+                        "color": "$freedom_emboss"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeNameShadow1",
+                        "at": [
+                          0,
+                          9.41
+                        ],
+                        "size": [
+                          140,
+                          24.38
+                        ],
+                        "font": "freedom_node",
+                        "color": "$freedom_emboss",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    54,
+                    42
+                  ],
+                  "size": [
+                    140,
+                    34
+                  ],
+                  "color": "$none",
+                  "note": "The name in two lines 15.4 apart, word-wrapped by the menu: bold Comic 14 = Pangolin SDF + SetBold, each line box 1.625 x 15 tall round its line.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0,
+                          -5.99
+                        ],
+                        "size": [
+                          140,
+                          24.38
+                        ],
+                        "font": "freedom_node",
+                        "color": "$freedom_black"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0,
+                          9.41
+                        ],
+                        "size": [
+                          140,
+                          24.38
+                        ],
+                        "font": "freedom_node",
+                        "color": "$freedom_black",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    28,
+                    79
+                  ],
+                  "size": [
+                    164,
+                    15
+                  ],
+                  "color": "$none",
+                  "note": "The menu puts the price chips (ozl_freedom_price_chip) in a row here."
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    28,
+                    79
+                  ],
+                  "size": [
+                    164,
+                    15
+                  ],
+                  "font": "freedom_price",
+                  "color": "$freedom_black",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    26,
+                    94
+                  ],
+                  "size": [
+                    168,
+                    5
+                  ],
+                  "color": "$white",
+                  "hidden": true,
+                  "children": [
+                    {
+                      "frame": {
+                        "name": "NodeBarFill",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          0,
+                          5
+                        ],
+                        "children": [
+                          {
+                            "icon": {
+                              "name": "NodeBarDash",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                168,
+                                6
+                              ],
+                              "set": "ozl_freedom",
+                              "image": "dash_node",
+                              "color": "$white"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    154,
+                    18
+                  ],
+                  "size": [
+                    26,
+                    24
+                  ],
+                  "set": "ozl_freedom",
+                  "image": "mark_check",
+                  "color": "$white",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeNew",
+                  "at": [
+                    156,
+                    20
+                  ],
+                  "size": [
+                    60,
+                    20
+                  ],
+                  "color": "$none",
+                  "hidden": true,
+                  "note": "The 'NEW!' tag of an available node: red text on yellow in a red edge, sized to the word and blinking (the skin).",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "NodeNewEdge",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          56,
+                          20
+                        ],
+                        "color": "$freedom_new_red"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "NodeNewFill",
+                        "at": [
+                          1,
+                          1
+                        ],
+                        "size": [
+                          54,
+                          18
+                        ],
+                        "color": "$freedom_acc"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeMarkText",
+                        "at": [
+                          5,
+                          0
+                        ],
+                        "size": [
+                          80,
+                          20
+                        ],
+                        "font": "freedom_new",
+                        "color": "$freedom_new_red"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

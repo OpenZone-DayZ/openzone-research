@@ -1,0 +1,4281 @@
+{
+  "layout": "ozl_tree_freedom",
+  "note": "The freedom window («ВОЛЯ.narod»): a home-made 2000s fan site. The tiled peace-and-leaf background over the whole screen (560-unit squares of the baked 140-unit tile, laid edge to edge from the stage's corner), and on the 1600x900 stage: the WordArt banner, the running line, the menu box (branches as links, the pool on LED counters, 'Сторінка в розробці!'), the helper leaf with its speech bubble, the tree growing up in a ridge frame, the node window info.exe, and the visitor-counter footer. Roles the menu fills are in source/ui/SKINS.md; the skin class drives the rest (OZL_TreeSkin_Freedom). Numbers are the mockup's, measured in Chrome.",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "panel": {
+            "name": "SiteBase",
+            "size": "fill",
+            "color": "$freedom_site"
+          }
+        },
+        {
+          "raw": {
+            "name": "SiteTiles",
+            "class": "FrameWidgetClass",
+            "anchor": "center",
+            "size": [
+              1600,
+              900
+            ],
+            "props": {
+              "clipchildren": 0,
+              "ignorepointer": 1
+            },
+            "note": "The stage's twin that does not clip: 7 x 3 squares of the tile from (-1120, -560) cover any screen up to 32:9, keeping the mockup's tile phase on the stage.",
+            "children": [
+              {
+                "image": {
+                  "name": "Tile00",
+                  "at": [
+                    -1120,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile10",
+                  "at": [
+                    -560,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile20",
+                  "at": [
+                    0,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile30",
+                  "at": [
+                    560,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile40",
+                  "at": [
+                    1120,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile50",
+                  "at": [
+                    1680,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile60",
+                  "at": [
+                    2240,
+                    -560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile01",
+                  "at": [
+                    -1120,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile11",
+                  "at": [
+                    -560,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile21",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile31",
+                  "at": [
+                    560,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile41",
+                  "at": [
+                    1120,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile51",
+                  "at": [
+                    1680,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile61",
+                  "at": [
+                    2240,
+                    0
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile02",
+                  "at": [
+                    -1120,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile12",
+                  "at": [
+                    -560,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile22",
+                  "at": [
+                    0,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile32",
+                  "at": [
+                    560,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile42",
+                  "at": [
+                    1120,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile52",
+                  "at": [
+                    1680,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              },
+              {
+                "image": {
+                  "name": "Tile62",
+                  "at": [
+                    2240,
+                    560
+                  ],
+                  "size": [
+                    560,
+                    560
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/freedom/tile_ca.paa",
+                  "color": "$white"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "anchor": "center",
+            "size": [
+              1600,
+              900
+            ],
+            "children": [
+              {
+                "panel": {
+                  "name": "Banner",
+                  "at": [
+                    0,
+                    4
+                  ],
+                  "size": [
+                    1600,
+                    92
+                  ],
+                  "color": "$none",
+                  "note": "The banner (.fbanner): the spinning peace sign, the rainbow WordArt title of the player's language and the leaf, centred together (the skin places the two symbols by the title's width, OnShow), and the dev line bottom right.",
+                  "children": [
+                    {
+                      "icon": {
+                        "name": "WordArt",
+                        "at": [
+                          450,
+                          -14
+                        ],
+                        "size": [
+                          700,
+                          120
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "wordart_ua",
+                        "color": "$white",
+                        "note": "WordArt sprite (660x80 + pad 20): the skin loads STR_OZL_SKIN_FREEDOM_WORDART_IMG into it."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "Peace",
+                        "at": [
+                          389.46,
+                          13
+                        ],
+                        "size": [
+                          66,
+                          66
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "peace_00",
+                        "color": "$freedom_acc",
+                        "note": "Sixteen frames peace_00..15, swapped by the skin (6 s a turn)."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "Leaf",
+                        "at": [
+                          1144.54,
+                          13
+                        ],
+                        "size": [
+                          66,
+                          66
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "leaf_sym",
+                        "color": "$freedom_leaf"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "DevName",
+                        "at": [
+                          1176,
+                          60.91
+                        ],
+                        "size": [
+                          400,
+                          24.99
+                        ],
+                        "font": "freedom_dev",
+                        "color": "$freedom_dev",
+                        "text": "#STR_OZL_SKIN_FREEDOM_DEV",
+                        "align": "right",
+                        "note": "Times italic 16 in the mockup: PT Serif SDF, the skin asks for italics (SetItalic)."
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "frame": {
+                  "name": "Marquee",
+                  "at": [
+                    0,
+                    98
+                  ],
+                  "size": [
+                    1600,
+                    30
+                  ],
+                  "note": "The running line (.marquee): black with magenta rules; the skin moves MarqueeText from the right edge until it has left on the left, 26 s a pass. The frame clips it.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "MarqueeBg",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1600,
+                          30
+                        ],
+                        "color": "$freedom_black"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "MarqueeTop",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1600,
+                          2
+                        ],
+                        "color": "$freedom_magenta"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "MarqueeBottom",
+                        "at": [
+                          0,
+                          28
+                        ],
+                        "size": [
+                          1600,
+                          2
+                        ],
+                        "color": "$freedom_magenta"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "MarqueeText",
+                        "at": [
+                          1600,
+                          -2.62
+                        ],
+                        "w": 4000,
+                        "h": 31.24,
+                        "font": "freedom_marquee",
+                        "color": "$freedom_acc",
+                        "text": "#STR_OZL_SKIN_FREEDOM_MARQUEE",
+                        "note": "Bold Times 18 in the mockup: PT Serif SDF + SetBold. Wider than the line on purpose: a label clips its text at its box."
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "LeftBox",
+                  "at": [
+                    14,
+                    140
+                  ],
+                  "size": [
+                    318,
+                    694
+                  ],
+                  "color": "$none",
+                  "note": "The menu box (.fbox): 5-unit ridge frame over black .72; ':: МЕНЮ ::' bar, the branches as links, ':: БАЛИ ::' bar and the pool (this section follows the branch list: the skin moves it, OnPaint), the hazard sign at the bottom.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "LeftBg",
+                        "at": [
+                          5,
+                          5
+                        ],
+                        "size": [
+                          308,
+                          684
+                        ],
+                        "color": "$freedom_box_bg"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeTL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_tl",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeTR",
+                        "at": [
+                          312,
+                          0
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_tr",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeBL",
+                        "at": [
+                          0,
+                          688
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_bl",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeBR",
+                        "at": [
+                          312,
+                          688
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_br",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeT",
+                        "at": [
+                          6,
+                          0
+                        ],
+                        "size": [
+                          306,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_t",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeB",
+                        "at": [
+                          6,
+                          688
+                        ],
+                        "size": [
+                          306,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_b",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeL",
+                        "at": [
+                          0,
+                          6
+                        ],
+                        "size": [
+                          6,
+                          682
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_l",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "LeftRidgeR",
+                        "at": [
+                          312,
+                          6
+                        ],
+                        "size": [
+                          6,
+                          682
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_r",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "MenuBar",
+                        "at": [
+                          5,
+                          5
+                        ],
+                        "size": [
+                          308,
+                          28
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "fbar",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "MenuBarText",
+                        "at": [
+                          5,
+                          9
+                        ],
+                        "size": [
+                          308,
+                          17
+                        ],
+                        "font": "freedom_bar",
+                        "color": "$freedom_acc",
+                        "text": "#STR_OZL_SKIN_FREEDOM_MENU_BAR",
+                        "align": "center"
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "BranchScroll",
+                        "stack": "BranchList",
+                        "at": [
+                          5,
+                          40
+                        ],
+                        "size": [
+                          308,
+                          24
+                        ],
+                        "note": "The menu creates a row per branch in BranchList (ozl_freedom_branch_row); the skin sizes this list to its rows (OnPaint), so it never shows a bar. A list like the card's and the pool's on the 16:14 stand: a bare WrapSpacer in a panel showed no row there. It also declares the pool row (PoolScroll is a raw scroll for its tinted bar; both are 308 wide, so the pool row is still laid out against 298).",
+                        "rows": {
+                          "ozl_freedom_branch_row": {
+                            "row": {
+                              "name": "OZL_FreedomBranchRow",
+                              "h": 24,
+                              "note": "A branch as a link of the menu (.branch): yellow '»', the name underlined in link blue (pink for the open branch), and '← ти тут' after the open one (RowPick, shown by the menu); the count right-aligned. RowHit is the click (the menu renames it branch:<id>). The skin lines the three parts up by their texts (FlowLater on RowFlow) and colours the open one (OnPaint).",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "RowHit",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      298,
+                                      24
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    }
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "RowFlow",
+                                    "at": [
+                                      12,
+                                      3
+                                    ],
+                                    "size": [
+                                      260,
+                                      18
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "RowMarkItem",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            30,
+                                            18
+                                          ],
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "RowMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  30,
+                                                  18
+                                                ],
+                                                "font": "freedom_branch",
+                                                "color": "$freedom_acc",
+                                                "text": "#STR_OZL_SKIN_FREEDOM_BRANCH_MARK"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "RowNameItem",
+                                          "at": [
+                                            14,
+                                            0
+                                          ],
+                                          "size": [
+                                            250,
+                                            18
+                                          ],
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "RowName",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  250,
+                                                  18
+                                                ],
+                                                "font": "freedom_branch",
+                                                "color": "$freedom_link"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "RowNameLine",
+                                                "at": [
+                                                  0,
+                                                  16
+                                                ],
+                                                "size": [
+                                                  100,
+                                                  1
+                                                ],
+                                                "color": "$freedom_link"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "RowPick",
+                                          "at": [
+                                            120,
+                                            0
+                                          ],
+                                          "size": [
+                                            110,
+                                            18
+                                          ],
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "RowPickArrow",
+                                                "at": [
+                                                  0,
+                                                  1
+                                                ],
+                                                "size": [
+                                                  12,
+                                                  16
+                                                ],
+                                                "set": "ozl_freedom",
+                                                "image": "here_arrow",
+                                                "color": "$freedom_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "RowPickText",
+                                                "at": [
+                                                  16,
+                                                  2
+                                                ],
+                                                "size": [
+                                                  90,
+                                                  15
+                                                ],
+                                                "font": "freedom_here",
+                                                "color": "$freedom_acc",
+                                                "text": "#STR_OZL_SKIN_FREEDOM_BRANCH_HERE"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "RowCount",
+                                    "at": [
+                                      12,
+                                      3
+                                    ],
+                                    "size": [
+                                      284,
+                                      15
+                                    ],
+                                    "font": "freedom_count",
+                                    "color": "$freedom_txt",
+                                    "align": "right"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_freedom_pool_row": {
+                            "row": {
+                              "name": "OZL_FreedomPoolRow",
+                              "h": 36,
+                              "note": "One line of the pool (.prow): the round chip of the line, its name (faint when the faction has none), and the number as the mockup's LED counter -- a black inset box with up to six bold red monospace digits (PT Mono SDF + SetBold, the mockup's bold Courier), one per slot, right-aligned 13.8 apart like its letter-spaced text, glowing (an SDF text shadow); a zero is dark red without the glow. The skin fills the slots (PaintPoolRow).",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "PoolChip",
+                                    "at": [
+                                      12,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      9,
+                                      9
+                                    ],
+                                    "set": "ozl_freedom",
+                                    "image": "dot",
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolName",
+                                    "at": [
+                                      31,
+                                      6.5
+                                    ],
+                                    "size": [
+                                      190,
+                                      17
+                                    ],
+                                    "font": "freedom_pool",
+                                    "color": "$freedom_txt"
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "PoolLed",
+                                    "at": [
+                                      232,
+                                      3
+                                    ],
+                                    "size": [
+                                      64,
+                                      24
+                                    ],
+                                    "set": "ozl_freedom",
+                                    "image": "led_box",
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolDigit0",
+                                    "at": [
+                                      272.6,
+                                      -0.75
+                                    ],
+                                    "size": [
+                                      14,
+                                      27.5
+                                    ],
+                                    "font": "freedom_led",
+                                    "color": "$freedom_led",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolDigit1",
+                                    "at": [
+                                      258.8,
+                                      -0.75
+                                    ],
+                                    "size": [
+                                      14,
+                                      27.5
+                                    ],
+                                    "font": "freedom_led",
+                                    "color": "$freedom_led",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolDigit2",
+                                    "at": [
+                                      245.0,
+                                      -0.75
+                                    ],
+                                    "size": [
+                                      14,
+                                      27.5
+                                    ],
+                                    "font": "freedom_led",
+                                    "color": "$freedom_led",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolDigit3",
+                                    "at": [
+                                      231.2,
+                                      -0.75
+                                    ],
+                                    "size": [
+                                      14,
+                                      27.5
+                                    ],
+                                    "font": "freedom_led",
+                                    "color": "$freedom_led",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolDigit4",
+                                    "at": [
+                                      217.4,
+                                      -0.75
+                                    ],
+                                    "size": [
+                                      14,
+                                      27.5
+                                    ],
+                                    "font": "freedom_led",
+                                    "color": "$freedom_led",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolDigit5",
+                                    "at": [
+                                      203.6,
+                                      -0.75
+                                    ],
+                                    "size": [
+                                      14,
+                                      27.5
+                                    ],
+                                    "font": "freedom_led",
+                                    "color": "$freedom_led",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "PoolSection",
+                        "at": [
+                          5,
+                          72
+                        ],
+                        "size": [
+                          308,
+                          290
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "icon": {
+                              "name": "PoolBar",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                308,
+                                28
+                              ],
+                              "set": "ozl_freedom",
+                              "image": "fbar",
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolBarText",
+                              "at": [
+                                0,
+                                4
+                              ],
+                              "size": [
+                                308,
+                                17
+                              ],
+                              "font": "freedom_bar",
+                              "color": "$freedom_acc",
+                              "text": "#STR_OZL_SKIN_FREEDOM_POOL_BAR",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "PoolScroll",
+                              "class": "ScrollWidgetClass",
+                              "at": [
+                                0,
+                                35
+                              ],
+                              "size": [
+                                308,
+                                250
+                              ],
+                              "color": "$freedom_win",
+                              "props": {
+                                "clipchildren": 1,
+                                "Scrollbar V": 1,
+                                "style": "blank"
+                              },
+                              "note": "One row per line of points, 36 apart; more lines than fit scroll (seven point types overflow the 250 units), the bar Windows-98 grey like the tree's and the card's. Raw with a stack (bandit's PoolScroll): a generated list takes no colour. The row template is declared on BranchScroll.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "PoolList",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 298
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolEmpty",
+                              "at": [
+                                12,
+                                40
+                              ],
+                              "size": [
+                                284,
+                                17
+                              ],
+                              "font": "freedom_pool",
+                              "color": "$freedom_faint",
+                              "text": "#STR_OZL_TREE_POOL_EMPTY",
+                              "hidden": true
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "UcBox",
+                        "at": [
+                          17,
+                          630
+                        ],
+                        "size": [
+                          284,
+                          50
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "uc_frame",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "UcText",
+                        "at": [
+                          17,
+                          639.9
+                        ],
+                        "size": [
+                          284,
+                          26.0
+                        ],
+                        "font": "freedom_uc",
+                        "color": "$freedom_black",
+                        "text": "#STR_OZL_SKIN_FREEDOM_UNDER_CONSTRUCTION",
+                        "align": "center",
+                        "note": "Bold Comic 15 in the mockup: Pangolin SDF + SetBold."
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "TreeBox",
+                  "at": [
+                    344,
+                    140
+                  ],
+                  "size": [
+                    806,
+                    694
+                  ],
+                  "color": "$none",
+                  "note": "The tree (.tree): ridge frame over dark green .82; the star sky is drawn on the canvas by the skin (GridLine); the head shade with the branch name in pink Impact (+ its black shadow) and the sub line; the legend strip below.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "TreeBg",
+                        "at": [
+                          5,
+                          5
+                        ],
+                        "size": [
+                          796,
+                          684
+                        ],
+                        "color": "$freedom_tree_bg"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeTL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_tl",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeTR",
+                        "at": [
+                          800,
+                          0
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_tr",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeBL",
+                        "at": [
+                          0,
+                          688
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_bl",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeBR",
+                        "at": [
+                          800,
+                          688
+                        ],
+                        "size": [
+                          6,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_br",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeT",
+                        "at": [
+                          6,
+                          0
+                        ],
+                        "size": [
+                          794,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_t",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeB",
+                        "at": [
+                          6,
+                          688
+                        ],
+                        "size": [
+                          794,
+                          6
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_b",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeL",
+                        "at": [
+                          0,
+                          6
+                        ],
+                        "size": [
+                          6,
+                          682
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_l",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeRidgeR",
+                        "at": [
+                          800,
+                          6
+                        ],
+                        "size": [
+                          6,
+                          682
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "ridge_r",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "TreeScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          5,
+                          5
+                        ],
+                        "size": [
+                          796,
+                          650
+                        ],
+                        "color": "$freedom_win",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "Scrollbar H": 1,
+                          "style": "blank"
+                        },
+                        "note": "The tree: drag it, or the wheel. The menu sizes TreeContent; the tree grows up, so home is the bottom. Bars Windows-98 grey (color + style blank: thumb #c0c0c0, track half of it).",
+                        "children": [
+                          {
+                            "frame": {
+                              "name": "TreeContent",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                784,
+                                638
+                              ],
+                              "children": [
+                                {
+                                  "frame": {
+                                    "name": "TreeTiers",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill",
+                                    "props": {
+                                      "ignorepointer": 1
+                                    },
+                                    "note": "The star sky (the skin's GridLine) and every link, drawn by the menu."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "TreeFogEdge",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      784,
+                                      80
+                                    ],
+                                    "set": "ozl_freedom",
+                                    "image": "fog_edge",
+                                    "color": "$freedom_fog",
+                                    "hidden": true,
+                                    "note": "Clear at the bottom, solid at the top: the tree grows up."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "TreeFog",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      784,
+                                      100
+                                    ],
+                                    "color": "$freedom_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeNodes",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTip",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      300,
+                                      28
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipEdge",
+                                          "size": "fill",
+                                          "color": "$freedom_black"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipBg",
+                                          "at": [
+                                            1,
+                                            1
+                                          ],
+                                          "size": [
+                                            298,
+                                            26
+                                          ],
+                                          "color": "$freedom_tip_bg"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "TreeTipText",
+                                          "at": [
+                                            9,
+                                            0
+                                          ],
+                                          "w": 600,
+                                          "h": 28,
+                                          "font": "freedom_tip",
+                                          "color": "$freedom_black",
+                                          "note": "Wider than any tip: the menu sizes TreeTip from the text and TreeTip clips the rest."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeHead",
+                        "at": [
+                          5,
+                          5
+                        ],
+                        "size": [
+                          786,
+                          90
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "thead",
+                        "color": "$white",
+                        "note": "The head shade (.thead: #020602 to 60 %, then clear)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchNameShadow",
+                        "at": [
+                          28,
+                          8.86
+                        ],
+                        "size": [
+                          746,
+                          50.88
+                        ],
+                        "font": "freedom_bname",
+                        "color": "$freedom_black",
+                        "note": "The hard shadow of the branch name (text-shadow 3px 3px 0 #000); the skin copies the name (OnPaint)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchName",
+                        "at": [
+                          25,
+                          5.86
+                        ],
+                        "size": [
+                          746,
+                          50.88
+                        ],
+                        "font": "freedom_bname",
+                        "color": "$freedom_link_here",
+                        "note": "Oswald 600 SDF: the mockup's magenta glow (0 0 8px #ff00ff) is its text shadow (OnShow)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchSub",
+                        "at": [
+                          25,
+                          57
+                        ],
+                        "size": [
+                          746,
+                          16
+                        ],
+                        "font": "freedom_bsub",
+                        "color": "$freedom_txt"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "TreeLegend",
+                        "at": [
+                          5,
+                          655
+                        ],
+                        "size": [
+                          796,
+                          34
+                        ],
+                        "color": "$freedom_black",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "LegendTop",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                796,
+                                2
+                              ],
+                              "color": "$freedom_legend_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegendRow",
+                              "at": [
+                                16,
+                                0
+                              ],
+                              "size": [
+                                764,
+                                34
+                              ],
+                              "color": "$none",
+                              "note": "Lined up by the menu (FlowLater from the skin's OnShow) by the width of each item's text plus 14.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegLocked",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      34
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegLockedBox",
+                                          "at": [
+                                            0,
+                                            12
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "set": "ozl_freedom",
+                                          "image": "legend_locked",
+                                          "color": "$freedom_faint"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegLockedText",
+                                          "at": [
+                                            18,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            240,
+                                            15
+                                          ],
+                                          "font": "freedom_legend",
+                                          "color": "$freedom_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_LOCKED"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegShort",
+                                    "at": [
+                                      81,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      34
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegShortBox",
+                                          "at": [
+                                            0,
+                                            12
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$freedom_bad"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegShortText",
+                                          "at": [
+                                            18,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            240,
+                                            15
+                                          ],
+                                          "font": "freedom_legend",
+                                          "color": "$freedom_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_SHORT"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegOpen",
+                                    "at": [
+                                      187.44,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      34
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegOpenBox",
+                                          "at": [
+                                            0,
+                                            12
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$freedom_acc"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegOpenText",
+                                          "at": [
+                                            18,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            240,
+                                            15
+                                          ],
+                                          "font": "freedom_legend",
+                                          "color": "$freedom_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_OPEN"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegDone",
+                                    "at": [
+                                      354.25,
+                                      0
+                                    ],
+                                    "size": [
+                                      258,
+                                      34
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegDoneBox",
+                                          "at": [
+                                            0,
+                                            12
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$freedom_ok"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegDoneText",
+                                          "at": [
+                                            18,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            240,
+                                            15
+                                          ],
+                                          "font": "freedom_legend",
+                                          "color": "$freedom_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_DONE"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAll",
+                                    "at": [
+                                      457.27,
+                                      0
+                                    ],
+                                    "size": [
+                                      280,
+                                      34
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAllBox",
+                                          "at": [
+                                            0,
+                                            12
+                                          ],
+                                          "size": [
+                                            34,
+                                            12
+                                          ],
+                                          "set": "ozl_freedom",
+                                          "image": "legend_all",
+                                          "color": "$freedom_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAllText",
+                                          "at": [
+                                            40,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            240,
+                                            15
+                                          ],
+                                          "font": "freedom_legend",
+                                          "color": "$freedom_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_ALL"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAny",
+                                    "at": [
+                                      571.42,
+                                      0
+                                    ],
+                                    "size": [
+                                      284,
+                                      34
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAnyBox",
+                                          "at": [
+                                            0,
+                                            12
+                                          ],
+                                          "size": [
+                                            38,
+                                            12
+                                          ],
+                                          "set": "ozl_freedom",
+                                          "image": "legend_any",
+                                          "color": "$freedom_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAnyText",
+                                          "at": [
+                                            44,
+                                            10.5
+                                          ],
+                                          "size": [
+                                            240,
+                                            15
+                                          ],
+                                          "font": "freedom_legend",
+                                          "color": "$freedom_txt",
+                                          "text": "#STR_OZL_TREE_LEGEND_ANY"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "TreeTemplates",
+                        "stack": "TreeTemplateList",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          100,
+                          20
+                        ],
+                        "hidden": true,
+                        "note": "Holds no rows: it only declares the row files the menu creates outside the lists.",
+                        "rows": {
+                          "ozl_freedom_tier_label": {
+                            "row": {
+                              "name": "OZL_FreedomTierLabel",
+                              "h": 1,
+                              "note": "A tier label (.tierlab: bold Verdana 13, #99ff33); the menu puts the row's corner on the label's centre.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "TierText",
+                                    "at": [
+                                      -40,
+                                      -9
+                                    ],
+                                    "size": [
+                                      80,
+                                      18
+                                    ],
+                                    "font": "freedom_tier",
+                                    "color": "$freedom_tier",
+                                    "align": "center"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_freedom_or_label": {
+                            "row": {
+                              "name": "OZL_FreedomOrLabel",
+                              "h": 1,
+                              "note": "The 'АБО' beside an 'any' diamond (Comic 11 in the mockup); the menu puts the row's corner on the diamond and colours the word like its line.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "OrText",
+                                    "at": [
+                                      12,
+                                      -8
+                                    ],
+                                    "size": [
+                                      60,
+                                      16
+                                    ],
+                                    "font": "freedom_or",
+                                    "color": "$freedom_txt",
+                                    "text": "#STR_OZL_TREE_OR"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_freedom_price_chip": {
+                            "row": {
+                              "name": "OZL_FreedomPriceChip",
+                              "h": 15,
+                              "note": "One line of a node's price (.price b): a 7-unit square in the line's colour, then the amount. The menu lines them up in NodePrice, 6 apart.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PriceChip",
+                                    "at": [
+                                      0,
+                                      5
+                                    ],
+                                    "size": [
+                                      7,
+                                      7
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PriceText",
+                                    "at": [
+                                      10,
+                                      0
+                                    ],
+                                    "w": "auto",
+                                    "h": 15,
+                                    "font": "freedom_price",
+                                    "color": "$freedom_black"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_freedom_cost_row": {
+                            "row": {
+                              "name": "OZL_FreedomCostRow",
+                              "h": 37,
+                              "note": "A cost line of info.exe (.crow), 5 units below the one above: the chip, the name, 'have / need' in bold (green enough, red short), and the Windows 98 inset bar whose navy dashes are revealed by CostBarFill (a clipping frame the menu widens).",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "CostChip",
+                                    "at": [
+                                      0,
+                                      8
+                                    ],
+                                    "size": [
+                                      10,
+                                      10
+                                    ],
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CostName",
+                                    "at": [
+                                      20,
+                                      5
+                                    ],
+                                    "size": [
+                                      280,
+                                      16
+                                    ],
+                                    "font": "freedom_crow",
+                                    "color": "$freedom_black"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CostValue",
+                                    "at": [
+                                      20,
+                                      5
+                                    ],
+                                    "size": [
+                                      362,
+                                      16
+                                    ],
+                                    "font": "freedom_crow_value",
+                                    "color": "$freedom_black",
+                                    "align": "right"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "CostBar",
+                                    "at": [
+                                      20,
+                                      25
+                                    ],
+                                    "size": [
+                                      362,
+                                      12
+                                    ],
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "CostBarEdge",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            362,
+                                            12
+                                          ],
+                                          "set": "ozl_freedom",
+                                          "image": "cost_bar",
+                                          "color": "$white"
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CostBarFill",
+                                          "at": [
+                                            2,
+                                            2
+                                          ],
+                                          "size": [
+                                            0,
+                                            8
+                                          ],
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "CostBarDash",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  358,
+                                                  8
+                                                ],
+                                                "set": "ozl_freedom",
+                                                "image": "dash_cost",
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_freedom_opens_chip": {
+                            "row": {
+                              "name": "OZL_FreedomOpensChip",
+                              "h": 23,
+                              "note": "A node this one opens: a blue underlined link (.opens a), grey for a hidden one. The menu lines the chips up 6 apart and stretches ChipHit to each; the underline (ChipUnder) is sized to the text by the skin.",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "ChipHit",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      200,
+                                      17
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    }
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "ChipText",
+                                    "at": [
+                                      4,
+                                      0
+                                    ],
+                                    "w": 400,
+                                    "h": 17,
+                                    "font": "freedom_opens",
+                                    "color": "$freedom_link_blue"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "ChipUnder",
+                                    "at": [
+                                      4,
+                                      15
+                                    ],
+                                    "size": [
+                                      10,
+                                      1
+                                    ],
+                                    "color": "$freedom_link_blue"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "InfoWin",
+                  "at": [
+                    1162,
+                    140
+                  ],
+                  "size": [
+                    424,
+                    694
+                  ],
+                  "color": "$none",
+                  "note": "The node window (.fwin 'info.exe'): Windows 98 grey with a 3-unit bevel, the blue title bar with its three buttons (the × closes the tree), and the card: name, meta, status, teal section tags, the Times description, cost rows with inset bars, the time with the segment bar, the links it opens, and the big button with the reason below.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "InfoBg",
+                        "at": [
+                          3,
+                          3
+                        ],
+                        "size": [
+                          418,
+                          688
+                        ],
+                        "color": "$freedom_win"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelTL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          4,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_tl",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelTR",
+                        "at": [
+                          420,
+                          0
+                        ],
+                        "size": [
+                          4,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_tr",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelBL",
+                        "at": [
+                          0,
+                          690
+                        ],
+                        "size": [
+                          4,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_bl",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelBR",
+                        "at": [
+                          420,
+                          690
+                        ],
+                        "size": [
+                          4,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_br",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelT",
+                        "at": [
+                          4,
+                          0
+                        ],
+                        "size": [
+                          416,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_t",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelB",
+                        "at": [
+                          4,
+                          690
+                        ],
+                        "size": [
+                          416,
+                          4
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_b",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelL",
+                        "at": [
+                          0,
+                          4
+                        ],
+                        "size": [
+                          4,
+                          686
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_l",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBevelR",
+                        "at": [
+                          420,
+                          4
+                        ],
+                        "size": [
+                          4,
+                          686
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "win_r",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "InfoBar",
+                        "at": [
+                          3,
+                          3
+                        ],
+                        "size": [
+                          418,
+                          28
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "title_bar",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "InfoTitle",
+                        "at": [
+                          9,
+                          8.5
+                        ],
+                        "size": [
+                          300,
+                          17
+                        ],
+                        "font": "freedom_info",
+                        "color": "$white",
+                        "text": "#STR_OZL_SKIN_FREEDOM_INFO_TITLE"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "BtnClose",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          395,
+                          8
+                        ],
+                        "size": [
+                          20,
+                          18
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "note": "Over the title bar's × button."
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          21,
+                          47
+                        ],
+                        "size": [
+                          382,
+                          628
+                        ],
+                        "hidden": true,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                0,
+                                285
+                              ],
+                              "size": [
+                                382,
+                                22
+                              ],
+                              "font": "freedom_empty",
+                              "color": "$freedom_black",
+                              "text": "#STR_OZL_TREE_PICK",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                0,
+                                308
+                              ],
+                              "size": [
+                                382,
+                                18
+                              ],
+                              "font": "freedom_empty_hint",
+                              "color": "$freedom_black",
+                              "text": "#STR_OZL_TREE_HINT",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardBody",
+                        "at": [
+                          21,
+                          47
+                        ],
+                        "size": [
+                          392,
+                          628
+                        ],
+                        "note": "392 wide: the card list's scrollbar (10) lies in the window's right padding.",
+                        "children": [
+                          {
+                            "raw": {
+                              "name": "CardScroll",
+                              "class": "ScrollWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                392,
+                                549
+                              ],
+                              "color": "$freedom_win",
+                              "props": {
+                                "clipchildren": 1,
+                                "Scrollbar V": 1,
+                                "style": "blank"
+                              },
+                              "note": "The card, top to bottom (gaps 5 inside a group, 10 between groups, as the mockup's flex); a long card scrolls above the button, its bar Windows-98 grey. Raw with a stack (sop's pattern): a generated list takes no colour. Its rows live on TreeTemplates.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "CardFlow",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 382,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CardNameBox",
+                                          "w": 382,
+                                          "h": 37,
+                                          "color": "$none",
+                                          "note": "The name (Impact 30, purple) over its pink shadow 2 units off; both word-wrapped into two lines. The skin sets the box to the lines in use (OnUpdate).",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardNameShadow",
+                                                "at": [
+                                                  2,
+                                                  2
+                                                ],
+                                                "size": [
+                                                  382,
+                                                  74
+                                                ],
+                                                "color": "$none",
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardNameShadow0",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        382,
+                                                        37
+                                                      ],
+                                                      "font": "freedom_cname",
+                                                      "color": "$freedom_cname_shadow"
+                                                    }
+                                                  },
+                                                  {
+                                                    "label": {
+                                                      "name": "CardNameShadow1",
+                                                      "at": [
+                                                        0,
+                                                        37
+                                                      ],
+                                                      "size": [
+                                                        382,
+                                                        37
+                                                      ],
+                                                      "font": "freedom_cname",
+                                                      "color": "$freedom_cname_shadow",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardName",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  382,
+                                                  74
+                                                ],
+                                                "color": "$none",
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "CardName0",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        382,
+                                                        37
+                                                      ],
+                                                      "font": "freedom_cname",
+                                                      "color": "$freedom_cname"
+                                                    }
+                                                  },
+                                                  {
+                                                    "label": {
+                                                      "name": "CardName1",
+                                                      "at": [
+                                                        0,
+                                                        37
+                                                      ],
+                                                      "size": [
+                                                        382,
+                                                        37
+                                                      ],
+                                                      "font": "freedom_cname",
+                                                      "color": "$freedom_cname",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 5
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardMeta",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardMeta0",
+                                                "h": 15,
+                                                "font": "freedom_cmeta",
+                                                "color": "$freedom_black"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta1",
+                                                "h": 15,
+                                                "font": "freedom_cmeta",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 0.6
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardStatus",
+                                          "h": 29.25,
+                                          "font": "freedom_cstat",
+                                          "color": "$freedom_black",
+                                          "note": "Bold Comic 17: Pangolin SDF + SetBold, one line 1.625 x 18 tall; the gaps round it are 0.6 and 9.15, so the word sits where the mockup's 5 / 24 / 10 put it."
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 9.15
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardDescTag",
+                                          "h": 19,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardDescTagBg",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  54,
+                                                  19
+                                                ],
+                                                "color": "$freedom_sec_bg"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDescHead",
+                                                "at": [
+                                                  6,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  300,
+                                                  19
+                                                ],
+                                                "font": "freedom_sec",
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 5
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardDesc",
+                                          "note": "Times 16 / 1.35: lines 21.6 apart, word-wrapped by the menu.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardDesc0",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc1",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc2",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc3",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc4",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc5",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc6",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc7",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc8",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc9",
+                                                "h": 21.6,
+                                                "font": "freedom_cdesc",
+                                                "color": "$freedom_black",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 10
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardCostTag",
+                                          "h": 19,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardCostTagBg",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  54,
+                                                  19
+                                                ],
+                                                "color": "$freedom_sec_bg"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardCostHead",
+                                                "at": [
+                                                  6,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  300,
+                                                  19
+                                                ],
+                                                "font": "freedom_sec",
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardCostList"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardItemsTag",
+                                          "h": 24,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardItemsTagBg",
+                                                "at": [
+                                                  0,
+                                                  5
+                                                ],
+                                                "size": [
+                                                  54,
+                                                  19
+                                                ],
+                                                "color": "$freedom_sec_bg"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardItemsHead",
+                                                "at": [
+                                                  6,
+                                                  5
+                                                ],
+                                                "size": [
+                                                  300,
+                                                  19
+                                                ],
+                                                "font": "freedom_sec",
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardItemList"
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 10
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardTimeTag",
+                                          "h": 19,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardTimeTagBg",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  54,
+                                                  19
+                                                ],
+                                                "color": "$freedom_sec_bg"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardTimeHead",
+                                                "at": [
+                                                  6,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  300,
+                                                  19
+                                                ],
+                                                "font": "freedom_sec",
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 5
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardTime",
+                                          "h": 16,
+                                          "font": "freedom_ctime",
+                                          "color": "$freedom_black"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardSegs",
+                                          "h": 21,
+                                          "color": "$none",
+                                          "hidden": true,
+                                          "note": "The running project (.pbar): 20 navy segments in a white inset bar, 5 units below the time.",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "CardSegBar",
+                                                "at": [
+                                                  0,
+                                                  5
+                                                ],
+                                                "size": [
+                                                  382,
+                                                  16
+                                                ],
+                                                "set": "ozl_freedom",
+                                                "image": "seg_bar",
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg0",
+                                                "at": [
+                                                  4.0,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg1",
+                                                "at": [
+                                                  22.8,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg2",
+                                                "at": [
+                                                  41.6,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg3",
+                                                "at": [
+                                                  60.4,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg4",
+                                                "at": [
+                                                  79.2,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg5",
+                                                "at": [
+                                                  98.0,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg6",
+                                                "at": [
+                                                  116.8,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg7",
+                                                "at": [
+                                                  135.6,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg8",
+                                                "at": [
+                                                  154.4,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg9",
+                                                "at": [
+                                                  173.2,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg10",
+                                                "at": [
+                                                  192.0,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg11",
+                                                "at": [
+                                                  210.8,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg12",
+                                                "at": [
+                                                  229.6,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg13",
+                                                "at": [
+                                                  248.4,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg14",
+                                                "at": [
+                                                  267.2,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg15",
+                                                "at": [
+                                                  286.0,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg16",
+                                                "at": [
+                                                  304.8,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg17",
+                                                "at": [
+                                                  323.6,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg18",
+                                                "at": [
+                                                  342.4,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg19",
+                                                "at": [
+                                                  361.2,
+                                                  9
+                                                ],
+                                                "size": [
+                                                  16.8,
+                                                  8
+                                                ],
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CardOpensTag",
+                                          "h": 29,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardOpensTagBg",
+                                                "at": [
+                                                  0,
+                                                  10
+                                                ],
+                                                "size": [
+                                                  54,
+                                                  19
+                                                ],
+                                                "color": "$freedom_sec_bg"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardOpensHead",
+                                                "at": [
+                                                  6,
+                                                  10
+                                                ],
+                                                "size": [
+                                                  300,
+                                                  19
+                                                ],
+                                                "font": "freedom_sec",
+                                                "color": "$white"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 5
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardOpensList",
+                                          "w": 382,
+                                          "h": 23,
+                                          "note": "The menu lines the 'opens' chips up here (ozl_freedom_opens_chip) and sets the height to what they take; exact width, because the menu sizes it (SKINS.md: every widget the menu sizes is exact)."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "CardFoot",
+                              "at": [
+                                0,
+                                549
+                              ],
+                              "size": [
+                                382,
+                                79
+                              ],
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "BtnUp",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      382,
+                                      56
+                                    ],
+                                    "set": "ozl_freedom",
+                                    "image": "btn_up",
+                                    "color": "$white"
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "BtnDown",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      382,
+                                      56
+                                    ],
+                                    "set": "ozl_freedom",
+                                    "image": "btn_down",
+                                    "color": "$white",
+                                    "hidden": true,
+                                    "note": "The pressed look (.go:active): shown by the skin while the button is held."
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      382,
+                                      56
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: the face is BtnUp/BtnDown under it.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchShadow",
+                                          "at": [
+                                            1,
+                                            5.28
+                                          ],
+                                          "size": [
+                                            382,
+                                            42.25
+                                          ],
+                                          "font": "freedom_button",
+                                          "color": "$white",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
+                                          "align": "center",
+                                          "hidden": true,
+                                          "note": "The embossed shadow of a disabled button (text-shadow 1px 1px 0 #fff)."
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchText",
+                                          "at": [
+                                            0,
+                                            4.28
+                                          ],
+                                          "size": [
+                                            382,
+                                            42.25
+                                          ],
+                                          "font": "freedom_button",
+                                          "color": "$freedom_black",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
+                                          "align": "center",
+                                          "note": "Bold Comic 24: Pangolin SDF + SetBold; the menu writes ButtonText."
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "BtnResearchHover",
+                                          "at": [
+                                            0,
+                                            4.28
+                                          ],
+                                          "size": [
+                                            382,
+                                            42.25
+                                          ],
+                                          "font": "freedom_button",
+                                          "color": "$freedom_navy",
+                                          "text": "#STR_OZL_TREE_RESEARCH",
+                                          "align": "center",
+                                          "hidden": true,
+                                          "note": "Navy text under the mouse (.go:hover); the menu shows it while the button is enabled."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0,
+                                      61
+                                    ],
+                                    "size": [
+                                      382,
+                                      18
+                                    ],
+                                    "font": "freedom_why",
+                                    "color": "$freedom_cost_bad"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "Footer",
+                  "at": [
+                    0,
+                    842
+                  ],
+                  "size": [
+                    1600,
+                    50
+                  ],
+                  "color": "$none",
+                  "note": "The footer (.ffoot): the visit counter, the blinking NEW, the guestbook and links (inert), the copyright line. Centred as one row by the skin from the widths of its texts (OnUpdate, once).",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "FootBg",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1600,
+                          50
+                        ],
+                        "color": "$freedom_foot_bg"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "FootCounterLabel",
+                        "at": [
+                          383.11,
+                          16.5
+                        ],
+                        "w": 400,
+                        "h": 17,
+                        "font": "freedom_foot",
+                        "color": "$freedom_txt",
+                        "text": "#STR_OZL_SKIN_FREEDOM_COUNTER_LABEL"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "FootCounter",
+                        "at": [
+                          498.25,
+                          13
+                        ],
+                        "size": [
+                          98,
+                          24
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "icon": {
+                              "name": "FootLed",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                98,
+                                24
+                              ],
+                              "set": "ozl_freedom",
+                              "image": "led_foot",
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootDigit0",
+                              "at": [
+                                6.4,
+                                -3.75
+                              ],
+                              "size": [
+                                14,
+                                27.5
+                              ],
+                              "font": "freedom_led",
+                              "color": "$freedom_led_foot",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootDigit1",
+                              "at": [
+                                20.2,
+                                -3.75
+                              ],
+                              "size": [
+                                14,
+                                27.5
+                              ],
+                              "font": "freedom_led",
+                              "color": "$freedom_led_foot",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootDigit2",
+                              "at": [
+                                34.0,
+                                -3.75
+                              ],
+                              "size": [
+                                14,
+                                27.5
+                              ],
+                              "font": "freedom_led",
+                              "color": "$freedom_led_foot",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootDigit3",
+                              "at": [
+                                47.8,
+                                -3.75
+                              ],
+                              "size": [
+                                14,
+                                27.5
+                              ],
+                              "font": "freedom_led",
+                              "color": "$freedom_led_foot",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootDigit4",
+                              "at": [
+                                61.6,
+                                -3.75
+                              ],
+                              "size": [
+                                14,
+                                27.5
+                              ],
+                              "font": "freedom_led",
+                              "color": "$freedom_led_foot",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootDigit5",
+                              "at": [
+                                75.4,
+                                -3.75
+                              ],
+                              "size": [
+                                14,
+                                27.5
+                              ],
+                              "font": "freedom_led",
+                              "color": "$freedom_led_foot",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "FootNew",
+                        "at": [
+                          615.06,
+                          16.5
+                        ],
+                        "size": [
+                          62,
+                          17
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "icon": {
+                              "name": "FootStarL",
+                              "at": [
+                                0,
+                                -0.5
+                              ],
+                              "size": [
+                                12,
+                                18
+                              ],
+                              "set": "ozl_freedom",
+                              "image": "star",
+                              "color": "$freedom_blink"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "FootNewText",
+                              "at": [
+                                15.4,
+                                0
+                              ],
+                              "w": 100,
+                              "h": 17,
+                              "font": "freedom_foot",
+                              "color": "$freedom_blink",
+                              "text": "#STR_OZL_SKIN_FREEDOM_FOOT_NEW"
+                            }
+                          },
+                          {
+                            "icon": {
+                              "name": "FootStarR",
+                              "at": [
+                                50.8,
+                                -0.5
+                              ],
+                              "size": [
+                                12,
+                                18
+                              ],
+                              "set": "ozl_freedom",
+                              "image": "star",
+                              "color": "$freedom_blink"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "FootGuest",
+                        "at": [
+                          694.67,
+                          17
+                        ],
+                        "size": [
+                          110,
+                          16
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "FootGuestText",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "w": 600,
+                              "h": 16,
+                              "font": "freedom_foot",
+                              "color": "$freedom_link",
+                              "text": "#STR_OZL_SKIN_FREEDOM_FOOT_GUESTBOOK"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "FootGuestLine",
+                              "at": [
+                                0,
+                                14
+                              ],
+                              "size": [
+                                100,
+                                1
+                              ],
+                              "color": "$freedom_link"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "FootLinks",
+                        "at": [
+                          814.98,
+                          17
+                        ],
+                        "size": [
+                          40,
+                          16
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "FootLinksText",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "w": 600,
+                              "h": 16,
+                              "font": "freedom_foot",
+                              "color": "$freedom_link",
+                              "text": "#STR_OZL_SKIN_FREEDOM_FOOT_LINKS"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "FootLinksLine",
+                              "at": [
+                                0,
+                                14
+                              ],
+                              "size": [
+                                100,
+                                1
+                              ],
+                              "color": "$freedom_link"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "FootCopy",
+                        "at": [
+                          870.41,
+                          16.5
+                        ],
+                        "size": [
+                          360,
+                          17
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "FootCopyText",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "w": 600,
+                              "h": 17,
+                              "font": "freedom_foot",
+                              "color": "$freedom_txt",
+                              "text": "#STR_OZL_SKIN_FREEDOM_FOOT_COPY"
+                            }
+                          },
+                          {
+                            "icon": {
+                              "name": "FootPeace",
+                              "at": [
+                                350.5,
+                                -0.5
+                              ],
+                              "size": [
+                                12,
+                                18
+                              ],
+                              "set": "ozl_freedom",
+                              "image": "peace_small",
+                              "color": "$freedom_txt"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "HelperRoot",
+                  "at": [
+                    40,
+                    500
+                  ],
+                  "size": [
+                    270,
+                    330
+                  ],
+                  "color": "$none",
+                  "note": "The helper (.fhelp): the speech bubble (three slices: the middle stretches to the text) with the tip's title and text, the buttons 'Ага' (next tip) and 'Відчепись' (hides for 10 s), and the leaf with eyes below it. The skin lays it out from the wrapped lines, bobs and blinks the leaf and fades the whole helper (OnUpdate).",
+                  "children": [
+                    {
+                      "icon": {
+                        "name": "BubbleTop",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          266,
+                          12
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "bubble_top",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "BubbleMid",
+                        "at": [
+                          0,
+                          12
+                        ],
+                        "size": [
+                          266,
+                          106.34
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "bubble_mid",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "BubbleBot",
+                        "at": [
+                          0,
+                          118.34
+                        ],
+                        "size": [
+                          266,
+                          22
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "bubble_bot",
+                        "color": "$white"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "HelperTitle",
+                        "at": [
+                          13,
+                          11
+                        ],
+                        "size": [
+                          236,
+                          56
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "HelperTitle0",
+                              "at": [
+                                0,
+                                0.0
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_title",
+                              "color": "$freedom_black"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperTitle1",
+                              "at": [
+                                0,
+                                18.2
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_title",
+                              "color": "$freedom_black",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperTitle2",
+                              "at": [
+                                0,
+                                36.4
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_title",
+                              "color": "$freedom_black",
+                              "hidden": true
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "HelperText",
+                        "at": [
+                          13,
+                          51.4
+                        ],
+                        "size": [
+                          236,
+                          92
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "HelperText0",
+                              "at": [
+                                0,
+                                0.0
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_text",
+                              "color": "$freedom_black"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperText1",
+                              "at": [
+                                0,
+                                18.2
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_text",
+                              "color": "$freedom_black",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperText2",
+                              "at": [
+                                0,
+                                36.4
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_text",
+                              "color": "$freedom_black",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperText3",
+                              "at": [
+                                0,
+                                54.6
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_text",
+                              "color": "$freedom_black",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperText4",
+                              "at": [
+                                0,
+                                72.8
+                              ],
+                              "size": [
+                                236,
+                                18.2
+                              ],
+                              "font": "freedom_help_text",
+                              "color": "$freedom_black",
+                              "hidden": true
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "HelperNextBox",
+                        "at": [
+                          109.94,
+                          95.75
+                        ],
+                        "size": [
+                          45.08,
+                          23.6
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "HelperNextFace",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                45.08,
+                                23.6
+                              ],
+                              "color": "$freedom_win"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperNextTop",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                45.08,
+                                2
+                              ],
+                              "color": "$freedom_win_hi"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperNextLeft",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                2,
+                                23.6
+                              ],
+                              "color": "$freedom_win_hi"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperNextBottom",
+                              "at": [
+                                0,
+                                21.6
+                              ],
+                              "size": [
+                                45.08,
+                                2
+                              ],
+                              "color": "$freedom_win_lo"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperNextRight",
+                              "at": [
+                                43.08,
+                                0
+                              ],
+                              "size": [
+                                2,
+                                23.6
+                              ],
+                              "color": "$freedom_win_lo"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperNextText",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                45.08,
+                                23.6
+                              ],
+                              "font": "freedom_help_button",
+                              "color": "$freedom_black",
+                              "text": "#STR_OZL_SKIN_FREEDOM_HELP_NEXT",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "HelperNext",
+                              "class": "ButtonWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                45.08,
+                                23.6
+                              ],
+                              "props": {
+                                "style": "Empty",
+                                "text": ""
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "HelperHideBox",
+                        "at": [
+                          163.02,
+                          95.75
+                        ],
+                        "size": [
+                          85.98,
+                          23.6
+                        ],
+                        "color": "$none",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "HelperHideFace",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                85.98,
+                                23.6
+                              ],
+                              "color": "$freedom_win"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperHideTop",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                85.98,
+                                2
+                              ],
+                              "color": "$freedom_win_hi"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperHideLeft",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                2,
+                                23.6
+                              ],
+                              "color": "$freedom_win_hi"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperHideBottom",
+                              "at": [
+                                0,
+                                21.6
+                              ],
+                              "size": [
+                                85.98,
+                                2
+                              ],
+                              "color": "$freedom_win_lo"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "HelperHideRight",
+                              "at": [
+                                83.98,
+                                0
+                              ],
+                              "size": [
+                                2,
+                                23.6
+                              ],
+                              "color": "$freedom_win_lo"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "HelperHideText",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                85.98,
+                                23.6
+                              ],
+                              "font": "freedom_help_button",
+                              "color": "$freedom_black",
+                              "text": "#STR_OZL_SKIN_FREEDOM_HELP_HIDE",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "HelperHide",
+                              "class": "ButtonWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                85.98,
+                                23.6
+                              ],
+                              "props": {
+                                "style": "Empty",
+                                "text": ""
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "HelperLeaf",
+                        "at": [
+                          138,
+                          128.34
+                        ],
+                        "size": [
+                          124,
+                          136
+                        ],
+                        "set": "ozl_freedom",
+                        "image": "leaf_open",
+                        "color": "$white",
+                        "note": "Frames leaf_open / leaf_half / leaf_shut (the blink), moved up and down by the skin (the bob)."
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
