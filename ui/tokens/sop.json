@@ -1,5 +1,5 @@
 {
-  "note": "Tokens of the sop tree window «Тактичний планшет» (mockup body[data-f=sop]). Every name starts with 'sop_' so the seven skin files never collide; only the sop skin task edits this file (source/ui/SKINS.md).",
+  "note": "Tokens of the sop tree window «Тактичний планшет» (mockup body[data-f=sop]). Every name starts with 'sop_' so the seven skin files never collide; only the sop skin task edits this file (source/ui/SKINS.md). Colours are the mockup's variables and the color-mix() values its base CSS derives from them; fonts restate face, size and fixed, and the size is the cell height = round(CSS px x 1.236 for Oswald 400, x 1.238 for Oswald 600; source/fonts/README.md). The 7-segment timer is the vanilla 7segment family's 48-pixel file (cell 40 px, digit ink 87 % of it). The game blends in linear light: sop_roll (.05 in the mockup) is .0075 so the band shows as faintly as in the browser on the dark window.",
   "color": {
     "sop_txt": [0.925, 0.875, 0.682, 1.0],
     "sop_dim": [0.604, 0.553, 0.361, 1.0],
@@ -18,10 +18,42 @@
     "sop_done_bg": [0.166, 0.185, 0.095, 1.0],
     "sop_done_edge": [0.392, 0.469, 0.229, 1.0],
     "sop_res_edge": [0.585, 0.433, 0.134, 1.0],
+    "sop_avail_bg": [0.207, 0.166, 0.066, 1.0],
+    "sop_locked_bg": [0.063, 0.06, 0.035, 1.0],
     "sop_line_dim": [0.604, 0.553, 0.361, 0.6],
     "sop_fog": [0.065, 0.061, 0.032, 1.0],
     "sop_casing": [0.235, 0.227, 0.173, 1.0],
     "sop_casing_hi": [0.361, 0.345, 0.259, 1.0],
-    "sop_grid": [1.0, 0.784, 0.431, 0.07]
+    "sop_grid": [1.0, 0.784, 0.431, 0.07],
+    "sop_stage": [0.02, 0.02, 0.016, 1.0],
+    "sop_roll": [1.0, 0.902, 0.627, 0.0075]
+  },
+  "font": {
+    "sop_dev": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 19, "fixed": false},
+    "sop_bname": {"face": "OpenZone_Research/gui/fonts/ozl_oswaldb70", "size": 37, "fixed": false},
+    "sop_bsub": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_pool": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 19, "fixed": false},
+    "sop_pool_value": {"face": "OpenZone_Research/gui/fonts/ozl_oswaldb70", "size": 30, "fixed": false},
+    "sop_tier": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_legend": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 17, "fixed": false},
+    "sop_tip": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 16, "fixed": false},
+    "sop_node": {"face": "OpenZone_Research/gui/fonts/ozl_oswaldb42", "size": 21, "fixed": false},
+    "sop_price": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 19, "fixed": false},
+    "sop_or": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 14, "fixed": false},
+    "sop_head": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_cname": {"face": "OpenZone_Research/gui/fonts/ozl_oswaldb70", "size": 40, "fixed": false},
+    "sop_cmeta": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_cstat": {"face": "OpenZone_Research/gui/fonts/ozl_oswaldb42", "size": 25, "fixed": false},
+    "sop_cdesc": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 21, "fixed": false},
+    "sop_sec": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_crow": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 22, "fixed": false},
+    "sop_ctime": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 22, "fixed": false},
+    "sop_timer": {"face": "gui/fonts/7segment48", "size": 26, "fixed": false},
+    "sop_opens": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_button": {"face": "OpenZone_Research/gui/fonts/ozl_oswaldb70", "size": 35, "fixed": false},
+    "sop_why": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_empty": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 20, "fixed": false},
+    "sop_empty_hint": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 16, "fixed": false},
+    "sop_close": {"face": "OpenZone_Research/gui/fonts/ozl_oswald40", "size": 17, "fixed": false}
   }
 }

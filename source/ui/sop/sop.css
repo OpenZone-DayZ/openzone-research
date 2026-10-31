@@ -1,0 +1,108 @@
+/* The sop window («Тактичний планшет»): the CSS of the owner's mockup that draws its pictures,
+   lifted as it is (body[data-f="sop"] and the base rules it builds on). Every picture of
+   sprites.json is a box on the bake page; the classes below are the mockup's own rules with
+   the box in place of the mockup's element. Colours are the mockup's tokens. */
+
+/* Oswald from the repository: the bake has no network, the mockup took it from Google Fonts */
+@font-face {
+  font-family: "Oswald";
+  src: url("../../fonts/oswald/Oswald%5Bwght%5D.ttf") format("truetype");
+  font-weight: 200 700;
+  font-style: normal;
+}
+
+* { box-sizing: border-box; }
+
+body[data-f="sop"] {
+  --font: "Oswald", "Bahnschrift SemiCondensed", "Arial Narrow", sans-serif;
+  --txt: #ecdfae; --dim: #9a8d5c; --acc: #ffb935; --ok: #b4dc6a; --bad: #ff6a4a;
+  --screen: #14130b; --edge: #5a5232; --lcd: #121109;
+  --casing: #3c3a2c; --casing-hi: #5c5842; --dev-r: 54px;
+  font-family: var(--font);
+}
+
+/* The game blends the interface in LINEAR light and the browser in sRGB (measured on the stand
+   2026-10-31: white at alpha .04 / .1 / .25 / .5 over black drew 56 / 90 / 137 / 188, the sRGB
+   encoding of the alpha itself). A half-transparent black is weaker there and a half-transparent
+   light far stronger, so every partly transparent picture below carries the alpha that gives the
+   mockup's sRGB result in the game: black a -> 1 - (1 - a)^2.2; a light over the dark window ->
+   about a / 6 (worked out on the window's #14130b). */
+
+/* #stage::before -- the tube's bezel: a thick rounded casing, the ring, the dark band and the
+   shadow it throws onto the glass (mockup .75 -> .95). Above everything in the game too. */
+.sop-bezel {
+  position: absolute; inset: 0;
+  border: 26px solid #24231b; border-radius: var(--dev-r);
+  box-shadow: inset 0 0 0 3px #45422f, inset 0 0 0 30px #070705, inset 0 0 60px 20px rgba(0,0,0,.95);
+}
+
+/* #stage::after without its pixel pattern: the dark corners (mockup 0 / .4 / .8 at 68 / 90 /
+   100 % -> the same curve for linear blending, with stops between; black from 98 % on and no
+   rounded corners -- both under the bezel -- so the DXT5 read-back keeps the alpha range the
+   bake checks). The scanlines are the tile crt_lines (pixel-sharp). The glare on the glass
+   (rgba(255,255,240,.07)) is left out: on the dark window linear blending needs it at about
+   4/255, and four alpha levels drew four visible rings (stand, 2026-10-31). */
+.sop-glow {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 68%, rgba(0,0,0,.207) 73.5%, rgba(0,0,0,.388) 79%,
+      rgba(0,0,0,.544) 84.5%, rgba(0,0,0,.675) 90%, rgba(0,0,0,.867) 95%, #000 98%);
+}
+
+/* #stage::after: scanlines 2 of 4 as a 16 x 16 pixel tile (mockup .34 black -> .58). The game
+   tiles a picture without stretching at one texel per screen pixel, so the tile is drawn in
+   pixels: 1 px = 2/3 of a CSS px of this page (the bake draws it at 1.5). The mockup's RGB mask
+   (.04-.05 colour columns) is left out: DXT5 keeps two colours per 4 x 4 block and turned it
+   into green dots, and at its true strength it is invisible on the dark window anyway. */
+.sop-lines {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.58) 0 1.3333333px, transparent 1.3333333px 2.6666667px);
+}
+
+/* .hud: the 10-unit hazard stripe on top and the border-image of the plate's 1-unit sides,
+   which the stripe turns into a dashed line. Only the border: the plate itself is a panel. */
+.sop-hud {
+  position: absolute; inset: 0;
+  border: 1px solid var(--edge); border-top: 10px solid transparent;
+  border-image: repeating-linear-gradient(-45deg, var(--acc) 0 14px, #15150f 14px 28px) 10;
+}
+
+/* .content .bg over the tree's lcd: the glow of the screen, OPAQUE -- composited here in sRGB,
+   so the game draws exactly the mockup's colours (the grid lines are drawn on the canvas) */
+.sop-tree-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--txt) 6%, transparent), rgba(0,0,0,.35) 90%), var(--lcd);
+}
+
+/* the stripes of the fog, as a 32 x 32 pixel tile: 135deg, half txt at 4 % (-> .6 % for linear
+   blending over the fog) */
+.sop-fog-stripes {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(236,223,174,.006) 0 7.5424723px, transparent 7.5424723px 15.0849447px);
+}
+
+/* .node .cell: the diamond -- a 62-unit square turned 45 degrees, its 3-unit edge, the
+   dashed edge of a locked node and the outline of the selected one (outline-offset 5) */
+.sop-cell {
+  position: absolute; left: 13px; top: 13px; width: 62px; height: 62px; transform: rotate(45deg);
+}
+.sop-cell.fill { background: #fff; }
+.sop-cell.edge { border: 3px solid #fff; }
+.sop-cell.dash { border: 3px dashed #fff; }
+.sop-cell.sel { left: 22px; top: 22px; outline: 1px solid #fff; outline-offset: 5px; }
+
+/* .tree::after, .target::after: the corner brackets, 36 x 4 */
+.sop-bracket { position: absolute; background: #fff; }
+
+/* the glyphs the mockup's text has and Oswald has not: the line box of their text */
+.sop-glyph { position: absolute; left: 0; top: 0; font-size: 16px; line-height: 25px; color: #fff; white-space: nowrap; }
+
+/* .crow .cbar: dashes of 8 with gaps of 2; the comb paints the gaps over a solid track and fill */
+.sop-comb { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 8px, #fff 8px 10px); }
+
+/* .roll: the band that runs down the screen every 7 s */
+.sop-roll { position: absolute; inset: 0; background: linear-gradient(rgba(255,255,255,0), #fff 50%, rgba(255,255,255,0)); }
+
+/* the fade at the start of the fog: clear on the left, the tree grows right; the mockup's linear
+   0 -> 1 as it looks with linear blending (1 - (1 - a)^2.2 at 0 / 25 / 50 / 75 / 100 %) */
+.sop-fog-edge { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.469) 25%, rgba(255,255,255,.782) 50%, rgba(255,255,255,.953) 75%, #fff); }

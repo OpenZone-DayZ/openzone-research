@@ -1,0 +1,2469 @@
+{
+  "layout": "ozl_tree_sop",
+  "note": "The sop window («Тактичний планшет»): an old tube monitor -- a thick rounded bezel, scanlines, an RGB mask, dark corners, a glare on the glass, a flicker and a rolling band -- showing a military HUD: the call sign of the branch and the pool as ammo gauges under a hazard stripe, the tree growing right in diamonds on an amber grid, and the target frame with the node's data. Root TreeWindow fills the screen; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome (build/ui/sop/reference.png).",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "panel": {
+            "name": "TreeOutside",
+            "size": "fill",
+            "color": "$sop_stage",
+            "note": "The dark around the tube on a screen wider than 16:9 (#stage's background)."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "children": [
+              {
+                "panel": {
+                  "name": "HudPlate",
+                  "at": [
+                    64,
+                    62
+                  ],
+                  "size": [
+                    1472,
+                    92
+                  ],
+                  "color": "$sop_screen",
+                  "note": "The HUD plate (.hud): the call sign block (DevName over BranchName), the sub, and on the right the pool as ammo gauges. The skin puts BranchSub after the wider of the two call-sign lines and lines the pool rows up from the right edge (their widths are their texts').",
+                  "children": [
+                    {
+                      "image": {
+                        "name": "HudStripe",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1472,
+                          92
+                        ],
+                        "file": "OpenZone_Research/gui/textures/tree/sop/hud_ca.paa",
+                        "color": "$white",
+                        "note": "The plate's border-image: the hazard stripe on top, its dashes along the 1-unit sides."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "DevName",
+                        "at": [
+                          27,
+                          17
+                        ],
+                        "size": [
+                          700,
+                          22
+                        ],
+                        "font": "sop_dev",
+                        "color": "$sop_dim",
+                        "text": "#STR_OZL_SKIN_SOP_DEV",
+                        "note": "Capitals and letter spacing from the skin (OnShow)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchName",
+                        "at": [
+                          27,
+                          39
+                        ],
+                        "size": [
+                          700,
+                          45
+                        ],
+                        "font": "sop_bname",
+                        "color": "$sop_txt"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "SopBranchMark",
+                        "at": [
+                          200,
+                          49
+                        ],
+                        "size": [
+                          16,
+                          25
+                        ],
+                        "set": "ozl_sop",
+                        "image": "sec_arrow",
+                        "color": "$sop_dim",
+                        "hidden": true,
+                        "note": "Not in the mockup: with more than one branch, a mark after the call sign says it switches."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchSub",
+                        "at": [
+                          226,
+                          40.5
+                        ],
+                        "size": [
+                          600,
+                          24
+                        ],
+                        "font": "sop_bsub",
+                        "color": "$sop_dim"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "PoolList",
+                        "at": [
+                          396,
+                          28
+                        ],
+                        "size": [
+                          1049,
+                          52
+                        ],
+                        "color": "$none",
+                        "note": "The menu creates the pool rows (ozl_sop_pool_row) here; the skin places them right to left from this box's right edge, 18 apart."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "PoolEmpty",
+                        "at": [
+                          396,
+                          40.5
+                        ],
+                        "size": [
+                          1049,
+                          24
+                        ],
+                        "font": "sop_bsub",
+                        "color": "$sop_dim",
+                        "text": "#STR_OZL_TREE_POOL_EMPTY",
+                        "align": "right",
+                        "hidden": true
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "SopBranchNext",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          27,
+                          17
+                        ],
+                        "size": [
+                          200,
+                          67
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "hidden": true,
+                        "note": "Not in the mockup: the call sign cycles the branches when the faction has more than one (the skin's OnClick)."
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "TreeBox",
+                  "at": [
+                    64,
+                    166
+                  ],
+                  "size": [
+                    1030,
+                    676
+                  ],
+                  "color": "$sop_lcd",
+                  "note": "The tree (.tree, lcd): the scrolled content, the legend, the corner brackets above both.",
+                  "children": [
+                    {
+                      "raw": {
+                        "name": "TreeScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1030,
+                          642
+                        ],
+                        "color": "$sop_cell_edge",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "Scrollbar H": 1,
+                          "style": "blank"
+                        },
+                        "note": "The tree: drag it, or the wheel. The menu sizes TreeContent. Its colour and style blank make the scrollbars the mockup's dark thumb (--cell-edge) instead of the engine's white bar, as the vanilla inventory scrollers do.",
+                        "children": [
+                          {
+                            "frame": {
+                              "name": "TreeContent",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1018,
+                                630
+                              ],
+                              "children": [
+                                {
+                                  "image": {
+                                    "name": "TreeGlow",
+                                    "size": "fill",
+                                    "file": "OpenZone_Research/gui/textures/tree/sop/tree_glow_ca.paa",
+                                    "color": "$white",
+                                    "note": "The screen behind the tree (.tree lcd + .content .bg glow), opaque, stretched over the whole content as the CSS gradient is."
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTiers",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "TreeLines",
+                                    "class": "CanvasWidgetClass",
+                                    "size": "fill",
+                                    "props": {
+                                      "ignorepointer": 1
+                                    },
+                                    "note": "The 56-unit amber grid and every link, drawn by the menu."
+                                  }
+                                },
+                                {
+                                  "image": {
+                                    "name": "SopFogStripes",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      80,
+                                      630
+                                    ],
+                                    "file": "OpenZone_Research/gui/textures/tree/sop/fog_stripes_ca.paa",
+                                    "stretch": false,
+                                    "color": "$white",
+                                    "hidden": true,
+                                    "note": "The fog's 135-degree stripes, a pixel tile under TreeFogEdge: they show through the fade only, as in the mockup. The skin keeps it on TreeFogEdge's rectangle."
+                                  }
+                                },
+                                {
+                                  "icon": {
+                                    "name": "TreeFogEdge",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      80,
+                                      630
+                                    ],
+                                    "set": "ozl_sop",
+                                    "image": "fog_edge",
+                                    "color": "$sop_fog",
+                                    "hidden": true,
+                                    "note": "The 80-unit fade at the start of the fog, clear on the left (the tree grows right)."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "TreeFog",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      100,
+                                      630
+                                    ],
+                                    "color": "$sop_fog",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeNodes",
+                                    "size": "fill"
+                                  }
+                                },
+                                {
+                                  "frame": {
+                                    "name": "TreeTip",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      300,
+                                      31
+                                    ],
+                                    "hidden": true,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipEdge",
+                                          "size": "fill",
+                                          "color": "$sop_txt"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "TreeTipBg",
+                                          "at": [
+                                            1,
+                                            1
+                                          ],
+                                          "size": [
+                                            298,
+                                            29
+                                          ],
+                                          "color": "$sop_screen"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "TreeTipText",
+                                          "at": [
+                                            10,
+                                            6
+                                          ],
+                                          "size": [
+                                            600,
+                                            19
+                                          ],
+                                          "font": "sop_tip",
+                                          "color": "$sop_txt",
+                                          "note": "Wider than any tip on purpose: the menu sizes TreeTip from the text (GetTextSize) and TreeTip clips the rest."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "TreeLegend",
+                        "at": [
+                          0,
+                          642
+                        ],
+                        "size": [
+                          1030,
+                          34
+                        ],
+                        "note": "The legend under the tree (.legend): lcd, a 1-unit edge on top.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "LegendRule",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1030,
+                                1
+                              ],
+                              "color": "$sop_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegendRow",
+                              "at": [
+                                16,
+                                7
+                              ],
+                              "size": [
+                                1000,
+                                21
+                              ],
+                              "color": "$none",
+                              "note": "Lined up by the menu (FlowLater from the skin's OnShow) by the width of each item's TEXT plus 14: the English words are longer.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegLocked",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      21
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegLockedBox",
+                                          "at": [
+                                            0,
+                                            4.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "set": "ozl_sop",
+                                          "image": "legend_box",
+                                          "color": "$sop_faint"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegLockedText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            300,
+                                            21
+                                          ],
+                                          "font": "sop_legend",
+                                          "color": "$sop_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_LOCKED"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegShort",
+                                    "at": [
+                                      72.13,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      21
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegShortBox",
+                                          "at": [
+                                            0,
+                                            4.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$sop_bad"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegShortText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            300,
+                                            21
+                                          ],
+                                          "font": "sop_legend",
+                                          "color": "$sop_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_SHORT"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegOpen",
+                                    "at": [
+                                      165.53,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      21
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegOpenBox",
+                                          "at": [
+                                            0,
+                                            4.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$sop_acc"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegOpenText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            300,
+                                            21
+                                          ],
+                                          "font": "sop_legend",
+                                          "color": "$sop_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_OPEN"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegDone",
+                                    "at": [
+                                      311.28,
+                                      0
+                                    ],
+                                    "size": [
+                                      318,
+                                      21
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "LegDoneBox",
+                                          "at": [
+                                            0,
+                                            4.5
+                                          ],
+                                          "size": [
+                                            12,
+                                            12
+                                          ],
+                                          "color": "$sop_ok"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegDoneText",
+                                          "at": [
+                                            18,
+                                            0
+                                          ],
+                                          "size": [
+                                            300,
+                                            21
+                                          ],
+                                          "font": "sop_legend",
+                                          "color": "$sop_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_DONE"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAll",
+                                    "at": [
+                                      405.97,
+                                      0
+                                    ],
+                                    "size": [
+                                      340,
+                                      21
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAllMark",
+                                          "at": [
+                                            0,
+                                            4.5
+                                          ],
+                                          "size": [
+                                            34,
+                                            12
+                                          ],
+                                          "set": "ozl_sop",
+                                          "image": "legend_all",
+                                          "color": "$sop_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAllText",
+                                          "at": [
+                                            40,
+                                            0
+                                          ],
+                                          "size": [
+                                            300,
+                                            21
+                                          ],
+                                          "font": "sop_legend",
+                                          "color": "$sop_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_ALL"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "LegAny",
+                                    "at": [
+                                      511.41,
+                                      0
+                                    ],
+                                    "size": [
+                                      344,
+                                      21
+                                    ],
+                                    "color": "$none",
+                                    "children": [
+                                      {
+                                        "icon": {
+                                          "name": "LegAnyMark",
+                                          "at": [
+                                            0,
+                                            4.5
+                                          ],
+                                          "size": [
+                                            38,
+                                            12
+                                          ],
+                                          "set": "ozl_sop",
+                                          "image": "legend_any",
+                                          "color": "$sop_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "LegAnyText",
+                                          "at": [
+                                            44,
+                                            0
+                                          ],
+                                          "size": [
+                                            300,
+                                            21
+                                          ],
+                                          "font": "sop_legend",
+                                          "color": "$sop_dim",
+                                          "text": "#STR_OZL_TREE_LEGEND_ANY"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "list": {
+                        "name": "TreeTemplates",
+                        "stack": "TreeTemplateList",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          100,
+                          20
+                        ],
+                        "hidden": true,
+                        "note": "Holds no rows: it only declares the row files the menu creates outside the lists.",
+                        "rows": {
+                          "ozl_sop_tier_label": {
+                            "row": {
+                              "name": "OZL_SopTierLabel",
+                              "h": 1,
+                              "note": "A tier label ('тир I'); the menu puts the row's corner on the label's centre (x along, 22 across).",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "TierText",
+                                    "at": [
+                                      -60,
+                                      -12
+                                    ],
+                                    "size": [
+                                      120,
+                                      24
+                                    ],
+                                    "font": "sop_tier",
+                                    "color": "$sop_dim",
+                                    "align": "center"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_sop_or_label": {
+                            "row": {
+                              "name": "OZL_SopOrLabel",
+                              "h": 22,
+                              "note": "АБО centred above the diamond of an any-of knot, its baseline 14 above the knot (the mockup's svg text). The SAME widgets as ozl_sop_price_chip: the engine handed this path the price chip's layout (stand 2026-10-31, on two fresh clients; a byte-identical copy under another name loaded right), so both files hold the same parts at the same size and the skin shows the right ones (LabelTick): whichever file the engine hands over, the row works.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PriceChip",
+                                    "at": [
+                                      0,
+                                      10.9
+                                    ],
+                                    "size": [
+                                      7,
+                                      7
+                                    ],
+                                    "color": "$sop_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PriceText",
+                                    "at": [
+                                      10,
+                                      0
+                                    ],
+                                    "w": "auto",
+                                    "h": 22,
+                                    "font": "sop_price",
+                                    "color": "$sop_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "OrText",
+                                    "at": [
+                                      -30,
+                                      -27.1
+                                    ],
+                                    "size": [
+                                      60,
+                                      16.3
+                                    ],
+                                    "font": "sop_or",
+                                    "color": "$sop_dim",
+                                    "text": "#STR_OZL_TREE_OR",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_sop_pool_row": {
+                            "row": {
+                              "name": "OZL_SopPoolRow",
+                              "h": 52,
+                              "note": "One line of the pool in the HUD (.hud .prow): the name in capitals and the number under it, where the mockup's segment gauge began. No gauge: the owner dropped it (2026-10-31), it read as unrelated to the number. Created into PoolList; the skin places the rows.",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "PoolName",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      300,
+                                      22
+                                    ],
+                                    "font": "sop_pool",
+                                    "color": "$sop_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PoolValue",
+                                    "at": [
+                                      0,
+                                      20
+                                    ],
+                                    "size": [
+                                      100,
+                                      30
+                                    ],
+                                    "font": "sop_pool_value",
+                                    "color": "$sop_txt"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "ozl_sop_price_chip": {
+                            "row": {
+                              "name": "OZL_SopPriceChip",
+                              "h": 22,
+                              "note": "A price chip of a node: the 7-unit square of the line (sitting on the baseline) and the amount; the skin centres the row under the node. Holds the hidden OrText of ozl_sop_or_label too (see there).",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "PriceChip",
+                                    "at": [
+                                      0,
+                                      10.9
+                                    ],
+                                    "size": [
+                                      7,
+                                      7
+                                    ],
+                                    "color": "$sop_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "PriceText",
+                                    "at": [
+                                      10,
+                                      0
+                                    ],
+                                    "w": "auto",
+                                    "h": 22,
+                                    "font": "sop_price",
+                                    "color": "$sop_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "OrText",
+                                    "at": [
+                                      -30,
+                                      -27.1
+                                    ],
+                                    "size": [
+                                      60,
+                                      16.3
+                                    ],
+                                    "font": "sop_or",
+                                    "color": "$sop_dim",
+                                    "text": "#STR_OZL_TREE_OR",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeBrTL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_tl",
+                        "color": "$sop_acc"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeBrTR",
+                        "at": [
+                          994,
+                          0
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_tr",
+                        "color": "$sop_acc"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeBrBL",
+                        "at": [
+                          0,
+                          640
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_bl",
+                        "color": "$sop_acc"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TreeBrBR",
+                        "at": [
+                          994,
+                          640
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_br",
+                        "color": "$sop_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "TargetBox",
+                  "at": [
+                    1106,
+                    166
+                  ],
+                  "size": [
+                    430,
+                    676
+                  ],
+                  "color": "$sop_screen",
+                  "note": "The target frame (.target): the card in 30 / 30 / 24 of padding, the corner brackets.",
+                  "children": [
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          30,
+                          30
+                        ],
+                        "size": [
+                          370,
+                          622
+                        ],
+                        "hidden": true,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                0,
+                                287.3
+                              ],
+                              "size": [
+                                370,
+                                24
+                              ],
+                              "font": "sop_empty",
+                              "color": "$sop_dim",
+                              "text": "#STR_OZL_TREE_PICK",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                0,
+                                311
+                              ],
+                              "size": [
+                                370,
+                                24
+                              ],
+                              "font": "sop_empty_hint",
+                              "color": "$sop_dim",
+                              "text": "#STR_OZL_TREE_HINT",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardBody",
+                        "at": [
+                          30,
+                          30
+                        ],
+                        "size": [
+                          380,
+                          622
+                        ],
+                        "children": [
+                          {
+                            "raw": {
+                              "name": "CardScroll",
+                              "class": "ScrollWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                380,
+                                506
+                              ],
+                              "color": "$sop_cell_edge",
+                              "props": {
+                                "clipchildren": 1,
+                                "Scrollbar V": 1,
+                                "style": "blank"
+                              },
+                              "note": "The target's data, top to bottom (.card, gap 14 between blocks, 8 inside one); a long one scrolls above the button. The stack is the mockup's 370 and the scrollbar takes the 10 beside it (the engine draws it over the content's right edge, which hid the last digits of a cost); colour and style blank give it the mockup's dark thumb, as on the tree.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "CardFlow",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 370,
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "SopHeadRow",
+                                          "h": 25,
+                                          "color": "$none",
+                                          "note": "«◇ ЦІЛЬ» (.c-head::before): the diamond is a sprite, Oswald has no ◇.",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "SopTargetMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  18,
+                                                  25
+                                                ],
+                                                "set": "ozl_sop",
+                                                "image": "target_mark",
+                                                "color": "$sop_dim"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "SopTargetText",
+                                                "at": [
+                                                  26.25,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  300,
+                                                  25
+                                                ],
+                                                "font": "sop_head",
+                                                "color": "$sop_dim",
+                                                "text": "#STR_OZL_SKIN_SOP_TARGET"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 8
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardName",
+                                          "note": "Word-wrapped by the menu into its lines (bitmap fonts: no MultilineTextWidget).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardName0",
+                                                "h": 38,
+                                                "font": "sop_cname",
+                                                "color": "$sop_txt"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardName1",
+                                                "h": 38,
+                                                "font": "sop_cname",
+                                                "color": "$sop_txt",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardName2",
+                                                "h": 38,
+                                                "font": "sop_cname",
+                                                "color": "$sop_txt",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 6.8
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardMeta",
+                                          "note": "Word-wrapped by the menu into its lines (bitmap fonts: no MultilineTextWidget).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardMeta0",
+                                                "h": 24,
+                                                "font": "sop_cmeta",
+                                                "color": "$sop_soft"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta1",
+                                                "h": 24,
+                                                "font": "sop_cmeta",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta2",
+                                                "h": 24,
+                                                "font": "sop_cmeta",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 8
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardStatus",
+                                          "h": 30,
+                                          "font": "sop_cstat",
+                                          "color": "$sop_acc"
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 14
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardDesc",
+                                          "note": "Word-wrapped by the menu into its lines (bitmap fonts: no MultilineTextWidget).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardDesc0",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc1",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc2",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc3",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc4",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc5",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc6",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc7",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc8",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc9",
+                                                "h": 23.8,
+                                                "font": "sop_cdesc",
+                                                "color": "$sop_soft",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "SopCostHeadRow",
+                                          "h": 39,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "SopCostArrow",
+                                                "at": [
+                                                  0,
+                                                  14
+                                                ],
+                                                "size": [
+                                                  16,
+                                                  25
+                                                ],
+                                                "set": "ozl_sop",
+                                                "image": "sec_arrow",
+                                                "color": "$sop_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardCostHead",
+                                                "at": [
+                                                  21.78,
+                                                  14
+                                                ],
+                                                "size": [
+                                                  340,
+                                                  25
+                                                ],
+                                                "font": "sop_sec",
+                                                "color": "$sop_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardCostList"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "SopItemsHeadRow",
+                                          "h": 33,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "SopItemsArrow",
+                                                "at": [
+                                                  0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  16,
+                                                  25
+                                                ],
+                                                "set": "ozl_sop",
+                                                "image": "sec_arrow",
+                                                "color": "$sop_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardItemsHead",
+                                                "at": [
+                                                  21.78,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  340,
+                                                  25
+                                                ],
+                                                "font": "sop_sec",
+                                                "color": "$sop_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardItemList"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "SopTimeHeadRow",
+                                          "h": 39,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "SopTimeArrow",
+                                                "at": [
+                                                  0,
+                                                  14
+                                                ],
+                                                "size": [
+                                                  16,
+                                                  25
+                                                ],
+                                                "set": "ozl_sop",
+                                                "image": "sec_arrow",
+                                                "color": "$sop_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardTimeHead",
+                                                "at": [
+                                                  21.78,
+                                                  14
+                                                ],
+                                                "size": [
+                                                  340,
+                                                  25
+                                                ],
+                                                "font": "sop_sec",
+                                                "color": "$sop_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "SopTimeRow",
+                                          "h": 34,
+                                          "color": "$none",
+                                          "note": "The time line: 'Тривалість: 1 хв 00 с' (CardTime), or while researching 'Лишилось' + the 7-segment clock + 'з 1 хв 00 с' (the skin shows those and grows the row to 47; the clock is 26 high, the words 18 px).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardTime",
+                                                "at": [
+                                                  0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  370,
+                                                  26
+                                                ],
+                                                "font": "sop_ctime",
+                                                "color": "$sop_txt"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "SopTimeLeft",
+                                                "at": [
+                                                  0,
+                                                  20.23
+                                                ],
+                                                "size": [
+                                                  200,
+                                                  22
+                                                ],
+                                                "font": "sop_ctime",
+                                                "color": "$sop_txt",
+                                                "text": "#STR_OZL_TREE_LEFT",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardTimer",
+                                                "at": [
+                                                  75,
+                                                  17.2
+                                                ],
+                                                "size": [
+                                                  200,
+                                                  26
+                                                ],
+                                                "color": "$none",
+                                                "hidden": true,
+                                                "note": "The big 7-segment clock (.tmr). The vanilla 7segment font has digits and no colon, so the skin writes the groups of OZL_Text.Clock into SopTimerG0..2 and puts the colon sprites between them; the menu only shows and hides this container.",
+                                                "children": [
+                                                  {
+                                                    "label": {
+                                                      "name": "SopTimerG0",
+                                                      "at": [
+                                                        0,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        80,
+                                                        26
+                                                      ],
+                                                      "font": "sop_timer",
+                                                      "color": "$sop_txt"
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "SopTimerC0",
+                                                      "at": [
+                                                        16,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        8,
+                                                        26
+                                                      ],
+                                                      "set": "ozl_sop",
+                                                      "image": "timer_colon",
+                                                      "color": "$sop_txt"
+                                                    }
+                                                  },
+                                                  {
+                                                    "label": {
+                                                      "name": "SopTimerG1",
+                                                      "at": [
+                                                        24,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        80,
+                                                        26
+                                                      ],
+                                                      "font": "sop_timer",
+                                                      "color": "$sop_txt"
+                                                    }
+                                                  },
+                                                  {
+                                                    "icon": {
+                                                      "name": "SopTimerC1",
+                                                      "at": [
+                                                        56,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        8,
+                                                        26
+                                                      ],
+                                                      "set": "ozl_sop",
+                                                      "image": "timer_colon",
+                                                      "color": "$sop_txt",
+                                                      "hidden": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "label": {
+                                                      "name": "SopTimerG2",
+                                                      "at": [
+                                                        64,
+                                                        0
+                                                      ],
+                                                      "size": [
+                                                        80,
+                                                        26
+                                                      ],
+                                                      "font": "sop_timer",
+                                                      "color": "$sop_txt",
+                                                      "hidden": true
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "SopTimeTail",
+                                                "at": [
+                                                  130,
+                                                  20.23
+                                                ],
+                                                "size": [
+                                                  240,
+                                                  22
+                                                ],
+                                                "font": "sop_ctime",
+                                                "color": "$sop_txt",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardSegs",
+                                          "h": 24,
+                                          "hidden": true,
+                                          "note": "The 16-high segmented bar of a running project (.pbar): 20 segments, 3 apart; 8 above it.",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg0",
+                                                "at": [
+                                                  0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg1",
+                                                "at": [
+                                                  18.65,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg2",
+                                                "at": [
+                                                  37.3,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg3",
+                                                "at": [
+                                                  55.95,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg4",
+                                                "at": [
+                                                  74.6,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg5",
+                                                "at": [
+                                                  93.25,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg6",
+                                                "at": [
+                                                  111.9,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg7",
+                                                "at": [
+                                                  130.55,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg8",
+                                                "at": [
+                                                  149.2,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg9",
+                                                "at": [
+                                                  167.85,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg10",
+                                                "at": [
+                                                  186.5,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg11",
+                                                "at": [
+                                                  205.15,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg12",
+                                                "at": [
+                                                  223.8,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg13",
+                                                "at": [
+                                                  242.45,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg14",
+                                                "at": [
+                                                  261.1,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg15",
+                                                "at": [
+                                                  279.75,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg16",
+                                                "at": [
+                                                  298.4,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg17",
+                                                "at": [
+                                                  317.05,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg18",
+                                                "at": [
+                                                  335.7,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg19",
+                                                "at": [
+                                                  354.35,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.65,
+                                                  16
+                                                ],
+                                                "color": "$sop_track"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "SopOpensHeadRow",
+                                          "h": 47,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "icon": {
+                                                "name": "SopOpensArrow",
+                                                "at": [
+                                                  0,
+                                                  14
+                                                ],
+                                                "size": [
+                                                  16,
+                                                  25
+                                                ],
+                                                "set": "ozl_sop",
+                                                "image": "sec_arrow",
+                                                "color": "$sop_acc"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardOpensHead",
+                                                "at": [
+                                                  21.78,
+                                                  14
+                                                ],
+                                                "size": [
+                                                  340,
+                                                  25
+                                                ],
+                                                "font": "sop_sec",
+                                                "color": "$sop_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardOpensList",
+                                          "h": 38,
+                                          "note": "The skin lines the 'opens' chips up here (ozl_sop_opens_chip) and sets the height to what they take."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "CardFoot",
+                              "at": [
+                                0,
+                                520
+                              ],
+                              "size": [
+                                370,
+                                102
+                              ],
+                              "note": "The button (.go, 70 high, a 4-unit frame) and the reason under it.",
+                              "children": [
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      370,
+                                      70
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: a style-less button paints a light box under the mouse."
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "SopBtnTop",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      370,
+                                      4
+                                    ],
+                                    "color": "$sop_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "SopBtnBottom",
+                                    "at": [
+                                      0,
+                                      66
+                                    ],
+                                    "size": [
+                                      370,
+                                      4
+                                    ],
+                                    "color": "$sop_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "SopBtnLeft",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      4,
+                                      70
+                                    ],
+                                    "color": "$sop_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "SopBtnRight",
+                                    "at": [
+                                      366,
+                                      0
+                                    ],
+                                    "size": [
+                                      4,
+                                      70
+                                    ],
+                                    "color": "$sop_edge"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "BtnResearchText",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      370,
+                                      70
+                                    ],
+                                    "font": "sop_button",
+                                    "color": "$sop_faint",
+                                    "text": "#STR_OZL_TREE_RESEARCH",
+                                    "align": "center"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchHover",
+                                    "at": [
+                                      4,
+                                      4
+                                    ],
+                                    "size": [
+                                      362,
+                                      62
+                                    ],
+                                    "color": "$sop_acc",
+                                    "hidden": true,
+                                    "note": "Under the mouse while enabled (.go:hover): amber with the word in the screen's colour.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "SopBtnHoverText",
+                                          "at": [
+                                            -4,
+                                            -4
+                                          ],
+                                          "size": [
+                                            370,
+                                            70
+                                          ],
+                                          "font": "sop_button",
+                                          "color": "$sop_screen",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0,
+                                      78
+                                    ],
+                                    "size": [
+                                      370,
+                                      24
+                                    ],
+                                    "font": "sop_why",
+                                    "color": "$sop_bad"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "list": {
+                              "name": "CardTemplates",
+                              "stack": "CardTemplateList",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                380,
+                                20
+                              ],
+                              "hidden": true,
+                              "note": "Holds no rows: it only declares the card's row files (built 370 wide, the stack's width).",
+                              "rows": {
+                                "ozl_sop_cost_row": {
+                                  "row": {
+                                    "name": "OZL_SopCostRow",
+                                    "h": 44,
+                                    "note": "A cost line (.crow): the 14-unit chip of the line, the name, 'have / need' on the right and under them the dashed bar -- a solid track and fill with the comb of 2-unit gaps (8 on, 2 off) painted over both in the plate's colour. The 8 before the line is the gap between lines.",
+                                    "children": [
+                                      {
+                                        "panel": {
+                                          "name": "CostChip",
+                                          "at": [
+                                            0,
+                                            14
+                                          ],
+                                          "size": [
+                                            14,
+                                            14
+                                          ],
+                                          "color": "$sop_dim"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CostName",
+                                          "at": [
+                                            22,
+                                            8
+                                          ],
+                                          "size": [
+                                            280,
+                                            26
+                                          ],
+                                          "font": "sop_crow",
+                                          "color": "$sop_txt"
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CostValue",
+                                          "at": [
+                                            22,
+                                            8
+                                          ],
+                                          "size": [
+                                            348,
+                                            26
+                                          ],
+                                          "font": "sop_crow",
+                                          "color": "$sop_txt",
+                                          "align": "right"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CostBar",
+                                          "at": [
+                                            22,
+                                            38
+                                          ],
+                                          "size": [
+                                            348,
+                                            6
+                                          ],
+                                          "color": "$sop_track",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CostBarFill",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  0,
+                                                  6
+                                                ],
+                                                "color": "$sop_ok"
+                                              }
+                                            },
+                                            {
+                                              "icon": {
+                                                "name": "CostComb",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  348,
+                                                  6
+                                                ],
+                                                "set": "ozl_sop",
+                                                "image": "cbar_comb",
+                                                "color": "$sop_screen"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                "ozl_sop_opens_chip": {
+                                  "row": {
+                                    "name": "OZL_SopOpensChip",
+                                    "h": 38,
+                                    "note": "A node this one opens (.opens a): the name in a 2-unit frame, 12 in from it. The skin lines the chips up (gap 6, wrapping) and sizes the frame to the text; ChipHit is the click.",
+                                    "children": [
+                                      {
+                                        "raw": {
+                                          "name": "ChipHit",
+                                          "class": "ButtonWidgetClass",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            200,
+                                            38
+                                          ],
+                                          "props": {
+                                            "style": "Empty",
+                                            "text": ""
+                                          },
+                                          "note": "style Empty: a style-less button paints a light box under the mouse."
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "ChipText",
+                                          "at": [
+                                            12,
+                                            7
+                                          ],
+                                          "size": [
+                                            600,
+                                            24
+                                          ],
+                                          "font": "sop_opens",
+                                          "color": "$sop_txt",
+                                          "note": "Wider than any name: the skin measures the text (GetTextSize) and clips nothing."
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "ChipTopLine",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            200,
+                                            2
+                                          ],
+                                          "color": "$sop_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "ChipBottomLine",
+                                          "at": [
+                                            0,
+                                            36
+                                          ],
+                                          "size": [
+                                            200,
+                                            2
+                                          ],
+                                          "color": "$sop_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "ChipLeftEdge",
+                                          "at": [
+                                            0,
+                                            0
+                                          ],
+                                          "size": [
+                                            2,
+                                            38
+                                          ],
+                                          "color": "$sop_edge"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "ChipRightEdge",
+                                          "at": [
+                                            198,
+                                            0
+                                          ],
+                                          "size": [
+                                            2,
+                                            38
+                                          ],
+                                          "color": "$sop_edge"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TgtBrTL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_tl",
+                        "color": "$sop_acc"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TgtBrTR",
+                        "at": [
+                          394,
+                          0
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_tr",
+                        "color": "$sop_acc"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TgtBrBL",
+                        "at": [
+                          0,
+                          640
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_bl",
+                        "color": "$sop_acc"
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "TgtBrBR",
+                        "at": [
+                          394,
+                          640
+                        ],
+                        "size": [
+                          36,
+                          36
+                        ],
+                        "set": "ozl_sop",
+                        "image": "bracket_br",
+                        "color": "$sop_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "icon": {
+                  "name": "CrtRoll",
+                  "at": [
+                    0,
+                    -160
+                  ],
+                  "size": [
+                    1600,
+                    160
+                  ],
+                  "set": "ozl_sop",
+                  "image": "roll",
+                  "color": "$sop_roll",
+                  "note": "The roll bar (.roll): a soft 160-high band, moved from -160 to 900 every 7 s by the skin's OnUpdate."
+                }
+              },
+              {
+                "image": {
+                  "name": "CrtGlow",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/sop/crt_glow_ca.paa",
+                  "color": "$white",
+                  "note": "The glass (#stage::after): the glare and the dark corners. Its alpha flickers like crt-flicker (OnUpdate)."
+                }
+              },
+              {
+                "image": {
+                  "name": "CrtLines",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/sop/crt_lines_ca.paa",
+                  "stretch": false,
+                  "color": "$white",
+                  "note": "Scanlines 2 of 4: a 16-pixel tile repeated at one texel per screen pixel. Flickers with CrtGlow."
+                }
+              },
+              {
+                "image": {
+                  "name": "Bezel",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/sop/bezel_ca.paa",
+                  "color": "$white",
+                  "note": "The tube's bezel (#stage::before): the 26-unit casing rounded 54, its ring and the dark band, above everything."
+                }
+              },
+              {
+                "raw": {
+                  "name": "BtnClose",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    1340,
+                    874
+                  ],
+                  "size": [
+                    190,
+                    26
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "Not in the mockup: the window has no close control (Esc closes it), so a word on the casing's bottom rim does.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "BtnCloseText",
+                        "size": "fill",
+                        "font": "sop_close",
+                        "color": "$sop_dim",
+                        "text": "#STR_OZL_TREE_CLOSE",
+                        "align": "right"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "anchor": "center",
+            "size": [
+              1600,
+              900
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

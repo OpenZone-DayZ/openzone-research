@@ -1,0 +1,246 @@
+{
+  "layout": "ozl_node_sop",
+  "note": "One node of the sop window: a 62-unit square turned 45 degrees (88 x 88 by its box) with a 3-unit edge, the icon in it, the name in capitals under it, the price under the name, the progress bar under the diamond and the mark above-right. The cell is 200 x 176 with the node's point at (100, 56), the skin's AnchorX/AnchorY. NodeHit is the style-less button under the diamond and the texts.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        200,
+        176
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "color": "$none",
+            "click": true,
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it is under it and only sees the cell's margins. Every other widget of the node ignores the pointer.",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    5,
+                    10
+                  ],
+                  "size": [
+                    190,
+                    164
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "The node's only pointer target (style Empty), under the diamond: the diamond, the mark, the name and the price -- the parts of the mockup's node that take the mouse."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeFill",
+                  "at": [
+                    56,
+                    12
+                  ],
+                  "size": [
+                    88,
+                    88
+                  ],
+                  "set": "ozl_sop",
+                  "image": "diamond_fill",
+                  "color": "$sop_cell",
+                  "note": "The diamond's fill: the skin tints it by status (cell, amber 14 %, green 14 %, the locked dark)."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    56,
+                    12
+                  ],
+                  "size": [
+                    88,
+                    88
+                  ],
+                  "set": "ozl_sop",
+                  "image": "diamond_edge",
+                  "color": "$sop_cell_edge",
+                  "note": "The 3-unit edge: slot 0 solid, slot 1 dashed (locked), tinted by status; the hovered node's edge is txt."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    47,
+                    3
+                  ],
+                  "size": [
+                    106,
+                    106
+                  ],
+                  "set": "ozl_sop",
+                  "image": "diamond_sel",
+                  "color": "$sop_txt",
+                  "hidden": true,
+                  "note": "The selected node: a 1-unit outline 5 outside the edge."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeIcon",
+                  "at": [
+                    84,
+                    40
+                  ],
+                  "size": [
+                    32,
+                    32
+                  ],
+                  "set": "ozl_common",
+                  "image": "mark_dot",
+                  "color": "$sop_dim",
+                  "hidden": true,
+                  "note": "The node's own icon (the menu loads it into slot 0)."
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    60,
+                    103
+                  ],
+                  "size": [
+                    80,
+                    5
+                  ],
+                  "color": "$sop_track",
+                  "hidden": true,
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "NodeBarFill",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          0,
+                          5
+                        ],
+                        "color": "$sop_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    5,
+                    107.27
+                  ],
+                  "size": [
+                    190,
+                    40.55
+                  ],
+                  "color": "$none",
+                  "note": "The name UNDER the diamond, in capitals, two lines at most (19.55 apart), wrapped by the menu.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          190,
+                          21
+                        ],
+                        "font": "sop_node",
+                        "color": "$sop_txt",
+                        "align": "center"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0,
+                          19.55
+                        ],
+                        "size": [
+                          190,
+                          21
+                        ],
+                        "font": "sop_node",
+                        "color": "$sop_txt",
+                        "align": "center",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    5,
+                    152
+                  ],
+                  "size": [
+                    190,
+                    22
+                  ],
+                  "color": "$none",
+                  "note": "The menu puts the price chips (ozl_sop_price_chip) in a row here; the skin centres the row."
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    5,
+                    152
+                  ],
+                  "size": [
+                    190,
+                    22
+                  ],
+                  "font": "sop_price",
+                  "color": "$sop_dim",
+                  "align": "center",
+                  "hidden": true
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    129.5,
+                    13
+                  ],
+                  "size": [
+                    22,
+                    22
+                  ],
+                  "set": "ozl_common",
+                  "image": "mark_check",
+                  "color": "$sop_ok",
+                  "hidden": true,
+                  "note": "Above-right of the diamond: lock / check / dot (blinking while researching)."
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "note": "Preview gallery of the sop tree window («Тактичний планшет») for ui_gallery index=preview/sop.json. The window's root is the whole host, the 1600x900 stage centred in it. A fixture only sets texts: what the skin lays out at run time (the pool gauges, the price under a node, the 7-segment clock, the opens chips) needs the live menu -- look at it with world_exec oz_research treeui. A fixture travels to the bridge as one JSON string of at most ~1000 bytes on the wire.",
+  "entries": [
+    {
+      "name": "sop-window",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_sop.layout",
+      "host": "1600 900",
+      "fixture": "preview/sop-window.json"
+    },
+    {
+      "name": "sop-node",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_sop.layout",
+      "host": "200 176",
+      "fixture": "preview/sop-node.json"
+    }
+  ]
+}

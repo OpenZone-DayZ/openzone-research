@@ -1,6 +1,64 @@
 {
-  "comment": "Placeholder until the skin is drawn: one 8x8 transparent sprite, so the imageset that config.cpp registers exists and loads.",
+  "comment": [
+    "The sop window («Тактичний планшет», the tube-monitor tablet): every picture the mockup draws with CSS.",
+    "Sizes are layout units; drawn at 1.5 px per unit. White shapes are tinted in the game (the layout's color or SetColor);",
+    "the textures with their own colours (bezel, glow, hud, tree_glow, crt_lines, fog_stripes) are shown with color 1 1 1 1.",
+    "The rules are the mockup's own CSS (body[data-f=sop] and the base it builds on), lifted into sop.css.",
+    "crt_lines and fog_stripes are pixel tiles: the game repeats a picture shown without stretching at one texel per",
+    "screen pixel, so they are drawn at exactly 16 and 32 pixels (w x 1.5 = size) and keep the mockup's pattern in",
+    "pixels: scanlines 2 of 4 at 1920x1080, the 135-degree stripes of the fog at 3840x1600.",
+    "The game blends in LINEAR light (measured 2026-10-31), so every partly transparent picture carries a compensated",
+    "alpha and the tree's glow is baked opaque over its lcd; sop.css says which and why."
+  ],
+  "scale": 1.5,
+  "css": ["sop.css"],
+  "body": { "data-f": "sop" },
   "sprites": [
-    { "name": "blank", "w": 8, "h": 8, "html": "" }
+    { "name": "diamond_fill", "w": 88, "h": 88, "html": "<div class='sop-cell fill'></div>" },
+    { "name": "diamond_edge", "w": 88, "h": 88, "html": "<div class='sop-cell edge'></div>" },
+    { "name": "diamond_dash", "w": 88, "h": 88, "html": "<div class='sop-cell dash'></div>" },
+    { "name": "diamond_sel", "w": 106, "h": 106, "html": "<div class='sop-cell sel'></div>" },
+    {
+      "name": "bracket_tl", "w": 36, "h": 36,
+      "html": "<div class='sop-bracket' style='left:0;top:0;width:36px;height:4px'></div><div class='sop-bracket' style='left:0;top:0;width:4px;height:36px'></div>"
+    },
+    {
+      "name": "bracket_tr", "w": 36, "h": 36,
+      "html": "<div class='sop-bracket' style='right:0;top:0;width:36px;height:4px'></div><div class='sop-bracket' style='right:0;top:0;width:4px;height:36px'></div>"
+    },
+    {
+      "name": "bracket_bl", "w": 36, "h": 36,
+      "html": "<div class='sop-bracket' style='left:0;bottom:0;width:36px;height:4px'></div><div class='sop-bracket' style='left:0;bottom:0;width:4px;height:36px'></div>"
+    },
+    {
+      "name": "bracket_br", "w": 36, "h": 36,
+      "html": "<div class='sop-bracket' style='right:0;bottom:0;width:36px;height:4px'></div><div class='sop-bracket' style='right:0;bottom:0;width:4px;height:36px'></div>"
+    },
+    { "name": "target_mark", "w": 18, "h": 25, "html": "<div class='sop-glyph'>&#x25C7;</div>" },
+    { "name": "sec_arrow", "w": 16, "h": 25, "html": "<div class='sop-glyph'>&#x25B8;</div>" },
+    {
+      "name": "timer_colon", "w": 8, "h": 26,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='8' height='26' viewBox='0 0 8 26'><path d='M3.6 5.6h2.8l-.5 2.8H3.1zM2.1 14.4h2.8l-.5 2.8H1.6z' fill='#fff'/></svg>"
+    },
+    { "name": "legend_box", "w": 12, "h": 12, "html": "<div style='position:absolute;inset:0;border:1px dashed #fff'></div>" },
+    {
+      "name": "legend_all", "w": 34, "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='34' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2'/><rect x='26' y='2' width='8' height='8' fill='#fff'/></svg>"
+    },
+    {
+      "name": "legend_any", "w": 38, "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='38' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2' stroke-dasharray='4 3'/><path d='M32 1l5 5-5 5-5-5z' fill='none' stroke='#fff' stroke-width='1.5'/></svg>"
+    },
+    { "name": "fog_edge", "w": 80, "h": 16, "html": "<div class='sop-fog-edge'></div>" },
+    { "name": "roll", "w": 8, "h": 160, "html": "<div class='sop-roll'></div>" },
+    { "name": "cbar_comb", "w": 348, "h": 6, "html": "<div class='sop-comb'></div>" }
+  ],
+  "textures": [
+    { "name": "bezel", "w": 1600, "h": 900, "size": [2048, 1024], "html": "<div class='sop-bezel'></div>" },
+    { "name": "crt_glow", "w": 1600, "h": 900, "size": [1024, 512], "html": "<div class='sop-glow'></div>" },
+    { "name": "crt_lines", "w": 10.666666, "h": 10.666666, "size": [16, 16], "html": "<div class='sop-lines'></div>" },
+    { "name": "hud", "w": 1472, "h": 92, "size": [2048, 128], "html": "<div class='sop-hud'></div>" },
+    { "name": "tree_glow", "w": 1172, "h": 630, "size": [512, 256], "html": "<div class='sop-tree-glow'></div>" },
+    { "name": "fog_stripes", "w": 21.333333, "h": 21.333333, "size": [32, 32], "html": "<div class='sop-fog-stripes'></div>" }
   ]
 }
