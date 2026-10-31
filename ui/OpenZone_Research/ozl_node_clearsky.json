@@ -1,0 +1,259 @@
+{
+  "layout": "ozl_node_clearsky",
+  "note": "One node of the clearsky window: a round marker 50 x 50 with a 2-unit edge, the icon 26 in its centre, the name to the RIGHT (from x + 34, 150 wide, two lines), the price under it, the progress bar under the price (120 wide), the mark above-right; available = a 6-unit glow ring (acc at 20 %), selected = a dashed circle 5 units out. The cell is 226 x 72 with the node's point at (36, 36), the skin's AnchorX/AnchorY. NodeHit is the style-less button under the marker and the texts.",
+  "root": {
+    "frame": {
+      "name": "NodeCell",
+      "size": [
+        226,
+        72
+      ],
+      "children": [
+        {
+          "panel": {
+            "name": "NodeBody",
+            "size": "fill",
+            "color": "$none",
+            "click": true,
+            "note": "The only container that takes the pointer, on purpose: it holds NodeHit, so it is under it and only sees the cell's margins. Every other widget of the node ignores the pointer.",
+            "children": [
+              {
+                "raw": {
+                  "name": "NodeHit",
+                  "class": "ButtonWidgetClass",
+                  "at": [
+                    11,
+                    11
+                  ],
+                  "size": [
+                    209,
+                    54
+                  ],
+                  "props": {
+                    "style": "Empty",
+                    "text": ""
+                  },
+                  "note": "style Empty: a style-less button paints a light box under the mouse."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeRing",
+                  "at": [
+                    5,
+                    5
+                  ],
+                  "size": [
+                    62,
+                    62
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "node_glow",
+                  "color": "$clearsky_glow",
+                  "hidden": true,
+                  "note": "Available: box-shadow 0 0 0 6px of acc at 20 %."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeFill",
+                  "at": [
+                    11,
+                    11
+                  ],
+                  "size": [
+                    50,
+                    50
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "node_disc",
+                  "color": "$clearsky_cell",
+                  "note": "The marker's fill; the skin colours it by status."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeShape",
+                  "at": [
+                    11,
+                    11
+                  ],
+                  "size": [
+                    50,
+                    50
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "node_ring",
+                  "color": "$clearsky_cell_edge",
+                  "note": "The 2-unit edge: slot 0 solid, slot 1 dashed (locked); tinted by status, txt under the mouse."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeSel",
+                  "at": [
+                    5,
+                    5
+                  ],
+                  "size": [
+                    62,
+                    62
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "node_sel",
+                  "color": "$clearsky_txt",
+                  "hidden": true,
+                  "note": "Selected: outline 1px dashed, 5 out."
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeIcon",
+                  "at": [
+                    23,
+                    23
+                  ],
+                  "size": [
+                    26,
+                    26
+                  ],
+                  "set": "ozl_common",
+                  "image": "mark_dot",
+                  "color": "$clearsky_dim",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeName",
+                  "at": [
+                    70,
+                    12.95
+                  ],
+                  "size": [
+                    150,
+                    32
+                  ],
+                  "color": "$none",
+                  "note": ".lbl: 13px, line 1.15, 150 wide, two lines at most; wrapped by the menu.",
+                  "children": [
+                    {
+                      "label": {
+                        "name": "NodeName0",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          150,
+                          17
+                        ],
+                        "font": "clearsky_node",
+                        "color": "$clearsky_txt"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "NodeName1",
+                        "at": [
+                          0,
+                          14.95
+                        ],
+                        "size": [
+                          150,
+                          17
+                        ],
+                        "font": "clearsky_node",
+                        "color": "$clearsky_txt",
+                        "hidden": true
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodePrice",
+                  "at": [
+                    70,
+                    44
+                  ],
+                  "size": [
+                    150,
+                    16
+                  ],
+                  "color": "$none"
+                }
+              },
+              {
+                "label": {
+                  "name": "NodePriceText",
+                  "at": [
+                    70,
+                    44
+                  ],
+                  "size": [
+                    150,
+                    16
+                  ],
+                  "font": "clearsky_price",
+                  "color": "$clearsky_dim",
+                  "hidden": true
+                }
+              },
+              {
+                "panel": {
+                  "name": "NodeBar",
+                  "at": [
+                    70,
+                    62
+                  ],
+                  "size": [
+                    120,
+                    3
+                  ],
+                  "color": "$clearsky_track",
+                  "hidden": true,
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "NodeBarFill",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          0,
+                          3
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "icon": {
+                  "name": "NodeMark",
+                  "at": [
+                    52,
+                    4
+                  ],
+                  "size": [
+                    16,
+                    16
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "mark_check",
+                  "color": "$clearsky_ok",
+                  "hidden": true,
+                  "note": ".mark at (16, -32) from the point, the mockup's 12px glyph."
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

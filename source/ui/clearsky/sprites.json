@@ -1,6 +1,55 @@
 {
-  "comment": "Placeholder until the skin is drawn: one 8x8 transparent sprite, so the imageset that config.cpp registers exists and loads.",
+  "comment": [
+    "The clearsky window («Польовий КПК», the Clear Sky field PDA): every picture the mockup draws with CSS.",
+    "Sizes are layout units; drawn at 1.5 px per unit. White shapes are tinted in the game (the layout's color or SetColor);",
+    "the map texture has its own colours, is opaque (composited on --lcd: the game blends in linear light) and is shown with color 1 1 1 1.",
+    "icon_gear is the mockup's ICON.gear, the icon its iconOf() falls back to: the skin shows it in a node that has no icon of its own.",
+    "The rules are the mockup's own CSS (body[data-f=clearsky] and the base it builds on), lifted into clearsky.css.",
+    "The straight bands of the casing and every flat rectangle (the floating panels, their edges and accent corners,",
+    "chips, bars, the button) are panels of the layout; only the casing's rounded corners are pictures here.",
+    "scan and fog_stripes are pixel tiles: the game repeats a picture shown without stretching at one texel per screen",
+    "pixel, so they are drawn at exactly 16 and 32 pixels (w x 1.5 = size)."
+  ],
+  "scale": 1.5,
+  "css": ["clearsky.css"],
+  "body": { "data-f": "clearsky" },
   "sprites": [
-    { "name": "blank", "w": 8, "h": 8, "html": "" }
+    { "name": "node_disc", "w": 50, "h": 50, "html": "<div class='cs-cell cs-disc'></div>" },
+    { "name": "node_ring", "w": 50, "h": 50, "html": "<div class='cs-cell cs-ring'></div>" },
+    { "name": "node_ring_dash", "w": 50, "h": 50, "html": "<div class='cs-cell cs-ring-dash'></div>" },
+    { "name": "node_glow", "w": 50, "h": 50, "pad": 6, "html": "<div class='cs-cell cs-glow'></div>" },
+    { "name": "node_sel", "w": 50, "h": 50, "pad": 6, "html": "<div class='cs-cell cs-sel'></div>" },
+    { "name": "mark_lock", "w": 16, "h": 16, "html": "<div class='cs-mark cs-emoji'>&#x1F512;</div>" },
+    { "name": "mark_check", "w": 16, "h": 16, "html": "<div class='cs-mark'>&#x2713;</div>" },
+    { "name": "mark_dot", "w": 16, "h": 16, "html": "<div class='cs-mark'>&#x25CF;</div>" },
+    {
+      "name": "icon_gear", "w": 26, "h": 26,
+      "html": "<div class='cs-icon'><svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='1.8'><circle cx='12' cy='12' r='3.2'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1'/><circle cx='12' cy='12' r='6.5'/></svg></div>"
+    },
+    { "name": "head_dash", "w": 266, "h": 1, "html": "<div class='cs-hdash'></div>" },
+    { "name": "chip_dash", "w": 88, "h": 23, "html": "<div class='cs-chip-dash'></div>" },
+    { "name": "legend_box", "w": 12, "h": 12, "html": "<div class='cs-lbox'></div>" },
+    {
+      "name": "legend_all", "w": 34, "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='34' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2'/><rect x='26' y='2' width='8' height='8' fill='#fff'/></svg>"
+    },
+    {
+      "name": "legend_any", "w": 38, "h": 12,
+      "html": "<svg xmlns='http://www.w3.org/2000/svg' width='38' height='12'><path d='M0 6H26' stroke='#fff' stroke-width='2' stroke-dasharray='4 3'/><path d='M32 1l5 5-5 5-5-5z' fill='none' stroke='#fff' stroke-width='1.5'/></svg>"
+    },
+    { "name": "fog_edge", "w": 16, "h": 80, "html": "<div class='cs-fog-edge'></div>" },
+    { "name": "casing_tl", "w": 14, "h": 14, "html": "<div class='cs-casing' style='left:0;top:0'></div>" },
+    { "name": "casing_tr", "w": 14, "h": 14, "html": "<div class='cs-casing' style='right:0;top:0'></div>" },
+    { "name": "casing_bl", "w": 14, "h": 14, "html": "<div class='cs-casing' style='left:0;bottom:0'></div>" },
+    { "name": "casing_br", "w": 14, "h": 14, "html": "<div class='cs-casing' style='right:0;bottom:0'></div>" },
+    { "name": "casing_hi_tl", "w": 4, "h": 4, "html": "<div class='cs-hi' style='left:0;top:0'></div>" },
+    { "name": "casing_hi_tr", "w": 4, "h": 4, "html": "<div class='cs-hi' style='right:0;top:0'></div>" },
+    { "name": "casing_hi_bl", "w": 4, "h": 4, "html": "<div class='cs-hi' style='left:0;bottom:0'></div>" },
+    { "name": "casing_hi_br", "w": 4, "h": 4, "html": "<div class='cs-hi' style='right:0;bottom:0'></div>" }
+  ],
+  "textures": [
+    { "name": "map", "w": 1564, "h": 830, "size": [2048, 1024], "html": "<div class='cs-map'></div>" },
+    { "name": "scan", "w": 10.666666, "h": 10.666666, "size": [16, 16], "html": "<div class='cs-scan'></div>" },
+    { "name": "fog_stripes", "w": 21.333333, "h": 21.333333, "size": [32, 32], "html": "<div class='cs-fog-stripes'></div>" }
   ]
 }

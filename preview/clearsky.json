@@ -1,0 +1,29 @@
+{
+  "note": "Preview gallery of the clearsky tree window («Польовий КПК») for ui_gallery index=preview/clearsky.json. The window's root is the whole host, the 1600x900 stage centred in it. A fixture only sets texts, colours and visibility: what the skin lays out at run time (the opens chips, the '»' after a branch name, the tier numerals, the gear of a node without an icon, the fog stripes) needs the live menu -- look at it with world_exec oz_research treeui owner=clearsky. A fixture travels to the bridge as one JSON string of at most ~1000 bytes on the wire.",
+  "entries": [
+    {
+      "name": "clearsky-window",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_clearsky.layout",
+      "host": "1600 900",
+      "fixture": "preview/clearsky-window.json"
+    },
+    {
+      "name": "clearsky-node",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_clearsky.layout",
+      "host": "226 72",
+      "fixture": "preview/clearsky-node.json"
+    },
+    {
+      "name": "clearsky-node-available",
+      "layout": "OpenZone_Research/gui/layouts/ozl_node_clearsky.layout",
+      "host": "226 72",
+      "fixture": "preview/clearsky-node-available.json"
+    },
+    {
+      "name": "clearsky-pool",
+      "layout": "OpenZone_Research/gui/layouts/ozl_tree_clearsky.layout",
+      "host": "1600 900",
+      "fixture": "preview/clearsky-pool.json"
+    }
+  ]
+}

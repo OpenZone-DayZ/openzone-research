@@ -1,0 +1,2962 @@
+{
+  "layout": "ozl_tree_clearsky",
+  "note": "The clearsky window («Польовий КПК», the Clear Sky field PDA): a dark-blue PDA casing; the whole screen is the map (contour lines over a 64-unit grid) and the tree on it grows down, left of the card; three panels float over the map: the branch, the legend with the points, the node's card. Root TreeWindow fills the screen with the stage's colour; TreeStage is the mockup's 1600x900 stage, centred. Roles the menu fills are listed in source/ui/SKINS.md; numbers are the mockup's, measured in Chrome; every text's baseline is the mockup's.",
+  "root": {
+    "frame": {
+      "name": "TreeWindow",
+      "size": "screen",
+      "priority": 10,
+      "children": [
+        {
+          "panel": {
+            "name": "CsOutside",
+            "size": "fill",
+            "color": "$clearsky_stage",
+            "note": "Around the PDA on any screen (the stage is 1600 x 900 units, the screen wider): #stage's own colour, casing 40 % with #0b0b0a."
+          }
+        },
+        {
+          "frame": {
+            "name": "TreeStage",
+            "anchor": "center",
+            "size": [
+              1600,
+              900
+            ],
+            "children": [
+              {
+                "panel": {
+                  "name": "CsTreeBg",
+                  "at": [
+                    12,
+                    12
+                  ],
+                  "size": [
+                    1576,
+                    876
+                  ],
+                  "color": "$clearsky_lcd",
+                  "note": "The map's ground: .tree's --lcd, under the scroll and the legend."
+                }
+              },
+              {
+                "raw": {
+                  "name": "TreeScroll",
+                  "class": "ScrollWidgetClass",
+                  "at": [
+                    12,
+                    12
+                  ],
+                  "size": [
+                    1576,
+                    842
+                  ],
+                  "color": "$clearsky_cell_edge",
+                  "props": {
+                    "clipchildren": 1,
+                    "Scrollbar V": 1,
+                    "Scrollbar H": 1,
+                    "style": "blank"
+                  },
+                  "note": "The whole window is the map: .scroll of the tree at (12, 12), 34 above the legend strip. Drag it, or the wheel. The menu sizes TreeContent. Colour + style blank: the mockup's thumb (--cell-edge) on a dark track instead of the engine's white bar.",
+                  "children": [
+                    {
+                      "frame": {
+                        "name": "TreeContent",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1564,
+                          830
+                        ],
+                        "children": [
+                          {
+                            "image": {
+                              "name": "CsMap",
+                              "size": "fill",
+                              "file": "OpenZone_Research/gui/textures/tree/clearsky/map_ca.paa",
+                              "color": "$white",
+                              "note": "The map itself (.content .bg): the screen's glow over the contour lines, stretched over the content as the CSS stretches them. The grid is the canvas's (GridStep 64)."
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CsTiers",
+                              "size": "fill",
+                              "color": "$none",
+                              "note": "The tier numerals (.tierlab: 13px, dim, letters spread, centred on x = 22): the window's OWN labels, placed by the skin (OnPaint). No TreeTiers role, so the menu creates no tier_label rows -- on the stand (2026-10-31) CreateWidgets of ozl_clearsky_tier_label.layout handed back another skin's opens chip (layout mix-up R7).",
+                              "children": [
+                                {
+                                  "label": {
+                                    "name": "CsTier0",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier1",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier2",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier3",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier4",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier5",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier6",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier7",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier8",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier9",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier10",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CsTier11",
+                                    "at": [
+                                      0,
+                                      -7.55
+                                    ],
+                                    "size": [
+                                      44,
+                                      17
+                                    ],
+                                    "font": "clearsky_tier",
+                                    "color": "$clearsky_dim",
+                                    "align": "center",
+                                    "hidden": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "raw": {
+                              "name": "TreeLines",
+                              "class": "CanvasWidgetClass",
+                              "size": "fill",
+                              "props": {
+                                "ignorepointer": 1
+                              },
+                              "note": "The 64-unit grid and every route, drawn by the menu."
+                            }
+                          },
+                          {
+                            "image": {
+                              "name": "CsFogStripes",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1564,
+                                80
+                              ],
+                              "file": "OpenZone_Research/gui/textures/tree/clearsky/fog_stripes_ca.paa",
+                              "stretch": false,
+                              "color": "$white",
+                              "hidden": true,
+                              "note": "The fog's 135-degree stripes, a pixel tile; the skin puts it on TreeFogEdge's rectangle, under it, where the fade lets them show."
+                            }
+                          },
+                          {
+                            "icon": {
+                              "name": "TreeFogEdge",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1564,
+                                80
+                              ],
+                              "set": "ozl_clearsky",
+                              "image": "fog_edge",
+                              "color": "$clearsky_fog",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "TreeFog",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1564,
+                                100
+                              ],
+                              "color": "$clearsky_fog",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "TreeNodes",
+                              "size": "fill"
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "TreeTip",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                300,
+                                27
+                              ],
+                              "hidden": true,
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "TreeTipEdge",
+                                    "size": "fill",
+                                    "color": "$clearsky_txt"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "TreeTipBg",
+                                    "at": [
+                                      1,
+                                      1
+                                    ],
+                                    "size": [
+                                      298,
+                                      25
+                                    ],
+                                    "color": "$clearsky_screen"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "TreeTipText",
+                                    "at": [
+                                      10,
+                                      5.95
+                                    ],
+                                    "size": [
+                                      600,
+                                      17
+                                    ],
+                                    "font": "clearsky_tip",
+                                    "color": "$clearsky_txt",
+                                    "note": "Wider than any tip on purpose: the menu sizes TreeTip from the text (GetTextSize) and TreeTip clips the rest."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "frame": {
+                  "name": "TreeLegend",
+                  "at": [
+                    12,
+                    854
+                  ],
+                  "size": [
+                    1576,
+                    34
+                  ],
+                  "note": "The legend strip at the foot of the map (.legend: 34 high, lcd, an edge line on top); the casing's dark band hides its last 10 units, as in the mockup.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "CsLegendBg",
+                        "size": "fill",
+                        "color": "$clearsky_lcd"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "LegendRule",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1576,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "LegendRow",
+                        "at": [
+                          16,
+                          0
+                        ],
+                        "size": [
+                          1544,
+                          34
+                        ],
+                        "color": "$none",
+                        "note": "Lined up by the menu (FlowLater from the skin's OnShow) by the width of each item's text plus 14, as the mockup's flex row with gap 14.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "LegLocked",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                258,
+                                34
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "LegLockedBox",
+                                    "at": [
+                                      0,
+                                      11.5
+                                    ],
+                                    "size": [
+                                      12,
+                                      12
+                                    ],
+                                    "set": "ozl_clearsky",
+                                    "image": "legend_box",
+                                    "color": "$clearsky_faint"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegLockedText",
+                                    "at": [
+                                      18,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "clearsky_legend",
+                                    "color": "$clearsky_dim",
+                                    "text": "#STR_OZL_TREE_LEGEND_LOCKED"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegShort",
+                              "at": [
+                                80,
+                                0
+                              ],
+                              "size": [
+                                258,
+                                34
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegShortBox",
+                                    "at": [
+                                      0,
+                                      11.5
+                                    ],
+                                    "size": [
+                                      12,
+                                      12
+                                    ],
+                                    "color": "$clearsky_bad"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegShortText",
+                                    "at": [
+                                      18,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "clearsky_legend",
+                                    "color": "$clearsky_dim",
+                                    "text": "#STR_OZL_TREE_LEGEND_SHORT"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegOpen",
+                              "at": [
+                                175,
+                                0
+                              ],
+                              "size": [
+                                258,
+                                34
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegOpenBox",
+                                    "at": [
+                                      0,
+                                      11.5
+                                    ],
+                                    "size": [
+                                      12,
+                                      12
+                                    ],
+                                    "color": "$clearsky_acc"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegOpenText",
+                                    "at": [
+                                      18,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "clearsky_legend",
+                                    "color": "$clearsky_dim",
+                                    "text": "#STR_OZL_TREE_LEGEND_OPEN"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegDone",
+                              "at": [
+                                315,
+                                0
+                              ],
+                              "size": [
+                                258,
+                                34
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "LegDoneBox",
+                                    "at": [
+                                      0,
+                                      11.5
+                                    ],
+                                    "size": [
+                                      12,
+                                      12
+                                    ],
+                                    "color": "$clearsky_ok"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegDoneText",
+                                    "at": [
+                                      18,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "clearsky_legend",
+                                    "color": "$clearsky_dim",
+                                    "text": "#STR_OZL_TREE_LEGEND_DONE"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegAll",
+                              "at": [
+                                410,
+                                0
+                              ],
+                              "size": [
+                                280,
+                                34
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "LegAllMark",
+                                    "at": [
+                                      0,
+                                      11.5
+                                    ],
+                                    "size": [
+                                      34,
+                                      12
+                                    ],
+                                    "set": "ozl_clearsky",
+                                    "image": "legend_all",
+                                    "color": "$clearsky_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegAllText",
+                                    "at": [
+                                      40,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "clearsky_legend",
+                                    "color": "$clearsky_dim",
+                                    "text": "#STR_OZL_TREE_LEGEND_ALL"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "LegAny",
+                              "at": [
+                                530,
+                                0
+                              ],
+                              "size": [
+                                284,
+                                34
+                              ],
+                              "color": "$none",
+                              "children": [
+                                {
+                                  "icon": {
+                                    "name": "LegAnyMark",
+                                    "at": [
+                                      0,
+                                      11.5
+                                    ],
+                                    "size": [
+                                      38,
+                                      12
+                                    ],
+                                    "set": "ozl_clearsky",
+                                    "image": "legend_any",
+                                    "color": "$clearsky_dim"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "LegAnyText",
+                                    "at": [
+                                      44,
+                                      10.5
+                                    ],
+                                    "size": [
+                                      240,
+                                      16
+                                    ],
+                                    "font": "clearsky_legend",
+                                    "color": "$clearsky_dim",
+                                    "text": "#STR_OZL_TREE_LEGEND_ANY"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "list": {
+                  "name": "TreeTemplates",
+                  "stack": "TreeTemplateList",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    364,
+                    20
+                  ],
+                  "hidden": true,
+                  "note": "Holds no rows: it only declares the row files the menu creates outside a list primitive -- the label rows, and the rows of the card and the pool, whose scrolls are raw ScrollWidgets (a list cannot carry the scrollbar's colour). No tier_label: the tier numerals are this window's own CsTier labels.",
+                  "rows": {
+                    "ozl_clearsky_or_label": {
+                      "row": {
+                        "name": "OZL_ClearskyOrLabel",
+                        "h": 16,
+                        "note": "The widgets of BOTH the 'АБО' label and the price chip (engine layout mix-up R7, SKINS.md: CreateWidgets of one of two such paths has handed back the other file): whichever file arrives, the row works. A price row shows PriceChip + PriceText, OrText hidden (the price flow measures the first VISIBLE text); the skin's LabelTick shows OrText and hides the price parts on rows that sit directly in TreeNodes. Here: the 'АБО' beside an 'any' diamond, the mockup's text at (12, 4) from the diamond, 11px, coloured like its line by the menu.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "PriceChip",
+                              "at": [
+                                0,
+                                4
+                              ],
+                              "size": [
+                                7,
+                                7
+                              ],
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PriceText",
+                              "at": [
+                                10,
+                                0
+                              ],
+                              "size": [
+                                140,
+                                16
+                              ],
+                              "font": "clearsky_price",
+                              "color": "$clearsky_dim"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "OrText",
+                              "at": [
+                                12,
+                                -6.25
+                              ],
+                              "size": [
+                                60,
+                                15
+                              ],
+                              "font": "clearsky_or",
+                              "color": "$clearsky_txt",
+                              "text": "#STR_OZL_TREE_OR",
+                              "hidden": true
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_clearsky_price_chip": {
+                      "row": {
+                        "name": "OZL_ClearskyPriceChip",
+                        "h": 16,
+                        "note": "The widgets of BOTH the 'АБО' label and the price chip (engine layout mix-up R7, SKINS.md: CreateWidgets of one of two such paths has handed back the other file): whichever file arrives, the row works. A price row shows PriceChip + PriceText, OrText hidden (the price flow measures the first VISIBLE text); the skin's LabelTick shows OrText and hides the price parts on rows that sit directly in TreeNodes. Here: one part of a node's price (.price b + amount), a 7 x 7 square of the line's colour on the text's baseline and the amount 3 after it; the menu lines them up in NodePrice, 6 apart.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "PriceChip",
+                              "at": [
+                                0,
+                                4
+                              ],
+                              "size": [
+                                7,
+                                7
+                              ],
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PriceText",
+                              "at": [
+                                10,
+                                0
+                              ],
+                              "size": [
+                                140,
+                                16
+                              ],
+                              "font": "clearsky_price",
+                              "color": "$clearsky_dim"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "OrText",
+                              "at": [
+                                12,
+                                -6.25
+                              ],
+                              "size": [
+                                60,
+                                15
+                              ],
+                              "font": "clearsky_or",
+                              "color": "$clearsky_txt",
+                              "text": "#STR_OZL_TREE_OR",
+                              "hidden": true
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_clearsky_pool_row": {
+                      "row": {
+                        "name": "OZL_ClearskyPoolRow",
+                        "h": 29,
+                        "note": "One line of the pool (PoolList): its colour, its name, the number at the right; a zero is faint (the skin).",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "PoolChip",
+                              "at": [
+                                0,
+                                7.5
+                              ],
+                              "size": [
+                                10,
+                                10
+                              ],
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolName",
+                              "at": [
+                                20,
+                                3.9
+                              ],
+                              "size": [
+                                196,
+                                19
+                              ],
+                              "font": "clearsky_pool",
+                              "color": "$clearsky_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "PoolValue",
+                              "at": [
+                                166,
+                                3.63
+                              ],
+                              "size": [
+                                100,
+                                20
+                              ],
+                              "font": "clearsky_pool_value",
+                              "color": "$clearsky_txt",
+                              "align": "right"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_clearsky_cost_row": {
+                      "row": {
+                        "name": "OZL_ClearskyCostRow",
+                        "h": 32,
+                        "note": "A cost line (.crow): its colour, the name, 'have / need' at the right, the bar under both; 8 of the column's gap at the bottom.",
+                        "children": [
+                          {
+                            "panel": {
+                              "name": "CostChip",
+                              "at": [
+                                0,
+                                3.5
+                              ],
+                              "size": [
+                                10,
+                                10
+                              ],
+                              "color": "$white"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CostName",
+                              "at": [
+                                20,
+                                0.18
+                              ],
+                              "size": [
+                                260,
+                                18
+                              ],
+                              "font": "clearsky_crow",
+                              "color": "$clearsky_txt"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CostValue",
+                              "at": [
+                                20,
+                                0.18
+                              ],
+                              "size": [
+                                334,
+                                18
+                              ],
+                              "font": "clearsky_crow",
+                              "color": "$clearsky_txt",
+                              "align": "right"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CostBar",
+                              "at": [
+                                20,
+                                21
+                              ],
+                              "size": [
+                                334,
+                                3
+                              ],
+                              "color": "$clearsky_track",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "CostBarFill",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      0,
+                                      3
+                                    ],
+                                    "color": "$clearsky_ok"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "ozl_clearsky_opens_chip": {
+                      "row": {
+                        "name": "OZL_ClearskyOpensChip",
+                        "h": 23,
+                        "note": "A node this one opens (.opens a): text in a 1-unit edge, 8 of padding each side (text at 9, OpensPad 9); the edge is txt under the mouse (OnRowHover); a hidden node's chip has a dashed edge and faint text. The menu stretches ChipHit and the ...Line parts to the chip's width; the skin puts the right edge there and the rows 6 apart.",
+                        "children": [
+                          {
+                            "raw": {
+                              "name": "ChipHit",
+                              "class": "ButtonWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                88,
+                                23
+                              ],
+                              "props": {
+                                "style": "Empty",
+                                "text": ""
+                              },
+                              "note": "style Empty: a style-less button paints a light box under the mouse."
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "ChipText",
+                              "at": [
+                                9,
+                                3.95
+                              ],
+                              "size": [
+                                600,
+                                17
+                              ],
+                              "font": "clearsky_opens",
+                              "color": "$clearsky_txt"
+                            }
+                          },
+                          {
+                            "icon": {
+                              "name": "ChipDashLine",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                88,
+                                23
+                              ],
+                              "set": "ozl_clearsky",
+                              "image": "chip_dash",
+                              "color": "$clearsky_edge",
+                              "hidden": true
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "ChipTopLine",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                88,
+                                1
+                              ],
+                              "color": "$clearsky_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "ChipBottomLine",
+                              "at": [
+                                0,
+                                22
+                              ],
+                              "size": [
+                                88,
+                                1
+                              ],
+                              "color": "$clearsky_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CsChipLeft",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                1,
+                                23
+                              ],
+                              "color": "$clearsky_edge"
+                            }
+                          },
+                          {
+                            "panel": {
+                              "name": "CsChipRight",
+                              "at": [
+                                87,
+                                0
+                              ],
+                              "size": [
+                                1,
+                                23
+                              ],
+                              "color": "$clearsky_edge"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "frame": {
+                  "name": "CsBranchFloat",
+                  "at": [
+                    40,
+                    36
+                  ],
+                  "size": [
+                    460,
+                    118
+                  ],
+                  "note": "The branch panel: device name, branch name, faction and count (the mockup's branch list is display:none).",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatBg",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          460,
+                          118
+                        ],
+                        "color": "$clearsky_float"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatEdgeT",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          460,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatEdgeB",
+                        "at": [
+                          0,
+                          117
+                        ],
+                        "size": [
+                          460,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatEdgeL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1,
+                          118
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatEdgeR",
+                        "at": [
+                          459,
+                          0
+                        ],
+                        "size": [
+                          1,
+                          118
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "DevName",
+                        "at": [
+                          17,
+                          15
+                        ],
+                        "size": [
+                          300,
+                          16
+                        ],
+                        "font": "clearsky_dev",
+                        "color": "$clearsky_dim",
+                        "text": "#STR_OZL_SKIN_CLEARSKY_DEV",
+                        "note": ".dev: the skin writes it in capitals (its .14em spacing is narrower than an etelka space: dropped)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchName",
+                        "at": [
+                          17,
+                          34.49
+                        ],
+                        "size": [
+                          426,
+                          25
+                        ],
+                        "font": "clearsky_bname",
+                        "color": "$clearsky_txt",
+                        "note": ".bname: in capitals (the skin; its .1em spacing is dropped)."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "CsBranchMark",
+                        "at": [
+                          17,
+                          34.49
+                        ],
+                        "size": [
+                          40,
+                          25
+                        ],
+                        "font": "clearsky_bname",
+                        "color": "$clearsky_dim",
+                        "text": "»",
+                        "hidden": true,
+                        "note": "Not in the mockup (one branch there): with several branches the skin puts it after the name, and a click on the name shows the next one."
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "BranchSub",
+                        "at": [
+                          17,
+                          61.95
+                        ],
+                        "size": [
+                          426,
+                          17
+                        ],
+                        "font": "clearsky_bsub",
+                        "color": "$clearsky_dim"
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "CsBranchNext",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          17,
+                          32
+                        ],
+                        "size": [
+                          426,
+                          28
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "hidden": true,
+                        "note": "With several branches: a click shows the next one (the skin's OnClick). style Empty."
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "BtnClose",
+                        "class": "ButtonWidgetClass",
+                        "at": [
+                          348,
+                          8
+                        ],
+                        "size": [
+                          100,
+                          28
+                        ],
+                        "props": {
+                          "style": "Empty",
+                          "text": ""
+                        },
+                        "note": "Not in the mockup: a PDA's title line, so the word in the panel's top right corner, like the device name on the left. style Empty.",
+                        "children": [
+                          {
+                            "label": {
+                              "name": "BtnCloseText",
+                              "at": [
+                                0,
+                                7
+                              ],
+                              "size": [
+                                95,
+                                16
+                              ],
+                              "font": "clearsky_close",
+                              "color": "$clearsky_dim",
+                              "text": "#STR_OZL_TREE_CLOSE",
+                              "align": "right"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatAccH",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          21,
+                          3
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsBranchFloatAccV",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          3,
+                          21
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "frame": {
+                  "name": "CsPoolFloat",
+                  "at": [
+                    40,
+                    560
+                  ],
+                  "size": [
+                    300,
+                    250
+                  ],
+                  "note": "The legend-and-points panel: the heading over the pool rows.",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatBg",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          300,
+                          250
+                        ],
+                        "color": "$clearsky_float"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatEdgeT",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          300,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatEdgeB",
+                        "at": [
+                          0,
+                          249
+                        ],
+                        "size": [
+                          300,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatEdgeL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1,
+                          250
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatEdgeR",
+                        "at": [
+                          299,
+                          0
+                        ],
+                        "size": [
+                          1,
+                          250
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "CsLegendHead",
+                        "at": [
+                          17,
+                          14.95
+                        ],
+                        "size": [
+                          266,
+                          17
+                        ],
+                        "font": "clearsky_head",
+                        "color": "$clearsky_acc",
+                        "text": "#STR_OZL_SKIN_CLEARSKY_LEGEND_POOL",
+                        "note": ".h: in capitals, letters spread with spaces (.16em; the skin)."
+                      }
+                    },
+                    {
+                      "icon": {
+                        "name": "CsLegendDash",
+                        "at": [
+                          17,
+                          36
+                        ],
+                        "size": [
+                          266,
+                          1
+                        ],
+                        "set": "ozl_clearsky",
+                        "image": "head_dash",
+                        "color": "$clearsky_edge",
+                        "note": "The .h's 1px dashed underline, as Chrome dashes it."
+                      }
+                    },
+                    {
+                      "raw": {
+                        "name": "PoolScroll",
+                        "class": "ScrollWidgetClass",
+                        "at": [
+                          17,
+                          45
+                        ],
+                        "size": [
+                          276,
+                          190
+                        ],
+                        "color": "$clearsky_cell_edge",
+                        "props": {
+                          "clipchildren": 1,
+                          "Scrollbar V": 1,
+                          "style": "blank"
+                        },
+                        "note": "The points (.pool: rows 25 high, 4 apart); a faction with more lines scrolls, its bar the mockup's thumb (colour + style blank). The 266-wide stack is the panel's content; the bar takes the 10 beside it.",
+                        "children": [
+                          {
+                            "stack": {
+                              "name": "PoolList",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "w": 266
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "label": {
+                        "name": "PoolEmpty",
+                        "at": [
+                          17,
+                          48.91
+                        ],
+                        "size": [
+                          266,
+                          19
+                        ],
+                        "font": "clearsky_pool",
+                        "color": "$clearsky_faint",
+                        "text": "#STR_OZL_TREE_POOL_EMPTY",
+                        "hidden": true
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatAccH",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          21,
+                          3
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsPoolFloatAccV",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          3,
+                          21
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "frame": {
+                  "name": "CsCardFloat",
+                  "at": [
+                    1170,
+                    36
+                  ],
+                  "size": [
+                    392,
+                    774
+                  ],
+                  "note": "The card panel: the node's card (inset 14/16, padding 4/2: content 354 x 736 from (19, 19)).",
+                  "children": [
+                    {
+                      "panel": {
+                        "name": "CsCardFloatBg",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          392,
+                          774
+                        ],
+                        "color": "$clearsky_float"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsCardFloatEdgeT",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          392,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsCardFloatEdgeB",
+                        "at": [
+                          0,
+                          773
+                        ],
+                        "size": [
+                          392,
+                          1
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsCardFloatEdgeL",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          1,
+                          774
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsCardFloatEdgeR",
+                        "at": [
+                          391,
+                          0
+                        ],
+                        "size": [
+                          1,
+                          774
+                        ],
+                        "color": "$clearsky_edge"
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardEmpty",
+                        "at": [
+                          19,
+                          19
+                        ],
+                        "size": [
+                          354,
+                          736
+                        ],
+                        "hidden": true,
+                        "children": [
+                          {
+                            "label": {
+                              "name": "CardEmptyText",
+                              "at": [
+                                0,
+                                349.63
+                              ],
+                              "size": [
+                                354,
+                                20
+                              ],
+                              "font": "clearsky_empty",
+                              "color": "$clearsky_dim",
+                              "text": "#STR_OZL_TREE_PICK",
+                              "align": "center"
+                            }
+                          },
+                          {
+                            "label": {
+                              "name": "CardEmptyHint",
+                              "at": [
+                                0,
+                                370.18
+                              ],
+                              "size": [
+                                354,
+                                18
+                              ],
+                              "font": "clearsky_empty_hint",
+                              "color": "$clearsky_dim",
+                              "text": "#STR_OZL_TREE_HINT",
+                              "align": "center"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "frame": {
+                        "name": "CardBody",
+                        "at": [
+                          19,
+                          19
+                        ],
+                        "size": [
+                          354,
+                          736
+                        ],
+                        "children": [
+                          {
+                            "raw": {
+                              "name": "CardScroll",
+                              "class": "ScrollWidgetClass",
+                              "at": [
+                                0,
+                                0
+                              ],
+                              "size": [
+                                364,
+                                650
+                              ],
+                              "color": "$clearsky_cell_edge",
+                              "props": {
+                                "clipchildren": 1,
+                                "Scrollbar V": 1,
+                                "style": "blank"
+                              },
+                              "note": "The card, top to bottom (.card: inset 14/16, padding 4/2, gap 10). The stack is the card's 354; a long card scrolls, its bar the mockup's thumb (colour + style blank) in the card's right margin. The rows (cost_row, opens_chip) are declared on TreeTemplates.",
+                              "children": [
+                                {
+                                  "stack": {
+                                    "name": "CardFlow",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "w": 354,
+                                    "children": [
+                                      {
+                                        "stack": {
+                                          "name": "CardName",
+                                          "note": "The name (.cname 21px, line 1.15): wrapped by the menu into its lines.",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardName0",
+                                                "h": 24.15,
+                                                "font": "clearsky_cname",
+                                                "color": "$clearsky_txt"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardName1",
+                                                "h": 24.15,
+                                                "font": "clearsky_cname",
+                                                "color": "$clearsky_txt",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 8
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardMeta",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardMeta0",
+                                                "h": 15,
+                                                "font": "clearsky_cmeta",
+                                                "color": "$clearsky_soft"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardMeta1",
+                                                "h": 15,
+                                                "font": "clearsky_cmeta",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 8
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardStatus",
+                                          "h": 17,
+                                          "font": "clearsky_cstat",
+                                          "color": "$clearsky_txt"
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 10
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardDesc",
+                                          "note": "The description (.cdesc 14px, line 1.4, soft): wrapped by the menu into these lines (etelka is a bitmap face; one face for the whole window, as the howto asks).",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CardDesc0",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc1",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc2",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc3",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc4",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc5",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc6",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc7",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc8",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc9",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc10",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardDesc11",
+                                                "h": 19.6,
+                                                "font": "clearsky_cdesc",
+                                                "color": "$clearsky_soft",
+                                                "hidden": true
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 10
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CsCostHeadRow",
+                                          "h": 22,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CsCostMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  30,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_dim",
+                                                "text": "#STR_OZL_SKIN_CLEARSKY_SEC_MARK"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardCostHead",
+                                                "at": [
+                                                  18,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  320,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardCostList"
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CsItemsHeadRow",
+                                          "h": 22,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CsItemsMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  30,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_dim",
+                                                "text": "#STR_OZL_SKIN_CLEARSKY_SEC_MARK"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardItemsHead",
+                                                "at": [
+                                                  18,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  320,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "stack": {
+                                          "name": "CardItemList"
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 2
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CsTimeHeadRow",
+                                          "h": 22,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CsTimeMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  30,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_dim",
+                                                "text": "#STR_OZL_SKIN_CLEARSKY_SEC_MARK"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardTimeHead",
+                                                "at": [
+                                                  18,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  320,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "label": {
+                                          "name": "CardTime",
+                                          "h": 17,
+                                          "font": "clearsky_crow",
+                                          "color": "$clearsky_txt"
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardSegs",
+                                          "h": 18,
+                                          "hidden": true,
+                                          "note": "The 20 segments of a running project (.pbar: 10 high, 2 apart), 8 under the time.",
+                                          "children": [
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg0",
+                                                "at": [
+                                                  0,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg1",
+                                                "at": [
+                                                  17.8,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg2",
+                                                "at": [
+                                                  35.6,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg3",
+                                                "at": [
+                                                  53.4,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg4",
+                                                "at": [
+                                                  71.2,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg5",
+                                                "at": [
+                                                  89,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg6",
+                                                "at": [
+                                                  106.8,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg7",
+                                                "at": [
+                                                  124.6,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg8",
+                                                "at": [
+                                                  142.4,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg9",
+                                                "at": [
+                                                  160.2,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg10",
+                                                "at": [
+                                                  178,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg11",
+                                                "at": [
+                                                  195.8,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg12",
+                                                "at": [
+                                                  213.6,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg13",
+                                                "at": [
+                                                  231.4,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg14",
+                                                "at": [
+                                                  249.2,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg15",
+                                                "at": [
+                                                  267,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg16",
+                                                "at": [
+                                                  284.8,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg17",
+                                                "at": [
+                                                  302.6,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg18",
+                                                "at": [
+                                                  320.4,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            },
+                                            {
+                                              "panel": {
+                                                "name": "CardSeg19",
+                                                "at": [
+                                                  338.2,
+                                                  8
+                                                ],
+                                                "size": [
+                                                  15.8,
+                                                  10
+                                                ],
+                                                "color": "$clearsky_track"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "gap": {
+                                          "h": 10
+                                        }
+                                      },
+                                      {
+                                        "panel": {
+                                          "name": "CsOpensHeadRow",
+                                          "h": 22,
+                                          "color": "$none",
+                                          "children": [
+                                            {
+                                              "label": {
+                                                "name": "CsOpensMark",
+                                                "at": [
+                                                  0,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  30,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_dim",
+                                                "text": "#STR_OZL_SKIN_CLEARSKY_SEC_MARK"
+                                              }
+                                            },
+                                            {
+                                              "label": {
+                                                "name": "CardOpensHead",
+                                                "at": [
+                                                  18,
+                                                  0
+                                                ],
+                                                "size": [
+                                                  320,
+                                                  16
+                                                ],
+                                                "font": "clearsky_sec",
+                                                "color": "$clearsky_acc"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "frame": {
+                                          "name": "CardOpensList",
+                                          "h": 23,
+                                          "note": "The 'opens' chips (ozl_clearsky_opens_chip): the skin lines them up as the mockup does, 6 apart both ways, and sets the height."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "frame": {
+                              "name": "CardFoot",
+                              "at": [
+                                0,
+                                660
+                              ],
+                              "size": [
+                                354,
+                                76
+                              ],
+                              "note": ".c-foot at the bottom of the card: the button and the reason under it.",
+                              "children": [
+                                {
+                                  "panel": {
+                                    "name": "CsBtnBg",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      354,
+                                      50
+                                    ],
+                                    "color": "$clearsky_screen"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "BtnResearchHover",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      354,
+                                      50
+                                    ],
+                                    "color": "$clearsky_acc",
+                                    "hidden": true,
+                                    "note": ".go:hover: the button turns acc and its words screen; the menu shows this under the mouse while the button is enabled.",
+                                    "children": [
+                                      {
+                                        "label": {
+                                          "name": "CsBtnHoverText",
+                                          "at": [
+                                            0,
+                                            14.07
+                                          ],
+                                          "size": [
+                                            354,
+                                            23
+                                          ],
+                                          "font": "clearsky_button",
+                                          "color": "$clearsky_screen",
+                                          "align": "center"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CsBtnTop",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      354,
+                                      2
+                                    ],
+                                    "color": "$clearsky_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CsBtnBottom",
+                                    "at": [
+                                      0,
+                                      48
+                                    ],
+                                    "size": [
+                                      354,
+                                      2
+                                    ],
+                                    "color": "$clearsky_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CsBtnLeft",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      2,
+                                      50
+                                    ],
+                                    "color": "$clearsky_edge"
+                                  }
+                                },
+                                {
+                                  "panel": {
+                                    "name": "CsBtnRight",
+                                    "at": [
+                                      352,
+                                      0
+                                    ],
+                                    "size": [
+                                      2,
+                                      50
+                                    ],
+                                    "color": "$clearsky_edge"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "BtnResearchText",
+                                    "at": [
+                                      0,
+                                      14.07
+                                    ],
+                                    "size": [
+                                      354,
+                                      23
+                                    ],
+                                    "font": "clearsky_button",
+                                    "color": "$clearsky_faint",
+                                    "text": "#STR_OZL_TREE_RESEARCH",
+                                    "align": "center"
+                                  }
+                                },
+                                {
+                                  "raw": {
+                                    "name": "BtnResearch",
+                                    "class": "ButtonWidgetClass",
+                                    "at": [
+                                      0,
+                                      0
+                                    ],
+                                    "size": [
+                                      354,
+                                      50
+                                    ],
+                                    "props": {
+                                      "style": "Empty",
+                                      "text": ""
+                                    },
+                                    "note": "style Empty: a style-less button paints a light box under the mouse."
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "name": "CardWhy",
+                                    "at": [
+                                      0,
+                                      57.95
+                                    ],
+                                    "size": [
+                                      354,
+                                      17
+                                    ],
+                                    "font": "clearsky_why",
+                                    "color": "$clearsky_bad"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsCardFloatAccH",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          21,
+                          3
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    },
+                    {
+                      "panel": {
+                        "name": "CsCardFloatAccV",
+                        "at": [
+                          0,
+                          0
+                        ],
+                        "size": [
+                          3,
+                          21
+                        ],
+                        "color": "$clearsky_acc"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "image": {
+                  "name": "CsScan",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    1600,
+                    900
+                  ],
+                  "file": "OpenZone_Research/gui/textures/tree/clearsky/scan_ca.paa",
+                  "stretch": false,
+                  "color": "$white",
+                  "note": "#stage::after: light scanlines over the whole window, under the casing; a pixel tile."
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsDarkT",
+                  "at": [
+                    12,
+                    12
+                  ],
+                  "size": [
+                    1576,
+                    10
+                  ],
+                  "color": "$clearsky_dark",
+                  "note": "#stage::before's inset shadow of 12 under the 2-unit highlight: a dark band 10 wide around the screen."
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsDarkB",
+                  "at": [
+                    12,
+                    878
+                  ],
+                  "size": [
+                    1576,
+                    10
+                  ],
+                  "color": "$clearsky_dark"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsDarkL",
+                  "at": [
+                    12,
+                    22
+                  ],
+                  "size": [
+                    10,
+                    856
+                  ],
+                  "color": "$clearsky_dark"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsDarkR",
+                  "at": [
+                    1578,
+                    22
+                  ],
+                  "size": [
+                    10,
+                    856
+                  ],
+                  "color": "$clearsky_dark"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsHiT",
+                  "at": [
+                    14,
+                    10
+                  ],
+                  "size": [
+                    1572,
+                    2
+                  ],
+                  "color": "$clearsky_casing_hi",
+                  "note": "The 2-unit highlight ring (--casing-hi) along the inside of the casing."
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsHiB",
+                  "at": [
+                    14,
+                    888
+                  ],
+                  "size": [
+                    1572,
+                    2
+                  ],
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsHiL",
+                  "at": [
+                    10,
+                    14
+                  ],
+                  "size": [
+                    2,
+                    872
+                  ],
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsHiR",
+                  "at": [
+                    1588,
+                    14
+                  ],
+                  "size": [
+                    2,
+                    872
+                  ],
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsHiTL",
+                  "at": [
+                    10,
+                    10
+                  ],
+                  "size": [
+                    4,
+                    4
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_hi_tl",
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsHiTR",
+                  "at": [
+                    1586,
+                    10
+                  ],
+                  "size": [
+                    4,
+                    4
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_hi_tr",
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsHiBL",
+                  "at": [
+                    10,
+                    886
+                  ],
+                  "size": [
+                    4,
+                    4
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_hi_bl",
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsHiBR",
+                  "at": [
+                    1586,
+                    886
+                  ],
+                  "size": [
+                    4,
+                    4
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_hi_br",
+                  "color": "$clearsky_casing_hi"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsCasingT",
+                  "at": [
+                    14,
+                    0
+                  ],
+                  "size": [
+                    1572,
+                    10
+                  ],
+                  "color": "$clearsky_casing",
+                  "note": "The casing: a 10-unit frame of --casing, radius 14 (the corners are pictures)."
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsCasingB",
+                  "at": [
+                    14,
+                    890
+                  ],
+                  "size": [
+                    1572,
+                    10
+                  ],
+                  "color": "$clearsky_casing"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsCasingL",
+                  "at": [
+                    0,
+                    14
+                  ],
+                  "size": [
+                    10,
+                    872
+                  ],
+                  "color": "$clearsky_casing"
+                }
+              },
+              {
+                "panel": {
+                  "name": "CsCasingR",
+                  "at": [
+                    1590,
+                    14
+                  ],
+                  "size": [
+                    10,
+                    872
+                  ],
+                  "color": "$clearsky_casing"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsCasingTL",
+                  "at": [
+                    0,
+                    0
+                  ],
+                  "size": [
+                    14,
+                    14
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_tl",
+                  "color": "$clearsky_casing"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsCasingTR",
+                  "at": [
+                    1586,
+                    0
+                  ],
+                  "size": [
+                    14,
+                    14
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_tr",
+                  "color": "$clearsky_casing"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsCasingBL",
+                  "at": [
+                    0,
+                    886
+                  ],
+                  "size": [
+                    14,
+                    14
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_bl",
+                  "color": "$clearsky_casing"
+                }
+              },
+              {
+                "icon": {
+                  "name": "CsCasingBR",
+                  "at": [
+                    1586,
+                    886
+                  ],
+                  "size": [
+                    14,
+                    14
+                  ],
+                  "set": "ozl_clearsky",
+                  "image": "casing_br",
+                  "color": "$clearsky_casing"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

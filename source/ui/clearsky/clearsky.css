@@ -1,0 +1,94 @@
+/* The clearsky window («Польовий КПК»): the CSS of the owner's mockup that draws its pictures,
+   lifted as it is (body[data-f="clearsky"] and the base rules it builds on). Every picture of
+   sprites.json is a box on the bake page; the classes below are the mockup's own rules with the
+   box in place of the mockup's element. Colours are the mockup's tokens; what the game tints is
+   drawn in white. Consolas is a Windows font, as on the mockup's page. */
+
+* { box-sizing: border-box; }
+
+body[data-f="clearsky"] {
+  --mono: "Consolas", "Lucida Console", monospace;
+  --font: var(--mono);
+  --txt: #c3dff0; --dim: #5f8aa6; --acc: #6fc1ff; --ok: #8ad7c0; --bad: #ff8a5c;
+  --screen: #0b1520; --edge: #24425c; --lcd: #0a1826;
+  --casing: #1f3346; --casing-hi: #3c5a75; --dev-r: 14px; --scan: .1;
+  --pattern: repeating-radial-gradient(ellipse at 28% 62%, transparent 0 46px, rgba(110,180,240,.08) 46px 47px),
+             repeating-radial-gradient(ellipse at 74% 24%, transparent 0 34px, rgba(110,180,240,.06) 34px 35px);
+  font-family: var(--font);
+}
+
+/* .content .bg without its grid: the glow of the screen (the first layer, on top) over the
+   contour lines of --pattern, ON the tree's --lcd -- baked OPAQUE: the game blends in linear
+   light, so the faint light layers came out several times brighter over the dark map (stand,
+   2026-10-31); composited here they are the mockup's colours exactly. The 64-unit grid is drawn
+   by the game on the tree's canvas. The box is the tree's content at its usual size, 1564 x 830
+   (the scroll of 1576 x 842 less 12); the game stretches the texture over the content, as the
+   CSS stretches these layers. */
+.cs-map {
+  position: absolute; inset: 0;
+  background-color: var(--lcd);
+  background-image: radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--txt) 6%, transparent), rgba(0,0,0,.35) 90%),
+    var(--pattern);
+  background-size: 100% 100%, auto;
+}
+
+/* #stage::after: the scanlines, as a 16 x 16 pixel tile that the game repeats at one texel per
+   screen pixel. The mockup's line is 1 unit in 3 at --scan (.1); the tile cannot hold a period
+   of 3 (it is a power of two), so its line is 1 pixel in 4 at .1333, the same mean shade; and the
+   game blends in linear light, where black darkens less, so .2 (on this window's dark ground that
+   gives the mockup's shade; the skill's 1 - (1 - a)^2.2 is for mid tones). On the owner's
+   1600-row screen the mockup's period is 4.44 px and this one 4. 1 px is 2/3 of a CSS px here
+   (the bake draws at 1.5). */
+.cs-scan {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,.2) 0 .6666667px, transparent .6666667px 2.6666667px);
+}
+
+/* #stage::before: the casing. Only its rounded corners are pictures (the straight bands are
+   panels of the layout): a box with the casing's 10-unit border and radius 14, and the 2-unit
+   highlight ring (the inset box-shadow) along the padding box of radius 4. The box is larger
+   than the sprite; the sprite keeps the corner it is anchored to. */
+.cs-casing { position: absolute; width: 100px; height: 100px; border: 10px solid #fff; border-radius: var(--dev-r); }
+.cs-hi { position: absolute; width: 100px; height: 100px; border: 2px solid #fff; border-radius: 4px; }
+
+/* .node .cell of clearsky: a round marker 50 x 50 with a 2-unit edge (solid, or dashed when
+   locked), the glow of an available node (box-shadow 0 0 0 6px, tinted acc at 20 % in the game)
+   and the dashed outline of the selected one (outline-offset 5). The fill is its own disc. */
+.cs-cell { position: absolute; left: 0; top: 0; width: 50px; height: 50px; border-radius: 50%; }
+.cs-disc { background: #fff; }
+.cs-ring { border: 2px solid #fff; }
+.cs-ring-dash { border: 2px dashed #fff; }
+.cs-glow { box-shadow: 0 0 0 6px #fff; }
+.cs-sel { outline: 1px dashed #fff; outline-offset: 5px; }
+
+/* .node .mark: the mockup's glyphs at 12px in its font (Consolas, the system fallback draws them).
+   The padlock is a colour emoji there; here it is its white silhouette, tinted --faint in the
+   game as the mockup's .st-locked .mark asks. */
+.cs-mark { position: absolute; left: 0; top: 0; font-size: 12px; line-height: normal; color: #fff; white-space: nowrap; }
+.cs-emoji { filter: brightness(0) invert(1); }
+
+/* .h: the dashed underline of the legend-and-points heading (266 wide, as the panel's content) */
+.cs-hdash { position: absolute; left: 0; top: 0; width: 266px; height: 1px; border-bottom: 1px dashed #fff; }
+
+/* .opens a.fogged: the dashed frame of the "??? невідомо" chip, at the chip's Ukrainian width
+   (text + 2 x 8 + 2); the game stretches it to the chip */
+.cs-chip-dash { position: absolute; inset: 0; border: 1px dashed #fff; }
+
+/* the legend: the dashed swatch of "закрито" */
+.cs-lbox { position: absolute; inset: 0; border: 1px dashed #fff; }
+
+/* .fog: the 80-unit fade at its start (the tree grows down: clear at the top) */
+.cs-fog-edge { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0), #fff); }
+
+/* .fog: its 135-degree stripes, a 32 x 32 pixel tile like sop's: the period along the stripes
+   is 22.6 px, so the tile repeats every 32 px across. The mockup's txt at 4 % over the dark fog
+   blends in sRGB; in the game's linear light the same stripe needs .7 % (solved per channel for
+   the fog colour: .5-.9 %) */
+.cs-fog-stripes {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--txt) .7%, transparent) 0 7.5424723px, transparent 7.5424723px 15.0849447px);
+}
+
+/* the mockup's node icon when the node has none (iconOf() falls back to the gear): ICON.gear,
+   white, tinted like the node's own icon */
+.cs-icon { position: absolute; inset: 0; color: #fff; }
