@@ -409,22 +409,29 @@ at 64, 32, 24 and 16 bits never collide.
 
 It was not sop's pair alone. A later client log (2026-10-31 15:49) has ecolog's `tier_label` coming
 back as duty's price chip (`OZL_DutyPriceChip`) and clearsky's as ecolog's opens chip
-(`OZL_EcologOpensChip`); bandit's second pool row arrived as clearsky's opens chip. The wrong file
-was always one created earlier in the same client session.
+(`OZL_EcologOpensChip`); bandit's second pool row arrived as clearsky's opens chip; and in the
+combined pass (log 16:59, windows opened duty, freedom, ecolog) ecolog's node cells, made from
+`ozl_node_ecolog.layout`, held freedom's branch row. The wrong file was always one created earlier in
+the same client session.
 
 What to do:
 
 - look at the ROOT's name in `ui_tree` — it says which file the engine used;
-- the menu guards every row it creates from a row layout (`Row()`): the root's name must be the
-  file's name without underscores and case (`ozl_sop_or_label.layout` → `OZL_SopOrLabel`; the
-  generator names every root that way, and a hand-written row layout must too). On a mismatch it
-  unlinks the wrong row and creates it again — the same path, then the same file spelled
-  differently (lower case, a `./` segment, a doubled `/`, backslashes) — keeps the first row with the
-  right root and writes ONE line: `tree: <path> gave a row '<root>' (another file's root); <what each
-  attempt gave>; <the spelling that worked, or none>`. A spelling that returns nothing just counts as
-  failed. When nothing works the last row is kept, as before the guard; the same path with the same
-  outcome is written once per window. Widgets a skin creates itself with `CreateWidgets`, the node
-  cell and the window are not guarded;
+- the menu guards every layout file it creates widgets from (`MakeWidgets()`: the host, each window,
+  each node cell, each row): the root's name must be the expected one, ignoring underscores and
+  case — a row layout's file name (`ozl_sop_or_label.layout` → `OZL_SopOrLabel`; the generator names
+  every root that way, and a hand-written row layout must too), `NodeCell` for
+  `ozl_node_<skin>.layout`, `TreeWindow` for `ozl_tree_<skin>.layout`, `OZL_TreeHost` for the host.
+  On a mismatch it unlinks the wrong widget and creates it again — the same path, then the same file
+  spelled differently (lower case, a `./` segment, a doubled `/`, backslashes, and last a path padded
+  with `./` segments to 96 bytes, past the 64 of the usual ones) — keeps the first widget with the
+  right root and writes ONE line: `tree: <path> gave '<root>', wanted '<root>' (another file's
+  root); <what each attempt gave>; <the spelling that worked, or none>`. A spelling that returns
+  nothing just counts as failed. When nothing works the last widget is kept, as before the guard; the
+  same path with the same outcome is written once per window. The node and window roots are the same
+  in all seven skins, so a swap between two skins' node cells (or two windows) is invisible to the
+  guard, while a swap between kinds (a row, the host, a window, a node cell) is caught. Widgets a
+  skin creates itself with `CreateWidgets` are not guarded;
 - when the name cannot change, give both files the same widgets and let the script show the right
   ones by where the row sits (sop's workaround: whichever file arrives, the row works); when it
   can, rename.

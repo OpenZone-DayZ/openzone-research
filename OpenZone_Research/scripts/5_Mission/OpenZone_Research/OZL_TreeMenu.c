@@ -107,6 +107,15 @@ class OZL_TreeMenu : UIScriptedMenu
     static const string HOST_LAYOUT = "OpenZone_Research/gui/layouts/ozl_tree_host.layout";
     // Стільки кадрів відкладене чекає, поки віджет розкладеться.
     static const int    LATER_TRIES = 12;
+    // Корені, які мусять мати віджети з нерядкових розкладок (SKINS.md): так
+    // названо всі файли кожного виду -- хост, сім вікон, сім комірок вузла.
+    // Корінь рядкової розкладки названий за її файлом (Row, StemOf).
+    static const string ROOT_HOST   = "OZL_TreeHost";
+    static const string ROOT_WINDOW = "TreeWindow";
+    static const string ROOT_NODE   = "NodeCell";
+    // Остання спроба Respell: шлях довшає сегментами "./" до цієї довжини, в
+    // байтах (наші шляхи -- 49..64 байти).
+    static const int    LONG_PATH   = 96;
     // Смуга прокрутки ScrollWidget: 10 одиниць розкладки (виміряно
     // 2026-09-04 і 2026-10-31, вертикальна й горизонтальна).
     static const float  SCROLLBAR_UNITS = 10;
@@ -128,9 +137,10 @@ class OZL_TreeMenu : UIScriptedMenu
     private Widget m_RowHover;
     private string m_RowKind = "";
     private string m_RowId   = "";
-    // Підміни файлу рядка (Row, Layout mix-up), про які в цьому вікні вже
-    // написано в лог: ключ "шлях|чим вийшло". Повтор того самого не пишеться.
-    private ref map<string, bool> m_RowMixes;
+    // Підміни файлу розкладки (MakeWidgets, Layout mix-up), про які в цьому вікні
+    // вже написано в лог: ключ "шлях|чим вийшло". Повтор того самого не
+    // пишеться.
+    private ref map<string, bool> m_LayoutMixes;
 
     // Коли приїхала відповідь: залишок проєкту -- від серверної секунди в ній.
     private float m_ViewAge  = 0;
@@ -221,7 +231,7 @@ class OZL_TreeMenu : UIScriptedMenu
         m_WrapShown  = new map<Widget, string>();
         m_WidthFrac  = new map<Widget, float>();
         m_Nums       = new map<string, int>();
-        m_RowMixes   = new map<string, bool>();
+        m_LayoutMixes = new map<string, bool>();
     }
 
     static OZL_TreeMenu Open()
@@ -259,7 +269,7 @@ class OZL_TreeMenu : UIScriptedMenu
 
     override Widget Init()
     {
-        layoutRoot = GetGame().GetWorkspace().CreateWidgets(HOST_LAYOUT);
+        layoutRoot = MakeWidgets(HOST_LAYOUT, null, ROOT_HOST);
         if (!layoutRoot)
         {
             OZL_Log.Error("tree menu: the host layout produced no widgets");
@@ -865,7 +875,7 @@ class OZL_TreeMenu : UIScriptedMenu
         m_RowHover = null;
         m_RowKind = "";
         m_RowId = "";
-        m_RowMixes.Clear();
+        m_LayoutMixes.Clear();
         m_TipPending = false;
 
         OZL_TreeSkin skin = OZL_TreeSkins.Make(id);
@@ -879,12 +889,12 @@ class OZL_TreeMenu : UIScriptedMenu
         if (tryOwn && skin.Id != OZL_TreeSkins.FALLBACK && !FileExist(skin.WindowLayout))
             tryOwn = false;
         if (tryOwn)
-            win = GetGame().GetWorkspace().CreateWidgets(skin.WindowLayout, layoutRoot);
+            win = MakeWidgets(skin.WindowLayout, layoutRoot, ROOT_WINDOW);
         if (!win && skin.Id != OZL_TreeSkins.FALLBACK)
         {
             OZL_Log.Info("tree: window '" + skin.Id + "' has no layout yet (" + skin.WindowLayout + "), showing " + OZL_TreeSkins.FALLBACK);
             skin = OZL_TreeSkins.Make(OZL_TreeSkins.FALLBACK);
-            win = GetGame().GetWorkspace().CreateWidgets(skin.WindowLayout, layoutRoot);
+            win = MakeWidgets(skin.WindowLayout, layoutRoot, ROOT_WINDOW);
         }
         if (!win)
         {
@@ -1020,39 +1030,50 @@ class OZL_TreeMenu : UIScriptedMenu
         list.Clear();
     }
 
-    // Рядок списку з файлу розкладки скіна. СТОРОЖ ВІД ПІДМІНИ ФАЙЛУ (SKINS.md,
-    // "Layout mix-up"): CreateWidgets на шлях рядка інколи віддає віджети ІНШОГО
-    // рядкового файлу, створеного раніше в цій сесії клієнта (стенд 2026-10-31:
-    // ozl_ecolog_tier_label -> OZL_DutyPriceChip, ozl_clearsky_tier_label ->
-    // OZL_EcologOpensChip, пул bandit -> чіп clearsky). Корінь кожного рядкового
-    // файлу названий за файлом, тож підміну видно з кореня; тоді рядок
-    // робиться ще раз (Respell). null -- як і раніше, лише коли CreateWidgets
-    // не дав нічого.
+    // СТОРОЖ ВІД ПІДМІНИ ФАЙЛУ (SKINS.md, "Layout mix-up"). Кожен віджет з
+    // файлу розкладки меню створює тут: CreateWidgets на шлях інколи віддає
+    // віджети ІНШОГО файлу, створеного раніше в цій сесії клієнта (стенд
+    // 2026-10-31: ozl_ecolog_tier_label -> OZL_DutyPriceChip,
+    // ozl_clearsky_tier_label -> OZL_EcologOpensChip, пул bandit -> чіп
+    // clearsky, комірки вузлів ecolog -> рядок гілки freedom). Корінь файлу
+    // відомий (want), тож підміну видно з кореня; тоді віджет робиться ще раз
+    // (Respell). Корінь комірок вузла (NodeCell) і вікон (TreeWindow) один у
+    // всіх семи скінів, тож підміну між двома скінами сторож не бачить, а
+    // підміну рядком, хостом чи вікном -- бачить. null -- як і раніше, лише
+    // коли CreateWidgets не дав нічого.
+    private Widget MakeWidgets(string path, Widget parent, string want)
+    {
+        Widget w = GetGame().GetWorkspace().CreateWidgets(path, parent);
+        if (!w || RootIs(w, want))
+            return w;
+        return Respell(w, path, want, parent);
+    }
+
+    // Рядок списку з файлу розкладки скіна. Корінь рядкової розкладки названий
+    // за її файлом (генератор), тож чекаємо ім'я файлу.
     private Widget Row(string row, Widget parent)
     {
         if (!parent || !m_Skin)
             return null;
         string path = m_Skin.RowLayout(row);
-        Widget w = GetGame().GetWorkspace().CreateWidgets(path, parent);
-        if (!w || RootFits(w, path))
-            return w;
-        return Respell(w, path, parent);
+        return MakeWidgets(path, parent, StemOf(path));
     }
 
-    // Корінь віджета названий за файлом: ozl_sop_or_label.layout ->
-    // OZL_SopOrLabel; порівнюємо без підкреслень і без регістру. Так названі
-    // корені всіх рядкових розкладок усіх семи скінів на 2026-10-31 (їх
-    // називає генератор); розкладка рядка, написана вручну, мусить мати такий
-    // самий корінь, інакше сторож вважатиме її підміненою.
-    private bool RootFits(Widget w, string path)
+    // Корінь віджета -- такий, як чекали: порівнюємо без підкреслень і без
+    // регістру (ozl_sop_or_label -> OZL_SopOrLabel). Так названі корені всіх
+    // рядкових розкладок усіх семи скінів на 2026-10-31 (44 файли; їх називає
+    // генератор), усіх семи комірок вузла (NodeCell), усіх семи вікон
+    // (TreeWindow) і хоста (OZL_TreeHost). Розкладка, написана вручну, мусить
+    // мати такий самий корінь, інакше сторож вважатиме її підміненою.
+    private bool RootIs(Widget w, string want)
     {
-        string want = StemOf(path);
-        string got = w.GetName();
-        want.Replace("_", "");
-        want.ToLower();
-        got.Replace("_", "");
-        got.ToLower();
-        return want == got;
+        string a = want;
+        string b = w.GetName();
+        a.Replace("_", "");
+        a.ToLower();
+        b.Replace("_", "");
+        b.ToLower();
+        return a == b;
     }
 
     // Ім'я файлу без каталогу й розширення: ".../ozl_sop_or_label.layout" ->
@@ -1069,18 +1090,21 @@ class OZL_TreeMenu : UIScriptedMenu
         return stem;
     }
 
-    // Рушій віддав чужий файл: корінь не той. Причину не знайдено -- схоже на
-    // кеш рушія за ключем, якого ми не бачимо, тож пробуємо інші ключі до
-    // того самого файлу: той самий шлях ще раз, тоді нижній регістр, сегмент
-    // "./", подвоєний "/", зворотні скісні. ПЕРЕД кожною спробою хибний віджет
-    // знімається (Unlink); варіант, що не дав віджета, просто не вдався; перший
-    // з правильним коренем лишається. Нічого не вийшло -- віддаємо останній
-    // віджет, як до сторожа; null там, де раніше був віджет, не буде (коли всі
-    // варіанти дали null, шлях робиться ще раз як є). Один рядок у лозі на
-    // підміну: який корінь прийшов і чим вийшло (стенд скаже, який запис
+    // Рушій віддав чужий файл: корінь не той (want). Причину не знайдено --
+    // схоже на кеш рушія за ключем, якого ми не бачимо; робоча гіпотеза: за
+    // адресою звільненого рядка шляху, а в такому разі рядок іншого класу
+    // розміру ляже деінде. Тож пробуємо інші ключі до того самого файлу: той
+    // самий шлях ще раз, тоді нижній регістр, сегмент "./", подвоєний "/",
+    // зворотні скісні й, останнім, шлях, подовжений сегментами "./" до
+    // LONG_PATH байтів. ПЕРЕД кожною спробою хибний віджет знімається (Unlink);
+    // варіант, що не дав віджета, просто не вдався; перший з правильним
+    // коренем лишається. Нічого не вийшло -- віддаємо останній віджет, як до
+    // сторожа; null там, де раніше був віджет, не буде (коли всі варіанти дали
+    // null, шлях робиться ще раз як є). Один рядок у лозі на підміну: шлях,
+    // який корінь прийшов, чого чекали й чим вийшло (стенд скаже, який запис
     // працює); той самий шлях з тим самим наслідком у цьому вікні вдруге не
     // пишеться.
-    private Widget Respell(Widget wrong, string path, Widget parent)
+    private Widget Respell(Widget wrong, string path, string want, Widget parent)
     {
         string wrongName = wrong.GetName();
         string folder = "";
@@ -1108,6 +1132,17 @@ class OZL_TreeMenu : UIScriptedMenu
         labels.Insert("a doubled /");
         spellings.Insert(back);
         labels.Insert("backslashes");
+        // Останній: ті самі каталоги й файл, але "./" стільки, що шлях довший
+        // за 64 байти (усі наші -- 49..64) і лежить у рядку іншого розміру.
+        string dots = "./";
+        int longLen = path.Length() + 2;
+        while (longLen < LONG_PATH)
+        {
+            dots += "./";
+            longLen += 2;
+        }
+        spellings.Insert(folder + dots + leaf);
+        labels.Insert("a path padded with ./ to " + longLen.ToString() + " bytes");
 
         Widget cur = wrong;
         string how = "";
@@ -1121,7 +1156,7 @@ class OZL_TreeMenu : UIScriptedMenu
             if (cur)
             {
                 verdict = "'" + cur.GetName() + "'";
-                if (RootFits(cur, path))
+                if (RootIs(cur, want))
                 {
                     verdict = "right";
                     how = labels[i];
@@ -1140,10 +1175,10 @@ class OZL_TreeMenu : UIScriptedMenu
         else if (cur)
             outcome += ", kept '" + cur.GetName() + "'";
         string key = path + "|" + outcome;
-        if (!m_RowMixes.Contains(key))
+        if (!m_LayoutMixes.Contains(key))
         {
-            m_RowMixes.Set(key, true);
-            OZL_Log.Warn("tree: " + path + " gave a row '" + wrongName + "' (another file's root); " + trail + "; " + outcome + " (SKINS.md, Layout mix-up)");
+            m_LayoutMixes.Set(key, true);
+            OZL_Log.Warn("tree: " + path + " gave '" + wrongName + "', wanted '" + want + "' (another file's root); " + trail + "; " + outcome + " (SKINS.md, Layout mix-up)");
         }
         return cur;
     }
@@ -1312,7 +1347,8 @@ class OZL_TreeMenu : UIScriptedMenu
         for (i = 0; i < m_Plan.Ids.Count() && nodes && b; i++)
         {
             OZL_NodeView n = NodeOf(m_Plan.Ids[i]);
-            Widget cell = GetGame().GetWorkspace().CreateWidgets(m_Skin.NodeLayout, nodes);
+            // Корінь ще NodeCell: перейменування на cell:<id> -- нижче.
+            Widget cell = MakeWidgets(m_Skin.NodeLayout, nodes, ROOT_NODE);
             if (!cell)
             {
                 OZL_Log.Error("tree: the node layout " + m_Skin.NodeLayout + " produced no widgets");
