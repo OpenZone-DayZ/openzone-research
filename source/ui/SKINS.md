@@ -110,7 +110,15 @@ nodes. `(u, v)` becomes `(x, y)`: down `(v, u)`, up `(v, H - u)`, right `(u, v)`
 each cell at `(x - AnchorX, y - AnchorY)` in `TreeNodes` and sizes `TreeContent` to the plan.
 
 "Home" when the window opens or the branch changes: down — top, up — bottom, right — left edge;
-across — centred. Press-and-drag on the tree scrolls it (a move over 4 units turns the release
+across — centred, as in the mockup's `scrollHome`. The plan's `view` is the scroll's size minus 12,
+so a tree that fits is NOT scrolled at all: `TreeContent` sits flush with the start and leaves 12
+units at the far end, as in the mockup. Only a tree larger than what the scroll shows (its size minus
+the bars it draws) is moved: by half the excess across, by all of it for "up" along. The menu sets
+these positions in pixels (`HScrollToPos`, `VScrollToPos`) and does not use the engine's
+`...ToPos01`: measured on the stand (2026-10-31, 3840x1600) the engine's scroll range is some 16-18 px
+longer than the mockup's even where no bar is drawn, so `HScrollToPos01(0.5)` pushed a fitting tree
+5.1-5.6 units left (clearsky, duty, neutral, bandit), `VScrollToPos01(0.5)` about 6 up (sop), and
+`VScrollToPos01(1)` of an "up" tree about twice that. Press-and-drag on the tree scrolls it (a move over 4 units turns the release
 into a drag, not a click); a press in `TreeScroll`'s scrollbar strips (its bottom and right
 10 units, each only while its bar is drawn — `TreeContent` wider, or taller, than the view) moves
 the bar natively and does not drag the content — the menu tells them by position, because on an

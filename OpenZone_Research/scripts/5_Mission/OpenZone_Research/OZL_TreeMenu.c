@@ -2672,11 +2672,32 @@ class OZL_TreeMenu : UIScriptedMenu
         OZL_Log.Dbg("tree: measured screen " + scrW.ToString() + "x" + scrH.ToString() + ", " + m_Px.ToString() + " px per layout unit; SetPos moves " + perSet.ToString() + " px per unit given, SetSize(100) is " + m_ProbeW.ToString() + " px; so K = " + m_K.ToString() + " Set-units per layout unit");
     }
 
+    // Які смуги прокрутки рушій малює: смуга є, коли вміст (cw x ch) не влазить
+    // у прокрутку (sw x sh); одна смуга забирає bar у другого виміру й може
+    // покликати другу (виміряно 2026-10-31, скіл gui-layouts §31). Одиниці --
+    // будь-які, але одні й ті самі в усіх шести числах.
+    private void ScrollBars(float cw, float ch, float sw, float sh, float bar, out bool barV, out bool barH)
+    {
+        barV = ch > sh;
+        barH = cw > sw;
+        if (barH && !barV && ch > sh - bar)
+            barV = true;
+        if (barV && !barH && cw > sw - bar)
+            barH = true;
+    }
+
     // "Додому": вниз -- до початку, вгору -- до кінця, вправо -- до лівого
-    // краю; поперек -- до середини (scrollHome() мокапа). Кадр після розміру
-    // вмісту: прокрутка бачить новий розмір не одразу. Колишня проба
-    // прокрутки (VScrollToPos01(0), потім (1)) на кожному відкритті кидала
-    // дерево в кінець на кілька кадрів; одиниці прокрутки вже виміряно.
+    // краю; поперек -- до середини (scrollHome() мокапа). Як у мокапі, дерево,
+    // що влізає (його вміст -- вид мінус 12), НЕ прокручується: лежить упритул
+    // до початку, а середина -- scrollLeft = (scrollWidth - clientWidth) / 2 --
+    // це половина того, на скільки вміст ширший за ВИДИМЕ, тобто за розмір
+    // прокрутки без смуг, які вона малює. Позиція йде в пікселях, а не
+    // HScrollToPos01 / VScrollToPos01: діапазон рушія довший за мокапів на
+    // 16-18 px навіть без смуг (стенд 2026-10-31, 3840x1600), тож 0.5 зсувало
+    // дерево, що влізає, на 5,1-5,6 одиниці ліворуч (clearsky, duty, neutral,
+    // bandit), на ~6 угору (sop; "вправо" -- по вертикалі), а 1 ("вгору") --
+    // приблизно вдвічі більше. Кадр після розміру вмісту: прокрутка бачить
+    // новий розмір не одразу.
     private void Home()
     {
         if (m_NeedTree)
@@ -2691,19 +2712,37 @@ class OZL_TreeMenu : UIScriptedMenu
         ScrollWidget sw = ScrollWidget.Cast(Role("TreeScroll"));
         if (!sw || !m_Skin)
             return;
+        float scrollW;
+        float scrollH;
+        UnitsOf(sw, scrollW, scrollH);
+        bool barV;
+        bool barH;
+        ScrollBars(m_Plan.W, m_Plan.H, scrollW, scrollH, SCROLLBAR_UNITS, barV, barH);
+        float shownW = scrollW;
+        float shownH = scrollH;
+        if (barV)
+            shownW -= SCROLLBAR_UNITS;
+        if (barH)
+            shownH -= SCROLLBAR_UNITS;
+        float offX = 0;
+        float offY = 0;
         if (m_Skin.Dir == "right")
         {
-            sw.HScrollToPos01(0);
-            sw.VScrollToPos01(0.5);
+            offY = (m_Plan.H - shownH) / 2;
         }
         else
         {
+            offX = (m_Plan.W - shownW) / 2;
             if (m_Skin.Dir == "up")
-                sw.VScrollToPos01(1);
-            else
-                sw.VScrollToPos01(0);
-            sw.HScrollToPos01(0.5);
+                offY = m_Plan.H - shownH;
         }
+        if (offX < 0)
+            offX = 0;
+        if (offY < 0)
+            offY = 0;
+        sw.HScrollToPos(offX * m_Px);
+        sw.VScrollToPos(offY * m_Px);
+        OZL_Log.Dbg("tree: home (" + m_Skin.Dir + "): content " + m_Plan.W.ToString() + " x " + m_Plan.H.ToString() + ", shown " + shownW.ToString() + " x " + shownH.ToString() + " of " + scrollW.ToString() + " x " + scrollH.ToString() + " units; scrolled to " + offX.ToString() + " x " + offY.ToString() + " units, the engine is at " + sw.GetHScrollPos().ToString() + " x " + sw.GetVScrollPos().ToString() + " px");
     }
 
     // ------------------------------------------------------------------
@@ -2752,14 +2791,7 @@ class OZL_TreeMenu : UIScriptedMenu
             float cw;
             float ch;
             content.GetScreenSize(cw, ch);
-            barV = ch > sh;
-            barH = cw > sw;
-            // Одна смуга забирає 10 одиниць у другого виміру -- і може
-            // покликати другу.
-            if (barH && !barV && ch > sh - bar)
-                barV = true;
-            if (barV && !barH && cw > sw - bar)
-                barH = true;
+            ScrollBars(cw, ch, sw, sh, bar, barV, barH);
         }
         if (barV && mx >= sx + sw - bar)
             return true;
