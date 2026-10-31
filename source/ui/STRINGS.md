@@ -144,6 +144,7 @@ Mockup window: duty -- «Реєстр досліджень» (the Duty form on t
 | `STR_OZL_SKIN_DUTY_ORG_REF` | `Вих. № 0417/Д` | `Out. No. 0417/D` | form requisites, line 3: outgoing number (the number is typed text in the mockup) |
 | `STR_OZL_SKIN_DUTY_GRIF` | `Для службового користування` | `For official use only` | the classification stamp (`.dsk`); the mockup draws it rotated in a box, so the skin shows GRIF_IMG and keeps this key as a text twin |
 | `STR_OZL_SKIN_DUTY_GRIF_IMG` | `set:ozl_duty image:grif_ua` | `set:ozl_duty image:grif_en` | sprite reference: the rotated "Для службового користування" stamp |
+| `STR_OZL_SKIN_DUTY_TITLE_IMG` | `set:ozl_duty image:title_ua` | `set:ozl_duty image:title_en` | sprite reference: the sheet title «Реєстр досліджень» with wide letter spacing, baked (live text cannot space letters) |
 | `STR_OZL_SKIN_DUTY_FORM` | `Форма № 7-Д` | `Form No. 7-D` | top right corner of the sheet (`.dform`) |
 | `STR_OZL_SKIN_DUTY_APPROVE` | `Затверджую` | `I approve` | approval block, line 1 (bold) |
 | `STR_OZL_SKIN_DUTY_APPROVE_CMD` | `Командир ___________` | `Commander ___________` | approval block, line 2 (the blank is typed text) |
