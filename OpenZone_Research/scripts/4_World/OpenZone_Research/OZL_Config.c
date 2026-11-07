@@ -211,6 +211,28 @@ class OZL_Config
         OZ_ConfigLoader<OZL_Settings>.Load(OZL_Const.SETTINGS, TAG_SETTINGS, settings);
         m_Settings = settings.Copy();
 
+        // Свіжий профіль отримує повний пакет, який мод везе в собі; наявний
+        // файл не чіпається (OZL_Defaults).
+        OZL_Defaults.SeedAll();
+        LoadPack();
+
+        // Порожній набір -- ні власників, ні правил, ні дерева -- записував свіжий
+        // старт, поки мод не віз пакета. Такий профіль отримує пакет поверх (старі
+        // файли -- у Backup). Заповнене бодай щось із трьох -- сервер налаштований,
+        // і його файли не чіпаються.
+        if (m_Owners.Owners.Count() == 0 && m_Rules.Count() == 0 && m_Tree.NodeCount() == 0)
+        {
+            if (OZL_Defaults.ReplaceAll())
+                LoadPack();
+        }
+
+        CheckAll();
+        m_Revision++;
+    }
+
+    // Шість конфігів пакета, у тому порядку, в якому їх читав LoadAll.
+    private void LoadPack()
+    {
         OZL_PointTypes pt = new OZL_PointTypes();
         OZ_ConfigLoader<OZL_PointTypes>.Load(OZL_Const.POINT_TYPES, TAG_POINT_TYPES, pt);
         m_PointTypes = pt.Copy();
@@ -234,9 +256,6 @@ class OZL_Config
         OZL_StaticsConfig statics = new OZL_StaticsConfig();
         OZ_ConfigLoader<OZL_StaticsConfig>.Load(OZL_Const.STATICS, TAG_STATICS, statics);
         m_Statics = statics.Copy();
-
-        CheckAll();
-        m_Revision++;
     }
 
     // Перевірки проти гри й один одного -- після того, як усе прочитано.

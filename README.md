@@ -6,8 +6,13 @@ Research points and a technology tree for OpenZone servers, on the OpenZone core
 
 **Status: research by lines.** Seven lines -- biology, anomalies, electronics, loot,
 trails, ballistics, protection -- each with one sample, one analysis and one carrier,
-shared by every faction that works the line. The mod starts empty; two packs of configs
-ship under `examples/`.
+shared by every faction that works the line. A fresh server starts with the `example` pack:
+the mod carries it in `OpenZone_Research/defaults` and writes each research config the
+profile does not have yet; a file already in the profile is not touched. The one exception
+is a profile with no owners, no rules and no tree at all -- what a fresh start wrote before
+the mod carried the pack: the pack is written over it, and the old files go to
+`Backup/before-defaults.<file>`. The pack places no stations: the administrator puts them
+in `OZ_Research_Statics.json`. Both packs, `example` and `test-stand`, are under `examples/`.
 
 ## What it does
 
@@ -161,7 +166,7 @@ Measurements: `docs/measurements/2026-09-20/bridge.md`. Design:
 | `OpenZone_Research_Bridge/` | a stand-only verb for the `dayz` MCP bridge, never published |
 | `source/models/` | the Blender generators of the models; see its README |
 | `ui/` | layout descriptions; `layout_build` writes the `.layout` files from them |
-| `examples/` | config packs: `full` (seven factions) and `test-stand` |
+| `examples/` | config packs: `example` (seven factions, what the mod ships) and `test-stand` |
 | `packaging/` | what a published `@Mod` needs besides the pbo |
 | `docs/` | measurements; the design lives in the series' `docs/specs/` |
 

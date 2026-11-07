@@ -1,0 +1,61 @@
+{
+    "Version": 3,
+    "PointTypes": [
+        {
+            "Id": "bio",
+            "Name": "Біологія",
+            "Icon": "",
+            "Color": "#7CB342",
+            "SortOrder": 1,
+            "BasePurity": 0.7
+        },
+        {
+            "Id": "anomaly",
+            "Name": "Аномалії",
+            "Icon": "",
+            "Color": "#AB47BC",
+            "SortOrder": 2,
+            "BasePurity": 0.7
+        },
+        {
+            "Id": "electronics",
+            "Name": "Електроніка",
+            "Icon": "",
+            "Color": "#29B6F6",
+            "SortOrder": 3,
+            "BasePurity": 0.7
+        },
+        {
+            "Id": "khabar",
+            "Name": "Хабар",
+            "Icon": "",
+            "Color": "#FFB300",
+            "SortOrder": 4,
+            "BasePurity": 0.7
+        },
+        {
+            "Id": "trails",
+            "Name": "Стежки",
+            "Icon": "",
+            "Color": "#26A69A",
+            "SortOrder": 5,
+            "BasePurity": 0.7
+        },
+        {
+            "Id": "ballistics",
+            "Name": "Балістика",
+            "Icon": "",
+            "Color": "#C62828",
+            "SortOrder": 6,
+            "BasePurity": 0.7
+        },
+        {
+            "Id": "protection",
+            "Name": "Захист",
+            "Icon": "",
+            "Color": "#78909C",
+            "SortOrder": 7,
+            "BasePurity": 0.7
+        }
+    ]
+}

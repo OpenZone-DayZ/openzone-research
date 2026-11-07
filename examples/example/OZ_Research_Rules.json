@@ -1,0 +1,4303 @@
+{
+    "Version": 3,
+    "Groups": [
+        {
+            "Id": "bnd_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "bnd_analiz_khabar",
+                    "Enabled": 1,
+                    "Device": "OZL_Bnd_Proc_Khabar",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Khabar",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Khabar",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "bandit"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Бандитів, лінія «Хабар»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "bnd_analiz_trails",
+                    "Enabled": 1,
+                    "Device": "OZL_Bnd_Proc_Trail",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Trail",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Trail",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "bandit"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Бандитів, лінія «Стежки»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "bnd_pak_trails_t1_chernarusmap",
+                    "Enabled": 1,
+                    "Device": "OZL_Bnd_Pack_Trail",
+                    "InputItem": {
+                        "Classname": "ChernarusMap|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Trail",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "bandit"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Бандитів, стежок, 1 бал. Сировина — ванільна мапа (nominal 50 у types.xml); рідкість: ваніль, nominal 50. Точний збіг (|1): ChernarusMap — батько креслень zmp_bp_* і ChernarusMap_Open — catch-all заборонено.",
+                    "Purity": -1
+                }
+            ]
+        },
+        {
+            "Id": "dty_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "dty_pak_ball_t3_starlightoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "StarlightOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "dty_nich",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний нічний приціл (StarlightOptic, nominal 1 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t3_nvgoggles_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "NVGoggles|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "dty_nich",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 25 балів: Прилад нічного бачення (ваніль). 25 балів — ванільний ПНБ (nominal 5); точний збіг |1, щоб не ловив 8 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_m67grenade",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M67Grenade",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільна M67 (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_m18smokegrenade_colorbase",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M18SmokeGrenade_ColorBase",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Димова граната M18 (ваніль). 5 балів — армійська піротехніка: димова шашка зі штатним хімзарядом маскування, а не металобрухт Другої світової (1 бал). Батька лишено як кольорову родину — 6 нащадків (Green/Purple/Red/Red_Contaminated/White/Yellow) це один предмет у різних кольорах диму.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_rdg2smokegrenade_colorbase",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "RDG2SmokeGrenade_ColorBase",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Димова граната РДГ-2 (ваніль). 5 балів — армійська піротехніка: димова шашка зі штатним хімзарядом маскування, а не металобрухт Другої світової (1 бал). Батька лишено як кольорову родину — 2 нащадки (Black/White) це один предмет у двох кольорах диму.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_m4_suppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M4_Suppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Глушник під 5.56 (Standardized) (ваніль). 5 балів — армійський глушник під основний калібр 5.56 — рівень бойових комплектів, а не унікальна річ.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_ak_suppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "AK_Suppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Глушник АК (Normalized) (ваніль). 5 балів — армійський глушник АК під основний калібр — рівень бойових комплектів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_rgd5grenade_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "RGD5Grenade|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Граната РГД-5 (ваніль). 5 балів — ванільна бойова граната (nominal 15); точний збіг |1, щоб не ловила 13 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_huntingoptic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "HuntingOptic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Мисливський приціл (ваніль). 5 балів — ванільний мисливський приціл (nominal 7); точний збіг |1, щоб не перекривав Sniper_AoD_Optic_PKS.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_flashgrenade_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "FlashGrenade|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Світлошумова граната 8-M4 (ваніль). 5 балів — ванільна світлошумова (nominal 10); точний збіг |1, щоб не ловила нащадків із модів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_pso1optic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PSO1Optic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Приціл ПСО-1 (ваніль). 5 балів — армійський денний приціл 4x із підсвіткою сітки й далекоміром — той самий рівень, що ELCAN і ПКС-07, вище за голу оптику 1 бал. Точний збіг |1: PSO6Optic (nominal 6) і дитина SFP_PSO11Optic сюди не потрапляють.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t2_acogoptic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ACOGOptic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_prystrilka",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 5 балів: Приціл ACOG (ваніль). 5 балів — армійський денний приціл 4x із підсвіченою сіткою — той самий рівень, що ELCAN і ПКС-07, вище за голу оптику 1 бал. Точний збіг |1: ACOGOptic_6x (nominal 5) сюди не потрапляє.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_puscopeoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PUScopeOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний приціл ПУ (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_reflexoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ReflexOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_kobraoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "KobraOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор «Кобра» (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_m68optic",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M68Optic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор M68 (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_kashtanoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "KashtanOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний приціл «Каштан» (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_improvisedsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ImprovisedSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 1 бал: Саморобний глушник із пляшки (ваніль). 1 бал — саморобний глушник із пластикової пляшки — найдешевша сировина.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_pistolsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PistolSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 1 бал: Пістолетний глушник (ваніль). 1 бал — пістолетний глушник, найпоширеніший (nominal 10). Викинуто 116 нащадків із модів, яких на сервері немає (жива перевірка 138.201.51.220:27005, 2026-08-23): 112 глушників @DECRYPTION - STALKER RP (уся родина kr_muzzle*/kr_suppressor_*, Groza_Barrel_*), 3 ПНБ звідти ж (GIR_Eq_NVG_P8GRN3*, GIR_Eq_VVAR15_NVG) і SFP_F1Grenade з локального @SFP (id 2623995836). Повертати їх не можна: на сервері цих класів не існує.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_makarovpbsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "MakarovPBSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 1 бал: Глушник ПБ 6П9 (ваніль). 1 бал — пістолетний глушник ПБ 6П9 під 9x18.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_mp5_compensator",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "MP5_Compensator",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 1 бал: Компенсатор SG5-K (ваніль). 1 бал — компенсатор пістолета-кулемета, не глушник — проста залізяка.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_ball_t1_mosin_compensator",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "Mosin_Compensator",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, балістика, 1 бал: Компенсатор Мосіна 91/30 (ваніль). 1 бал — дульний компенсатор старої гвинтівки, не глушник.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_analiz_ballistics",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Proc_Ball",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Ball",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Долгу, лінія «Балістика»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "dty_pak_prot_t2_mich2001helmet_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "Mich2001Helmet|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Тактичний шолом (ваніль). 5 балів — ванільний бойовий шолом (nominal 4); точний збіг |1, щоб не ловив 263 нащадки.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_bdu",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_BDU",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (BDU) (ваніль). 5 балів — ванільний балістичний шолом; кольори виписано поіменно, бо спільного батька зайняли шоломи STALKER Equipment.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_black",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Black",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (чорний) (ваніль). 5 балів — той самий ванільний шолом, інший колір (nominal 3).",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_desert",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Desert",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (пустельний) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_green",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Green",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (зелений) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_navy",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Navy",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (флотський) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_un",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_UN",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (ООН) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_winter",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Winter",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (зимовий) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t2_ballistichelmet_woodland",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Woodland",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "dty_bronia",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 5 балів: Балістичний шолом (лісовий) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t1_ssh68helmet",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "Ssh68Helmet",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільна каска СШ-68 (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t1_gasmask_filter_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GasMask_Filter|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 1
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 1 бал: Фільтр протигаза (ваніль). 1 бал — ванільна витратка, масовий лут (nominal 20); точний збіг |1, щоб не ловив 43 нащадки. Викинуто нащадків із модів, яких на сервері немає (жива перевірка 138.201.51.220:27005, 2026-08-23): @DECRYPTION - STALKER RP — 214 класів (GIR_Eq_*, SSM_*, CAWFA_PSZ7_*, Leo_Mich_*) і локальний @SFP (id 2623995836) — 60 класів (SFP_ExoClassic_Helmet_*, SFP_SevaMark2_UpModule_*, SFP_TacticalHelmet_* тощо). Повертати їх не можна: на сервері цих класів не існує.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t1_gasmask_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GasMask|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 1 бал: Бойовий протигаз (ваніль). 1 бал — ванільний протигаз, масовий лут (nominal 10); точний збіг |1, щоб не ловив 41 нащадка.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_pak_prot_t1_gp5gasmask_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GP5GasMask|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Долгу, захист, 1 бал: Протигаз ГП-5 (ваніль). 1 бал — ванільний цивільний протигаз (nominal 10); точний збіг |1, щоб не ловив 105 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "dty_analiz_protection",
+                    "Enabled": 1,
+                    "Device": "OZL_Dty_Proc_Prot",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Prot",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "duty"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Долгу, лінія «Захист»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                }
+            ]
+        },
+        {
+            "Id": "eco_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "eco_analiz_bio",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Proc_Bio",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Bio",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Bio",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Вчених, лінія «Біологія»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "eco_analiz_anomaly",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Proc_Anom",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Anom",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Anom",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Вчених, лінія «Аномалії»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "eco_pak_electro_t3_nvgoggles",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "NVGoggles|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_dani",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 25 балів: Прилад нічного бачення (ваніль). 25 балів — ванільний ПНБ (nominal 5); точний збіг |1, щоб не ловити модові ПНБ — вони названі окремо нижче.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t3_remotedetonator",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "RemoteDetonator|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_dani",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 25 балів: Блок дистанційного підриву (ваніль, nominal 5). 25 балів — радіокерована електроніка підриву; точний збіг |1, бо два ванільні нащадки — це різні предмети (приймач і пульт) і вони названі окремо нижче.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t3_remotedetonatorreceiver",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "RemoteDetonatorReceiver",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_dani",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 25 балів: Приймач детонатора (ваніль). 25 балів — радіоприймач бойової частини комплекту підриву, рівень решти технічної електроніки 25 балів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t3_remotedetonatortrigger",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "RemoteDetonatorTrigger",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_dani",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 25 балів: Пульт дистанційного підриву (ваніль). 25 балів — передавач комплекту підриву, рівень решти технічної електроніки 25 балів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t2_universallight",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "UniversalLight|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_elektro",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 5 балів: ваніль, nominal 30 у types.xml. Точний збіг (|1): UniversalLight — батько ліхтарів шоломів ПСЗ/ССП і тактичних блоків Kuvalda_* — усі вони тепер названі окремими правилами, catch-all прибрано.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t2_kitchentimer",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "KitchenTimer",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_elektro",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 5 балів: ваніль, nominal 25 у types.xml.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t2_gpsreceiver",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "GPSReceiver",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_elektro",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 5 балів: ваніль, nominal 25.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t2_megaphone",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "Megaphone",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "eco_teh_elektro",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 5 балів: Мегафон (ваніль). 5 балів — робоча електроніка з підсилювачем і батареєю, дорожча за ліхтар, але не носій даних. Батька лишено як кольорову родину: єдиний нащадок aod_gear_Megaphone — ретекстур того самого мегафона з dz_aod_retexture.pbo, власного displayName не має.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t1_flashlight",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "Flashlight|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 1 бал: ваніль, nominal 90. Точний збіг (|1): Flashlight — батько детекторів RZ_Anom_Detector*, дозиметра RZ_Rad_geigerjmih, SFP_Mobile_NUKEA тощо — catch-all заборонено.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t1_cablereel",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "CableReel",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 1 бал: ваніль, nominal 80.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t1_sparkplug",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "SparkPlug",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 1 бал: ваніль, nominal 60.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_pak_electro_t1_battery9v",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "Battery9V|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 1
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Вчених, технічний, 1 бал: ваніль, nominal 100 — масова сировина. Точний збіг (|1): нащадки Battery9V_LL і Battery9V_Radioactive мають власні правила (5 балів і 25 балів), решта — з модів, яких на сервері нема; catch-all прибрано.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "eco_analiz_electronics",
+                    "Enabled": 1,
+                    "Device": "OZL_Eco_Proc_Electro",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Electro",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "ecolog"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Вчених, лінія «Електроніка»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                }
+            ]
+        },
+        {
+            "Id": "frd_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "frd_pak_ball_t3_starlightoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "StarlightOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "frd_teplo",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний нічний приціл (StarlightOptic, nominal 1 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t3_nvgoggles_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "NVGoggles|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "frd_teplo",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 25 балів: Прилад нічного бачення (ваніль). 25 балів — ванільний ПНБ (nominal 5); точний збіг |1, щоб не ловив 8 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_m67grenade",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M67Grenade",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільна M67 (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_m18smokegrenade_colorbase",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M18SmokeGrenade_ColorBase",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Димова граната M18 (ваніль). 5 балів — армійська піротехніка: димова шашка зі штатним хімзарядом маскування, а не металобрухт Другої світової (1 бал). Батька лишено як кольорову родину — 6 нащадків (Green/Purple/Red/Red_Contaminated/White/Yellow) це один предмет у різних кольорах диму.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_rdg2smokegrenade_colorbase",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "RDG2SmokeGrenade_ColorBase",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Димова граната РДГ-2 (ваніль). 5 балів — армійська піротехніка: димова шашка зі штатним хімзарядом маскування, а не металобрухт Другої світової (1 бал). Батька лишено як кольорову родину — 2 нащадки (Black/White) це один предмет у двох кольорах диму.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_m4_suppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M4_Suppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Глушник під 5.56 (Standardized) (ваніль). 5 балів — армійський глушник під основний калібр 5.56 — рівень бойових комплектів, а не унікальна річ.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_ak_suppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "AK_Suppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Глушник АК (Normalized) (ваніль). 5 балів — армійський глушник АК під основний калібр — рівень бойових комплектів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_rgd5grenade_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "RGD5Grenade|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Граната РГД-5 (ваніль). 5 балів — ванільна бойова граната (nominal 15); точний збіг |1, щоб не ловила 13 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_huntingoptic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "HuntingOptic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Мисливський приціл (ваніль). 5 балів — ванільний мисливський приціл (nominal 7); точний збіг |1, щоб не перекривав Sniper_AoD_Optic_PKS.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_flashgrenade_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "FlashGrenade|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Світлошумова граната 8-M4 (ваніль). 5 балів — ванільна світлошумова (nominal 10); точний збіг |1, щоб не ловила нащадків із модів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_pso1optic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PSO1Optic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Приціл ПСО-1 (ваніль). 5 балів — армійський денний приціл 4x із підсвіткою сітки й далекоміром — той самий рівень, що ELCAN і ПКС-07, вище за голу оптику 1 бал. Точний збіг |1: PSO6Optic (nominal 6) і дитина SFP_PSO11Optic сюди не потрапляють.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t2_acogoptic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ACOGOptic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_zbroiar",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 5 балів: Приціл ACOG (ваніль). 5 балів — армійський денний приціл 4x із підсвіченою сіткою — той самий рівень, що ELCAN і ПКС-07, вище за голу оптику 1 бал. Точний збіг |1: ACOGOptic_6x (nominal 5) сюди не потрапляє.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_puscopeoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PUScopeOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний приціл ПУ (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_reflexoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ReflexOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_kobraoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "KobraOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор «Кобра» (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_m68optic",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M68Optic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор M68 (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_kashtanoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "KashtanOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний приціл «Каштан» (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_improvisedsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ImprovisedSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 1 бал: Саморобний глушник із пляшки (ваніль). 1 бал — саморобний глушник із пластикової пляшки — найдешевша сировина.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_pistolsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PistolSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 1 бал: Пістолетний глушник (ваніль). 1 бал — пістолетний глушник, найпоширеніший (nominal 10). Викинуто 116 нащадків із модів, яких на сервері немає (жива перевірка 138.201.51.220:27005, 2026-08-23): 112 глушників @DECRYPTION - STALKER RP (уся родина kr_muzzle*/kr_suppressor_*, Groza_Barrel_*), 3 ПНБ звідти ж (GIR_Eq_NVG_P8GRN3*, GIR_Eq_VVAR15_NVG) і SFP_F1Grenade з локального @SFP (id 2623995836). Повертати їх не можна: на сервері цих класів не існує.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_makarovpbsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "MakarovPBSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 1 бал: Глушник ПБ 6П9 (ваніль). 1 бал — пістолетний глушник ПБ 6П9 під 9x18.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_mp5_compensator",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "MP5_Compensator",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 1 бал: Компенсатор SG5-K (ваніль). 1 бал — компенсатор пістолета-кулемета, не глушник — проста залізяка.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_ball_t1_mosin_compensator",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "Mosin_Compensator",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, балістика, 1 бал: Компенсатор Мосіна 91/30 (ваніль). 1 бал — дульний компенсатор старої гвинтівки, не глушник.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_analiz_ballistics",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Proc_Ball",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Ball",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Волі, лінія «Балістика»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "frd_pak_prot_t2_mich2001helmet_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "Mich2001Helmet|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Тактичний шолом (ваніль). 5 балів — ванільний бойовий шолом (nominal 4); точний збіг |1, щоб не ловив 263 нащадки.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_bdu",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_BDU",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (BDU) (ваніль). 5 балів — ванільний балістичний шолом; кольори виписано поіменно, бо спільного батька зайняли шоломи STALKER Equipment.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_black",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Black",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (чорний) (ваніль). 5 балів — той самий ванільний шолом, інший колір (nominal 3).",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_desert",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Desert",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (пустельний) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_green",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Green",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (зелений) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_navy",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Navy",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (флотський) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_un",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_UN",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (ООН) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_winter",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Winter",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (зимовий) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t2_ballistichelmet_woodland",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Woodland",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "frd_khimzakhyst",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 5 балів: Балістичний шолом (лісовий) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t1_ssh68helmet",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "Ssh68Helmet",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільна каска СШ-68 (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t1_gasmask_filter_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GasMask_Filter|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 1
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 1 бал: Фільтр протигаза (ваніль). 1 бал — ванільна витратка, масовий лут (nominal 20); точний збіг |1, щоб не ловив 43 нащадки. Викинуто нащадків із модів, яких на сервері немає (жива перевірка 138.201.51.220:27005, 2026-08-23): @DECRYPTION - STALKER RP — 214 класів (GIR_Eq_*, SSM_*, CAWFA_PSZ7_*, Leo_Mich_*) і локальний @SFP (id 2623995836) — 60 класів (SFP_ExoClassic_Helmet_*, SFP_SevaMark2_UpModule_*, SFP_TacticalHelmet_* тощо). Повертати їх не можна: на сервері цих класів не існує.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t1_gasmask_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GasMask|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 1 бал: Бойовий протигаз (ваніль). 1 бал — ванільний протигаз, масовий лут (nominal 10); точний збіг |1, щоб не ловив 41 нащадка.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_pak_prot_t1_gp5gasmask_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GP5GasMask|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Волі, захист, 1 бал: Протигаз ГП-5 (ваніль). 1 бал — ванільний цивільний протигаз (nominal 10); точний збіг |1, щоб не ловив 105 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "frd_analiz_protection",
+                    "Enabled": 1,
+                    "Device": "OZL_Frd_Proc_Prot",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Prot",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "freedom"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Волі, лінія «Захист»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                }
+            ]
+        },
+        {
+            "Id": "lnr_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "lnr_analiz_khabar",
+                    "Enabled": 1,
+                    "Device": "OZL_Lnr_Proc_Khabar",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Khabar",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Khabar",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "neutral"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Нейтралів, лінія «Хабар»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "lnr_analiz_trails",
+                    "Enabled": 1,
+                    "Device": "OZL_Lnr_Proc_Trail",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Trail",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Trail",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "neutral"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Нейтралів, лінія «Стежки»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "lnr_pak_trails_t1_chernarusmap",
+                    "Enabled": 1,
+                    "Device": "OZL_Lnr_Pack_Trail",
+                    "InputItem": {
+                        "Classname": "ChernarusMap|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Trail",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "neutral"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Нейтралів, стежок, 1 бал. Сировина — ванільна мапа (nominal 50 у types.xml); рідкість: ваніль, nominal 50. Точний збіг (|1): ChernarusMap — батько креслень zmp_bp_* і ChernarusMap_Open — catch-all заборонено.",
+                    "Purity": -1
+                }
+            ]
+        },
+        {
+            "Id": "sky_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "sky_analiz_bio",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Proc_Bio",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Bio",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Bio",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Чистого неба, лінія «Біологія»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "sky_analiz_anomaly",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Proc_Anom",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Anom",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Anom",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Чистого неба, лінія «Аномалії»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "sky_pak_electro_t3_nvgoggles",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "NVGoggles|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_dani",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 25 балів: Прилад нічного бачення (ваніль). 25 балів — ванільний ПНБ (nominal 5); точний збіг |1, щоб не ловити модові ПНБ — вони названі окремо нижче.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t3_remotedetonator",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "RemoteDetonator|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_dani",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 25 балів: Блок дистанційного підриву (ваніль, nominal 5). 25 балів — радіокерована електроніка підриву; точний збіг |1, бо два ванільні нащадки — це різні предмети (приймач і пульт) і вони названі окремо нижче.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t3_remotedetonatorreceiver",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "RemoteDetonatorReceiver",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_dani",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 25 балів: Приймач детонатора (ваніль). 25 балів — радіоприймач бойової частини комплекту підриву, рівень решти технічної електроніки 25 балів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t3_remotedetonatortrigger",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "RemoteDetonatorTrigger",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 35.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_dani",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 25 балів: Пульт дистанційного підриву (ваніль). 25 балів — передавач комплекту підриву, рівень решти технічної електроніки 25 балів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t2_universallight",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "UniversalLight|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_elektro",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 5 балів: ваніль, nominal 30 у types.xml. Точний збіг (|1): UniversalLight — батько ліхтарів шоломів ПСЗ/ССП і тактичних блоків Kuvalda_* — усі вони тепер названі окремими правилами, catch-all прибрано.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t2_kitchentimer",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "KitchenTimer",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_elektro",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 5 балів: ваніль, nominal 25 у types.xml.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t2_gpsreceiver",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "GPSReceiver",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_elektro",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 5 балів: ваніль, nominal 25.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t2_megaphone",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "Megaphone",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sky_teh_elektro",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 5 балів: Мегафон (ваніль). 5 балів — робоча електроніка з підсилювачем і батареєю, дорожча за ліхтар, але не носій даних. Батька лишено як кольорову родину: єдиний нащадок aod_gear_Megaphone — ретекстур того самого мегафона з dz_aod_retexture.pbo, власного displayName не має.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t1_flashlight",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "Flashlight|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 1 бал: ваніль, nominal 90. Точний збіг (|1): Flashlight — батько детекторів RZ_Anom_Detector*, дозиметра RZ_Rad_geigerjmih, SFP_Mobile_NUKEA тощо — catch-all заборонено.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t1_cablereel",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "CableReel",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 1 бал: ваніль, nominal 80.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t1_sparkplug",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "SparkPlug",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 1 бал: ваніль, nominal 60.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_pak_electro_t1_battery9v",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Pack_Electro",
+                    "InputItem": {
+                        "Classname": "Battery9V|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 1
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник Чистого неба, технічний, 1 бал: ваніль, nominal 100 — масова сировина. Точний збіг (|1): нащадки Battery9V_LL і Battery9V_Radioactive мають власні правила (5 балів і 25 балів), решта — з модів, яких на сервері нема; catch-all прибрано.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sky_analiz_electronics",
+                    "Enabled": 1,
+                    "Device": "OZL_Sky_Proc_Electro",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Electro",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Electro",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "clearsky"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор Чистого неба, лінія «Електроніка»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                }
+            ]
+        },
+        {
+            "Id": "sop_lanciuhy",
+            "Rules": [
+                {
+                    "Id": "sop_pak_ball_t3_starlightoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "StarlightOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "sop_snaiper",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний нічний приціл (StarlightOptic, nominal 1 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t3_nvgoggles_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "NVGoggles|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 25
+                        }
+                    ],
+                    "RequiredNode": "sop_snaiper",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 25 балів: Прилад нічного бачення (ваніль). 25 балів — ванільний ПНБ (nominal 5); точний збіг |1, щоб не ловив 8 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_m67grenade",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M67Grenade",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільна M67 (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_m18smokegrenade_colorbase",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M18SmokeGrenade_ColorBase",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Димова граната M18 (ваніль). 5 балів — армійська піротехніка: димова шашка зі штатним хімзарядом маскування, а не металобрухт Другої світової (1 бал). Батька лишено як кольорову родину — 6 нащадків (Green/Purple/Red/Red_Contaminated/White/Yellow) це один предмет у різних кольорах диму.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_rdg2smokegrenade_colorbase",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "RDG2SmokeGrenade_ColorBase",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Димова граната РДГ-2 (ваніль). 5 балів — армійська піротехніка: димова шашка зі штатним хімзарядом маскування, а не металобрухт Другої світової (1 бал). Батька лишено як кольорову родину — 2 нащадки (Black/White) це один предмет у двох кольорах диму.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_m4_suppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M4_Suppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Глушник під 5.56 (Standardized) (ваніль). 5 балів — армійський глушник під основний калібр 5.56 — рівень бойових комплектів, а не унікальна річ.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_ak_suppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "AK_Suppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Глушник АК (Normalized) (ваніль). 5 балів — армійський глушник АК під основний калібр — рівень бойових комплектів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_rgd5grenade_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "RGD5Grenade|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Граната РГД-5 (ваніль). 5 балів — ванільна бойова граната (nominal 15); точний збіг |1, щоб не ловила 13 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_huntingoptic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "HuntingOptic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Мисливський приціл (ваніль). 5 балів — ванільний мисливський приціл (nominal 7); точний збіг |1, щоб не перекривав Sniper_AoD_Optic_PKS.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_flashgrenade_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "FlashGrenade|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Світлошумова граната 8-M4 (ваніль). 5 балів — ванільна світлошумова (nominal 10); точний збіг |1, щоб не ловила нащадків із модів.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_pso1optic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PSO1Optic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Приціл ПСО-1 (ваніль). 5 балів — армійський денний приціл 4x із підсвіткою сітки й далекоміром — той самий рівень, що ELCAN і ПКС-07, вище за голу оптику 1 бал. Точний збіг |1: PSO6Optic (nominal 6) і дитина SFP_PSO11Optic сюди не потрапляють.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t2_acogoptic_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ACOGOptic|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_strilba",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 5 балів: Приціл ACOG (ваніль). 5 балів — армійський денний приціл 4x із підсвіченою сіткою — той самий рівень, що ELCAN і ПКС-07, вище за голу оптику 1 бал. Точний збіг |1: ACOGOptic_6x (nominal 5) сюди не потрапляє.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_puscopeoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PUScopeOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний приціл ПУ (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_reflexoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ReflexOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_kobraoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "KobraOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор «Кобра» (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_m68optic",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "M68Optic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний коліматор M68 (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_kashtanoptic",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "KashtanOptic",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільний приціл «Каштан» (nominal 15 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_improvisedsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "ImprovisedSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 1 бал: Саморобний глушник із пляшки (ваніль). 1 бал — саморобний глушник із пластикової пляшки — найдешевша сировина.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_pistolsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "PistolSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 1 бал: Пістолетний глушник (ваніль). 1 бал — пістолетний глушник, найпоширеніший (nominal 10). Викинуто 116 нащадків із модів, яких на сервері немає (жива перевірка 138.201.51.220:27005, 2026-08-23): 112 глушників @DECRYPTION - STALKER RP (уся родина kr_muzzle*/kr_suppressor_*, Groza_Barrel_*), 3 ПНБ звідти ж (GIR_Eq_NVG_P8GRN3*, GIR_Eq_VVAR15_NVG) і SFP_F1Grenade з локального @SFP (id 2623995836). Повертати їх не можна: на сервері цих класів не існує.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_makarovpbsuppressor",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "MakarovPBSuppressor",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 1 бал: Глушник ПБ 6П9 (ваніль). 1 бал — пістолетний глушник ПБ 6П9 під 9x18.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_mp5_compensator",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "MP5_Compensator",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 1 бал: Компенсатор SG5-K (ваніль). 1 бал — компенсатор пістолета-кулемета, не глушник — проста залізяка.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_ball_t1_mosin_compensator",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Ball",
+                    "InputItem": {
+                        "Classname": "Mosin_Compensator",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, балістика, 1 бал: Компенсатор Мосіна 91/30 (ваніль). 1 бал — дульний компенсатор старої гвинтівки, не глушник.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_analiz_ballistics",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Proc_Ball",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Ball",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Ball",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор СОП, лінія «Балістика»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                },
+                {
+                    "Id": "sop_pak_prot_t2_mich2001helmet_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "Mich2001Helmet|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Тактичний шолом (ваніль). 5 балів — ванільний бойовий шолом (nominal 4); точний збіг |1, щоб не ловив 263 нащадки.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_bdu",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_BDU",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (BDU) (ваніль). 5 балів — ванільний балістичний шолом; кольори виписано поіменно, бо спільного батька зайняли шоломи STALKER Equipment.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_black",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Black",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (чорний) (ваніль). 5 балів — той самий ванільний шолом, інший колір (nominal 3).",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_desert",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Desert",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (пустельний) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_green",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Green",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (зелений) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_navy",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Navy",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (флотський) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_un",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_UN",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (ООН) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_winter",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Winter",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (зимовий) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t2_ballistichelmet_woodland",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "BallisticHelmet_Woodland",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 25.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 5
+                        }
+                    ],
+                    "RequiredNode": "sop_zakhyst",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 5 балів: Балістичний шолом (лісовий) (ваніль). 5 балів — той самий ванільний шолом, інший колір.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t1_ssh68helmet",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "Ssh68Helmet",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Ванільна каска СШ-68 (nominal 20 у types.xml)",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t1_gasmask_filter_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GasMask_Filter|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 1
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 1 бал: Фільтр протигаза (ваніль). 1 бал — ванільна витратка, масовий лут (nominal 20); точний збіг |1, щоб не ловив 43 нащадки. Викинуто нащадків із модів, яких на сервері немає (жива перевірка 138.201.51.220:27005, 2026-08-23): @DECRYPTION - STALKER RP — 214 класів (GIR_Eq_*, SSM_*, CAWFA_PSZ7_*, Leo_Mich_*) і локальний @SFP (id 2623995836) — 60 класів (SFP_ExoClassic_Helmet_*, SFP_SevaMark2_UpModule_*, SFP_TacticalHelmet_* тощо). Повертати їх не можна: на сервері цих класів не існує.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t1_gasmask_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GasMask|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 1 бал: Бойовий протигаз (ваніль). 1 бал — ванільний протигаз, масовий лут (nominal 10); точний збіг |1, щоб не ловив 41 нащадка.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_pak_prot_t1_gp5gasmask_exact",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Pack_Prot",
+                    "InputItem": {
+                        "Classname": "GP5GasMask|1",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "TimeSec": 20.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Sample_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 1
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Пакувальник СОП, захист, 1 бал: Протигаз ГП-5 (ваніль). 1 бал — ванільний цивільний протигаз (nominal 10); точний збіг |1, щоб не ловив 105 нащадків.",
+                    "Purity": -1
+                },
+                {
+                    "Id": "sop_analiz_protection",
+                    "Enabled": 1,
+                    "Device": "OZL_Sop_Proc_Prot",
+                    "InputItem": {
+                        "Classname": "OZL_Sample_Prot",
+                        "Quantity": 1,
+                        "ConsumeInput": 1,
+                        "RequireFullQuantity": 0
+                    },
+                    "Purity": -1,
+                    "TimeSec": 30.0,
+                    "Consumables": [],
+                    "Outputs": [
+                        {
+                            "Classname": "OZL_Carrier_Prot",
+                            "Quantity": 1,
+                            "Chance": 1.0,
+                            "Points": 0
+                        }
+                    ],
+                    "RequiredNode": "",
+                    "RequiredFactions": [
+                        "sop"
+                    ],
+                    "RequiredWorn": [],
+                    "RequiredTools": [],
+                    "Notes": "Аналізатор СОП, лінія «Захист»: проба лінії → носій лінії; бали переходять із проби, чистота проби — шанс."
+                }
+            ]
+        }
+    ]
+}
