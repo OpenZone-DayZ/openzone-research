@@ -111,6 +111,83 @@
                   ]}}
                 ]}},
 
+              {"frame": {"name": "RzPage_tree", "w": "fill", "h": "fill", "hidden": true,
+                "note": "The tree of one owner's branch, drawn with that owner's skin the way the player's window draws it (OZL_TreePlan, OZL_TreeLines, the skin's node layout), from the draft. Owners and branches on the left, the canvas in the middle, the picked node's fields on the right. The script sizes RzTrScroll and RzTrContent; the window's resize moves the columns (OnWindowResized).",
+                "children": [
+                  {"hbox": {"name": "RzTrCols", "w": "fill", "h": "fill", "gap": 12, "children": [
+                    {"vbox": {"name": "RzTrSide", "w": 200, "gap": "$space.tight", "children": [
+                      {"label": {"name": "RzTrOwnHead", "h": "$size.hint", "text": "#STR_OZL_ED_TR_OWNERS", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "RzTrOwners", "h": 170, "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 7}}},
+                      {"label": {"name": "RzTrBrHead", "h": "$size.hint", "text": "#STR_OZL_ED_TR_BRANCHES", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "RzTrBranches", "h": "fill", "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 6}}}
+                    ]}},
+                    {"vbox": {"name": "RzTrMid", "w": 446, "gap": "$space.tight", "children": [
+                      {"hbox": {"name": "RzTrBar", "h": 28, "gap": "$space.tight", "children": [
+                        {"label": {"name": "RzTrSkin", "w": "fill", "text": "-", "font": "small", "color": "$muted"}},
+                        {"button": {"name": "BtnRzTrRoot", "w": 110, "text": "#STR_OZL_ED_TR_ROOT", "font": "small", "edge": "$ok", "color": "$ok"}},
+                        {"button": {"name": "BtnRzTrChild", "w": 130, "text": "#STR_OZL_ED_TR_CHILD", "font": "small", "edge": "$ok", "color": "$ok"}}
+                      ]}},
+                      {"frame": {"name": "RzTrHost", "h": "fill", "children": [
+                        {"raw": {"name": "RzTrScroll", "class": "ScrollWidgetClass", "at": [0, 0], "size": [446, 348], "color": "$edge",
+                          "props": {"clipchildren": 1, "Scrollbar V": 1, "Scrollbar H": 1, "style": "blank"},
+                          "note": "The canvas: two-axis scroll, pencil scrollbars as in the player's windows. The script sizes it with the window and RzTrContent with the plan.",
+                          "children": [
+                            {"frame": {"name": "RzTrContent", "at": [0, 0], "size": [434, 336], "children": [
+                              {"raw": {"name": "RzTrLines", "class": "CanvasWidgetClass", "size": "fill", "props": {"ignorepointer": 1},
+                                "note": "Grid and links, drawn by OZL_TreeLines with the owner's skin."}},
+                              {"frame": {"name": "RzTrNodes", "size": "fill",
+                                "note": "One node cell of the skin per node, placed by the plan; each cell's NodeHit is renamed rznode:<id>."}}
+                            ]}}
+                          ]}}
+                      ]}}
+                    ]}},
+                    {"vbox": {"name": "RzTrInsp", "w": 290, "gap": 4, "children": [
+                      {"label": {"name": "RzTnHead", "h": "$size.hint", "text": "#STR_OZL_ED_TN_PICK", "font": "small", "color": "$accent"}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnIdLbl", "w": 80, "text": "#STR_OZL_ED_TN_ID", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnId", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnNameLbl", "w": 80, "text": "#STR_OZL_ED_TN_NAME", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnName", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnTierLbl", "w": 80, "text": "#STR_OZL_ED_TN_TIER", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnTier", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnParentsLbl", "w": 80, "text": "#STR_OZL_ED_TN_PARENTS", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnParents", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnModeLbl", "w": 80, "text": "#STR_OZL_ED_TN_MODE", "font": "small", "color": "$muted"}},
+                        {"button": {"name": "BtnRzTnMode", "w": 210, "text": "#STR_OZL_ED_TN_ALL", "font": "small"}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnCostLbl", "w": 80, "text": "#STR_OZL_ED_TN_COST", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnCost", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnItemsLbl", "w": 80, "text": "#STR_OZL_ED_TN_ITEMS", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnItems", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnTimeLbl", "w": 80, "text": "#STR_OZL_ED_TN_TIME", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnTime", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzTnIconLbl", "w": 80, "text": "#STR_OZL_ED_TN_ICON", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzTnIcon", "w": 210}}
+                      ]}},
+                      {"button": {"name": "BtnRzTnDel", "h": "$size.button", "text": "#STR_OZL_ED_TN_DEL", "font": "small", "edge": "$bad", "color": "$bad"}},
+                      {"text": {"name": "RzTnNote", "w": 290, "h": "fill", "plain": true, "grow": false, "font": "tiny", "color": "$muted",
+                        "text": "#STR_OZL_ED_TN_NOTE"}}
+                    ]}}
+                  ]}}
+                ]}},
+
               {"frame": {"name": "RzPage_soon", "w": "fill", "h": "fill", "hidden": true,
                 "note": "Every sub-tab whose page is not written yet shows this one.",
                 "children": [
