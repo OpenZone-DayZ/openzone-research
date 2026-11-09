@@ -1,60 +1,144 @@
 {
   "layout": "oz_research_vpp_pane",
-  "note": "RESEARCH pane of the OpenZone admin window -- its own pbo and its own layout, because a server without the research mod never loads this file and the core must not know the pane exists. OZL_VppPane.OnCreate builds it under M_SUB_WIDGET and calls RegisterPane(research, RESEARCH, pane, ResHint), so the root stands at [0, vpp.paneY] and starts hidden like the core panes. Names the script resolves by string: ResOwners, ResConfigs, ResPicked, ResStatics (FindAnyWidget) and GrantType, GrantN, NodeId (SetEdit/GetEdit); ResHint is resolved by the core from the hint name handed to RegisterPane. Buttons dispatched in OnClick: BtnRefresh, BtnReload, BtnReset, BtnGrant, BtnComplete, BtnEditCfg. Tokens come from the core repository through [build] tokens: the admin window is a platform surface. Console captions stay English.",
+  "note": "RESEARCH pane of the OpenZone admin window -- its own pbo and its own layout, because a server without the research mod never loads this file and the core must not know the pane exists. OZL_VppPane.OnCreate builds it under M_SUB_WIDGET and calls RegisterPane(research, RESEARCH, pane, ResHint), so the root stands at [0, vpp.paneY] and starts hidden like the core panes. Since 2026-11-09 it is the research editor (docs/specs/2026-11-09-research-editor-vpp-design.md): a row of sub-tabs, one page per sub-tab in RzPages (the script shows one), and the draft's action bar. Names the script resolves by string: every widget named Rz*, ResOwners, ResPicked, ResStatics, RzSummary, GrantType, GrantN, NodeId; ResHint is resolved by the core from the hint name handed to RegisterPane. Captions are stringtable keys of OpenZone_Research (UA original, EN).",
   "root": {"frame": {"name": "PaneResearch", "size": "$vpp.pane", "at": [0, "$vpp.paneY"], "inset": "$vpp.inset",
     "hidden": true, "priority": 2,
     "note": "Hidden: ShowPane shows the open tab's pane and hides the rest.",
     "children": [
-      {"vbox": {"name": "ResBody", "gap": "$space.gap",
-        "note": "Vertical budget 524 - 2 * 20 = 484: 322 (the two columns) + 10 + 120 (the configs band) + 10 + 22 (ResHint) = 484. Columns 600 + 20 + 340 = 960 = 1000 - 2 * 20.",
+      {"vbox": {"name": "RzBody", "gap": 8,
+        "note": "Vertical budget 524 - 2 * 20 = 484: 28 (sub-tabs) + 8 + 384 (pages) + 8 + 28 (action bar) + 6 + 22 (ResHint) = 484.",
         "children": [
-          {"hbox": {"name": "ResCols", "h": 322, "gap": "$space.column", "children": [
-
-            {"vbox": {"name": "ResOwnersCol", "w": 600, "gap": "$space.tight", "children": [
-              {"label": {"name": "ResOwnersHead", "h": "$size.hint", "text": "FACTIONS: id -- name | pool | done / running", "font": "small", "color": "$accent"}},
-              {"listbox": {"name": "ResOwners", "h": "fill", "font": "field", "color": "$text",
-                "props": {"title visible": false, "highlight row": true, "lines": 10},
-                "note": "The engine's own listbox, filled by AddItem: one row per faction the core's registry or a state file knows. 322 - 22 - 6 = 294 units for ten rows of 29.4."}}
+          {"hbox": {"name": "RzNav", "h": 28, "gap": 6,
+            "note": "The sub-tabs. The script colours the open one; the button name after RzNav_ is the page key.",
+            "children": [
+              {"button": {"name": "RzNav_overview", "w": "fill", "text": "#STR_OZL_ED_TAB_OVERVIEW", "font": "small"}},
+              {"button": {"name": "RzNav_tree", "w": "fill", "text": "#STR_OZL_ED_TAB_TREE", "font": "small"}},
+              {"button": {"name": "RzNav_chains", "w": "fill", "text": "#STR_OZL_ED_TAB_CHAINS", "font": "small"}},
+              {"button": {"name": "RzNav_points", "w": "fill", "text": "#STR_OZL_ED_TAB_POINTS", "font": "small"}},
+              {"button": {"name": "RzNav_owners", "w": "fill", "text": "#STR_OZL_ED_TAB_OWNERS", "font": "small"}},
+              {"button": {"name": "RzNav_modules", "w": "fill", "text": "#STR_OZL_ED_TAB_MODULES", "font": "small"}},
+              {"button": {"name": "RzNav_statics", "w": "fill", "text": "#STR_OZL_ED_TAB_STATICS", "font": "small"}},
+              {"button": {"name": "RzNav_settings", "w": "fill", "text": "#STR_OZL_ED_TAB_SETTINGS", "font": "small"}}
             ]}},
 
-            {"vbox": {"name": "ResActsCol", "w": 340, "gap": "$space.tight",
-              "note": "22 + 3 * 28 + 3 * 30 + 30 = 256 plus seven gaps of 6 = 298; the spacer panel takes the 24 left.",
-              "children": [
-              {"label": {"name": "ResPicked", "h": "$size.hint", "text": "pick a faction on the list", "font": "small", "color": "$muted"}},
-              {"hrow": {"h": "$size.field", "children": [
-                {"label": {"name": "GrantTypeLbl", "w": 90, "text": "point type", "font": "small", "color": "$muted"}},
-                {"field": {"name": "GrantType", "w": 250}}
-              ]}},
-              {"hrow": {"h": "$size.field", "children": [
-                {"label": {"name": "GrantNLbl", "w": 90, "text": "amount", "font": "small", "color": "$muted"}},
-                {"field": {"name": "GrantN", "w": 250}}
-              ]}},
-              {"hrow": {"h": "$size.field", "children": [
-                {"label": {"name": "NodeIdLbl", "w": 90, "text": "node id", "font": "small", "color": "$muted"}},
-                {"field": {"name": "NodeId", "w": 250}}
-              ]}},
-              {"button": {"name": "BtnGrant", "h": "$size.button", "text": "GRANT POINTS", "edge": "$ok", "color": "$ok"}},
-              {"button": {"name": "BtnComplete", "h": "$size.button", "text": "COMPLETE NODE", "edge": "$ok", "color": "$ok"}},
-              {"button": {"name": "BtnReset", "h": "$size.button", "text": "RESET FACTION", "edge": "$bad", "color": "$bad"}},
-              {"hbox": {"name": "ResReloadRow", "h": "$size.button", "gap": "$space.tight", "children": [
-                {"button": {"name": "BtnReload", "w": "fill", "text": "RELOAD CONFIGS", "edge": "$alert", "color": "$alert"}},
-                {"button": {"name": "BtnRefresh", "w": "fill", "text": "REFRESH"}}
-              ]}},
-              {"panel": {"name": "ResActsSpacer", "h": "fill", "color": "$none"}}
-            ]}}
-          ]}},
+          {"frame": {"name": "RzPages", "h": "fill",
+            "note": "The pages lie on top of each other at [0, 0]; the script shows the open sub-tab's page and hides the rest.",
+            "children": [
 
-          {"hbox": {"name": "ResCfgRow", "h": 120, "gap": "$space.column", "children": [
-            {"listbox": {"name": "ResConfigs", "w": "fill", "font": "field", "color": "$text",
-              "props": {"title visible": false, "highlight row": true, "lines": 4},
-              "note": "The nine config names the mod registered with the core's editor; EDIT opens the core's CONFIG pane on the picked one."}},
-            {"vbox": {"name": "ResCfgActs", "w": 250, "gap": "$space.tight", "children": [
-              {"button": {"name": "BtnEditCfg", "h": "$size.button", "text": "EDIT IN CONFIG"}},
-              {"text": {"name": "ResStatics", "w": 250, "h": 84, "plain": true, "grow": false, "font": "tiny", "color": "$muted",
-                "text": "statics: -",
-                "note": "The static spawner's line: entries with spawned/pending, or the reason auto-spawn is off."}}
-            ]}}
-          ]}},
+              {"frame": {"name": "RzPage_overview", "w": "fill", "h": "fill",
+                "note": "The quick actions that were the whole pane before the editor: factions with their pools, grant, complete a node, reset, reload.",
+                "children": [
+                  {"hbox": {"name": "ResCols", "w": "fill", "h": "fill", "gap": "$space.column", "children": [
+                    {"vbox": {"name": "ResOwnersCol", "w": 600, "gap": "$space.tight", "children": [
+                      {"label": {"name": "ResOwnersHead", "h": "$size.hint", "text": "#STR_OZL_ED_OV_HEAD", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "ResOwners", "h": "fill", "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 12},
+                        "note": "One row per faction the core's registry or a state file knows."}}
+                    ]}},
+                    {"vbox": {"name": "ResActsCol", "w": 340, "gap": "$space.tight", "children": [
+                      {"label": {"name": "ResPicked", "h": "$size.hint", "text": "#STR_OZL_ED_OV_PICK", "font": "small", "color": "$muted"}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "GrantTypeLbl", "w": 90, "text": "#STR_OZL_ED_OV_PTYPE", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "GrantType", "w": 250}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "GrantNLbl", "w": 90, "text": "#STR_OZL_ED_OV_AMOUNT", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "GrantN", "w": 250}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "NodeIdLbl", "w": 90, "text": "#STR_OZL_ED_OV_NODE", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "NodeId", "w": 250}}
+                      ]}},
+                      {"button": {"name": "BtnGrant", "h": "$size.button", "text": "#STR_OZL_ED_OV_GRANT", "edge": "$ok", "color": "$ok"}},
+                      {"button": {"name": "BtnComplete", "h": "$size.button", "text": "#STR_OZL_ED_OV_COMPLETE", "edge": "$ok", "color": "$ok"}},
+                      {"button": {"name": "BtnReset", "h": "$size.button", "text": "#STR_OZL_ED_OV_RESET", "edge": "$bad", "color": "$bad"}},
+                      {"hbox": {"name": "ResReloadRow", "h": "$size.button", "gap": "$space.tight", "children": [
+                        {"button": {"name": "BtnReload", "w": "fill", "text": "#STR_OZL_ED_OV_RELOAD", "edge": "$alert", "color": "$alert"}},
+                        {"button": {"name": "BtnRefresh", "w": "fill", "text": "#STR_OZL_ED_OV_REFRESH"}}
+                      ]}},
+                      {"text": {"name": "RzSummary", "w": 340, "h": 60, "plain": true, "grow": false, "font": "tiny", "color": "$muted",
+                        "text": "-",
+                        "note": "What the editor holds: how many files came, how many entries each, the draft's state."}},
+                      {"text": {"name": "ResStatics", "w": 340, "h": "fill", "plain": true, "grow": false, "font": "tiny", "color": "$muted",
+                        "text": "statics: -",
+                        "note": "The static spawner's line: entries with spawned/pending, or the reason auto-spawn is off."}}
+                    ]}}
+                  ]}}
+                ]}},
+
+              {"frame": {"name": "RzPage_points", "w": "fill", "h": "fill", "hidden": true,
+                "note": "Point types (the lines): the list on the left, the picked one's fields on the right. Every field writes the draft as it is typed; ADD and DELETE change the list.",
+                "children": [
+                  {"hbox": {"name": "RzPtCols", "w": "fill", "h": "fill", "gap": "$space.column", "children": [
+                    {"vbox": {"name": "RzPtListCol", "w": 440, "gap": "$space.tight", "children": [
+                      {"label": {"name": "RzPtHead", "h": "$size.hint", "text": "#STR_OZL_ED_PT_HEAD", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "RzPtList", "h": "fill", "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 12}}}
+                    ]}},
+                    {"vbox": {"name": "RzPtForm", "w": 500, "gap": "$space.tight", "children": [
+                      {"label": {"name": "RzPtPicked", "h": "$size.hint", "text": "#STR_OZL_ED_PT_PICK", "font": "small", "color": "$muted"}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzPtIdLbl", "w": 150, "text": "#STR_OZL_ED_PT_ID", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzPtId", "w": 350}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzPtNameLbl", "w": 150, "text": "#STR_OZL_ED_PT_NAME", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzPtName", "w": 350}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzPtColorLbl", "w": 150, "text": "#STR_OZL_ED_PT_COLOR", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzPtColor", "w": 350}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzPtSortLbl", "w": 150, "text": "#STR_OZL_ED_PT_SORT", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzPtSort", "w": 350}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzPtPurityLbl", "w": 150, "text": "#STR_OZL_ED_PT_PURITY", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzPtPurity", "w": 350}}
+                      ]}},
+                      {"hrow": {"h": "$size.field", "children": [
+                        {"label": {"name": "RzPtIconLbl", "w": 150, "text": "#STR_OZL_ED_PT_ICON", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzPtIcon", "w": 350}}
+                      ]}},
+                      {"hbox": {"name": "RzPtBtns", "h": "$size.button", "gap": "$space.tight", "children": [
+                        {"button": {"name": "BtnRzPtAdd", "w": "fill", "text": "#STR_OZL_ED_PT_ADD", "edge": "$ok", "color": "$ok"}},
+                        {"button": {"name": "BtnRzPtDel", "w": "fill", "text": "#STR_OZL_ED_PT_DEL", "edge": "$bad", "color": "$bad"}}
+                      ]}},
+                      {"text": {"name": "RzPtNote", "w": 500, "h": "fill", "plain": true, "grow": false, "font": "tiny", "color": "$muted",
+                        "text": "#STR_OZL_ED_PT_NOTE"}}
+                    ]}}
+                  ]}}
+                ]}},
+
+              {"frame": {"name": "RzPage_soon", "w": "fill", "h": "fill", "hidden": true,
+                "note": "Every sub-tab whose page is not written yet shows this one.",
+                "children": [
+                  {"text": {"name": "RzSoonText", "w": 960, "h": 120, "plain": true, "grow": false, "font": "body", "color": "$muted",
+                    "text": "#STR_OZL_ED_SOON"}}
+                ]}},
+
+              {"frame": {"name": "RzPage_problems", "w": "fill", "h": "fill", "hidden": true,
+                "note": "What the server's own checks will say about the draft (Validate and Check of the seven files), shown by the problems button over the open page.",
+                "children": [
+                  {"vbox": {"name": "RzProbCol", "w": "fill", "h": "fill", "gap": "$space.tight", "children": [
+                    {"label": {"name": "RzProbHead", "h": "$size.hint", "text": "#STR_OZL_ED_PROB_HEAD", "font": "small", "color": "$accent"}},
+                    {"listbox": {"name": "RzProbList", "h": "fill", "font": "field", "color": "$text",
+                      "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 12}}}
+                  ]}}
+                ]}}
+            ]}},
+
+          {"hbox": {"name": "RzBar", "h": 28, "gap": 6,
+            "note": "The draft's state on the left, its actions on the right. The script writes the counts into RzStatus, BtnRzProblems and BtnRzApply.",
+            "children": [
+              {"label": {"name": "RzStatus", "w": "fill", "text": "-", "font": "small", "color": "$muted"}},
+              {"button": {"name": "BtnRzProblems", "w": 190, "text": "#STR_OZL_ED_PROB_NONE", "font": "small"}},
+              {"button": {"name": "BtnRzUndo", "w": 120, "text": "#STR_OZL_ED_BTN_UNDO", "font": "small"}},
+              {"button": {"name": "BtnRzRedo", "w": 120, "text": "#STR_OZL_ED_BTN_REDO", "font": "small"}},
+              {"button": {"name": "BtnRzDiscard", "w": 120, "text": "#STR_OZL_ED_BTN_DISCARD", "font": "small", "edge": "$bad", "color": "$bad"}},
+              {"button": {"name": "BtnRzApply", "w": 160, "text": "#STR_OZL_ED_BTN_APPLY", "font": "small", "edge": "$ok", "color": "$ok"}}
+            ]}},
 
           {"label": {"name": "ResHint", "h": "$size.hint", "font": "hint", "color": "$muted"}}
         ]}}

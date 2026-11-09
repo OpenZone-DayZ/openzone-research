@@ -13,6 +13,22 @@
 
 class OZL_Log
 {
+    // ЗБИРАЧ ДЛЯ РЕДАКТОРА У VPP. Validate і Check конфігів кажуть про
+    // знахідки лише цим Warn; редактор ганяє їх на копії свого чернетки ЩОРАЗУ,
+    // як адмін щось змінить, і хоче не рядки в лозі клієнта, а список
+    // проблем. Поки збирач стоїть, Warn пише туди й мовчить у лозі.
+    private static ref array<string> s_Sink;
+
+    static void CaptureBegin(array<string> sink)
+    {
+        s_Sink = sink;
+    }
+
+    static void CaptureEnd()
+    {
+        s_Sink = null;
+    }
+
     static void Info(string msg)
     {
         Print(OZL_Const.LOG_PREFIX + msg);
@@ -20,6 +36,11 @@ class OZL_Log
 
     static void Warn(string msg)
     {
+        if (s_Sink)
+        {
+            s_Sink.Insert(msg);
+            return;
+        }
         Print(OZL_Const.LOG_PREFIX + "WARNING: " + msg);
     }
 
