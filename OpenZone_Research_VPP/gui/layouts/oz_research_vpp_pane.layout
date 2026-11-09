@@ -3811,6 +3811,3917 @@ FrameWidgetClass PaneResearch {
         }
        }
       }
+      // Processing chains of one owner and one line: the conveyor raw items -> packer -> sample -> analyzer -> carrier -> terminal/pool as six cards, the packer's rules (raw items) by the tier of their node with a bulk bar, the rule inspector on the right, and the station as the player meets it instead of the raw list. The script fills every text and places the cards with the window (OnWindowResized).
+      FrameWidgetClass RzPage_chains {
+       visible 0
+       position 0 0
+       size 960 382
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 3
+       {
+        FrameWidgetClass RzChCols {
+         visible 1
+         position 0 0
+         size 960 382
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         priority 0
+         {
+          FrameWidgetClass RzChSide {
+           visible 1
+           position 0 0
+           size 200 382
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 0
+           {
+            TextWidgetClass RzChOwnHead {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 200 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.31 0.71 0.91 1
+             priority 0
+             text "#STR_OZL_ED_CH_OWNERS"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" left
+             "text valign" center
+            }
+            TextListboxWidgetClass RzChOwners {
+             visible 1
+             position 0 28
+             size 200 150
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.9 0.93 0.95 1
+             priority 1
+             font "gui/fonts/MetronBook14"
+             "exact text" 1
+             style NoScrollBar
+             "title visible" 0
+             "highlight row" 1
+             lines 7
+            }
+            TextWidgetClass RzChLineHead {
+             visible 1
+             ignorepointer 1
+             position 0 184
+             size 200 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.31 0.71 0.91 1
+             priority 2
+             text "#STR_OZL_ED_CH_LINES"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" left
+             "text valign" center
+            }
+            TextListboxWidgetClass RzChLines {
+             visible 1
+             position 0 212
+             size 200 136
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.9 0.93 0.95 1
+             priority 3
+             font "gui/fonts/MetronBook14"
+             "exact text" 1
+             style NoScrollBar
+             "title visible" 0
+             "highlight row" 1
+             lines 5
+            }
+            // Switches the space under the cards between the raw items (editing) and the station as the player meets it.
+            ButtonWidgetClass BtnRzChMode {
+             visible 1
+             position 0 354
+             size 200 28
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text ""
+             priority 4
+             {
+              PanelWidgetClass BtnRzChModeEdge {
+               visible 1
+               ignorepointer 1
+               position -1 -1
+               size 202 30
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.31 0.71 0.91 1
+               priority 0
+               style rover_sim_colorable
+              }
+              PanelWidgetClass BtnRzChModeBg {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 200 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.135 0.18 0.225 1
+               priority 1
+               style rover_sim_colorable
+              }
+              TextWidgetClass BtnRzChModeText {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 200 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.31 0.71 0.91 1
+               priority 2
+               text "#STR_OZL_ED_TR_VIEW"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass RzChMid {
+           visible 1
+           position 212 0
+           size 446 382
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 1
+           {
+            // Six cards, three in a row; the script places them (one row when the column is wide enough).
+            FrameWidgetClass RzChPipe {
+             visible 1
+             position 0 0
+             size 446 134
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 0
+             {
+              FrameWidgetClass RzChCard_raw {
+               visible 1
+               position 0 0
+               size 146 64
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 0
+               {
+                ButtonWidgetClass BtnRzChCard_raw {
+                 visible 1
+                 position 0 0
+                 size 146 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 0
+                 {
+                  PanelWidgetClass BtnRzChCard_rawEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 66
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzChCard_rawBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzChCard_rawText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text ""
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzChK_raw {
+                 visible 1
+                 ignorepointer 1
+                 position 6 3
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 1
+                 text "#STR_OZL_ED_CH_K_RAW"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChV_raw {
+                 visible 1
+                 ignorepointer 1
+                 position 6 17
+                 size 134 18
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 2
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChC_raw {
+                 visible 1
+                 ignorepointer 1
+                 position 6 33
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 3
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChS_raw {
+                 visible 1
+                 ignorepointer 1
+                 position 6 47
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 4
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass RzChCard_packer {
+               visible 1
+               position 150 0
+               size 146 64
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 1
+               {
+                ButtonWidgetClass BtnRzChCard_packer {
+                 visible 1
+                 position 0 0
+                 size 146 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 0
+                 {
+                  PanelWidgetClass BtnRzChCard_packerEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 66
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzChCard_packerBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzChCard_packerText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text ""
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzChK_packer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 3
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 1
+                 text "#STR_OZL_ED_CH_K_PACKER"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChV_packer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 17
+                 size 134 18
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 2
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChC_packer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 33
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 3
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChS_packer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 47
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 4
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass RzChCard_sample {
+               visible 1
+               position 300 0
+               size 146 64
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 2
+               {
+                ButtonWidgetClass BtnRzChCard_sample {
+                 visible 1
+                 position 0 0
+                 size 146 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 0
+                 {
+                  PanelWidgetClass BtnRzChCard_sampleEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 66
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzChCard_sampleBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzChCard_sampleText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text ""
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzChK_sample {
+                 visible 1
+                 ignorepointer 1
+                 position 6 3
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 1
+                 text "#STR_OZL_ED_CH_K_SAMPLE"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChV_sample {
+                 visible 1
+                 ignorepointer 1
+                 position 6 17
+                 size 134 18
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 2
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChC_sample {
+                 visible 1
+                 ignorepointer 1
+                 position 6 33
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 3
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChS_sample {
+                 visible 1
+                 ignorepointer 1
+                 position 6 47
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 4
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass RzChCard_analyzer {
+               visible 1
+               position 0 70
+               size 146 64
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 3
+               {
+                ButtonWidgetClass BtnRzChCard_analyzer {
+                 visible 1
+                 position 0 0
+                 size 146 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 0
+                 {
+                  PanelWidgetClass BtnRzChCard_analyzerEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 66
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzChCard_analyzerBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzChCard_analyzerText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text ""
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzChK_analyzer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 3
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 1
+                 text "#STR_OZL_ED_CH_K_ANALYZER"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChV_analyzer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 17
+                 size 134 18
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 2
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChC_analyzer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 33
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 3
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChS_analyzer {
+                 visible 1
+                 ignorepointer 1
+                 position 6 47
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 4
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass RzChCard_carrier {
+               visible 1
+               position 150 70
+               size 146 64
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 4
+               {
+                ButtonWidgetClass BtnRzChCard_carrier {
+                 visible 1
+                 position 0 0
+                 size 146 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 0
+                 {
+                  PanelWidgetClass BtnRzChCard_carrierEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 66
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzChCard_carrierBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzChCard_carrierText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text ""
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzChK_carrier {
+                 visible 1
+                 ignorepointer 1
+                 position 6 3
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 1
+                 text "#STR_OZL_ED_CH_K_CARRIER"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChV_carrier {
+                 visible 1
+                 ignorepointer 1
+                 position 6 17
+                 size 134 18
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 2
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChC_carrier {
+                 visible 1
+                 ignorepointer 1
+                 position 6 33
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 3
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChS_carrier {
+                 visible 1
+                 ignorepointer 1
+                 position 6 47
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 4
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass RzChCard_terminal {
+               visible 1
+               position 300 70
+               size 146 64
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 5
+               {
+                ButtonWidgetClass BtnRzChCard_terminal {
+                 visible 1
+                 position 0 0
+                 size 146 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 0
+                 {
+                  PanelWidgetClass BtnRzChCard_terminalEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 66
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzChCard_terminalBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzChCard_terminalText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 64
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text ""
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzChK_terminal {
+                 visible 1
+                 ignorepointer 1
+                 position 6 3
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 1
+                 text "#STR_OZL_ED_CH_K_TERMINAL"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChV_terminal {
+                 visible 1
+                 ignorepointer 1
+                 position 6 17
+                 size 134 18
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 2
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChC_terminal {
+                 visible 1
+                 ignorepointer 1
+                 position 6 33
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 3
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzChS_terminal {
+                 visible 1
+                 ignorepointer 1
+                 position 6 47
+                 size 134 14
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 4
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+               }
+              }
+             }
+            }
+            TextWidgetClass RzChRawHead {
+             visible 1
+             ignorepointer 1
+             position 0 140
+             size 446 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.31 0.71 0.91 1
+             priority 1
+             text "#STR_OZL_ED_CH_RAW_HEAD"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" left
+             "text valign" center
+            }
+            // The raw items list and the station preview lie on top of each other; BtnRzChMode picks one.
+            FrameWidgetClass RzChBody {
+             visible 1
+             position 0 168
+             size 446 180
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 2
+             {
+              TextListboxWidgetClass RzChRaw {
+               visible 1
+               position 0 0
+               size 1 1
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               color 0.9 0.93 0.95 1
+               priority 0
+               font "gui/fonts/MetronBook14"
+               "exact text" 1
+               style NoScrollBar
+               "title visible" 0
+               "highlight row" 1
+               lines 7
+              }
+              FrameWidgetClass RzChStation {
+               visible 0
+               position 0 0
+               size 1 1
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 1
+               {
+                TextWidgetClass RzStHead {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 446 20
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.31 0.71 0.91 1
+                 priority 0
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzStSlot0Edge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 23
+                 size 110 46
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass RzStSlot0 {
+                 visible 1
+                 ignorepointer 1
+                 position 0 24
+                 size 108 44
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass RzStSlotK0 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 2
+                   size 98 14
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.58 0.65 0.71 1
+                   priority 0
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 10
+                   "text halign" left
+                   "text valign" center
+                  }
+                  TextWidgetClass RzStSlotV0 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 18
+                   size 98 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" left
+                   "text valign" center
+                  }
+                 }
+                }
+                PanelWidgetClass RzStSlot1Edge {
+                 visible 1
+                 ignorepointer 1
+                 position 111 23
+                 size 110 46
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 2
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass RzStSlot1 {
+                 visible 1
+                 ignorepointer 1
+                 position 112 24
+                 size 108 44
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 2
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass RzStSlotK1 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 2
+                   size 98 14
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.58 0.65 0.71 1
+                   priority 0
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 10
+                   "text halign" left
+                   "text valign" center
+                  }
+                  TextWidgetClass RzStSlotV1 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 18
+                   size 98 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" left
+                   "text valign" center
+                  }
+                 }
+                }
+                PanelWidgetClass RzStSlot2Edge {
+                 visible 1
+                 ignorepointer 1
+                 position 223 23
+                 size 110 46
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 3
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass RzStSlot2 {
+                 visible 1
+                 ignorepointer 1
+                 position 224 24
+                 size 108 44
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 3
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass RzStSlotK2 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 2
+                   size 98 14
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.58 0.65 0.71 1
+                   priority 0
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 10
+                   "text halign" left
+                   "text valign" center
+                  }
+                  TextWidgetClass RzStSlotV2 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 18
+                   size 98 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" left
+                   "text valign" center
+                  }
+                 }
+                }
+                PanelWidgetClass RzStSlot3Edge {
+                 visible 1
+                 ignorepointer 1
+                 position 335 23
+                 size 110 46
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 4
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass RzStSlot3 {
+                 visible 1
+                 ignorepointer 1
+                 position 336 24
+                 size 108 44
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 4
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass RzStSlotK3 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 2
+                   size 98 14
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.58 0.65 0.71 1
+                   priority 0
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 10
+                   "text halign" left
+                   "text valign" center
+                  }
+                  TextWidgetClass RzStSlotV3 {
+                   visible 1
+                   ignorepointer 1
+                   position 5 18
+                   size 98 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" left
+                   "text valign" center
+                  }
+                 }
+                }
+                TextWidgetClass RzStAction {
+                 visible 1
+                 ignorepointer 1
+                 position 0 74
+                 size 446 20
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 5
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                TextWidgetClass RzStAdmin {
+                 visible 1
+                 ignorepointer 1
+                 position 0 94
+                 size 446 16
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 6
+                 text "-"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 10
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzStTipEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 113
+                 size 448 66
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 7
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass RzStTip {
+                 visible 1
+                 ignorepointer 1
+                 position 0 114
+                 size 446 64
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 7
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass RzStTipName {
+                   visible 1
+                   ignorepointer 1
+                   position 6 2
+                   size 434 18
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 0
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" left
+                   "text valign" center
+                  }
+                  MultilineTextWidgetClass RzStTipDesc {
+                   visible 1
+                   ignorepointer 1
+                   position 6 20
+                   size 434 42
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   text "-"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 10
+                   "text halign" left
+                   "text valign" top
+                   wrap 1
+                   "size to text h" 0
+                   "size to text v" 0
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+            FrameWidgetClass RzChBulk {
+             visible 1
+             position 0 354
+             size 446 28
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 3
+             {
+              TextWidgetClass RzChBulkTier {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 70 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzChBulkPtsFrame {
+               visible 1
+               position 76 0
+               size 50 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzChBulkPtsFill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 48 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzChBulkPts {
+                 visible 1
+                 position 6 0
+                 size 38 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              PanelWidgetClass RzChBulkNodeFrame {
+               visible 1
+               position 132 0
+               size 110 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 2
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzChBulkNodeFill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 108 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzChBulkNode {
+                 visible 1
+                 position 6 0
+                 size 98 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              ButtonWidgetClass BtnRzChBulk {
+               visible 1
+               position 248 0
+               size 90 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 3
+               {
+                PanelWidgetClass BtnRzChBulkEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 92 30
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzChBulkBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 90 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzChBulkText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 90 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.31 0.71 0.91 1
+                 priority 2
+                 text "#STR_OZL_ED_CH_BULK"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              ButtonWidgetClass BtnRzChRawAdd {
+               visible 1
+               position 344 0
+               size 100 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 4
+               {
+                PanelWidgetClass BtnRzChRawAddEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 102 30
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.39 0.76 0.36 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzChRawAddBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 100 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzChRawAddText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 100 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.39 0.76 0.36 1
+                 priority 2
+                 text "#STR_OZL_ED_CH_RAW_ADD"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+          // The picked rule's fields (RzRuForm), or a note about the terminal and the pool (RzRuInfo).
+          FrameWidgetClass RzChInsp {
+           visible 1
+           position 670 0
+           size 290 382
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 2
+           {
+            FrameWidgetClass RzRuForm {
+             visible 0
+             position 0 0
+             size 290 382
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 0
+             {
+              TextWidgetClass RzRuHead {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 290 22
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.31 0.71 0.91 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              ButtonWidgetClass BtnRzRuEnabled {
+               visible 1
+               position 0 25
+               size 290 26
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 1
+               {
+                PanelWidgetClass BtnRzRuEnabledEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 292 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzRuEnabledBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 290 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzRuEnabledText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 290 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.31 0.71 0.91 1
+                 priority 2
+                 text "#STR_OZL_ED_RU_ON"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow24 {
+               visible 1
+               position 0 54
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 2
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 2
+               Rows 1
+               {
+                TextWidgetClass RzRuDeviceLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_DEVICE"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuDeviceFrame {
+                 visible 1
+                 position 0 0
+                 size 210 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuDeviceFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 208 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuDevice {
+                   visible 1
+                   position 6 0
+                   size 198 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow25 {
+               visible 1
+               position 0 81
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 3
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 2
+               Rows 1
+               {
+                TextWidgetClass RzRuInputLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_INPUT"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuInputFrame {
+                 visible 1
+                 position 0 0
+                 size 210 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuInputFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 208 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuInput {
+                   visible 1
+                   position 6 0
+                   size 198 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow26 {
+               visible 1
+               position 0 108
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 4
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 3
+               Rows 1
+               {
+                TextWidgetClass RzRuQtyLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_QTY"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuInQtyFrame {
+                 visible 1
+                 position 0 0
+                 size 60 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuInQtyFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 58 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuInQty {
+                   visible 1
+                   position 6 0
+                   size 48 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+                ButtonWidgetClass BtnRzRuExact {
+                 visible 1
+                 position 0 0
+                 size 146 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 text ""
+                 priority 2
+                 {
+                  PanelWidgetClass BtnRzRuExactEdge {
+                   visible 1
+                   ignorepointer 1
+                   position -1 -1
+                   size 148 26
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.22 0.3 0.38 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  PanelWidgetClass BtnRzRuExactBg {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.135 0.18 0.225 1
+                   priority 1
+                   style rover_sim_colorable
+                  }
+                  TextWidgetClass BtnRzRuExactText {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 146 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.31 0.71 0.91 1
+                   priority 2
+                   text "#STR_OZL_ED_RU_KIN"
+                   font "gui/fonts/sdf_MetronBook24"
+                   "exact text" 1
+                   "exact text size" 13
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow27 {
+               visible 1
+               position 0 135
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 5
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 4
+               Rows 1
+               {
+                TextWidgetClass RzRuTimeLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_TIME"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuTimeFrame {
+                 visible 1
+                 position 0 0
+                 size 60 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuTimeFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 58 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuTime {
+                   visible 1
+                   position 6 0
+                   size 48 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+                TextWidgetClass RzRuPurLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 86 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 2
+                 text "#STR_OZL_ED_RU_PURITY"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuPurityFrame {
+                 visible 1
+                 position 0 0
+                 size 60 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 3
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuPurityFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 58 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuPurity {
+                   visible 1
+                   position 6 0
+                   size 48 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow28 {
+               visible 1
+               position 0 162
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 6
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 2
+               Rows 1
+               {
+                TextWidgetClass RzRuOutLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_OUT"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuOutFrame {
+                 visible 1
+                 position 0 0
+                 size 210 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuOutFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 208 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuOut {
+                   visible 1
+                   position 6 0
+                   size 198 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow29 {
+               visible 1
+               position 0 189
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 7
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 4
+               Rows 1
+               {
+                TextWidgetClass RzRuPtsLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_POINTS"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuOutPtsFrame {
+                 visible 1
+                 position 0 0
+                 size 60 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuOutPtsFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 58 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuOutPts {
+                   visible 1
+                   position 6 0
+                   size 48 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+                TextWidgetClass RzRuChLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 86 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 2
+                 text "#STR_OZL_ED_RU_CHANCE"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuOutChanceFrame {
+                 visible 1
+                 position 0 0
+                 size 60 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 3
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuOutChanceFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 58 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuOutChance {
+                   visible 1
+                   position 6 0
+                   size 48 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow30 {
+               visible 1
+               position 0 216
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 8
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 2
+               Rows 1
+               {
+                TextWidgetClass RzRuNodeLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_NODE"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuNodeFrame {
+                 visible 1
+                 position 0 0
+                 size 210 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuNodeFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 208 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuNode {
+                   visible 1
+                   position 6 0
+                   size 198 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow31 {
+               visible 1
+               position 0 243
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 9
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 2
+               Rows 1
+               {
+                TextWidgetClass RzRuFacLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_FACTIONS"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuFactionsFrame {
+                 visible 1
+                 position 0 0
+                 size 210 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuFactionsFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 208 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuFactions {
+                   visible 1
+                   position 6 0
+                   size 198 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass HRow32 {
+               visible 1
+               position 0 270
+               size 0 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               priority 10
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               "Size To Content V" 1
+               Columns 2
+               Rows 1
+               {
+                TextWidgetClass RzRuNotesLbl {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 80 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.58 0.65 0.71 1
+                 priority 0
+                 text "#STR_OZL_ED_RU_NOTES"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" left
+                 "text valign" center
+                }
+                PanelWidgetClass RzRuNotesFrame {
+                 visible 1
+                 position 0 0
+                 size 210 24
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.22 0.3 0.38 1
+                 priority 1
+                 style rover_sim_colorable
+                 {
+                  PanelWidgetClass RzRuNotesFill {
+                   visible 1
+                   ignorepointer 1
+                   position 1 1
+                   size 208 22
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.1 0.135 0.17 1
+                   priority 0
+                   style rover_sim_colorable
+                  }
+                  EditBoxWidgetClass RzRuNotes {
+                   visible 1
+                   position 6 0
+                   size 198 24
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   color 0.9 0.93 0.95 1
+                   priority 1
+                   style Default
+                   text ""
+                   font "gui/fonts/MetronBook14"
+                   "exact text" 1
+                  }
+                 }
+                }
+               }
+              }
+              ButtonWidgetClass BtnRzRuDup {
+               visible 1
+               position 0 297
+               size 142 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 0
+               {
+                PanelWidgetClass BtnRzRuDupEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 144 30
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.39 0.76 0.36 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzRuDupBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 142 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzRuDupText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 142 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.39 0.76 0.36 1
+                 priority 2
+                 text "#STR_OZL_ED_RU_DUP"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              ButtonWidgetClass BtnRzRuDel {
+               visible 1
+               position 148 297
+               size 142 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 1
+               {
+                PanelWidgetClass BtnRzRuDelEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 144 30
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.88 0.32 0.32 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzRuDelBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 142 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzRuDelText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 142 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.88 0.32 0.32 1
+                 priority 2
+                 text "#STR_OZL_ED_RU_DEL"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              MultilineTextWidgetClass RzRuNote {
+               visible 1
+               ignorepointer 1
+               position 0 328
+               size 290 54
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 12
+               text "#STR_OZL_ED_RU_NOTE"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" top
+               wrap 1
+               "size to text h" 0
+               "size to text v" 0
+              }
+             }
+            }
+            MultilineTextWidgetClass RzRuInfo {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 290 300
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.58 0.65 0.71 1
+             priority 1
+             text "#STR_OZL_ED_CH_INFO_PICK"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" left
+             "text valign" top
+             wrap 1
+             "size to text h" 0
+             "size to text v" 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      // One page for four files: OWNERS, MODULES, STATICS and SETTINGS. A list of the file's entries with ADD and DELETE on the left (hidden for SETTINGS, which is one object), the picked entry's fields on the right. The script names the rows (RzCfgLbl0..7), hides the unused ones and writes the hints.
+      FrameWidgetClass RzPage_cfg {
+       visible 0
+       position 0 0
+       size 960 382
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 4
+       {
+        FrameWidgetClass RzCfgCols {
+         visible 1
+         position 0 0
+         size 960 382
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         priority 0
+         {
+          FrameWidgetClass RzCfgSide {
+           visible 1
+           position 0 0
+           size 300 382
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 0
+           {
+            TextWidgetClass RzCfgListHead {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 300 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.31 0.71 0.91 1
+             priority 0
+             text "-"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" left
+             "text valign" center
+            }
+            TextListboxWidgetClass RzCfgList {
+             visible 1
+             position 0 28
+             size 300 320
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.9 0.93 0.95 1
+             priority 1
+             font "gui/fonts/MetronBook14"
+             "exact text" 1
+             style NoScrollBar
+             "title visible" 0
+             "highlight row" 1
+             lines 12
+            }
+            FrameWidgetClass RzCfgListBar {
+             visible 1
+             position 0 354
+             size 300 28
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 2
+             {
+              ButtonWidgetClass BtnRzCfgAdd {
+               visible 1
+               position 0 0
+               size 147 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 0
+               {
+                PanelWidgetClass BtnRzCfgAddEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 149 30
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.39 0.76 0.36 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzCfgAddBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 147 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzCfgAddText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 147 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.39 0.76 0.36 1
+                 priority 2
+                 text "#STR_OZL_ED_PT_ADD"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              ButtonWidgetClass BtnRzCfgDel {
+               visible 1
+               position 153 0
+               size 147 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text ""
+               priority 1
+               {
+                PanelWidgetClass BtnRzCfgDelEdge {
+                 visible 1
+                 ignorepointer 1
+                 position -1 -1
+                 size 149 30
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.88 0.32 0.32 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                PanelWidgetClass BtnRzCfgDelBg {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 147 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.135 0.18 0.225 1
+                 priority 1
+                 style rover_sim_colorable
+                }
+                TextWidgetClass BtnRzCfgDelText {
+                 visible 1
+                 ignorepointer 1
+                 position 0 0
+                 size 147 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.88 0.32 0.32 1
+                 priority 2
+                 text "#STR_OZL_ED_PT_DEL"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "exact text" 1
+                 "exact text size" 13
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass RzCfgForm {
+           visible 1
+           position 312 0
+           size 648 382
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 1
+           {
+            TextWidgetClass RzCfgHead {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 648 22
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.31 0.71 0.91 1
+             priority 0
+             text "-"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 13
+             "text halign" left
+             "text valign" center
+            }
+            GridSpacerWidgetClass RzCfgRow0 {
+             visible 1
+             position 0 26
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 1
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl0 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld0Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld0Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld0 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint0 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow1 {
+             visible 1
+             position 0 58
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 2
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl1 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld1Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld1Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld1 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint1 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow2 {
+             visible 1
+             position 0 90
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 3
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl2 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld2Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld2Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld2 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint2 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow3 {
+             visible 1
+             position 0 122
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 4
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl3 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld3Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld3Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld3 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint3 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow4 {
+             visible 1
+             position 0 154
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 5
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl4 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld4Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld4Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld4 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint4 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow5 {
+             visible 1
+             position 0 186
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 6
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl5 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld5Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld5Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld5 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint5 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow6 {
+             visible 1
+             position 0 218
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 7
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl6 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld6Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld6Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld6 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint6 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            GridSpacerWidgetClass RzCfgRow7 {
+             visible 1
+             position 0 250
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 8
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             Columns 3
+             Rows 1
+             {
+              TextWidgetClass RzCfgLbl7 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.58 0.65 0.71 1
+               priority 0
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" left
+               "text valign" center
+              }
+              PanelWidgetClass RzCfgFld7Frame {
+               visible 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.22 0.3 0.38 1
+               priority 1
+               style rover_sim_colorable
+               {
+                PanelWidgetClass RzCfgFld7Fill {
+                 visible 1
+                 ignorepointer 1
+                 position 1 1
+                 size 298 26
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.1 0.135 0.17 1
+                 priority 0
+                 style rover_sim_colorable
+                }
+                EditBoxWidgetClass RzCfgFld7 {
+                 visible 1
+                 position 6 0
+                 size 288 28
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 color 0.9 0.93 0.95 1
+                 priority 1
+                 style Default
+                 text ""
+                 font "gui/fonts/MetronBook14"
+                 "exact text" 1
+                }
+               }
+              }
+              TextWidgetClass RzCfgHint7 {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 170 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.37 0.45 0.52 1
+               priority 2
+               text ""
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 10
+               "text halign" left
+               "text valign" center
+              }
+             }
+            }
+            // The page's own action, named by the script: on STATICS it takes the admin's position and heading.
+            ButtonWidgetClass BtnRzCfgAct {
+             visible 1
+             position 0 282
+             size 300 28
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text ""
+             priority 9
+             {
+              PanelWidgetClass BtnRzCfgActEdge {
+               visible 1
+               ignorepointer 1
+               position -1 -1
+               size 302 30
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.31 0.71 0.91 1
+               priority 0
+               style rover_sim_colorable
+              }
+              PanelWidgetClass BtnRzCfgActBg {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.135 0.18 0.225 1
+               priority 1
+               style rover_sim_colorable
+              }
+              TextWidgetClass BtnRzCfgActText {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 300 28
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               color 0.31 0.71 0.91 1
+               priority 2
+               text "-"
+               font "gui/fonts/sdf_MetronBook24"
+               "exact text" 1
+               "exact text size" 13
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            MultilineTextWidgetClass RzCfgNote {
+             visible 1
+             ignorepointer 1
+             position 0 314
+             size 648 68
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             color 0.58 0.65 0.71 1
+             priority 10
+             text "-"
+             font "gui/fonts/sdf_MetronBook24"
+             "exact text" 1
+             "exact text size" 10
+             "text halign" left
+             "text valign" top
+             wrap 1
+             "size to text h" 0
+             "size to text v" 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
       // Every sub-tab whose page is not written yet shows this one.
       FrameWidgetClass RzPage_soon {
        visible 0
@@ -3820,7 +7731,7 @@ FrameWidgetClass PaneResearch {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       priority 3
+       priority 5
        {
         MultilineTextWidgetClass RzSoonText {
          visible 1
@@ -3854,7 +7765,7 @@ FrameWidgetClass PaneResearch {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       priority 4
+       priority 6
        {
         FrameWidgetClass RzProbCol {
          visible 1

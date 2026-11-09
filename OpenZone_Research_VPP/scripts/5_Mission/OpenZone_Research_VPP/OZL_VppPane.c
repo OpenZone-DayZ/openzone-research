@@ -312,14 +312,33 @@ modded class OZ_VppAdminMenu
     // Сторінка, яку показує відкрита підвкладка.
     protected string RzPageOf(string key)
     {
-        if (key == "overview" || key == "points" || key == "tree")
+        if (RzHasPage(key))
             return key;
         return "soon";
     }
 
+    // Чи написана сторінка підвкладки. Файли інших сторінок (ланцюги,
+    // решта конфігів) -- свої modded-шари цього класу: вони додають ключ
+    // тут, малюють сторінку в RepaintRzPage і розкладають її в
+    // OnWindowResized.
+    protected bool RzHasPage(string key)
+    {
+        if (key == "overview" || key == "points" || key == "tree")
+            return true;
+        return false;
+    }
+
+    protected void RepaintRzPage(string tab)
+    {
+        if (tab == "points")
+            RepaintPoints(true);
+        else if (tab == "tree")
+            RepaintTree(true);
+    }
+
     protected void ShowRzPage(string page)
     {
-        array<string> pages = {"overview", "points", "tree", "soon", "problems"};
+        array<string> pages = {"overview", "points", "tree", "chains", "cfg", "soon", "problems"};
         for (int i = 0; i < pages.Count(); i++)
         {
             Widget p = M_SUB_WIDGET.FindAnyWidget("RzPage_" + pages[i]);
@@ -354,10 +373,7 @@ modded class OZ_VppAdminMenu
         else
         {
             ShowRzPage(RzPageOf(m_RzTab));
-            if (m_RzTab == "points")
-                RepaintPoints(true);
-            else if (m_RzTab == "tree")
-                RepaintTree(true);
+            RepaintRzPage(m_RzTab);
         }
         PaintRzBar();
         PaintSummary();
@@ -1987,7 +2003,7 @@ modded class OZ_VppAdminMenu
         Widget pages = M_SUB_WIDGET.FindAnyWidget("RzPages");
         if (pages)
             pages.SetSize(iw, ph);
-        array<string> names = {"overview", "points", "tree", "soon", "problems"};
+        array<string> names = {"overview", "points", "tree", "chains", "cfg", "soon", "problems"};
         for (i = 0; i < names.Count(); i++)
         {
             Widget pg = M_SUB_WIDGET.FindAnyWidget("RzPage_" + names[i]);

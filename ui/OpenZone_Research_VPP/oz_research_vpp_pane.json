@@ -227,6 +227,229 @@
                   ]}}
                 ]}},
 
+              {"frame": {"name": "RzPage_chains", "w": "fill", "h": "fill", "hidden": true,
+                "note": "Processing chains of one owner and one line: the conveyor raw items -> packer -> sample -> analyzer -> carrier -> terminal/pool as six cards, the packer's rules (raw items) by the tier of their node with a bulk bar, the rule inspector on the right, and the station as the player meets it instead of the raw list. The script fills every text and places the cards with the window (OnWindowResized).",
+                "children": [
+                  {"hbox": {"name": "RzChCols", "w": "fill", "h": "fill", "gap": 12, "children": [
+                    {"vbox": {"name": "RzChSide", "w": 200, "gap": "$space.tight", "children": [
+                      {"label": {"name": "RzChOwnHead", "h": "$size.hint", "text": "#STR_OZL_ED_CH_OWNERS", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "RzChOwners", "h": 150, "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 7}}},
+                      {"label": {"name": "RzChLineHead", "h": "$size.hint", "text": "#STR_OZL_ED_CH_LINES", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "RzChLines", "h": "fill", "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 5}}},
+                      {"button": {"name": "BtnRzChMode", "h": 28, "text": "#STR_OZL_ED_TR_VIEW", "font": "small", "edge": "$accent", "color": "$accent",
+                        "note": "Switches the space under the cards between the raw items (editing) and the station as the player meets it."}}
+                    ]}},
+                    {"vbox": {"name": "RzChMid", "w": 446, "gap": "$space.tight", "children": [
+                      {"frame": {"name": "RzChPipe", "h": 134,
+                        "note": "Six cards, three in a row; the script places them (one row when the column is wide enough).",
+                        "children": [
+                          {"frame": {"name": "RzChCard_raw", "at": [0, 0], "size": [146, 64], "children": [
+                            {"button": {"name": "BtnRzChCard_raw", "at": [0, 0], "w": 146, "h": 64, "text": "", "font": "small"}},
+                            {"label": {"name": "RzChK_raw", "at": [6, 3], "w": 134, "h": 14, "text": "#STR_OZL_ED_CH_K_RAW", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChV_raw", "at": [6, 17], "w": 134, "h": 18, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzChC_raw", "at": [6, 33], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChS_raw", "at": [6, 47], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}}
+                          ]}},
+                          {"frame": {"name": "RzChCard_packer", "at": [150, 0], "size": [146, 64], "children": [
+                            {"button": {"name": "BtnRzChCard_packer", "at": [0, 0], "w": 146, "h": 64, "text": "", "font": "small"}},
+                            {"label": {"name": "RzChK_packer", "at": [6, 3], "w": 134, "h": 14, "text": "#STR_OZL_ED_CH_K_PACKER", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChV_packer", "at": [6, 17], "w": 134, "h": 18, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzChC_packer", "at": [6, 33], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChS_packer", "at": [6, 47], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}}
+                          ]}},
+                          {"frame": {"name": "RzChCard_sample", "at": [300, 0], "size": [146, 64], "children": [
+                            {"button": {"name": "BtnRzChCard_sample", "at": [0, 0], "w": 146, "h": 64, "text": "", "font": "small"}},
+                            {"label": {"name": "RzChK_sample", "at": [6, 3], "w": 134, "h": 14, "text": "#STR_OZL_ED_CH_K_SAMPLE", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChV_sample", "at": [6, 17], "w": 134, "h": 18, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzChC_sample", "at": [6, 33], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChS_sample", "at": [6, 47], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}}
+                          ]}},
+                          {"frame": {"name": "RzChCard_analyzer", "at": [0, 70], "size": [146, 64], "children": [
+                            {"button": {"name": "BtnRzChCard_analyzer", "at": [0, 0], "w": 146, "h": 64, "text": "", "font": "small"}},
+                            {"label": {"name": "RzChK_analyzer", "at": [6, 3], "w": 134, "h": 14, "text": "#STR_OZL_ED_CH_K_ANALYZER", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChV_analyzer", "at": [6, 17], "w": 134, "h": 18, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzChC_analyzer", "at": [6, 33], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChS_analyzer", "at": [6, 47], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}}
+                          ]}},
+                          {"frame": {"name": "RzChCard_carrier", "at": [150, 70], "size": [146, 64], "children": [
+                            {"button": {"name": "BtnRzChCard_carrier", "at": [0, 0], "w": 146, "h": 64, "text": "", "font": "small"}},
+                            {"label": {"name": "RzChK_carrier", "at": [6, 3], "w": 134, "h": 14, "text": "#STR_OZL_ED_CH_K_CARRIER", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChV_carrier", "at": [6, 17], "w": 134, "h": 18, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzChC_carrier", "at": [6, 33], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChS_carrier", "at": [6, 47], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}}
+                          ]}},
+                          {"frame": {"name": "RzChCard_terminal", "at": [300, 70], "size": [146, 64], "children": [
+                            {"button": {"name": "BtnRzChCard_terminal", "at": [0, 0], "w": 146, "h": 64, "text": "", "font": "small"}},
+                            {"label": {"name": "RzChK_terminal", "at": [6, 3], "w": 134, "h": 14, "text": "#STR_OZL_ED_CH_K_TERMINAL", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChV_terminal", "at": [6, 17], "w": 134, "h": 18, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzChC_terminal", "at": [6, 33], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"label": {"name": "RzChS_terminal", "at": [6, 47], "w": 134, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}}
+                          ]}}
+                        ]}},
+                      {"label": {"name": "RzChRawHead", "h": "$size.hint", "text": "#STR_OZL_ED_CH_RAW_HEAD", "font": "small", "color": "$accent"}},
+                      {"frame": {"name": "RzChBody", "h": "fill",
+                        "note": "The raw items list and the station preview lie on top of each other; BtnRzChMode picks one.",
+                        "children": [
+                          {"listbox": {"name": "RzChRaw", "size": "fill", "font": "field", "color": "$text",
+                            "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 7}}},
+                          {"frame": {"name": "RzChStation", "size": "fill", "hidden": true, "children": [
+                            {"label": {"name": "RzStHead", "at": [0, 0], "w": 446, "h": 20, "text": "-", "font": "small", "color": "$accent"}},
+                            {"panel": {"name": "RzStSlot0", "at": [0, 24], "size": [108, 44], "color": "$raised", "edge": "$edge", "children": [
+                              {"label": {"name": "RzStSlotK0", "at": [5, 2], "w": 98, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                              {"label": {"name": "RzStSlotV0", "at": [5, 18], "w": 98, "h": 22, "text": "-", "font": "small", "color": "$text"}}
+                            ]}},
+                            {"panel": {"name": "RzStSlot1", "at": [112, 24], "size": [108, 44], "color": "$raised", "edge": "$edge", "children": [
+                              {"label": {"name": "RzStSlotK1", "at": [5, 2], "w": 98, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                              {"label": {"name": "RzStSlotV1", "at": [5, 18], "w": 98, "h": 22, "text": "-", "font": "small", "color": "$text"}}
+                            ]}},
+                            {"panel": {"name": "RzStSlot2", "at": [224, 24], "size": [108, 44], "color": "$raised", "edge": "$edge", "children": [
+                              {"label": {"name": "RzStSlotK2", "at": [5, 2], "w": 98, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                              {"label": {"name": "RzStSlotV2", "at": [5, 18], "w": 98, "h": 22, "text": "-", "font": "small", "color": "$text"}}
+                            ]}},
+                            {"panel": {"name": "RzStSlot3", "at": [336, 24], "size": [108, 44], "color": "$raised", "edge": "$edge", "children": [
+                              {"label": {"name": "RzStSlotK3", "at": [5, 2], "w": 98, "h": 14, "text": "-", "font": "tiny", "color": "$muted"}},
+                              {"label": {"name": "RzStSlotV3", "at": [5, 18], "w": 98, "h": 22, "text": "-", "font": "small", "color": "$text"}}
+                            ]}},
+                            {"label": {"name": "RzStAction", "at": [0, 74], "w": 446, "h": 20, "text": "-", "font": "small", "color": "$text"}},
+                            {"label": {"name": "RzStAdmin", "at": [0, 94], "w": 446, "h": 16, "text": "-", "font": "tiny", "color": "$muted"}},
+                            {"panel": {"name": "RzStTip", "at": [0, 114], "size": [446, 64], "color": "$panel", "edge": "$edge", "children": [
+                              {"label": {"name": "RzStTipName", "at": [6, 2], "w": 434, "h": 18, "text": "-", "font": "small", "color": "$accent"}},
+                              {"text": {"name": "RzStTipDesc", "at": [6, 20], "w": 434, "h": 42, "plain": true, "grow": false, "font": "tiny", "color": "$text", "text": "-"}}
+                            ]}}
+                          ]}}
+                        ]}},
+                      {"hbox": {"name": "RzChBulk", "h": 28, "gap": "$space.tight", "children": [
+                        {"label": {"name": "RzChBulkTier", "w": 70, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzChBulkPts", "w": 50}},
+                        {"field": {"name": "RzChBulkNode", "w": 110}},
+                        {"button": {"name": "BtnRzChBulk", "w": 90, "text": "#STR_OZL_ED_CH_BULK", "font": "small"}},
+                        {"button": {"name": "BtnRzChRawAdd", "w": 100, "text": "#STR_OZL_ED_CH_RAW_ADD", "font": "small", "edge": "$ok", "color": "$ok"}}
+                      ]}}
+                    ]}},
+                    {"frame": {"name": "RzChInsp", "w": 290, "h": "fill",
+                      "note": "The picked rule's fields (RzRuForm), or a note about the terminal and the pool (RzRuInfo).",
+                      "children": [
+                    {"vbox": {"name": "RzRuForm", "w": "fill", "h": "fill", "gap": 3, "hidden": true, "children": [
+                      {"label": {"name": "RzRuHead", "h": "$size.hint", "text": "-", "font": "small", "color": "$accent"}},
+                      {"button": {"name": "BtnRzRuEnabled", "h": 26, "text": "#STR_OZL_ED_RU_ON", "font": "small"}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuDeviceLbl", "w": 80, "text": "#STR_OZL_ED_RU_DEVICE", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuDevice", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuInputLbl", "w": 80, "text": "#STR_OZL_ED_RU_INPUT", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuInput", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuQtyLbl", "w": 80, "text": "#STR_OZL_ED_RU_QTY", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuInQty", "w": 60}},
+                        {"button": {"name": "BtnRzRuExact", "w": 146, "text": "#STR_OZL_ED_RU_KIN", "font": "small"}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuTimeLbl", "w": 80, "text": "#STR_OZL_ED_RU_TIME", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuTime", "w": 60}},
+                        {"label": {"name": "RzRuPurLbl", "w": 86, "text": "#STR_OZL_ED_RU_PURITY", "font": "small", "color": "$muted", "align": "center"}},
+                        {"field": {"name": "RzRuPurity", "w": 60}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuOutLbl", "w": 80, "text": "#STR_OZL_ED_RU_OUT", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuOut", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuPtsLbl", "w": 80, "text": "#STR_OZL_ED_RU_POINTS", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuOutPts", "w": 60}},
+                        {"label": {"name": "RzRuChLbl", "w": 86, "text": "#STR_OZL_ED_RU_CHANCE", "font": "small", "color": "$muted", "align": "center"}},
+                        {"field": {"name": "RzRuOutChance", "w": 60}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuNodeLbl", "w": 80, "text": "#STR_OZL_ED_RU_NODE", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuNode", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuFacLbl", "w": 80, "text": "#STR_OZL_ED_RU_FACTIONS", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuFactions", "w": 210}}
+                      ]}},
+                      {"hrow": {"h": 24, "children": [
+                        {"label": {"name": "RzRuNotesLbl", "w": 80, "text": "#STR_OZL_ED_RU_NOTES", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzRuNotes", "w": 210}}
+                      ]}},
+                      {"hbox": {"h": 28, "gap": 6, "children": [
+                        {"button": {"name": "BtnRzRuDup", "w": 142, "text": "#STR_OZL_ED_RU_DUP", "font": "small", "edge": "$ok", "color": "$ok"}},
+                        {"button": {"name": "BtnRzRuDel", "w": 142, "text": "#STR_OZL_ED_RU_DEL", "font": "small", "edge": "$bad", "color": "$bad"}}
+                      ]}},
+                      {"text": {"name": "RzRuNote", "w": 290, "h": "fill", "plain": true, "grow": false, "font": "tiny", "color": "$muted",
+                        "text": "#STR_OZL_ED_RU_NOTE"}}
+                    ]}},
+                    {"text": {"name": "RzRuInfo", "at": [0, 0], "w": 290, "h": 300, "plain": true, "grow": false, "font": "small", "color": "$muted",
+                      "text": "#STR_OZL_ED_CH_INFO_PICK"}}
+                    ]}}
+                  ]}}
+                ]}},
+
+              {"frame": {"name": "RzPage_cfg", "w": "fill", "h": "fill", "hidden": true,
+                "note": "One page for four files: OWNERS, MODULES, STATICS and SETTINGS. A list of the file's entries with ADD and DELETE on the left (hidden for SETTINGS, which is one object), the picked entry's fields on the right. The script names the rows (RzCfgLbl0..7), hides the unused ones and writes the hints.",
+                "children": [
+                  {"hbox": {"name": "RzCfgCols", "w": "fill", "h": "fill", "gap": 12, "children": [
+                    {"vbox": {"name": "RzCfgSide", "w": 300, "gap": "$space.tight", "children": [
+                      {"label": {"name": "RzCfgListHead", "h": "$size.hint", "text": "-", "font": "small", "color": "$accent"}},
+                      {"listbox": {"name": "RzCfgList", "h": "fill", "font": "field", "color": "$text",
+                        "props": {"style": "NoScrollBar", "title visible": false, "highlight row": true, "lines": 12}}},
+                      {"hbox": {"name": "RzCfgListBar", "h": 28, "gap": 6, "children": [
+                        {"button": {"name": "BtnRzCfgAdd", "w": 147, "text": "#STR_OZL_ED_PT_ADD", "font": "small", "edge": "$ok", "color": "$ok"}},
+                        {"button": {"name": "BtnRzCfgDel", "w": 147, "text": "#STR_OZL_ED_PT_DEL", "font": "small", "edge": "$bad", "color": "$bad"}}
+                      ]}}
+                    ]}},
+                    {"vbox": {"name": "RzCfgForm", "w": 648, "gap": 4, "children": [
+                      {"label": {"name": "RzCfgHead", "h": "$size.hint", "text": "-", "font": "small", "color": "$accent"}},
+                      {"hrow": {"name": "RzCfgRow0", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl0", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld0", "w": 300}},
+                        {"label": {"name": "RzCfgHint0", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow1", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl1", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld1", "w": 300}},
+                        {"label": {"name": "RzCfgHint1", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow2", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl2", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld2", "w": 300}},
+                        {"label": {"name": "RzCfgHint2", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow3", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl3", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld3", "w": 300}},
+                        {"label": {"name": "RzCfgHint3", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow4", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl4", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld4", "w": 300}},
+                        {"label": {"name": "RzCfgHint4", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow5", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl5", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld5", "w": 300}},
+                        {"label": {"name": "RzCfgHint5", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow6", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl6", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld6", "w": 300}},
+                        {"label": {"name": "RzCfgHint6", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"hrow": {"name": "RzCfgRow7", "h": "$size.field", "children": [
+                        {"label": {"name": "RzCfgLbl7", "w": 170, "text": "-", "font": "small", "color": "$muted"}},
+                        {"field": {"name": "RzCfgFld7", "w": 300}},
+                        {"label": {"name": "RzCfgHint7", "w": 170, "text": "", "font": "tiny", "color": "$faint"}}
+                      ]}},
+                      {"button": {"name": "BtnRzCfgAct", "w": 300, "h": 28, "text": "-", "font": "small", "edge": "$accent", "color": "$accent",
+                        "note": "The page's own action, named by the script: on STATICS it takes the admin's position and heading."}},
+                      {"text": {"name": "RzCfgNote", "w": 648, "h": "fill", "plain": true, "grow": false, "font": "tiny", "color": "$muted", "text": "-"}}
+                    ]}}
+                  ]}}
+                ]}},
+
               {"frame": {"name": "RzPage_soon", "w": "fill", "h": "fill", "hidden": true,
                 "note": "Every sub-tab whose page is not written yet shows this one.",
                 "children": [
