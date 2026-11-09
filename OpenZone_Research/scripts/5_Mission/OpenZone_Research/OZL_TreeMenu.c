@@ -119,6 +119,16 @@ class OZL_TreeMenu : UIScriptedMenu
 
     private static OZL_TreeMenu s_Open;
 
+    // Перегляд «як бачить гравець» з редактора досліджень (VPP): вигляд,
+    // який редактор склав із чернетки (OZL_Tree.Fill), замість відповіді
+    // сервера. Редактор кладе його сюди перед EnterScriptedMenu, OnShow
+    // забирає, перший Update бере -- на кадр пізніше, як приходить відповідь
+    // служби. Поки вікно в перегляді, відповіді служби дерева сюди не йдуть
+    // і нового дерева воно не просить.
+    private static string s_PreviewNext = "";
+    private bool   m_Preview     = false;
+    private string m_PreviewJson = "";
+
     private ref OZL_TreeView m_View;
     private ref OZL_TreeSkin m_Skin;
     private string m_SkinAsked = "";   // id, який просив сервер (навіть якщо показано neutral)
@@ -236,6 +246,18 @@ class OZL_TreeMenu : UIScriptedMenu
         return s_Open;
     }
 
+    // Наступне відкриття покаже цей вигляд (JSON OZL_TreeView), а не дерево
+    // з сервера. Порожній рядок -- забрати непоказаний.
+    static void PreviewNext(string json)
+    {
+        s_PreviewNext = json;
+    }
+
+    bool IsPreview()
+    {
+        return m_Preview;
+    }
+
     // Відповідь служби -- сюди з OZL_MissionGameplay, для відкритого меню.
     static void OnService(string serviceId, string op, bool ok, string json, string error)
     {
@@ -244,11 +266,11 @@ class OZL_TreeMenu : UIScriptedMenu
         if (!ok)
         {
             OZ_Notice.Take("research." + op, false, error);
-            if (s_Open)
+            if (s_Open && !s_Open.m_Preview)
                 s_Open.Say(OZL_Text.Words(error));
             return;
         }
-        if (!s_Open)
+        if (!s_Open || s_Open.m_Preview)
             return;
         s_Open.Take(json);
         if (op == OZL_Const.OP_RESEARCH)
@@ -332,6 +354,13 @@ class OZL_TreeMenu : UIScriptedMenu
         Widget loading = layoutRoot.FindAnyWidget("TreeLoading");
         if (loading)
             loading.Show(true);
+        if (s_PreviewNext != "")
+        {
+            m_Preview = true;
+            m_PreviewJson = s_PreviewNext;
+            s_PreviewNext = "";
+            return;
+        }
         OZ_Rpc.ServiceRequest(OZL_Const.SERVICE, OZL_Const.OP_TREE, "{}");
     }
 
@@ -395,6 +424,12 @@ class OZL_TreeMenu : UIScriptedMenu
         m_ViewAge += timeslice;
         if (m_AskAgain > 0)
             m_AskAgain -= timeslice;
+        if (m_PreviewJson != "")
+        {
+            string preview = m_PreviewJson;
+            m_PreviewJson = "";
+            Take(preview);
+        }
 
         Probe();
         if (m_NeedTree && m_K > 0 && m_View && m_Skin)
@@ -2134,7 +2169,7 @@ class OZL_TreeMenu : UIScriptedMenu
         OZL_NodeView picked = NodeOf(m_Node);
         if (picked && picked.Status == "researching")
             PaintTime(picked);
-        if (ended && m_AskAgain <= 0)
+        if (ended && m_AskAgain <= 0 && !m_Preview)
         {
             m_AskAgain = 5;
             OZ_Rpc.ServiceRequest(OZL_Const.SERVICE, OZL_Const.OP_TREE, "{}");

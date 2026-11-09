@@ -466,7 +466,27 @@ class OZL_Tree
         v.MaySpend   = OZL_Access.MaySpend(uid);
         v.Now        = OZL_Clock.NowSec();
 
-        OZL_PointTypes pts = cfg.PointTypes();
+        // Матеріали рахуються по карго власного термінала поруч із гравцем --
+        // один раз на відповідь, а не на кожен вузол. Нема гравця чи термінала
+        // -- terminal лишається порожнім, і в усіх матеріалів Have = -1.
+        EntityAI terminal;
+        array<EntityAI> cargo = new array<EntityAI>();
+        if (player)
+            terminal = FindOwnTerminal(player, owner);
+        if (terminal)
+            terminal.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, cargo);
+
+        Fill(v, owner, st, cfg.PointTypes(), cfg.Tree(), cfg.Settings().TreeVisibilityDepth, terminal, cargo);
+        return v;
+    }
+
+    // Пул, назви балів і гілки власника у вигляд: туман, заглушки, статуси.
+    // Окремо від View, бо те саме складає редактор досліджень у VPP для
+    // перегляду «як бачить гравець» -- з чернетки, демо-стану й без
+    // термінала (terminal = null: у матеріалів Have = -1). Одна функція на
+    // обох -- і перегляд не розходиться з відповіддю сервера.
+    static void Fill(OZL_TreeView v, string owner, OZL_FactionState st, OZL_PointTypes pts, OZL_TreeConfig tree, int depthLimit, EntityAI terminal, array<EntityAI> cargo)
+    {
         int i;
         for (i = 0; i < pts.PointTypes.Count(); i++)
         {
@@ -484,23 +504,10 @@ class OZL_Tree
             v.Names.Insert(pn);
         }
 
-        OZL_TreeConfig tree = cfg.Tree();
-
-        // Матеріали рахуються по карго власного термінала поруч із гравцем --
-        // один раз на відповідь, а не на кожен вузол. Нема гравця чи термінала
-        // -- terminal лишається порожнім, і в усіх матеріалів Have = -1.
-        EntityAI terminal;
-        array<EntityAI> cargo = new array<EntityAI>();
-        if (player)
-            terminal = FindOwnTerminal(player, owner);
-        if (terminal)
-            terminal.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, cargo);
-
         // Перший прохід -- туман: які вузли власника видно. Другий збирає
         // відповідь, і йому треба знати це наперед: прихованому вузлові й
         // видимому з прихованим батьком дозволено згадати лише видимих батьків.
         // Пам'ять глибин одна на весь обхід -- батько з іншої гілки рахується раз.
-        int depthLimit = cfg.Settings().TreeVisibilityDepth;
         map<string, int> depthMemo = new map<string, int>();
         map<string, bool> shown = new map<string, bool>();
         for (int b1 = 0; b1 < tree.Branches.Count(); b1++)
@@ -605,7 +612,7 @@ class OZL_Tree
                     iv.Cls   = ic.Classname;
                     iv.Name  = ItemName(ic.Classname);
                     iv.Qty   = ic.Quantity;
-                    if (terminal)
+                    if (terminal && cargo)
                         iv.Have = CountInCargo(cargo, terminal, ic.Classname);
                     nv.Items.Insert(iv);
                 }
@@ -614,7 +621,6 @@ class OZL_Tree
             }
             v.Branches.Insert(bv);
         }
-        return v;
     }
 
     static string ViewJson(string owner, string uid, PlayerBase player)

@@ -66,6 +66,42 @@ modded class OZ_VppAdminMenu
     private ref OZL_BranchView m_TrView;
     private ref array<Widget>  m_TrCells;
     private ref array<ref OZL_TreeOrMark> m_TrOrs;
+    private ref array<Widget>  m_TrOrLabels;
+
+    // Контейнери фішок ціни, що чекають розкладки: тексти мають ширину лише
+    // кадром пізніше (OnUpdate -> RunTrFlows).
+    private ref array<Widget>  m_TrFlows;
+    private int                m_TrFlowTries = 0;
+
+    // Режим зв'язку: увімкнений і від якого вузла (порожньо -- батька ще не
+    // вибрано).
+    private bool   m_TrLink     = false;
+    private string m_TrLinkFrom = "";
+
+    // Перегляд гравця: демо-стан фракції (OZL_EdTree.DemoState).
+    private int    m_TrDemo = 0;
+
+    // Гілка: курок видалення.
+    private bool   m_BrDelArmed = false;
+
+    // Вузол, який тягнуть уздовж осі (тір), і полотно, яке тягнуть (прокрутка).
+    // Миша опитується з OnUpdate, як у вікні гравця (OZL_TreeMenu.Drag): так
+    // клік і перетягування не залежать від прапорця DRAGGABLE.
+    private string m_TnDragId    = "";
+    private bool   m_TnDragMoved = false;
+    private int    m_TnDragX     = 0;
+    private int    m_TnDragY     = 0;
+    private float  m_TnCellX     = 0;
+    private float  m_TnCellY     = 0;
+    // Клік, що приходить разом із відпусканням після перетягування, -- не
+    // вибір: кілька кадрів він ігнорується.
+    private int    m_TnSkipClick = 0;
+    private bool   m_TrPanDown   = false;
+    private bool   m_TrPanMoved  = false;
+    private int    m_TrPanX      = 0;
+    private int    m_TrPanY      = 0;
+    private float  m_TrPanH      = 0;
+    private float  m_TrPanV      = 0;
 
     override void OnCreate(Widget RootW)
     {
@@ -77,6 +113,8 @@ modded class OZ_VppAdminMenu
         m_Ed        = new OZL_EdDocs();
         m_TrCells   = new array<Widget>();
         m_TrOrs     = new array<ref OZL_TreeOrMark>();
+        m_TrOrLabels = new array<Widget>();
+        m_TrFlows   = new array<Widget>();
 
         Widget pane = GetGame().GetWorkspace().CreateWidgets("OpenZone_Research_VPP/gui/layouts/oz_research_vpp_pane.layout", M_SUB_WIDGET);
         if (!pane)
@@ -262,6 +300,10 @@ modded class OZ_VppAdminMenu
         m_RzProblems = false;
         m_RzDiscardArmed = false;
         m_PtDelArmed = false;
+        m_TnDelArmed = false;
+        m_BrDelArmed = false;
+        m_TrLink = false;
+        m_TrLinkFrom = "";
         if (m_Ed)
             m_Ed.EndGesture();
         RepaintRz();
@@ -850,7 +892,10 @@ modded class OZ_VppAdminMenu
         return tree.FindNode(m_TrSel);
     }
 
-    // Гілки власника в порядку файла -- рядки списку гілок.
+    // Гілки власника в порядку файла -- рядки списку гілок. Вибрана гілка,
+    // якої власник уже не має (у полі власників набирають інший список),
+    // лишається в кінці: інакше вибір стрибав би на іншу гілку посеред
+    // набору.
     protected void TrBranchIds(OZL_TreeConfig tree, array<string> into)
     {
         into.Clear();
@@ -860,6 +905,8 @@ modded class OZ_VppAdminMenu
             if (br && br.BelongsTo(m_TrOwner))
                 into.Insert(br.Id);
         }
+        if (m_TrBranch != "" && into.Find(m_TrBranch) < 0 && OZL_EdTree.FindBranch(tree, m_TrBranch))
+            into.Insert(m_TrBranch);
     }
 
     // Списки ліворуч; вибір за замовчуванням -- перший власник і його перша
@@ -923,6 +970,8 @@ modded class OZ_VppAdminMenu
             if (bn == "")
                 bn = br.Id;
             bl += bn + "  (" + br.Nodes.Count().ToString() + ")";
+            if (!br.BelongsTo(m_TrOwner))
+                bl += Tr("#STR_OZL_ED_BR_OTHER");
             lb.AddItem(bl, NULL, 0);
         }
         m_ResRepaint = false;
@@ -936,6 +985,72 @@ modded class OZ_VppAdminMenu
                 m_TrCells[i].Unlink();
         }
         m_TrCells.Clear();
+        m_TrFlows.Clear();
+        ClearTrOrs();
+    }
+
+    protected void ClearTrOrs()
+    {
+        for (int i = 0; i < m_TrOrLabels.Count(); i++)
+        {
+            if (m_TrOrLabels[i])
+                m_TrOrLabels[i].Unlink();
+        }
+        m_TrOrLabels.Clear();
+    }
+
+    // Мітки "АБО" на місцях, які OZL_TreeLines.Draw поклав у m_TrOrs: рядок
+    // скіна or_label, текст і колір -- як у вікні гравця (DrawLines).
+    protected void PaintTrOrs(float k)
+    {
+        ClearTrOrs();
+        Widget nodes = M_SUB_WIDGET.FindAnyWidget("RzTrNodes");
+        if (!nodes || !m_TrSkin)
+            return;
+        string path = m_TrSkin.RowLayout("or_label");
+        for (int i = 0; i < m_TrOrs.Count(); i++)
+        {
+            Widget lab = GetGame().GetWorkspace().CreateWidgets(path, nodes);
+            if (!lab)
+                return;
+            OZL_TreeMenu.IgnorePointer(lab, null);
+            lab.ClearFlags(WidgetFlags.CLIPCHILDREN);
+            TextWidget t = TextWidget.Cast(lab.FindAnyWidget("OrText"));
+            if (t)
+            {
+                t.SetText(OZL_Text.Words("STR_OZL_TREE_OR"));
+                t.SetColor(m_TrOrs[i].Color);
+            }
+            lab.SetPos(m_TrOrs[i].X * k, m_TrOrs[i].Y * k);
+            m_TrOrLabels.Insert(lab);
+        }
+    }
+
+    // Рядок під полотном: що зараз зробить клік чи перетягування.
+    protected void PaintTrInfo()
+    {
+        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrInfo"));
+        if (!t)
+            return;
+        if (m_TrLink && m_TrLinkFrom == "")
+            t.SetText(Tr("#STR_OZL_ED_TR_LINK_FROM"));
+        else if (m_TrLink)
+            t.SetText(Tr("#STR_OZL_ED_TR_LINK_TO") + m_TrLinkFrom);
+        else
+            t.SetText(Tr("#STR_OZL_ED_TR_INFO"));
+        if (m_TrLink)
+            t.SetColor(OZ_Palette.ACCENT);
+        else
+            t.SetColor(OZ_Palette.MUTED);
+    }
+
+    protected void TrInfoText(string text)
+    {
+        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrInfo"));
+        if (!t)
+            return;
+        t.SetText(text);
+        t.SetColor(OZ_Palette.ACCENT);
     }
 
     // Рамка ріже дітей по своєму краю (gui-layouts §31): комірка й
@@ -965,6 +1080,8 @@ modded class OZ_VppAdminMenu
         OZL_Owners owners = DraftOwners();
         TextWidget skinLbl = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrSkin"));
         CanvasWidget lines = CanvasWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrLines"));
+        PaintTrButtons();
+        PaintTrInfo();
         if (!tree || !owners)
         {
             ClearTrCells();
@@ -976,6 +1093,8 @@ modded class OZ_VppAdminMenu
         RepaintTrLists(tree, owners);
         if (m_TrSel != "" && !tree.FindNode(m_TrSel))
             m_TrSel = "";
+        if (m_TrLinkFrom != "" && !tree.FindNode(m_TrLinkFrom))
+            m_TrLinkFrom = "";
 
         OZL_TreeBranch br = TrBranch(tree);
         if (!br)
@@ -1007,7 +1126,13 @@ modded class OZ_VppAdminMenu
 
         PaintTrCells(tree);
         if (lines)
-            OZL_TreeLines.Draw(lines, m_TrSkin, m_TrPlan, m_TrView, m_TrSel, m_TrOrs);
+        {
+            string focus = m_TrSel;
+            if (m_TrLink && m_TrLinkFrom != "")
+                focus = m_TrLinkFrom;
+            OZL_TreeLines.Draw(lines, m_TrSkin, m_TrPlan, m_TrView, focus, m_TrOrs);
+            PaintTrOrs(k);
+        }
 
         if (skinLbl)
         {
@@ -1016,7 +1141,7 @@ modded class OZ_VppAdminMenu
                 dir = Tr("#STR_OZL_ED_TR_DIR_UP");
             else if (m_TrSkin.Dir == "right")
                 dir = Tr("#STR_OZL_ED_TR_DIR_RIGHT");
-            skinLbl.SetText(Tr("#STR_OZL_ED_TR_SKIN") + skinId + " - " + dir);
+            skinLbl.SetText(skinId + " - " + dir);
         }
 
         if (fillForm)
@@ -1065,10 +1190,13 @@ modded class OZ_VppAdminMenu
     }
 
     // Фарба комірок: стан "available" для всіх (редактор стану не має),
-    // вибраний -- виділений; ціна -- з вузла чернетки.
+    // вибраний (і джерело зв'язку) -- виділений; ціна -- фішками з вузла
+    // чернетки, як у вікні гравця, або рядком, якщо скін фішок не має.
     protected void PaintTrCells(OZL_TreeConfig tree)
     {
         OZL_PointTypes pts = DraftPointTypes();
+        m_TrFlows.Clear();
+        m_TrFlowTries = 0;
         for (int c = 0; c < m_TrCells.Count(); c++)
         {
             Widget cell = m_TrCells[c];
@@ -1083,16 +1211,77 @@ modded class OZ_VppAdminMenu
                     continue;
                 string price = "";
                 OZL_TreeNode tn = tree.FindNode(id);
+                Widget chips = null;
                 if (tn)
+                    chips = OZL_EdTree.PaintChips(m_TrSkin, cell, tn, pts, "available");
+                if (tn && !chips)
                     price = OZL_EdTree.PriceText(tn, pts);
-                OZL_EdTree.Paint(m_TrSkin, cell, nv, "available", id == m_TrSel, nv.Index + 1, price);
+                bool picked = (id == m_TrSel);
+                if (m_TrLink && m_TrLinkFrom != "")
+                    picked = (id == m_TrLinkFrom);
+                OZL_EdTree.Paint(m_TrSkin, cell, nv, "available", picked, nv.Index + 1, price);
+                if (chips)
+                    m_TrFlows.Insert(chips);
                 break;
             }
         }
     }
 
+    // Фішки, що чекають ширини тексту; після дванадцяти кадрів -- як є.
+    protected void RunTrFlows()
+    {
+        if (m_TrFlows.Count() == 0)
+            return;
+        float k = Px();
+        m_TrFlowTries++;
+        bool force = m_TrFlowTries > 12;
+        for (int i = m_TrFlows.Count() - 1; i >= 0; i--)
+        {
+            Widget box = m_TrFlows[i];
+            if (!box)
+            {
+                m_TrFlows.RemoveOrdered(i);
+                continue;
+            }
+            if (OZL_EdTree.FlowChips(m_TrSkin, box, k, force))
+                m_TrFlows.RemoveOrdered(i);
+        }
+        if (m_TrFlows.Count() == 0)
+            m_TrFlowTries = 0;
+    }
+
+    // Кнопки рядка полотна: ЗВ'ЯЗОК світиться, поки режим увімкнено; кнопка
+    // демо-стану називає стан, з яким відкриється перегляд.
+    protected void PaintTrButtons()
+    {
+        if (m_TrLink)
+            SetBtnText("BtnRzTrLink", Tr("#STR_OZL_ED_TR_LINK"), OZ_Palette.ACCENT);
+        else
+            SetBtnText("BtnRzTrLink", Tr("#STR_OZL_ED_TR_LINK"), OZ_Palette.TEXT);
+
+        string demo = "#STR_OZL_ED_TR_DEMO_NEW";
+        if (m_TrDemo == 1)
+            demo = "#STR_OZL_ED_TR_DEMO_FUNDED";
+        else if (m_TrDemo == 2)
+            demo = "#STR_OZL_ED_TR_DEMO_PROGRESS";
+        SetBtnText("BtnRzTrDemo", Tr(demo), OZ_Palette.TEXT);
+    }
+
+    // Інспектор: поля вибраного вузла, а без вибраного вузла -- поля гілки.
     protected void FillTnForm(OZL_TreeNode n)
     {
+        Widget tnForm = M_SUB_WIDGET.FindAnyWidget("RzTnForm");
+        Widget brForm = M_SUB_WIDGET.FindAnyWidget("RzBrForm");
+        if (tnForm)
+            tnForm.Show(n != null);
+        if (brForm)
+            brForm.Show(n == null);
+        if (!n)
+        {
+            FillBrForm(TrBranch(DraftTree()));
+            return;
+        }
+
         TextWidget head = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTnHead"));
         if (head)
         {
@@ -1139,6 +1328,453 @@ modded class OZ_VppAdminMenu
             SetBtnText("BtnRzTnMode", Tr("#STR_OZL_ED_TN_ANY"), OZ_Palette.ALERT);
         else
             SetBtnText("BtnRzTnMode", Tr("#STR_OZL_ED_TN_ALL"), OZ_Palette.TEXT);
+    }
+
+    protected void FillBrForm(OZL_TreeBranch br)
+    {
+        TextWidget head = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzBrHead"));
+        if (head)
+        {
+            if (br)
+                head.SetText(Tr("#STR_OZL_ED_BR_HEAD") + " " + br.Id);
+            else
+                head.SetText(Tr("#STR_OZL_ED_TR_NO_BRANCH"));
+        }
+        m_RzFill = true;
+        if (br)
+        {
+            SetEdit("RzBrId", br.Id);
+            SetEdit("RzBrName", br.Name);
+            SetEdit("RzBrOwners", OZL_EdTree.ListText(br.Owners));
+            SetEdit("RzBrSort", br.SortOrder.ToString());
+            SetEdit("RzBrIcon", br.Icon);
+        }
+        else
+        {
+            SetEdit("RzBrId", "");
+            SetEdit("RzBrName", "");
+            SetEdit("RzBrOwners", "");
+            SetEdit("RzBrSort", "");
+            SetEdit("RzBrIcon", "");
+        }
+        m_RzFill = false;
+    }
+
+    // Поле гілки змінилось: один знімок на поле, як у вузла.
+    protected void OnBrField(string field)
+    {
+        OZL_TreeConfig tree = DraftTree();
+        OZL_TreeBranch br = TrBranch(tree);
+        if (!br)
+            return;
+
+        string tag = OZL_Config.TAG_TREE;
+        m_Ed.BeginOnce(tag, "br:" + field);
+        string v = GetEdit(field);
+        if (field == "RzBrId")
+        {
+            br.Id = v.Trim();
+            m_TrBranch = br.Id;
+        }
+        else if (field == "RzBrName")
+            br.Name = v;
+        else if (field == "RzBrOwners")
+            OZL_EdTree.ParseList(v, br.Owners);
+        else if (field == "RzBrSort")
+            br.SortOrder = v.ToInt();
+        else if (field == "RzBrIcon")
+            br.Icon = v.Trim();
+
+        m_BrDelArmed = false;
+        m_RzDiscardArmed = false;
+        m_Ed.Commit(tag);
+        RepaintTree(true, false);
+        TextWidget head = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzBrHead"));
+        if (head)
+            head.SetText(Tr("#STR_OZL_ED_BR_HEAD") + " " + br.Id);
+        PaintRzBar();
+        PaintSummary();
+    }
+
+    protected void BrAdd()
+    {
+        OZL_TreeConfig tree = DraftTree();
+        if (!tree)
+        {
+            Hint(Tr("#STR_OZL_ED_HINT_LOADING"));
+            return;
+        }
+        string tag = OZL_Config.TAG_TREE;
+        m_Ed.BeginOnce(tag, "");
+        OZL_TreeBranch br = new OZL_TreeBranch();
+        string base = m_TrOwner + "_branch";
+        if (m_TrOwner == "")
+            base = "branch";
+        br.Id = OZL_EdTree.FreeBranchId(tree, base);
+        br.Name = br.Id;
+        if (m_TrOwner != "")
+            br.Owners.Insert(m_TrOwner);
+        tree.Branches.Insert(br);
+        m_Ed.Commit(tag);
+        m_Ed.EndGesture();
+
+        m_TrBranch = br.Id;
+        m_TrSel = "";
+        m_BrDelArmed = false;
+        RepaintTree(true);
+        PaintRzBar();
+        PaintSummary();
+        Hint(Tr("#STR_OZL_ED_BR_ADDED") + br.Id);
+    }
+
+    // Гілка йде разом зі своїми вузлами й усіма посиланнями на них.
+    protected void BrDelete()
+    {
+        OZL_TreeConfig tree = DraftTree();
+        OZL_TreeBranch br = TrBranch(tree);
+        if (!br)
+        {
+            Hint(Tr("#STR_OZL_ED_TR_PICK_BRANCH"));
+            return;
+        }
+        if (!m_BrDelArmed)
+        {
+            m_BrDelArmed = true;
+            Hint(Tr("#STR_OZL_ED_BR_DEL_ARMED") + br.Id + " (" + br.Nodes.Count().ToString() + ")");
+            return;
+        }
+        m_BrDelArmed = false;
+
+        string tag = OZL_Config.TAG_TREE;
+        m_Ed.BeginOnce(tag, "");
+        string id = br.Id;
+        array<string> gone = new array<string>();
+        int i;
+        for (i = 0; i < br.Nodes.Count(); i++)
+        {
+            if (br.Nodes[i])
+                gone.Insert(br.Nodes[i].Id);
+        }
+        for (i = tree.Branches.Count() - 1; i >= 0; i--)
+        {
+            if (tree.Branches[i] == br)
+                tree.Branches.RemoveOrdered(i);
+        }
+        for (i = 0; i < gone.Count(); i++)
+            OZL_EdTree.DropRefs(tree, gone[i]);
+        m_Ed.Commit(tag);
+        m_Ed.EndGesture();
+
+        m_TrBranch = "";
+        m_TrSel = "";
+        RepaintTree(true);
+        PaintRzBar();
+        PaintSummary();
+        Hint(Tr("#STR_OZL_ED_BR_DELETED") + id);
+    }
+
+    // ------------------------------------------------- зв'язки, тір, перегляд
+
+    protected void TrLinkToggle()
+    {
+        m_TrLink = !m_TrLink;
+        m_TrLinkFrom = "";
+        if (m_TrLink && m_TrSel != "")
+            m_TrLinkFrom = m_TrSel;
+        m_Ed.EndGesture();
+        RepaintTree(false);
+    }
+
+    // Клік по вузлу в режимі зв'язку: перший -- батько, далі -- діти; клік
+    // по дитині, що вже має цей зв'язок, його прибирає; клік по самому
+    // батькові -- вибрати іншого.
+    protected void TrLinkClick(string id)
+    {
+        if (m_TrLinkFrom == "" )
+        {
+            m_TrLinkFrom = id;
+            m_TrSel = id;
+            RepaintTree(false);
+            return;
+        }
+        if (id == m_TrLinkFrom)
+        {
+            m_TrLinkFrom = "";
+            RepaintTree(false);
+            return;
+        }
+
+        OZL_TreeConfig tree = DraftTree();
+        OZL_TreeNode parent = tree.FindNode(m_TrLinkFrom);
+        OZL_TreeNode child = tree.FindNode(id);
+        if (!parent || !child)
+            return;
+
+        string tag = OZL_Config.TAG_TREE;
+        int at = child.Parents.Find(m_TrLinkFrom);
+        if (at >= 0)
+        {
+            m_Ed.BeginOnce(tag, "");
+            child.Parents.RemoveOrdered(at);
+            m_Ed.Commit(tag);
+            m_Ed.EndGesture();
+            Hint(Tr("#STR_OZL_ED_TR_UNLINKED") + m_TrLinkFrom + " -> " + id);
+        }
+        else
+        {
+            if (OZL_EdTree.DependsOn(tree, parent, id, 0))
+            {
+                Hint(Tr("#STR_OZL_ED_TR_CYCLE") + m_TrLinkFrom + " -> " + id);
+                return;
+            }
+            m_Ed.BeginOnce(tag, "");
+            child.Parents.Insert(m_TrLinkFrom);
+            string note = "";
+            if (child.Tier <= parent.Tier)
+            {
+                child.Tier = parent.Tier + 1;
+                note = Tr("#STR_OZL_ED_TR_BUMPED") + child.Tier.ToString();
+            }
+            m_Ed.Commit(tag);
+            m_Ed.EndGesture();
+            Hint(Tr("#STR_OZL_ED_TR_LINKED") + m_TrLinkFrom + " -> " + id + note);
+        }
+        m_TnDelArmed = false;
+        m_RzDiscardArmed = false;
+        RepaintTree(true);
+        PaintRzBar();
+        PaintSummary();
+    }
+
+    // Тір під вузлом, зсунутим уздовж осі на along пікселів: ряд плану, у
+    // який потрапив центр вузла. За останнім рядом -- новий тір, перед
+    // першим -- на один менший (не нижче 1).
+    protected int TierAt(string id, float along)
+    {
+        if (!m_TrPlan || !m_TrSkin)
+            return 1;
+        int at = m_TrPlan.IndexOf(id);
+        int n = m_TrPlan.Tiers.Count();
+        if (at < 0 || n == 0)
+            return 1;
+        float u = m_TrPlan.U[at];
+        if (m_TrSkin.Dir == "up")
+            u -= along / Px();
+        else
+            u += along / Px();
+        float row = Math.Floor((u - m_TrSkin.Top) / m_TrSkin.Row);
+        int ti = row;
+        if (ti >= n)
+            return m_TrPlan.Tiers[n - 1] + 1;
+        if (ti < 0)
+        {
+            int first = m_TrPlan.Tiers[0] - 1;
+            if (first < 1)
+                first = 1;
+            return first;
+        }
+        return m_TrPlan.Tiers[ti];
+    }
+
+    // Натиснули на вузлі й тягнуть: комірка їде за мишею вздовж осі, рядок
+    // під полотном називає тір; відпустили -- тір вузла, один знімок.
+    protected void TrackTnDrag()
+    {
+        if (m_TnDragId == "")
+            return;
+        int mx;
+        int my;
+        GetMousePos(mx, my);
+        float dx = mx - m_TnDragX;
+        float dy = my - m_TnDragY;
+        bool horiz = (m_TrSkin && m_TrSkin.Dir == "right");
+        float along = dy;
+        if (horiz)
+            along = dx;
+
+        if (!(GetMouseState(MouseState.LEFT) & 0x80000000))
+        {
+            string id = m_TnDragId;
+            m_TnDragId = "";
+            if (m_TnDragMoved)
+            {
+                m_TnSkipClick = 3;
+                DropTier(id, along);
+            }
+            return;
+        }
+
+        if (!m_TnDragMoved && Math.AbsFloat(along) > 6 * Px())
+            m_TnDragMoved = true;
+        if (!m_TnDragMoved)
+            return;
+        Widget cell = M_SUB_WIDGET.FindAnyWidget("rzcell:" + m_TnDragId);
+        if (cell)
+        {
+            if (horiz)
+                cell.SetPos(m_TnCellX + dx, m_TnCellY);
+            else
+                cell.SetPos(m_TnCellX, m_TnCellY + dy);
+        }
+        TrInfoText(Tr("#STR_OZL_ED_TR_DRAG_TIER") + TierAt(m_TnDragId, along).ToString());
+    }
+
+    protected void DropTier(string id, float along)
+    {
+        OZL_TreeConfig tree = DraftTree();
+        OZL_TreeNode n = null;
+        if (tree)
+            n = tree.FindNode(id);
+        int tier = TierAt(id, along);
+        if (!n || tier == n.Tier)
+        {
+            RepaintTree(true, false);
+            return;
+        }
+        string tag = OZL_Config.TAG_TREE;
+        m_Ed.BeginOnce(tag, "");
+        int was = n.Tier;
+        n.Tier = tier;
+        m_Ed.Commit(tag);
+        m_Ed.EndGesture();
+        m_TrSel = id;
+        m_TnDelArmed = false;
+        m_RzDiscardArmed = false;
+        RepaintTree(true);
+        PaintRzBar();
+        PaintSummary();
+        Hint(Tr("#STR_OZL_ED_TR_TIER_SET") + id + ": " + was.ToString() + " -> " + tier.ToString());
+    }
+
+    // Натиснули на порожньому полотні: тягнення прокручує, клік без руху --
+    // зняти вибір вузла (інспектор показує гілку).
+    protected void TrackTrPan()
+    {
+        if (!m_TrPanDown)
+            return;
+        int mx;
+        int my;
+        GetMousePos(mx, my);
+        float dx = mx - m_TrPanX;
+        float dy = my - m_TrPanY;
+        if (!(GetMouseState(MouseState.LEFT) & 0x80000000))
+        {
+            m_TrPanDown = false;
+            if (!m_TrPanMoved && m_TrSel != "" && !m_TrLink)
+            {
+                m_TrSel = "";
+                m_TnDelArmed = false;
+                m_Ed.EndGesture();
+                RepaintTree(false);
+            }
+            return;
+        }
+        if (Math.AbsFloat(dx) + Math.AbsFloat(dy) > 4 * Px())
+            m_TrPanMoved = true;
+        if (!m_TrPanMoved)
+            return;
+        ScrollWidget sw = ScrollWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrScroll"));
+        if (!sw)
+            return;
+        sw.HScrollToPos(m_TrPanH - dx);
+        sw.VScrollToPos(m_TrPanV - dy);
+    }
+
+    // Чи натиснуто на смугу прокрутки полотна (10 одиниць біля правого й
+    // нижнього краю, як у вікні гравця).
+    protected bool OnTrScrollbar(int x, int y)
+    {
+        Widget sw = M_SUB_WIDGET.FindAnyWidget("RzTrScroll");
+        if (!sw)
+            return false;
+        float sx;
+        float sy;
+        float sww;
+        float swh;
+        sw.GetScreenPos(sx, sy);
+        sw.GetScreenSize(sww, swh);
+        float bar = 10 * Px();
+        bool onBar = false;
+        if (x > sx + sww - bar || y > sy + swh - bar)
+            onBar = true;
+        return onBar;
+    }
+
+    // ЯК У ГРАВЦЯ: вікно дерева гравця поверх адмінського, з виглядом із
+    // чернетки й демо-стану. Меню VPP лишається батьком (як записка над
+    // інвентарем у ванілі): ESC закриває дерево й повертає сюди.
+    protected void TrPreview()
+    {
+        OZL_TreeConfig tree = DraftTree();
+        OZL_Owners owners = DraftOwners();
+        OZL_PointTypes pts = DraftPointTypes();
+        OZL_Settings se = null;
+        OZL_EdDoc sd = m_Ed.Doc(OZL_Config.TAG_SETTINGS);
+        if (sd && sd.Loaded)
+            se = OZL_Settings.Cast(sd.Obj);
+        if (!tree || !owners || !pts || !se || m_TrOwner == "")
+        {
+            Hint(Tr("#STR_OZL_ED_HINT_LOADING"));
+            return;
+        }
+
+        OZL_TreeView v = OZL_EdTree.PlayerView(tree, owners, pts, se, m_TrOwner, m_TrDemo);
+        string json = JsonFileLoader<OZL_TreeView>.JsonMakeData(v);
+        OZL_TreeMenu.PreviewNext(json);
+        UIManager ui = GetGame().GetUIManager();
+        UIScriptedMenu menu = ui.EnterScriptedMenu(OZL_Const.MENU_TREE, ui.GetMenu());
+        if (!menu)
+        {
+            OZL_TreeMenu.PreviewNext("");
+            Hint(Tr("#STR_OZL_ED_TR_VIEW_FAIL"));
+            return;
+        }
+        Hint(Tr("#STR_OZL_ED_TR_VIEW_OPEN") + m_TrOwner);
+    }
+
+    override void OnUpdate(float timeslice)
+    {
+        super.OnUpdate(timeslice);
+        if (!M_SUB_WIDGET || !m_TrFlows)
+            return;
+        RunTrFlows();
+        TrackTnDrag();
+        TrackTrPan();
+        if (m_TnSkipClick > 0)
+            m_TnSkipClick--;
+    }
+
+    override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+    {
+        if (w && M_SUB_WIDGET && m_TrFlows && button == MouseState.LEFT && m_RzTab == "tree" && !m_RzProblems)
+        {
+            string nm = w.GetName();
+            if (nm.IndexOf("rznode:") == 0)
+            {
+                m_TnDragMoved = false;
+                if (!m_TrLink)
+                {
+                    m_TnDragId = nm.Substring(7, nm.Length() - 7);
+                    GetMousePos(m_TnDragX, m_TnDragY);
+                    Widget cell = M_SUB_WIDGET.FindAnyWidget("rzcell:" + m_TnDragId);
+                    if (cell)
+                        cell.GetPos(m_TnCellX, m_TnCellY);
+                }
+            }
+            else if (nm == "RzTrNodes" || nm == "RzTrContent" || (nm == "RzTrScroll" && !OnTrScrollbar(x, y)))
+            {
+                ScrollWidget sw = ScrollWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrScroll"));
+                if (sw)
+                {
+                    m_TrPanDown = true;
+                    m_TrPanMoved = false;
+                    GetMousePos(m_TrPanX, m_TrPanY);
+                    m_TrPanH = sw.GetHScrollPos();
+                    m_TrPanV = sw.GetVScrollPos();
+                }
+            }
+        }
+        return super.OnMouseButtonDown(w, x, y, button);
     }
 
     // Поле інспектора змінилось: правка вибраного вузла, один знімок на поле.
@@ -1402,12 +2038,20 @@ modded class OZ_VppAdminMenu
         Widget cols = M_SUB_WIDGET.FindAnyWidget("RzTrCols");
         if (cols)
             cols.SetSize(iw, ph);
+        // Бічна: списки згори, список гілок бере зайве, дві кнопки перегляду
+        // -- внизу (місця з розмітки: шапки 22, власники 150, проміжки 6).
         Widget side = M_SUB_WIDGET.FindAnyWidget("RzTrSide");
         if (side)
             side.SetSize(200 * s, ph);
+        float brH = ph - 280 * s;
+        if (brH < 40 * s)
+            brH = 40 * s;
         Widget brs = M_SUB_WIDGET.FindAnyWidget("RzTrBranches");
         if (brs)
-            brs.SetSize(200 * s, ph - 232 * s);
+            brs.SetSize(200 * s, brH);
+        PlaceBtn("BtnRzTrView", 0, 212 * s + brH + 6 * s, 200 * s, 28 * s);
+        PlaceBtn("BtnRzTrDemo", 0, 212 * s + brH + 40 * s, 200 * s, 28 * s);
+
         float mw = iw - (200 + 290 + 24) * s;
         if (mw < 100 * s)
             mw = 100 * s;
@@ -1417,17 +2061,24 @@ modded class OZ_VppAdminMenu
         Widget trBar = M_SUB_WIDGET.FindAnyWidget("RzTrBar");
         if (trBar)
             trBar.SetSize(mw, 28 * s);
-        PlaceBtn("BtnRzTrChild", mw - 130 * s, 0, 130 * s, 28 * s);
-        PlaceBtn("BtnRzTrRoot", mw - (130 + 6 + 110) * s, 0, 110 * s, 28 * s);
+        PlaceBtn("BtnRzTrLink", mw - 110 * s, 0, 110 * s, 28 * s);
+        PlaceBtn("BtnRzTrChild", mw - (110 + 6 + 110) * s, 0, 110 * s, 28 * s);
+        PlaceBtn("BtnRzTrRoot", mw - (110 + 6 + 110 + 6 + 100) * s, 0, 100 * s, 28 * s);
         Widget skinLbl = M_SUB_WIDGET.FindAnyWidget("RzTrSkin");
         if (skinLbl)
-            skinLbl.SetSize(mw - (130 + 6 + 110 + 6) * s, 28 * s);
+            skinLbl.SetSize(mw - (110 + 6 + 110 + 6 + 100 + 6) * s, 28 * s);
         Widget host = M_SUB_WIDGET.FindAnyWidget("RzTrHost");
         if (host)
-            host.SetSize(mw, ph - 34 * s);
+            host.SetSize(mw, ph - 62 * s);
         Widget scroll = M_SUB_WIDGET.FindAnyWidget("RzTrScroll");
         if (scroll)
-            scroll.SetSize(mw, ph - 34 * s);
+            scroll.SetSize(mw, ph - 62 * s);
+        Widget info = M_SUB_WIDGET.FindAnyWidget("RzTrInfo");
+        if (info)
+        {
+            info.SetPos(0, ph - 22 * s);
+            info.SetSize(mw, 22 * s);
+        }
         Widget insp = M_SUB_WIDGET.FindAnyWidget("RzTrInsp");
         if (insp)
             insp.SetPos(iw - 290 * s, 0);
@@ -1488,7 +2139,9 @@ modded class OZ_VppAdminMenu
                 m_TrOwner = owners.Owners[row].Id;
                 m_TrBranch = "";
                 m_TrSel = "";
+                m_TrLinkFrom = "";
                 m_TnDelArmed = false;
+                m_BrDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintTree(true);
             }
@@ -1505,7 +2158,9 @@ modded class OZ_VppAdminMenu
                 {
                     m_TrBranch = ids[row];
                     m_TrSel = "";
+                    m_TrLinkFrom = "";
                     m_TnDelArmed = false;
+                    m_BrDelArmed = false;
                     m_Ed.EndGesture();
                     RepaintTree(true);
                 }
@@ -1546,6 +2201,13 @@ modded class OZ_VppAdminMenu
                     m_Ed.EndGesture();
                 return true;
             }
+            if (nm.IndexOf("RzBr") == 0)
+            {
+                OnBrField(nm);
+                if (finished)
+                    m_Ed.EndGesture();
+                return true;
+            }
         }
         return super.OnChange(w, x, y, finished);
     }
@@ -1564,12 +2226,21 @@ modded class OZ_VppAdminMenu
             return true;
         }
 
-        // Вузол на полотні: NodeHit його комірки названий rznode:<id>.
+        // Вузол на полотні: NodeHit його комірки названий rznode:<id>. Клік,
+        // що прийшов із відпусканням після перетягування, -- не вибір.
         if (nm.IndexOf("rznode:") == 0)
         {
-            m_TrSel = nm.Substring(7, nm.Length() - 7);
+            if (m_TnSkipClick > 0 || m_TnDragMoved)
+                return true;
+            string picked = nm.Substring(7, nm.Length() - 7);
             m_TnDelArmed = false;
             m_Ed.EndGesture();
+            if (m_TrLink)
+            {
+                TrLinkClick(picked);
+                return true;
+            }
+            m_TrSel = picked;
             RepaintTree(false);
             return true;
         }
@@ -1581,6 +2252,32 @@ modded class OZ_VppAdminMenu
         if (nm == "BtnRzTrChild")
         {
             TnAdd(true);
+            return true;
+        }
+        if (nm == "BtnRzTrLink")
+        {
+            TrLinkToggle();
+            return true;
+        }
+        if (nm == "BtnRzTrView")
+        {
+            TrPreview();
+            return true;
+        }
+        if (nm == "BtnRzTrDemo")
+        {
+            m_TrDemo = (m_TrDemo + 1) % 3;
+            PaintTrButtons();
+            return true;
+        }
+        if (nm == "BtnRzBrAdd")
+        {
+            BrAdd();
+            return true;
+        }
+        if (nm == "BtnRzBrDel")
+        {
+            BrDelete();
             return true;
         }
         if (nm == "BtnRzTnMode")

@@ -439,6 +439,326 @@ class OZL_EdTree
         }
         return id;
     }
+
+    // ------------------------------------------------- гілки й зв'язки
+
+    static OZL_TreeBranch FindBranch(OZL_TreeConfig tree, string id)
+    {
+        for (int b = 0; b < tree.Branches.Count(); b++)
+        {
+            if (tree.Branches[b] && tree.Branches[b].Id == id)
+                return tree.Branches[b];
+        }
+        return null;
+    }
+
+    static string FreeBranchId(OZL_TreeConfig tree, string base)
+    {
+        string id = base;
+        int n = 1;
+        while (FindBranch(tree, id))
+        {
+            n++;
+            id = base + "_" + n.ToString();
+        }
+        return id;
+    }
+
+    // "a, b" <-> список рядків (власники гілки).
+    static string ListText(array<string> list)
+    {
+        string s = "";
+        for (int i = 0; i < list.Count(); i++)
+        {
+            if (s != "")
+                s += ", ";
+            s += list[i];
+        }
+        return s;
+    }
+
+    static void ParseList(string text, array<string> into)
+    {
+        into.Clear();
+        array<string> parts = new array<string>();
+        text.Split(",", parts);
+        for (int i = 0; i < parts.Count(); i++)
+        {
+            string p = parts[i].Trim();
+            if (p != "")
+                into.Insert(p);
+        }
+    }
+
+    // Чи залежить вузол (крізь батьків, на будь-яку глибину) від вузла id:
+    // зв'язок id -> node у зворотний бік замкнув би коло, і сервер оголосив
+    // би обидва недосяжними. Ліміт глибини -- на випадок кола, що вже є.
+    static bool DependsOn(OZL_TreeConfig tree, OZL_TreeNode node, string id, int guard)
+    {
+        if (!node || guard > 64)
+            return false;
+        for (int i = 0; i < node.Parents.Count(); i++)
+        {
+            if (node.Parents[i] == id)
+                return true;
+            if (DependsOn(tree, tree.FindNode(node.Parents[i]), id, guard + 1))
+                return true;
+        }
+        return false;
+    }
+
+    // ------------------------------------------------- ціна фішками
+
+    // Ціна в комірці фішками, як OZL_TreeMenu.PaintPrice: рядок скіна
+    // price_chip на тип балів (крапка кольору типу й число) і хвіст
+    // "+N предм.". Повертає контейнер NodePrice, якщо фішки є, -- його
+    // розкладає FlowChips кадром пізніше, коли тексти мають ширину; null --
+    // скін без контейнера чи шаблону, тоді ціна лишається рядком.
+    static Widget PaintChips(OZL_TreeSkin sk, Widget cell, OZL_TreeNode n, OZL_PointTypes pts, string status)
+    {
+        Widget box = cell.FindAnyWidget("NodePrice");
+        if (!box)
+            return null;
+        Widget child = box.GetChildren();
+        while (child)
+        {
+            Widget next = child.GetSibling();
+            child.Unlink();
+            child = next;
+        }
+
+        int color = sk.PriceColorOf(status);
+        string path = sk.RowLayout("price_chip");
+        int i;
+        int made = 0;
+        for (i = 0; i < n.Cost.Count(); i++)
+        {
+            OZL_TreeCost c = n.Cost[i];
+            if (!c)
+                continue;
+            Widget chip = GetGame().GetWorkspace().CreateWidgets(path, box);
+            if (!chip)
+            {
+                box.Show(false);
+                return null;
+            }
+            OZL_TreeMenu.IgnorePointer(chip, null);
+            Widget dot = chip.FindAnyWidget("PriceChip");
+            if (dot && pts)
+            {
+                OZL_PointType pt = pts.Find(c.Type);
+                if (pt)
+                    dot.SetColor(OZL_PointTypes.ColorArgb(pt.Color));
+            }
+            TextWidget amount = TextWidget.Cast(chip.FindAnyWidget("PriceText"));
+            if (amount)
+            {
+                amount.SetText(c.Amount.ToString());
+                amount.SetColor(color);
+            }
+            made++;
+        }
+
+        int qty = 0;
+        for (i = 0; i < n.ItemCost.Count(); i++)
+        {
+            if (n.ItemCost[i])
+                qty += n.ItemCost[i].Quantity;
+        }
+        if (qty > 0)
+        {
+            Widget more = GetGame().GetWorkspace().CreateWidgets(path, box);
+            if (more)
+            {
+                OZL_TreeMenu.IgnorePointer(more, null);
+                Widget moreDot = more.FindAnyWidget("PriceChip");
+                if (moreDot)
+                    moreDot.Show(false);
+                TextWidget moreText = TextWidget.Cast(more.FindAnyWidget("PriceText"));
+                if (moreText)
+                {
+                    moreText.SetText("+" + qty.ToString() + " " + OZL_Text.Words("STR_OZL_TREE_ITEMS_TAIL"));
+                    moreText.SetColor(color);
+                }
+                made++;
+            }
+        }
+
+        box.Show(made > 0);
+        if (made == 0)
+            return null;
+        Widget plain = cell.FindAnyWidget("NodePriceText");
+        if (plain)
+            plain.Show(false);
+        return box;
+    }
+
+    // Фішки рядком зліва направо, як OZL_TreeMenu.RunFlows без переносу:
+    // ширина фішки -- від її лівого краю до правого краю тексту, плюс 6
+    // одиниць. Екологи й ЧН потім ставлять рядок по центру під вузлом (їхні
+    // OZL_TreeSkin_Ecolog.LayPrice і OZL_TreeSkin_Sop.CenterPrice -- гачки,
+    // яким потрібне меню), екологи ще й тягнуть хвіст "+N предм." за
+    // попереднім числом через 3,2 одиниці, без квадратика: те саме тут.
+    // false -- тексти ще не розкладені (ширина 0), спитати кадром пізніше;
+    // force -- розкласти, як є.
+    static bool FlowChips(OZL_TreeSkin sk, Widget box, float k, bool force)
+    {
+        Widget item = box.GetChildren();
+        int pw;
+        int ph;
+        if (!force)
+        {
+            while (item)
+            {
+                TextWidget probe = TextWidget.Cast(item.FindAnyWidget("PriceText"));
+                if (probe && item.IsVisible())
+                {
+                    probe.GetTextSize(pw, ph);
+                    if (pw <= 0)
+                        return false;
+                }
+                item = item.GetSibling();
+            }
+        }
+
+        bool ecolog = (sk && sk.Id == "ecolog");
+        bool centre = (ecolog || (sk && sk.Id == "sop"));
+        float x = 0;
+        float end = 0;
+        int placed = 0;
+        item = box.GetChildren();
+        while (item)
+        {
+            if (item.IsVisible())
+            {
+                float lead = 0;
+                float tw = 0;
+                TextWidget t = TextWidget.Cast(item.FindAnyWidget("PriceText"));
+                if (t)
+                {
+                    float ix;
+                    float iy;
+                    item.GetScreenPos(ix, iy);
+                    float tx;
+                    float ty;
+                    t.GetScreenPos(tx, ty);
+                    t.GetTextSize(pw, ph);
+                    lead = (tx - ix) / k;
+                    tw = pw / k;
+                }
+                Widget dot = item.FindAnyWidget("PriceChip");
+                bool tail = false;
+                if (ecolog && placed > 0 && dot && !dot.IsVisible())
+                    tail = true;
+                if (tail)
+                    x = end + 3.2 - lead;
+                item.SetPos(x * k, 0);
+                end = x + lead + tw;
+                x = end + 6;
+                placed++;
+            }
+            item = item.GetSibling();
+        }
+
+        if (centre && placed > 0)
+        {
+            float bx;
+            float by;
+            box.GetPos(bx, by);
+            box.SetPos((sk.AnchorX - end / 2) * k, by);
+        }
+        return true;
+    }
+
+    // ------------------------------------------------- як бачить гравець
+
+    // Серверна секунда перегляду: вікно рахує залишок проєкту як EndSec мінус
+    // вона, тож число довільне, важить лише різниця.
+    static const int PREVIEW_NOW = 1000000;
+
+    // Демо-стан фракції для перегляду. 0 -- нова: пул порожній, нічого не
+    // зроблено (так дерево бачить фракція першого дня). 1 -- з балами: пул
+    // покриває ціну всіх вузлів власника. 2 -- у роботі: з балами, корені
+    // виконано, перший вузол, що став доступним, -- проєкт із половиною часу
+    // (не менше хвилини).
+    static OZL_FactionState DemoState(OZL_TreeConfig tree, string owner, int demo, int now)
+    {
+        OZL_FactionState st = new OZL_FactionState();
+        if (demo <= 0)
+            return st;
+
+        map<string, int> need = new map<string, int>();
+        array<OZL_TreeNode> mine = new array<OZL_TreeNode>();
+        int i;
+        for (int b = 0; b < tree.Branches.Count(); b++)
+        {
+            OZL_TreeBranch br = tree.Branches[b];
+            if (!br || !br.BelongsTo(owner))
+                continue;
+            for (int n = 0; n < br.Nodes.Count(); n++)
+            {
+                OZL_TreeNode node = br.Nodes[n];
+                if (!node || !tree.NodeBelongsTo(node, owner))
+                    continue;
+                mine.Insert(node);
+                for (i = 0; i < node.Cost.Count(); i++)
+                {
+                    OZL_TreeCost c = node.Cost[i];
+                    if (!c)
+                        continue;
+                    int have = 0;
+                    need.Find(c.Type, have);
+                    need.Set(c.Type, have + c.Amount);
+                }
+            }
+        }
+        for (i = 0; i < need.Count(); i++)
+            st.SetPoints(need.GetKey(i), need.GetElement(i));
+        if (demo < 2)
+            return st;
+
+        for (i = 0; i < mine.Count(); i++)
+        {
+            if (mine[i].Parents.Count() == 0)
+                st.CompletedNodes.Insert(mine[i].Id);
+        }
+        for (i = 0; i < mine.Count(); i++)
+        {
+            OZL_TreeNode next = mine[i];
+            if (st.IsCompleted(next.Id) || !OZL_Tree.ParentsSatisfied(st, next))
+                continue;
+            OZL_Project pr = new OZL_Project();
+            pr.NodeId = next.Id;
+            int half = next.ResearchTimeSec / 2;
+            if (half < 60)
+                half = 60;
+            pr.EndSec = now + half;
+            st.ActiveProjects.Insert(pr);
+            break;
+        }
+        return st;
+    }
+
+    // Те, що вікно дерева гравця отримало б від сервера, якби файли вже
+    // були такими, як чернетка, а фракція -- у демо-стані: та сама
+    // OZL_Tree.Fill, що складає відповідь сервера (туман, заглушки,
+    // статуси), без термінала поруч і без права витрачати.
+    static OZL_TreeView PlayerView(OZL_TreeConfig tree, OZL_Owners owners, OZL_PointTypes pts, OZL_Settings se, string owner, int demo)
+    {
+        OZL_TreeView v = new OZL_TreeView();
+        v.Owner = owner;
+        OZ_IdentityService id = OZ_Identity.Get();
+        v.OwnerName = id.FactionName(owner);
+        if (v.OwnerName == "")
+            v.OwnerName = owner;
+        v.OwnerColor = id.FactionColor(owner, 255);
+        v.Skin = owners.SkinOf(owner);
+        v.MaySpend = false;
+        v.Now = PREVIEW_NOW;
+        OZL_FactionState st = DemoState(tree, owner, demo, v.Now);
+        OZL_Tree.Fill(v, owner, st, pts, tree, se.TreeVisibilityDepth, null, null);
+        return v;
+    }
 }
 
 #endif
