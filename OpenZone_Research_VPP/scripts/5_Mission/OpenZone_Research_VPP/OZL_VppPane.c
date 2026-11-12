@@ -1,10 +1,12 @@
-// Панель «RESEARCH» в адмінському вікні OpenZone. З 2026-11-09 це редактор
-// досліджень (docs/specs/2026-11-09-research-editor-vpp-design.md): ряд
-// підвкладок, по сторінці на підвкладку і смуга дій чернетки. ОГЛЯД -- те,
-// чим панель була досі: фракції з пулами, нарахування, завершення вузла,
-// скидання, перечитування конфігів. Чернетка семи файлів -- у OZL_EdDocs.
-// Чіпляється вкладкою через modded class -- ядро про дослідження не знає й
-// знати не мусить.
+// Модуль «ДОСЛІДЖЕННЯ» в адмінському вікні OpenZone. З 2026-11-09 це редактор
+// досліджень (docs/specs/2026-11-09-research-editor-vpp-design.md): по
+// сторінці на розділ і смуга дій чернетки. З 2026-11-12 (переробка вікна VPP,
+// дизайн §5.5) розділи -- це сторінки рейки вікна: вісім сторінок модуля
+// "research" показують ОДНУ панель, а сторінку всередині перемикає
+// OnPaneShown. ОГЛЯД -- те, чим панель була досі: фракції з пулами,
+// нарахування, завершення вузла, скидання, перечитування конфігів. Чернетка
+// семи файлів -- у OZL_EdDocs. Чіпляється через modded class -- ядро про
+// дослідження не знає й знати не мусить.
 //
 // Гарди: NO_GUI -- сервер компілює Mission без UI; AVPPAdminTools і
 // OpenZone_VPP -- імена класів CfgMods (їх авто-дефайнить рушій).
@@ -19,6 +21,9 @@
 
 modded class OZ_VppAdminMenu
 {
+    // The page ids of the rail are "research." + the key of the page inside the pane.
+    static const string RZ_PAGE = "research.";
+
     private ref array<ref OZL_AdminOwner> m_ResOwners;
     private int  m_ResPicked    = -1;
     private bool m_ResResetArmed  = false;
@@ -31,10 +36,15 @@ modded class OZ_VppAdminMenu
     // ------------------------------------------------- редактор
     private ref OZL_EdDocs m_Ed;
 
-    // Відкрита підвкладка (ключ після "RzNav_") і чи поверх неї список
-    // проблем.
+    // Відкрита сторінка (ключ сторінки рейки після "research.") і чи поверх
+    // неї список проблем.
     private string m_RzTab = "overview";
     private bool   m_RzProblems = false;
+
+    // The page area in pixels as the last resize left it (OnWindowResized): the
+    // other layers lay their pages out from it instead of reading sizes back.
+    private float m_RzPageW = 0;
+    private float m_RzPageH = 0;
 
     // Сім cfg_get уже стоять у черзі ядра (раз на вікно; далі -- лише
     // перечитування застосованого).
@@ -123,7 +133,14 @@ modded class OZ_VppAdminMenu
             return;
         }
 
-        RegisterPane("research", "RESEARCH", pane, "ResHint");
+        // The rail's pages of the module (design 5.5): one pane registered under
+        // each page id; the shell shows it for any of them, OnPaneShown picks the
+        // page inside it.
+        array<string> keys = new array<string>();
+        array<string> labels = new array<string>();
+        RzPageList(keys, labels);
+        for (int k = 0; k < keys.Count(); k++)
+            RegisterPage("research", "#STR_OZL_VPP_MOD", RZ_PAGE + keys[k], labels[k], pane, "ResHint");
 
         // Власний слухач відповідей: список і операції -- наші, ядро про них
         // не знає; а ще він бачить відповіді cfg_set на наші файли.
@@ -132,28 +149,75 @@ modded class OZ_VppAdminMenu
         ShowRzTab("overview");
     }
 
+    // The rail's pages in their order, with their captions (the in-game page names).
+    protected void RzPageList(array<string> keys, array<string> labels)
+    {
+        keys.Clear();
+        labels.Clear();
+        keys.Insert("overview");
+        labels.Insert("#STR_OZL_VPP_PAGE_OVERVIEW");
+        keys.Insert("tree");
+        labels.Insert("#STR_OZL_VPP_PAGE_TREE");
+        keys.Insert("chains");
+        labels.Insert("#STR_OZL_VPP_PAGE_CHAINS");
+        keys.Insert("points");
+        labels.Insert("#STR_OZL_VPP_PAGE_POINTS");
+        keys.Insert("owners");
+        labels.Insert("#STR_OZL_VPP_PAGE_OWNERS");
+        keys.Insert("modules");
+        labels.Insert("#STR_OZL_VPP_PAGE_MODULES");
+        keys.Insert("statics");
+        labels.Insert("#STR_OZL_VPP_PAGE_STATICS");
+        keys.Insert("settings");
+        labels.Insert("#STR_OZL_VPP_PAGE_SETTINGS");
+    }
+
+    protected bool IsRzPage(string id)
+    {
+        return id.IndexOf(RZ_PAGE) == 0;
+    }
+
+    // Is one of the module's pages on screen: answers that come while another page is
+    // shown must not write into that page's hint line.
+    protected bool RzShown()
+    {
+        return IsRzPage(CurrentPane());
+    }
+
+    // A line for the admin, written only while a research page is shown.
+    protected void RzHint(string text)
+    {
+        if (RzShown())
+            Hint(text);
+    }
+
     void ~OZ_VppAdminMenu()
     {
         OZ_ClientState.AdminWatch().Remove(this.OnResearchResponse);
     }
 
+    // A page of the module was shown on the rail: the page inside the pane follows.
     override void OnPaneShown(string id)
     {
         super.OnPaneShown(id);
-        if (id != "research")
+        if (!IsRzPage(id) || !m_Ed)
             return;
 
-        AskResearchList();
-
         // Сім файлів -- у чергу ядра, раз на вікно: AskCfg шле по одному.
-        if (!m_RzAsked && m_Ed)
+        if (!m_RzAsked)
         {
             m_RzAsked = true;
             array<string> tags = m_Ed.Tags();
             for (int i = 0; i < tags.Count(); i++)
                 AskCfg(tags[i]);
         }
-        RepaintRz();
+
+        string prefix = RZ_PAGE;
+        int skip = prefix.Length();
+        string key = id.Substring(skip, id.Length() - skip);
+        if (key == "overview")
+            AskResearchList();
+        ShowRzTab(key);
     }
 
     protected void AskResearchList()
@@ -187,7 +251,7 @@ modded class OZ_VppAdminMenu
 
         if (!ok)
         {
-            Hint(op + ": " + Words(error));
+            RzHint(op + ": " + Words(error));
             return;
         }
 
@@ -195,7 +259,7 @@ modded class OZ_VppAdminMenu
         string err;
         if (!JsonFileLoader<OZL_AdminList>.LoadData(json, l, err))
         {
-            Hint("research: unreadable answer (" + err + ")");
+            RzHint("research: unreadable answer (" + err + ")");
             return;
         }
 
@@ -237,9 +301,9 @@ modded class OZ_VppAdminMenu
         }
 
         if (op == "list")
-            Hint(m_ResOwners.Count().ToString() + " faction(s); " + l.Counters);
+            RzHint(m_ResOwners.Count().ToString() + " faction(s); " + l.Counters);
         else
-            Hint(op + ": done");
+            RzHint(op + ": done");
     }
 
     protected void RepaintOwners()
@@ -336,6 +400,8 @@ modded class OZ_VppAdminMenu
             RepaintTree(true);
     }
 
+    // The open page of the pane; the rail marks which one it is (the row of sub-tabs
+    // that did it here went with the rework, design 5.5).
     protected void ShowRzPage(string page)
     {
         array<string> pages = {"overview", "points", "tree", "chains", "cfg", "soon", "problems"};
@@ -344,18 +410,6 @@ modded class OZ_VppAdminMenu
             Widget p = M_SUB_WIDGET.FindAnyWidget("RzPage_" + pages[i]);
             if (p)
                 p.Show(pages[i] == page);
-        }
-
-        array<string> tabs = {"overview", "tree", "chains", "points", "owners", "modules", "statics", "settings"};
-        for (int t = 0; t < tabs.Count(); t++)
-        {
-            TextWidget tx = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzNav_" + tabs[t] + "Text"));
-            if (!tx)
-                continue;
-            if (tabs[t] == m_RzTab)
-                tx.SetColor(OZ_Palette.ACCENT);
-            else
-                tx.SetColor(OZ_Palette.MUTED);
         }
     }
 
@@ -515,7 +569,7 @@ modded class OZ_VppAdminMenu
 
         string err;
         if (!m_Ed.OnFetched(name, body, err))
-            Hint(Tr("#STR_OZL_ED_HINT_BAD_FILE") + name + " (" + err + ")");
+            RzHint(Tr("#STR_OZL_ED_HINT_BAD_FILE") + name + " (" + err + ")");
         RepaintRz();
     }
 
@@ -606,7 +660,7 @@ modded class OZ_VppAdminMenu
         if (tag == "")
             return;
         SendCfg(tag, m_Ed.Doc(tag).Cur);
-        Hint(Tr("#STR_OZL_ED_HINT_APPLYING") + tag);
+        RzHint(Tr("#STR_OZL_ED_HINT_APPLYING") + tag);
     }
 
     protected void OnRzApplied(string tag, bool ok, string error)
@@ -614,7 +668,7 @@ modded class OZ_VppAdminMenu
         m_Ed.ApplyDone(tag, ok);
         if (!ok)
         {
-            Hint(tag + Tr("#STR_OZL_ED_HINT_REFUSED") + " (" + Words(error) + ")");
+            RzHint(tag + Tr("#STR_OZL_ED_HINT_REFUSED") + " (" + Words(error) + ")");
             RepaintRz();
             return;
         }
@@ -629,7 +683,7 @@ modded class OZ_VppAdminMenu
         // Усе пройшло. Сервер переписав файли з розібраного (Validate, бекап),
         // тож показуємо вже його текст: перечитуємо застосоване.
         array<string> done = m_Ed.Applied();
-        Hint(Tr("#STR_OZL_ED_HINT_APPLIED") + done.Count().ToString());
+        RzHint(Tr("#STR_OZL_ED_HINT_APPLIED") + done.Count().ToString());
         m_Ed.ClearHistory();
         for (int i = 0; i < done.Count(); i++)
             AskCfg(done[i]);
@@ -1968,10 +2022,18 @@ modded class OZ_VppAdminMenu
     // ================================================= розмір вікна
 
     // Вікно змінило розмір (OZ_VppAdminMenu.ApplyWindowSize): панель тепер
-    // w x h пікселів. Генератор розмітки поставив усе в точні місця, тож
-    // каркас редактора -- рядок підвкладок, сторінки, смуга дій, підказка --
-    // і колонки дерева перекладаються звідси; ОГЛЯД і ТИПИ БАЛІВ лишаються
-    // своїх розмірів у лівому верхньому куті сторінки.
+    // w x h пікселів -- область вмісту праворуч від рейки (1060 x 680 одиниць
+    // за замовчуванням). Генератор розмітки поставив усе в точні місця, тож
+    // каркас редактора -- сторінки, смуга дій, підказка -- і колонки дерева
+    // перекладаються звідси; ОГЛЯД і ТИПИ БАЛІВ лишаються своїх розмірів у
+    // лівому верхньому куті сторінки.
+    //
+    // NOTHING IS READ BACK HERE: the shell lays the window out once before the
+    // engine's first layout pass (the first show), and a widget measured then
+    // reads 0 x 0 (dayz-modding gui-layouts §23a). Every size comes from w, h and
+    // the layout's own numbers; the other layers take the page's size from
+    // m_RzPageW / m_RzPageH, which this layer -- the first to run after super --
+    // sets before them.
     override void OnWindowResized(float w, float h)
     {
         super.OnWindowResized(w, h);
@@ -1988,21 +2050,14 @@ modded class OZ_VppAdminMenu
         if (body)
             body.SetSize(iw, ih);
 
-        // Підвкладки -- порівну на всю ширину.
-        array<string> tabs = {"overview", "tree", "chains", "points", "owners", "modules", "statics", "settings"};
-        Widget nav = M_SUB_WIDGET.FindAnyWidget("RzNav");
-        if (nav)
-            nav.SetSize(iw, 28 * s);
-        float tw = (iw - 7 * 6 * s) / 8;
-        int i;
-        for (i = 0; i < tabs.Count(); i++)
-            PlaceBtn("RzNav_" + tabs[i], i * (tw + 6 * s), 0, tw, 28 * s);
-
-        // Сторінки -- усе, що лишається між рядком підвкладок і смугою дій.
-        float ph = ih - (28 + 8 + 8 + 28 + 8 + 22) * s;
+        // Сторінки -- усе над смугою дій і рядком підказки.
+        float ph = ih - (8 + 28 + 8 + 22) * s;
+        m_RzPageW = iw;
+        m_RzPageH = ph;
         Widget pages = M_SUB_WIDGET.FindAnyWidget("RzPages");
         if (pages)
             pages.SetSize(iw, ph);
+        int i;
         array<string> names = {"overview", "points", "tree", "chains", "cfg", "soon", "problems"};
         for (i = 0; i < names.Count(); i++)
         {
@@ -2012,7 +2067,7 @@ modded class OZ_VppAdminMenu
         }
 
         // Смуга дій -- під сторінками, кнопки праворуч.
-        float by = (28 + 8) * s + ph + 8 * s;
+        float by = ph + 8 * s;
         Widget bar = M_SUB_WIDGET.FindAnyWidget("RzBar");
         if (bar)
         {
@@ -2234,13 +2289,6 @@ modded class OZ_VppAdminMenu
             return super.OnClick(w, x, y, button);
 
         string nm = w.GetName();
-
-        // Підвкладки: ім'я кнопки після "RzNav_" -- ключ сторінки.
-        if (nm.IndexOf("RzNav_") == 0)
-        {
-            ShowRzTab(nm.Substring(6, nm.Length() - 6));
-            return true;
-        }
 
         // Вузол на полотні: NodeHit його комірки названий rznode:<id>. Клік,
         // що прийшов із відпусканням після перетягування, -- не вибір.

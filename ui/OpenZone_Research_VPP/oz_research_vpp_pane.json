@@ -1,26 +1,13 @@
 {
   "layout": "oz_research_vpp_pane",
-  "note": "RESEARCH pane of the OpenZone admin window -- its own pbo and its own layout, because a server without the research mod never loads this file and the core must not know the pane exists. OZL_VppPane.OnCreate builds it under M_SUB_WIDGET and calls RegisterPane(research, RESEARCH, pane, ResHint), so the root stands at [0, vpp.paneY] and starts hidden like the core panes. Since 2026-11-09 it is the research editor (docs/specs/2026-11-09-research-editor-vpp-design.md): a row of sub-tabs, one page per sub-tab in RzPages (the script shows one), and the draft's action bar. Names the script resolves by string: every widget named Rz*, ResOwners, ResPicked, ResStatics, RzSummary, GrantType, GrantN, NodeId; ResHint is resolved by the core from the hint name handed to RegisterPane. Captions are stringtable keys of OpenZone_Research (UA original, EN).",
-  "root": {"frame": {"name": "PaneResearch", "size": "$vpp.pane", "at": [0, "$vpp.paneY"], "inset": "$vpp.inset",
+  "note": "The research module of the OpenZone admin window -- its own pbo and its own layout, because a server without the research mod never loads this file and the core must not know the pane exists. OZL_VppPane.OnCreate builds it under M_SUB_WIDGET and registers it eight times with RegisterPage(research, ...): the rail's pages Overview, Tree, Chains, Point types, Owners, Modules, Statics and Settings all show this one pane, and OnPaneShown switches the page inside it (VPP rework 2026-11-12, design 5.5). The shell moves the root into the content area and sizes it (vpp.content by default); the script reflows the rest (OnWindowResized). Since 2026-11-09 it is the research editor (docs/specs/2026-11-09-research-editor-vpp-design.md): one page per rail entry in RzPages (the script shows one) and the draft's action bar. Names the script resolves by string: every widget named Rz*, ResOwners, ResPicked, ResStatics, RzSummary, GrantType, GrantN, NodeId; ResHint is resolved by the core from the hint name handed to RegisterPage. Captions are stringtable keys of OpenZone_Research (UA original, EN).",
+  "root": {"frame": {"name": "PaneResearch", "size": "$vpp.content", "at": [0, 0], "inset": "$vpp.inset",
     "hidden": true, "priority": 2,
-    "note": "Hidden: ShowPane shows the open tab's pane and hides the rest.",
+    "note": "Hidden: ShowPane shows the open page's pane and hides the rest.",
     "children": [
       {"vbox": {"name": "RzBody", "gap": 8,
-        "note": "Vertical budget 524 - 2 * 20 = 484: 28 (sub-tabs) + 8 + 384 (pages) + 8 + 28 (action bar) + 6 + 22 (ResHint) = 484.",
+        "note": "Vertical budget 680 - 2 * 20 = 640: 574 (pages) + 8 + 28 (action bar) + 8 + 22 (ResHint) = 640. The rail replaced the row of sub-tabs, and its height went to the pages.",
         "children": [
-          {"hbox": {"name": "RzNav", "h": 28, "gap": 6,
-            "note": "The sub-tabs. The script colours the open one; the button name after RzNav_ is the page key.",
-            "children": [
-              {"button": {"name": "RzNav_overview", "w": "fill", "text": "#STR_OZL_ED_TAB_OVERVIEW", "font": "small"}},
-              {"button": {"name": "RzNav_tree", "w": "fill", "text": "#STR_OZL_ED_TAB_TREE", "font": "small"}},
-              {"button": {"name": "RzNav_chains", "w": "fill", "text": "#STR_OZL_ED_TAB_CHAINS", "font": "small"}},
-              {"button": {"name": "RzNav_points", "w": "fill", "text": "#STR_OZL_ED_TAB_POINTS", "font": "small"}},
-              {"button": {"name": "RzNav_owners", "w": "fill", "text": "#STR_OZL_ED_TAB_OWNERS", "font": "small"}},
-              {"button": {"name": "RzNav_modules", "w": "fill", "text": "#STR_OZL_ED_TAB_MODULES", "font": "small"}},
-              {"button": {"name": "RzNav_statics", "w": "fill", "text": "#STR_OZL_ED_TAB_STATICS", "font": "small"}},
-              {"button": {"name": "RzNav_settings", "w": "fill", "text": "#STR_OZL_ED_TAB_SETTINGS", "font": "small"}}
-            ]}},
-
           {"frame": {"name": "RzPages", "h": "fill",
             "note": "The pages lie on top of each other at [0, 0]; the script shows the open sub-tab's page and hides the rest.",
             "children": [

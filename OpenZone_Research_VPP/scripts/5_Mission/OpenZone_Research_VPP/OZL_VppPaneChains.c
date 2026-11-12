@@ -982,17 +982,16 @@ modded class OZ_VppAdminMenu
 
     // ------------------------------------------------- розмір і події
 
+    // The page's size comes from the first layer (m_RzPageW / m_RzPageH); nothing
+    // is read back: on the first show the widgets still measure 0 x 0.
     override void OnWindowResized(float w, float h)
     {
         super.OnWindowResized(w, h);
-        if (!M_SUB_WIDGET)
+        if (!M_SUB_WIDGET || m_RzPageW <= 0)
             return;
         float s = Px();
-        float iw = w - 2 * 20 * s;
-        float ih = h - 2 * 20 * s;
-        if (iw < 300 * s || ih < 200 * s)
-            return;
-        float ph = ih - (28 + 8 + 8 + 28 + 8 + 22) * s;
+        float iw = m_RzPageW;
+        float ph = m_RzPageH;
 
         Widget cols = M_SUB_WIDGET.FindAnyWidget("RzChCols");
         if (cols)
@@ -1036,16 +1035,14 @@ modded class OZ_VppAdminMenu
             card.SetPos(col * (cw + 4 * s), row * 70 * s);
             card.SetSize(cw, 64 * s);
             PlaceBtn("BtnRzChCard_" + keys[i], 0, 0, cw, 64 * s);
+            // The card's four lines keep the layout's heights (14, 18, 14, 14).
             array<string> parts = {"RzChK_", "RzChV_", "RzChC_", "RzChS_"};
+            array<float> partH = {14.0, 18.0, 14.0, 14.0};
             for (int p = 0; p < parts.Count(); p++)
             {
                 Widget lab = M_SUB_WIDGET.FindAnyWidget(parts[p] + keys[i]);
-                if (!lab)
-                    continue;
-                float lw;
-                float lhh;
-                lab.GetSize(lw, lhh);
-                lab.SetSize(cw - 12 * s, lhh);
+                if (lab)
+                    lab.SetSize(cw - 12 * s, partH[p] * s);
             }
         }
 
@@ -1115,16 +1112,14 @@ modded class OZ_VppAdminMenu
         Widget tipDesc = M_SUB_WIDGET.FindAnyWidget("RzStTipDesc");
         if (tipDesc)
             tipDesc.SetSize(tipW - 12 * s, 42 * s);
+        // The station's three lines keep the layout's heights (20, 20, 16).
         array<string> wide = {"RzStHead", "RzStAction", "RzStAdmin"};
+        array<float> wideH = {20.0, 20.0, 16.0};
         for (int wd = 0; wd < wide.Count(); wd++)
         {
             Widget wl = M_SUB_WIDGET.FindAnyWidget(wide[wd]);
-            if (!wl)
-                continue;
-            float ww;
-            float wh;
-            wl.GetSize(ww, wh);
-            wl.SetSize(mw, wh);
+            if (wl)
+                wl.SetSize(mw, wideH[wd] * s);
         }
     }
 

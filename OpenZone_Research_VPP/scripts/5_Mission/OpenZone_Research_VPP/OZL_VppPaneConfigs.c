@@ -575,17 +575,16 @@ modded class OZ_VppAdminMenu
 
     // ------------------------------------------------- розмір і події
 
+    // The page's size comes from the first layer (m_RzPageW / m_RzPageH); nothing
+    // is read back: on the first show the widgets still measure 0 x 0.
     override void OnWindowResized(float w, float h)
     {
         super.OnWindowResized(w, h);
-        if (!M_SUB_WIDGET)
+        if (!M_SUB_WIDGET || m_RzPageW <= 0)
             return;
         float s = Px();
-        float iw = w - 2 * 20 * s;
-        float ih = h - 2 * 20 * s;
-        if (iw < 300 * s || ih < 200 * s)
-            return;
-        float ph = ih - (28 + 8 + 8 + 28 + 8 + 22) * s;
+        float iw = m_RzPageW;
+        float ph = m_RzPageH;
         Widget cols = M_SUB_WIDGET.FindAnyWidget("RzCfgCols");
         if (cols)
             cols.SetSize(iw, ph);
@@ -605,14 +604,12 @@ modded class OZ_VppAdminMenu
     // від лівого краю; підказки й примітка беруть те, що лишилось.
     protected void LayoutCfg()
     {
-        Widget cols = M_SUB_WIDGET.FindAnyWidget("RzCfgCols");
         Widget form = M_SUB_WIDGET.FindAnyWidget("RzCfgForm");
-        if (!cols || !form)
+        if (!form || m_RzPageW <= 0)
             return;
         float s = Px();
-        float cw;
-        float ch;
-        cols.GetSize(cw, ch);
+        float cw = m_RzPageW;
+        float ch = m_RzPageH;
         float fx = 312 * s;
         if (m_RzTab == "settings")
             fx = 0;
