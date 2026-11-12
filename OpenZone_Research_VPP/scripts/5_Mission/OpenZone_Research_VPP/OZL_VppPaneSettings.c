@@ -59,14 +59,6 @@ modded class OZ_VppAdminMenu
         Ask(OZ_AdminSect.CONFIG, "identity", "{}");
     }
 
-    // A question, not an action: it does not open a line of the window's journal.
-    override bool IsReadOp(string op)
-    {
-        if (op == "identity")
-            return true;
-        return super.IsReadOp(op);
-    }
-
     override void OnRzConfigAnswer(string op, bool ok, string json, string error)
     {
         super.OnRzConfigAnswer(op, ok, json, error);
@@ -182,7 +174,12 @@ modded class OZ_VppAdminMenu
             // leaders" (FFR: any member of a group).
             string leaderPart = Tr("#STR_OZL_VPP_SE_NO_LEADERS");
             if (m_SeIdLeaders && m_SeIdMeans != "")
+            {
+                // The source's words: a stringtable key (FFR) or plain text.
                 leaderPart = m_SeIdMeans;
+                if (leaderPart.IndexOf("#") == 0)
+                    leaderPart = Tr(leaderPart);
+            }
             else if (m_SeIdLeaders)
                 leaderPart = Tr("#STR_OZL_VPP_SE_HAS_LEADERS");
             string postPart = Tr("#STR_OZL_VPP_SE_NO_POSTS");
