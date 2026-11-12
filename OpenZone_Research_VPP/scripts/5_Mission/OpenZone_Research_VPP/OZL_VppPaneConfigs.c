@@ -399,9 +399,15 @@ modded class OZ_VppAdminMenu
             m_CfgSkinDirs.Clear();
             for (int d = 0; d < m_CfgSkins.Count(); d++)
             {
+                // The skin made into a local first: Make returns a new object from a
+                // non-ref function, and a field is not read off it in one chain.
                 string dir = "";
                 if (m_CfgSkins[d] != "")
-                    dir = OZL_TreeSkins.Make(m_CfgSkins[d]).Dir;
+                {
+                    OZL_TreeSkin sk = OZL_TreeSkins.Make(m_CfgSkins[d]);
+                    if (sk)
+                        dir = sk.Dir;
+                }
                 m_CfgSkinDirs.Insert(dir);
             }
         }

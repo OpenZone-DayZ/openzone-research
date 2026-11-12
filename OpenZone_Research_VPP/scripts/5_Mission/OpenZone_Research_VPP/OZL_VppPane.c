@@ -605,7 +605,6 @@ modded class OZ_VppAdminMenu
         RepaintRzPage(m_RzTab);
         PaintRzBar();
         PaintSummary();
-        RepaintProblems();
     }
 
     // ------------------------------------------------- дрібне для віджетів
@@ -790,6 +789,10 @@ modded class OZ_VppAdminMenu
             }
         }
         PaintBtn("BtnRzApply", apply, applyInk, applyGround, applyRim);
+
+        // The panel follows every edit while it is open: the pages stay usable under
+        // it now, so the draft changes while it is read.
+        RepaintProblems();
     }
 
     // Підсумок для ОГЛЯДУ: що тримає чернетка (сервер -- у клітинках над ним).
@@ -867,7 +870,6 @@ modded class OZ_VppAdminMenu
     {
         m_RzProblems = open;
         RzLayout();
-        RepaintProblems();
         PaintRzBar();
     }
 

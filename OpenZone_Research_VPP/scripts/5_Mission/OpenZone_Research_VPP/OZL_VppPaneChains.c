@@ -281,10 +281,19 @@ modded class OZ_VppAdminMenu
                 spread += "  ";
             spread += Tr("#STR_OZL_ED_CH_T") + lo.ToString() + ": " + counts[ti].ToString();
         }
+        // Two translations never share one argument list: the engine hands a call's
+        // result back through a slot the next call of the same function reuses
+        // (dayz-modding enforce-script.md); each goes into a local first.
         if (line.Packers.Count() > 0)
+        {
             ChCard("raw", Tr("#STR_OZL_ED_CH_KINDS") + line.Packers.Count().ToString(), spread, "", OZL_Metal.TEXT);
+        }
         else
-            ChCard("raw", Tr("#STR_OZL_ED_CH_WORLD_ONLY"), "", Tr("#STR_OZL_ED_CH_NO_PACKER"), OZL_Metal.TEXT);
+        {
+            string worldOnly = Tr("#STR_OZL_ED_CH_WORLD_ONLY");
+            string noPacker = Tr("#STR_OZL_ED_CH_NO_PACKER");
+            ChCard("raw", worldOnly, "", noPacker, OZL_Metal.TEXT);
+        }
 
         // ПАКУВАЛЬНИК: станок першого правила, межі часу.
         string packDev = "";
@@ -310,7 +319,10 @@ modded class OZ_VppAdminMenu
         {
             string times = Secs(tMin);
             if (tMax > tMin)
-                times = Secs(tMin) + " - " + Secs(tMax);
+            {
+                string upTo = Secs(tMax);
+                times = times + " - " + upTo;
+            }
             ChCard("packer", OZL_EdChains.ItemName(packDev), packDev, times, OZL_Metal.TEXT);
         }
         else
@@ -340,16 +352,26 @@ modded class OZ_VppAdminMenu
         if (an)
         {
             string anDev = OZL_Match.StripExact(an.Device);
-            ChCard("analyzer", OZL_EdChains.ItemName(anDev), anDev, Secs(an.TimeSec) + "  " + Tr("#STR_OZL_ED_CH_MODS") + mods.Count().ToString(), OZL_Metal.TEXT);
+            string anName = OZL_EdChains.ItemName(anDev);
+            string anTime = Secs(an.TimeSec);
+            string modsWord = Tr("#STR_OZL_ED_CH_MODS");
+            string anSub = anTime + "  " + modsWord + mods.Count().ToString();
+            ChCard("analyzer", anName, anDev, anSub, OZL_Metal.TEXT);
         }
         else
         {
             ChCard("analyzer", "-", "", "", OZL_Metal.FAINT);
         }
         if (line.Carrier != "")
-            ChCard("carrier", OZL_EdChains.ItemName(line.Carrier), line.Carrier, Tr("#STR_OZL_ED_CH_CHANCE"), LineColor(pts, line.Line));
+        {
+            string carrierName = OZL_EdChains.ItemName(line.Carrier);
+            string chanceWord = Tr("#STR_OZL_ED_CH_CHANCE");
+            ChCard("carrier", carrierName, line.Carrier, chanceWord, LineColor(pts, line.Line));
+        }
         else
+        {
             ChCard("carrier", "-", "", "", OZL_Metal.FAINT);
+        }
 
         // ТЕРМІНАЛ -> ПУЛ: термінал власника й тип балів лінії.
         OZL_OwnerDef def = OZL_EdChains.OwnerDef(owners, m_ChOwner);
