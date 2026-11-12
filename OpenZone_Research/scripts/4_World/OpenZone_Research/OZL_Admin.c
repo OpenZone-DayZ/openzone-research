@@ -34,6 +34,13 @@ class OZL_AdminList
 
 class OZL_Admin : OZ_AdminSection
 {
+    // A read changes nothing: other admins are not told about it (the core's
+    // OZ_AdminTell, VPP rework 2026-11-12).
+    override bool IsRead(string op)
+    {
+        return op == "list";
+    }
+
     override string Handle(string op, string json, PlayerIdentity sender, out bool ok, out string error)
     {
         string who = "?";
