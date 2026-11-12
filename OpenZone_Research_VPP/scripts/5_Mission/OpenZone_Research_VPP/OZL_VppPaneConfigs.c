@@ -19,7 +19,10 @@ modded class OZ_VppAdminMenu
 
     // Вибраний запис у списку вкладки (свій для кожної вкладки).
     private ref map<string, int> m_CfgPick;
-    private bool m_CfgDelArmed = false;
+
+    // What the confirm strip asked to delete: the page and the row as it read then.
+    private string m_CfgDelTab = "";
+    private string m_CfgDelWhat = "";
 
     override void OnCreate(Widget RootW)
     {
@@ -56,12 +59,6 @@ modded class OZ_VppAdminMenu
             return;
         }
         super.RepaintRzPage(tab);
-    }
-
-    override void ShowRzTab(string key)
-    {
-        m_CfgDelArmed = false;
-        super.ShowRzTab(key);
     }
 
     // ------------------------------------------------- схема вкладок
@@ -410,10 +407,7 @@ modded class OZ_VppAdminMenu
         if (note)
             note.SetPos(0, y);
 
-        if (m_CfgDelArmed)
-            SetBtnText("BtnRzCfgDel", Tr("#STR_OZL_ED_RU_DEL_AGAIN"), OZ_Palette.BAD);
-        else
-            SetBtnText("BtnRzCfgDel", Tr("#STR_OZL_ED_PT_DEL"), OZ_Palette.BAD);
+        SetBtnText("BtnRzCfgDel", Tr("#STR_OZL_ED_PT_DEL"), OZ_Palette.BAD);
         SetLabel("RzCfgNote", Tr("#STR_OZL_ED_CFG_NOTE_" + CfgHeadKey()), OZ_Palette.MUTED);
     }
 
@@ -436,8 +430,6 @@ modded class OZ_VppAdminMenu
         string tag = CfgTag();
         m_Ed.BeginOnce(tag, "cfg:" + m_RzTab + ":" + f.ToString());
         CfgSet(CfgPicked(), f, GetEdit("RzCfgFld" + f.ToString()));
-        m_CfgDelArmed = false;
-        m_RzDiscardArmed = false;
         m_Ed.Commit(tag);
         RepaintCfg(false);
         PaintRzBar();
@@ -497,8 +489,6 @@ modded class OZ_VppAdminMenu
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
         m_CfgPick.Set(m_RzTab, CfgCount() - 1);
-        m_CfgDelArmed = false;
-        m_RzDiscardArmed = false;
         RepaintCfg(true);
         PaintRzBar();
         PaintSummary();
@@ -512,15 +502,29 @@ modded class OZ_VppAdminMenu
         if (!c || m_RzTab == "settings" || n == 0)
             return;
         int at = CfgPicked();
-        string what = CfgRow(at);
-        if (!m_CfgDelArmed)
+        m_CfgDelTab = m_RzTab;
+        m_CfgDelWhat = CfgRow(at);
+        string ask = Tr("#STR_OZL_VPP_ASK_DEL_" + CfgHeadKey());
+        string tail = Tr("#STR_OZL_VPP_ASK_DRAFT");
+        Confirm(ask + m_CfgDelWhat + "? " + tail, "#STR_OZL_VPP_YES_DELETE", "rz:cfgdel:" + at.ToString());
+    }
+
+    // The strip's "yes": the entry it asked about, if the list still holds it at that
+    // row (the strip closes when the page changes, an edit may have moved the rows).
+    protected void CfgDeleteNow(int at)
+    {
+        OZ_ConfigBase c = CfgObj();
+        string what = m_CfgDelWhat;
+        bool same = (c != null && m_RzTab == m_CfgDelTab);
+        if (same && (at < 0 || at >= CfgCount()))
+            same = false;
+        if (same && CfgRow(at) != what)
+            same = false;
+        if (!same)
         {
-            m_CfgDelArmed = true;
-            Hint(Tr("#STR_OZL_ED_RU_DEL_ARMED") + what);
-            RepaintCfg(false);
+            Hint(Tr("#STR_OZL_VPP_GONE") + what);
             return;
         }
-        m_CfgDelArmed = false;
         string tag = CfgTag();
         m_Ed.BeginOnce(tag, "");
         if (m_RzTab == "owners")
@@ -531,11 +535,20 @@ modded class OZ_VppAdminMenu
             OZL_StaticsConfig.Cast(c).Entries.RemoveOrdered(at);
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
-        m_RzDiscardArmed = false;
         RepaintCfg(true);
         PaintRzBar();
         PaintSummary();
         Hint(Tr("#STR_OZL_ED_CFG_DELETED") + what);
+    }
+
+    override void OnConfirmed(string action)
+    {
+        if (action.IndexOf("rz:cfgdel:") == 0)
+        {
+            CfgDeleteNow(action.Substring(10, action.Length() - 10).ToInt());
+            return;
+        }
+        super.OnConfirmed(action);
     }
 
     // Позиція й напрям адміна -- у запис статики.
@@ -566,7 +579,6 @@ modded class OZ_VppAdminMenu
         HereInto(e);
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
-        m_RzDiscardArmed = false;
         RepaintCfg(true);
         PaintRzBar();
         PaintSummary();
@@ -639,7 +651,6 @@ modded class OZ_VppAdminMenu
             if (row >= 0 && row < CfgCount())
             {
                 m_CfgPick.Set(m_RzTab, row);
-                m_CfgDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintCfg(true);
             }

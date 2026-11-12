@@ -26,9 +26,6 @@ modded class OZ_VppAdminMenu
 
     private ref array<ref OZL_AdminOwner> m_ResOwners;
     private int  m_ResPicked    = -1;
-    private bool m_ResResetArmed  = false;
-    private bool m_ResReloadArmed = false;
-    private string m_ResArmedOwner = "";
     // Перемальовування списку кличе SelectRow, рушій відповідає OnItemSelected
     // -- прапорець рве це коло (як у ядрі й у сусідніх панелях).
     private bool m_ResRepaint = false;
@@ -53,17 +50,14 @@ modded class OZ_VppAdminMenu
     // Скрипт пише поля форми сам: OnChange, що прилетить на це, -- не правка.
     private bool m_RzFill = false;
 
-    private bool m_RzDiscardArmed = false;
 
     // Типи балів: вибраний рядок і курок видалення.
     private int  m_PtPicked = -1;
-    private bool m_PtDelArmed = false;
 
     // Дерево: власник, гілка, вибраний вузол; курок видалення вузла.
     private string m_TrOwner  = "";
     private string m_TrBranch = "";
     private string m_TrSel    = "";
-    private bool   m_TnDelArmed = false;
 
     // Id, на який зараз указують посилання, поки поле Id набирається:
     // посилання йдуть за вузлом лише на вільний Id (RenameTn).
@@ -92,7 +86,6 @@ modded class OZ_VppAdminMenu
     private int    m_TrDemo = 0;
 
     // Гілка: курок видалення.
-    private bool   m_BrDelArmed = false;
 
     // Вузол, який тягнуть уздовж осі (тір), і полотно, яке тягнуть (прокрутка).
     // Миша опитується з OnUpdate, як у вікні гравця (OZL_TreeMenu.Drag): так
@@ -246,9 +239,6 @@ modded class OZ_VppAdminMenu
         if (section != OZL_Const.SECTION)
             return;
 
-        m_ResResetArmed  = false;
-        m_ResReloadArmed = false;
-
         if (!ok)
         {
             RzHint(op + ": " + Words(error));
@@ -259,9 +249,15 @@ modded class OZ_VppAdminMenu
         string err;
         if (!JsonFileLoader<OZL_AdminList>.LoadData(json, l, err))
         {
-            RzHint("research: unreadable answer (" + err + ")");
+            string unreadable = Tr("#STR_OZL_VPP_HINT_UNREADABLE");
+            RzHint(unreadable + " (" + err + ")");
             return;
         }
+
+        // Рядки знімаємо одразу: далі будуються рядки списку, а конверт
+        // розібрав серіалізатор (шапка OZ_ConfigBase ядра).
+        string statics = l.Statics;
+        string counters = l.Counters;
 
         // Копія, яку збудував скрипт: те, що приїхало, живе лише до розбору.
         m_ResOwners.Clear();
@@ -289,7 +285,7 @@ modded class OZ_VppAdminMenu
 
         TextWidget st = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("ResStatics"));
         if (st)
-            st.SetText("statics: " + l.Statics);
+            st.SetText("statics: " + statics);
 
         // Після «перечитати конфіги» файли на сервері, можливо, інші: чернетка
         // без правок бере їх, з правками -- рахує зміни від нових.
@@ -300,10 +296,17 @@ modded class OZ_VppAdminMenu
                 AskCfg(tags[t]);
         }
 
+        string said;
         if (op == "list")
-            RzHint(m_ResOwners.Count().ToString() + " faction(s); " + l.Counters);
+        {
+            said = Tr("#STR_OZL_VPP_HINT_FACTIONS");
+            RzHint(said + m_ResOwners.Count().ToString() + "; " + counters);
+        }
         else
-            RzHint(op + ": done");
+        {
+            said = Tr("#STR_OZL_VPP_HINT_DONE");
+            RzHint(op + ": " + said);
+        }
     }
 
     protected void RepaintOwners()
@@ -355,6 +358,21 @@ modded class OZ_VppAdminMenu
         return m_ResOwners[m_ResPicked].Id;
     }
 
+    // The confirm strip's words for a reset: whose pool and nodes go.
+    protected string ResetAsk(string owner)
+    {
+        string who = owner;
+        if (m_ResPicked >= 0 && m_ResPicked < m_ResOwners.Count())
+        {
+            OZL_AdminOwner o = m_ResOwners[m_ResPicked];
+            if (o && o.Id == owner && o.Name != "" && o.Name != owner)
+                who = owner + " - " + o.Name;
+        }
+        string ask = Tr("#STR_OZL_VPP_ASK_RESET");
+        string tail = Tr("#STR_OZL_VPP_ASK_RESET2");
+        return ask + who + tail;
+    }
+
     // ================================================= редактор: оболонка
 
     // Підвкладка: своя сторінка, а для ще не написаних -- спільна «згодом».
@@ -362,10 +380,6 @@ modded class OZ_VppAdminMenu
     {
         m_RzTab = key;
         m_RzProblems = false;
-        m_RzDiscardArmed = false;
-        m_PtDelArmed = false;
-        m_TnDelArmed = false;
-        m_BrDelArmed = false;
         m_TrLink = false;
         m_TrLinkFrom = "";
         if (m_Ed)
@@ -593,8 +607,6 @@ modded class OZ_VppAdminMenu
             return;
         }
 
-        m_PtDelArmed = false;
-        m_RzDiscardArmed = false;
         ClampPicked();
         RepaintRz();
         if (redo)
@@ -603,6 +615,8 @@ modded class OZ_VppAdminMenu
             Hint(Tr("#STR_OZL_ED_HINT_UNDONE") + tag);
     }
 
+    // ВІДКИНУТИ питає рядком підтвердження вікна (дизайн вікна §3.4) і каже,
+    // які файли пропадуть; «так» приходить у OnConfirmed -> RzDiscardNow.
     protected void RzDiscard()
     {
         if (m_Ed.Changed() == 0)
@@ -610,24 +624,92 @@ modded class OZ_VppAdminMenu
             Hint(Tr("#STR_OZL_ED_HINT_NOTHING"));
             return;
         }
-        if (!m_RzDiscardArmed)
+        string ask = Tr("#STR_OZL_VPP_ASK_DISCARD");
+        string files = RzChangedFiles();
+        Confirm(ask + files, "#STR_OZL_VPP_YES_DISCARD", "rz:discard");
+    }
+
+    // "2 (Settings, Tree)": how many files the draft changed, and which.
+    protected string RzChangedFiles()
+    {
+        array<string> tags = m_Ed.Tags();
+        string names = "";
+        int n = 0;
+        for (int i = 0; i < tags.Count(); i++)
         {
-            m_RzDiscardArmed = true;
-            Hint(Tr("#STR_OZL_ED_HINT_DISCARD_ARMED"));
-            return;
+            OZL_EdDoc d = m_Ed.Doc(tags[i]);
+            if (!d || !d.Dirty())
+                continue;
+            string shortName = tags[i];
+            if (shortName.IndexOf("Research") == 0)
+                shortName = shortName.Substring(8, shortName.Length() - 8);
+            if (names != "")
+                names += ", ";
+            names += shortName;
+            n++;
         }
-        m_RzDiscardArmed = false;
+        return n.ToString() + " (" + names + ")";
+    }
+
+    protected void RzDiscardNow()
+    {
+        if (m_Ed.Changed() == 0)
+            return;
         m_Ed.Discard();
         ClampPicked();
         RepaintRz();
         Hint(Tr("#STR_OZL_ED_HINT_DISCARDED"));
     }
 
+    // The confirm strip's "yes" (design 3.4). Research's actions start with "rz:";
+    // the later layers take theirs (rz:rudel:, rz:cfgdel:) before they call super.
+    override void OnConfirmed(string action)
+    {
+        if (action.IndexOf("rz:") != 0)
+        {
+            super.OnConfirmed(action);
+            return;
+        }
+        if (action == "rz:discard")
+        {
+            RzDiscardNow();
+            return;
+        }
+        if (action == "rz:reload")
+        {
+            Ask(OZL_Const.SECTION, "reload", "{}");
+            Hint(Tr("#STR_OZL_VPP_RELOADING"));
+            return;
+        }
+        if (action.IndexOf("rz:reset:") == 0)
+        {
+            string owner = action.Substring(9, action.Length() - 9);
+            Ask(OZL_Const.SECTION, "reset:" + owner, "{}");
+            Hint(Tr("#STR_OZL_VPP_RESETTING") + owner);
+            return;
+        }
+        if (action.IndexOf("rz:ptdel:") == 0)
+        {
+            PtDeleteNow(action.Substring(9, action.Length() - 9));
+            return;
+        }
+        if (action.IndexOf("rz:tndel:") == 0)
+        {
+            TnDeleteNow(action.Substring(9, action.Length() - 9));
+            return;
+        }
+        if (action.IndexOf("rz:brdel:") == 0)
+        {
+            BrDeleteNow(action.Substring(9, action.Length() - 9));
+            return;
+        }
+        super.OnConfirmed(action);
+    }
+
     // ЗАСТОСУВАТИ: змінені файли по одному, у порядку OZL_EdDocs; помилки
     // чернетки не пускають -- сервер викинув би те, що на них стоїть.
     protected void RzApply()
     {
-        m_RzDiscardArmed = false;
         if (!m_Ed.AllLoaded())
         {
             Hint(Tr("#STR_OZL_ED_HINT_LOADING"));
@@ -827,8 +909,6 @@ modded class OZ_VppAdminMenu
         else if (field == "RzPtIcon")
             p.Icon = v.Trim();
 
-        m_PtDelArmed = false;
-        m_RzDiscardArmed = false;
         m_Ed.Commit(tag);
         RepaintPoints(false);
         PaintRzBar();
@@ -874,7 +954,6 @@ modded class OZ_VppAdminMenu
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
         m_PtPicked = pts.PointTypes.Count() - 1;
-        m_PtDelArmed = false;
         RepaintPoints(true);
         PaintRzBar();
         PaintSummary();
@@ -891,19 +970,43 @@ modded class OZ_VppAdminMenu
         }
 
         string id = pts.PointTypes[m_PtPicked].Id;
-        if (!m_PtDelArmed)
+        string ask = Tr("#STR_OZL_VPP_ASK_DEL_PT");
+        string tail = Tr("#STR_OZL_VPP_ASK_DRAFT");
+        Confirm(ask + id + "? " + tail, "#STR_OZL_VPP_YES_DELETE", "rz:ptdel:" + id);
+    }
+
+    // The strip's "yes": the type is found again by its id -- the picked row may
+    // have moved while the strip was open.
+    protected void PtDeleteNow(string id)
+    {
+        OZL_PointTypes pts = DraftPointTypes();
+        if (!pts)
+            return;
+        int at = -1;
+        int i;
+        for (i = 0; i < pts.PointTypes.Count(); i++)
         {
-            m_PtDelArmed = true;
-            Hint(Tr("#STR_OZL_ED_PT_DEL_ARMED") + id);
+            if (at < 0 && pts.PointTypes[i] && pts.PointTypes[i].Id == id)
+                at = i;
+        }
+        OZL_PointType picked = null;
+        if (m_PtPicked >= 0 && m_PtPicked < pts.PointTypes.Count())
+            picked = pts.PointTypes[m_PtPicked];
+        if (picked && picked.Id == id)
+            at = m_PtPicked;
+        if (at < 0)
+        {
+            Hint(Tr("#STR_OZL_VPP_GONE") + id);
             return;
         }
 
-        m_PtDelArmed = false;
         string tag = OZL_Config.TAG_POINT_TYPES;
         m_Ed.BeginOnce(tag, "");
-        pts.PointTypes.RemoveOrdered(m_PtPicked);
+        pts.PointTypes.RemoveOrdered(at);
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
+        if (at < m_PtPicked)
+            m_PtPicked--;
         if (m_PtPicked >= pts.PointTypes.Count())
             m_PtPicked = pts.PointTypes.Count() - 1;
         RepaintPoints(true);
@@ -1455,8 +1558,6 @@ modded class OZ_VppAdminMenu
         else if (field == "RzBrIcon")
             br.Icon = v.Trim();
 
-        m_BrDelArmed = false;
-        m_RzDiscardArmed = false;
         m_Ed.Commit(tag);
         RepaintTree(true, false);
         TextWidget head = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzBrHead"));
@@ -1490,14 +1591,14 @@ modded class OZ_VppAdminMenu
 
         m_TrBranch = br.Id;
         m_TrSel = "";
-        m_BrDelArmed = false;
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
         Hint(Tr("#STR_OZL_ED_BR_ADDED") + br.Id);
     }
 
-    // Гілка йде разом зі своїми вузлами й усіма посиланнями на них.
+    // Гілка йде разом зі своїми вузлами й усіма посиланнями на них -- після
+    // «так» у рядку підтвердження вікна.
     protected void BrDelete()
     {
         OZL_TreeConfig tree = DraftTree();
@@ -1507,13 +1608,24 @@ modded class OZ_VppAdminMenu
             Hint(Tr("#STR_OZL_ED_TR_PICK_BRANCH"));
             return;
         }
-        if (!m_BrDelArmed)
+        string ask = Tr("#STR_OZL_VPP_ASK_DEL_BRANCH");
+        string mid = Tr("#STR_OZL_VPP_ASK_DEL_BRANCH2");
+        string tail = Tr("#STR_OZL_VPP_ASK_DEL_BRANCH3");
+        string nodes = br.Nodes.Count().ToString();
+        Confirm(ask + br.Id + mid + nodes + tail, "#STR_OZL_VPP_YES_DELETE", "rz:brdel:" + br.Id);
+    }
+
+    protected void BrDeleteNow(string branchId)
+    {
+        OZL_TreeConfig tree = DraftTree();
+        OZL_TreeBranch br = null;
+        if (tree)
+            br = OZL_EdTree.FindBranch(tree, branchId);
+        if (!br)
         {
-            m_BrDelArmed = true;
-            Hint(Tr("#STR_OZL_ED_BR_DEL_ARMED") + br.Id + " (" + br.Nodes.Count().ToString() + ")");
+            Hint(Tr("#STR_OZL_VPP_GONE") + branchId);
             return;
         }
-        m_BrDelArmed = false;
 
         string tag = OZL_Config.TAG_TREE;
         m_Ed.BeginOnce(tag, "");
@@ -1535,8 +1647,12 @@ modded class OZ_VppAdminMenu
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
 
-        m_TrBranch = "";
-        m_TrSel = "";
+        // RepaintTree drops a picked node that is gone with the branch.
+        if (m_TrBranch == id)
+        {
+            m_TrBranch = "";
+            m_TrSel = "";
+        }
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
@@ -1609,8 +1725,6 @@ modded class OZ_VppAdminMenu
             m_Ed.EndGesture();
             Hint(Tr("#STR_OZL_ED_TR_LINKED") + m_TrLinkFrom + " -> " + id + note);
         }
-        m_TnDelArmed = false;
-        m_RzDiscardArmed = false;
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
@@ -1708,8 +1822,6 @@ modded class OZ_VppAdminMenu
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
         m_TrSel = id;
-        m_TnDelArmed = false;
-        m_RzDiscardArmed = false;
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
@@ -1733,7 +1845,6 @@ modded class OZ_VppAdminMenu
             if (!m_TrPanMoved && m_TrSel != "" && !m_TrLink)
             {
                 m_TrSel = "";
-                m_TnDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintTree(false);
             }
@@ -1886,8 +1997,6 @@ modded class OZ_VppAdminMenu
         else if (field == "RzTnIcon")
             n.Icon = v.Trim();
 
-        m_TnDelArmed = false;
-        m_RzDiscardArmed = false;
         m_Ed.Commit(tag);
         RepaintTree(structural, false);
         TextWidget head = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTnHead"));
@@ -1948,7 +2057,6 @@ modded class OZ_VppAdminMenu
         m_Ed.EndGesture();
 
         m_TrSel = n.Id;
-        m_TnDelArmed = false;
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
@@ -1964,13 +2072,23 @@ modded class OZ_VppAdminMenu
             Hint(Tr("#STR_OZL_ED_TN_PICK"));
             return;
         }
-        if (!m_TnDelArmed)
+        string ask = Tr("#STR_OZL_VPP_ASK_DEL_NODE");
+        string tail = Tr("#STR_OZL_VPP_ASK_DEL_NODE2");
+        Confirm(ask + n.Id + tail, "#STR_OZL_VPP_YES_DELETE", "rz:tndel:" + n.Id);
+    }
+
+    // The strip's "yes": the node is found again by its id, every link to it goes too.
+    protected void TnDeleteNow(string nodeId)
+    {
+        OZL_TreeConfig tree = DraftTree();
+        OZL_TreeNode n = null;
+        if (tree)
+            n = tree.FindNode(nodeId);
+        if (!n)
         {
-            m_TnDelArmed = true;
-            Hint(Tr("#STR_OZL_ED_TN_DEL_ARMED") + n.Id);
+            Hint(Tr("#STR_OZL_VPP_GONE") + nodeId);
             return;
         }
-        m_TnDelArmed = false;
 
         string tag = OZL_Config.TAG_TREE;
         m_Ed.BeginOnce(tag, "");
@@ -1988,7 +2106,8 @@ modded class OZ_VppAdminMenu
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
 
-        m_TrSel = "";
+        if (m_TrSel == id)
+            m_TrSel = "";
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
@@ -2193,12 +2312,12 @@ modded class OZ_VppAdminMenu
             if (row >= 0 && row < m_ResOwners.Count())
             {
                 m_ResPicked = row;
-                m_ResResetArmed = false;
                 m_ResRepaint = true;
                 RepaintOwners();
                 m_ResRepaint = false;
                 PaintPicked();
-                Hint("faction " + PickedOwner() + ": grant, complete a node, or reset (twice)");
+                string pickedHint = Tr("#STR_OZL_VPP_HINT_FACTION");
+                Hint(pickedHint + PickedOwner());
             }
             return true;
         }
@@ -2211,8 +2330,6 @@ modded class OZ_VppAdminMenu
                 m_TrBranch = "";
                 m_TrSel = "";
                 m_TrLinkFrom = "";
-                m_TnDelArmed = false;
-                m_BrDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintTree(true);
             }
@@ -2230,8 +2347,6 @@ modded class OZ_VppAdminMenu
                     m_TrBranch = ids[row];
                     m_TrSel = "";
                     m_TrLinkFrom = "";
-                    m_TnDelArmed = false;
-                    m_BrDelArmed = false;
                     m_Ed.EndGesture();
                     RepaintTree(true);
                 }
@@ -2244,7 +2359,6 @@ modded class OZ_VppAdminMenu
             if (pts && row >= 0 && row < pts.PointTypes.Count())
             {
                 m_PtPicked = row;
-                m_PtDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintPoints(true);
             }
@@ -2297,7 +2411,6 @@ modded class OZ_VppAdminMenu
             if (m_TnSkipClick > 0 || m_TnDragMoved)
                 return true;
             string picked = nm.Substring(7, nm.Length() - 7);
-            m_TnDelArmed = false;
             m_Ed.EndGesture();
             if (m_TrLink)
             {
@@ -2398,17 +2511,11 @@ modded class OZ_VppAdminMenu
             return true;
         }
 
+        // Перечитування й скидання питають рядком підтвердження вікна (дизайн
+        // вікна §3.4); «так» шле операцію з OnConfirmed.
         if (nm == "BtnReload")
         {
-            if (!m_ResReloadArmed)
-            {
-                m_ResReloadArmed = true;
-                Hint("press RELOAD CONFIGS again to re-read the seven files and the state folder");
-                return true;
-            }
-            m_ResReloadArmed = false;
-            Ask(OZL_Const.SECTION, "reload", "{}");
-            Hint("reloading...");
+            Confirm(Tr("#STR_OZL_VPP_ASK_RELOAD"), "#STR_OZL_VPP_YES_RELOAD", "rz:reload");
             return true;
         }
 
@@ -2417,20 +2524,10 @@ modded class OZ_VppAdminMenu
             string owner = PickedOwner();
             if (owner == "")
             {
-                Hint("pick a faction on the list first");
+                Hint(Tr("#STR_OZL_ED_OV_PICK"));
                 return true;
             }
-            // Підтвердження ПО ТІЙ САМІЙ фракції: зміна вибору знімає курок.
-            if (!m_ResResetArmed || m_ResArmedOwner != owner)
-            {
-                m_ResResetArmed = true;
-                m_ResArmedOwner = owner;
-                Hint("press RESET FACTION again to wipe the pool, nodes and projects of " + owner + " and stop its stations");
-                return true;
-            }
-            m_ResResetArmed = false;
-            Ask(OZL_Const.SECTION, "reset:" + owner, "{}");
-            Hint("resetting " + owner + "...");
+            Confirm(ResetAsk(owner), "#STR_OZL_VPP_YES_RESET", "rz:reset:" + owner);
             return true;
         }
 
@@ -2443,11 +2540,13 @@ modded class OZ_VppAdminMenu
             n.TrimInPlace();
             if (gOwner == "" || type == "" || n.ToInt() <= 0)
             {
-                Hint("pick a faction, then a point type id and an amount above zero");
+                Hint(Tr("#STR_OZL_VPP_HINT_GRANT_NEED"));
                 return true;
             }
-            Ask(OZL_Const.SECTION, "grant:" + gOwner + ":" + type + ":" + n.ToInt().ToString(), "{}");
-            Hint("granting " + n + " " + type + " to " + gOwner + "...");
+            string grantOp = "grant:" + gOwner + ":" + type + ":" + n.ToInt().ToString();
+            Ask(OZL_Const.SECTION, grantOp, "{}");
+            string granting = Tr("#STR_OZL_VPP_HINT_GRANTING");
+            Hint(granting + n + " " + type + " -> " + gOwner);
             return true;
         }
 
@@ -2458,11 +2557,12 @@ modded class OZ_VppAdminMenu
             node.TrimInPlace();
             if (cOwner == "" || node == "")
             {
-                Hint("pick a faction, then type the node id");
+                Hint(Tr("#STR_OZL_VPP_HINT_COMPLETE_NEED"));
                 return true;
             }
             Ask(OZL_Const.SECTION, "complete:" + cOwner + ":" + node, "{}");
-            Hint("completing " + node + " for " + cOwner + "...");
+            string completing = Tr("#STR_OZL_VPP_HINT_COMPLETING");
+            Hint(completing + node + " -> " + cOwner);
             return true;
         }
 

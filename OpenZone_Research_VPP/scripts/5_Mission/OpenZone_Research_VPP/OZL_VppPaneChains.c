@@ -25,7 +25,6 @@ modded class OZ_VppAdminMenu
     private string m_ChCard  = "raw";
     // Під картками -- станок, як його бачить гравець, а не список сировини.
     private bool   m_ChPlayer = false;
-    private bool   m_RuDelArmed = false;
     private ref array<ref OZL_EdLine> m_ChLines;
     // Id правил у рядках списку сировини, у порядку рядків.
     private ref array<string> m_ChRawIds;
@@ -52,12 +51,6 @@ modded class OZ_VppAdminMenu
             return;
         }
         super.RepaintRzPage(tab);
-    }
-
-    override void ShowRzTab(string key)
-    {
-        m_RuDelArmed = false;
-        super.ShowRzTab(key);
     }
 
     protected OZL_Rules DraftRules()
@@ -573,10 +566,7 @@ modded class OZ_VppAdminMenu
             SetBtnText("BtnRzRuExact", Tr("#STR_OZL_ED_RU_EXACT"), OZ_Palette.ALERT);
         else
             SetBtnText("BtnRzRuExact", Tr("#STR_OZL_ED_RU_KIN"), OZ_Palette.TEXT);
-        if (m_RuDelArmed)
-            SetBtnText("BtnRzRuDel", Tr("#STR_OZL_ED_RU_DEL_AGAIN"), OZ_Palette.BAD);
-        else
-            SetBtnText("BtnRzRuDel", Tr("#STR_OZL_ED_RU_DEL"), OZ_Palette.BAD);
+        SetBtnText("BtnRzRuDel", Tr("#STR_OZL_ED_RU_DEL"), OZ_Palette.BAD);
         if (!fillForm)
             return;
 
@@ -674,7 +664,6 @@ modded class OZ_VppAdminMenu
         OZL_Rules rules = DraftRules();
         OZL_EdLine line = ChLine();
         m_ChCard = k;
-        m_RuDelArmed = false;
         m_Ed.EndGesture();
         if (!rules || !line)
         {
@@ -748,7 +737,6 @@ modded class OZ_VppAdminMenu
         }
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
-        m_RzDiscardArmed = false;
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
@@ -806,7 +794,6 @@ modded class OZ_VppAdminMenu
 
         m_ChRule = r.Id;
         m_ChCard = "raw";
-        m_RzDiscardArmed = false;
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
@@ -866,8 +853,6 @@ modded class OZ_VppAdminMenu
         else if (field == "RzRuNotes")
             r.Notes = v;
 
-        m_RuDelArmed = false;
-        m_RzDiscardArmed = false;
         m_Ed.Commit(tag);
         RepaintChains(false);
         PaintRzBar();
@@ -902,7 +887,6 @@ modded class OZ_VppAdminMenu
         }
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
-        m_RzDiscardArmed = false;
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
@@ -933,7 +917,6 @@ modded class OZ_VppAdminMenu
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
         m_ChRule = c.Id;
-        m_RzDiscardArmed = false;
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
@@ -951,14 +934,23 @@ modded class OZ_VppAdminMenu
             Hint(Tr("#STR_OZL_ED_CH_INFO_PICK"));
             return;
         }
-        if (!m_RuDelArmed)
+        string ask = Tr("#STR_OZL_VPP_ASK_DEL_RULE");
+        string tail = Tr("#STR_OZL_VPP_ASK_DRAFT");
+        Confirm(ask + r.Id + "? " + tail, "#STR_OZL_VPP_YES_DELETE", "rz:rudel:" + r.Id);
+    }
+
+    // The strip's "yes": the rule is found again by its id.
+    protected void RuDeleteNow(string ruleId)
+    {
+        OZL_Rules rules = DraftRules();
+        OZL_Rule r = null;
+        if (rules)
+            r = rules.Find(ruleId);
+        if (!r)
         {
-            m_RuDelArmed = true;
-            Hint(Tr("#STR_OZL_ED_RU_DEL_ARMED") + r.Id);
-            RepaintChains(false);
+            Hint(Tr("#STR_OZL_VPP_GONE") + ruleId);
             return;
         }
-        m_RuDelArmed = false;
         OZL_RuleGroup grp = OZL_EdChains.GroupOf(rules, r.Id);
         if (!grp)
             return;
@@ -972,12 +964,22 @@ modded class OZ_VppAdminMenu
         }
         m_Ed.Commit(tag);
         m_Ed.EndGesture();
-        m_ChRule = "";
-        m_RzDiscardArmed = false;
+        if (m_ChRule == id)
+            m_ChRule = "";
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
         Hint(Tr("#STR_OZL_ED_RU_DELETED") + id);
+    }
+
+    override void OnConfirmed(string action)
+    {
+        if (action.IndexOf("rz:rudel:") == 0)
+        {
+            RuDeleteNow(action.Substring(9, action.Length() - 9));
+            return;
+        }
+        super.OnConfirmed(action);
     }
 
     // ------------------------------------------------- розмір і події
@@ -1136,7 +1138,6 @@ modded class OZ_VppAdminMenu
                 m_ChOwner = owners.Owners[row].Id;
                 m_ChLine = "";
                 m_ChRule = "";
-                m_RuDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintChains(true);
             }
@@ -1148,7 +1149,6 @@ modded class OZ_VppAdminMenu
             {
                 m_ChLine = m_ChLines[row].Line;
                 m_ChRule = "";
-                m_RuDelArmed = false;
                 m_Ed.EndGesture();
                 ChPickCard(m_ChCard);
             }
@@ -1160,7 +1160,6 @@ modded class OZ_VppAdminMenu
             {
                 m_ChRule = m_ChRawIds[row];
                 m_ChCard = "raw";
-                m_RuDelArmed = false;
                 m_Ed.EndGesture();
                 RepaintChains(true);
             }
