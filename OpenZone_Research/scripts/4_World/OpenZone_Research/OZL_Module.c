@@ -58,6 +58,8 @@ class OZL_Module : CF_ModuleWorld
         // опитуванням, бо їхній строк живе у файлі, а не в таймері.
         OZ_ServiceRegistry.Register(OZL_Const.SERVICE, new OZL_Service());
         OZ_AdminRegistry.Register(OZL_Const.SECTION, new OZL_Admin());
+        // The module's card on Ядро › Огляд (VPP rework 2026-11-12).
+        OZ_AdminFacts.Register(new OZL_Facts());
         m_PollTimer = new Timer(CALL_CATEGORY_SYSTEM);
         m_PollTimer.Run(OZL_Tree.POLL_SEC, this, "OZL_PollProjects", NULL, true);
 
