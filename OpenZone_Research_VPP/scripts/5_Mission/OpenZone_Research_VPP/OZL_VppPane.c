@@ -778,7 +778,7 @@ modded class OZ_VppAdminMenu
             apply += " - " + changed.ToString();
             if (errs == 0)
             {
-                applyInk = OZL_Metal.SCREEN;
+                applyInk = OZL_Metal.TEXT;
                 applyGround = OZL_Metal.ACCENT;
                 applyRim = OZL_Metal.ACCENT;
             }

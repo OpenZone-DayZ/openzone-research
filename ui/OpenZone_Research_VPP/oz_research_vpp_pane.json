@@ -621,7 +621,7 @@
               {"button": {"name": "BtnRzDiscard", "anchor": "right", "at": [172, 12], "size": [100, 32], "text": "#STR_OZL_ED_BTN_DISCARD", "font": "small",
                 "bg": "$vppRaised", "edge": "$vppBad", "color": "$vppBad"}},
               {"button": {"name": "BtnRzApply", "anchor": "right", "at": [24, 12], "size": [140, 32], "text": "#STR_OZL_ED_BTN_APPLY", "font": "small",
-                "bg": "$vppAccent", "edge": "$vppAccent", "color": "$vppScreen"}}
+                "bg": "$vppAccent", "edge": "$vppAccent", "color": "$vppText"}}
             ]}}
         ]}}
     ]}}
