@@ -1,8 +1,13 @@
-// Підвкладки ВЛАСНИКИ, МОДУЛІ, СТАТИКИ й НАЛАШТУВАННЯ редактора досліджень:
-// одна сторінка RzPage_cfg на чотири файли -- список записів файла з
-// ДОДАТИ й ВИДАЛИТИ ліворуч і поля вибраного запису праворуч. Що за поля,
-// як вони звуться й читаються, каже схема вкладки нижче (CfgFields,
-// CfgGet, CfgSet). НАЛАШТУВАННЯ -- один об'єкт: списку немає.
+// Сторінки ВЛАСНИКИ, МОДУЛІ й СТАТИКИ редактора досліджень: одна сторінка
+// RzPage_cfg на три файли -- список записів файла ліворуч (новий запис
+// додає дія в голові сторінки) і поля вибраного запису праворуч, з його
+// ВИДАЛИТИ. Що за поля, як вони звуться й читаються, каже схема сторінки
+// нижче (CfgFields, CfgGet, CfgSet). НАЛАШТУВАННЯ з 2026-11-12 -- окрема
+// сторінка (OZL_VppPaneSettings.c): вона питає джерело фракцій, що воно знає.
+//
+// Переробка вікна (дизайн вікна §5.5): вікно дерева власника вибирається
+// з семи скінів кнопками, а не набирається; позиція статики -- три поля
+// x, y, z замість одного рядка.
 //
 // Окремий modded-шар OZ_VppAdminMenu, як і ЛАНЦЮГИ: ім'я файлу мусить
 // сортуватися після OZL_VppPane.c (файли теки компілюються за абеткою).
@@ -17,38 +22,34 @@ modded class OZ_VppAdminMenu
 {
     static const int CFG_ROWS = 8;
 
-    // Вибраний запис у списку вкладки (свій для кожної вкладки).
+    // Вибраний запис у списку сторінки (свій для кожної сторінки).
     private ref map<string, int> m_CfgPick;
 
     // What the confirm strip asked to delete: the page and the row as it read then.
     private string m_CfgDelTab = "";
     private string m_CfgDelWhat = "";
 
+    // The tree windows the picker offers, in the order of its buttons; "" is "by the
+    // faction's id". Their ways of growing come from the skins themselves, once.
+    private ref array<string> m_CfgSkins;
+    private ref array<string> m_CfgSkinDirs;
+
     override void OnCreate(Widget RootW)
     {
         m_CfgPick = new map<string, int>();
+        m_CfgSkins = new array<string>();
+        array<string> skins = {"", "neutral", "ecolog", "clearsky", "duty", "freedom", "sop", "bandit"};
+        for (int i = 0; i < skins.Count(); i++)
+            m_CfgSkins.Insert(skins[i]);
+        m_CfgSkinDirs = new array<string>();
         super.OnCreate(RootW);
     }
 
     protected bool IsCfgTab(string key)
     {
-        if (key == "owners" || key == "modules" || key == "statics" || key == "settings")
+        if (key == "owners" || key == "modules" || key == "statics")
             return true;
         return false;
-    }
-
-    override string RzPageOf(string key)
-    {
-        if (IsCfgTab(key))
-            return "cfg";
-        return super.RzPageOf(key);
-    }
-
-    override bool RzHasPage(string key)
-    {
-        if (IsCfgTab(key))
-            return true;
-        return super.RzHasPage(key);
     }
 
     override void RepaintRzPage(string tab)
@@ -61,7 +62,7 @@ modded class OZ_VppAdminMenu
         super.RepaintRzPage(tab);
     }
 
-    // ------------------------------------------------- схема вкладок
+    // ------------------------------------------------- схема сторінок
 
     protected string CfgTag()
     {
@@ -69,14 +70,12 @@ modded class OZ_VppAdminMenu
             return OZL_Config.TAG_OWNERS;
         if (m_RzTab == "modules")
             return OZL_Config.TAG_MODULES;
-        if (m_RzTab == "statics")
-            return OZL_Config.TAG_STATICS;
-        return OZL_Config.TAG_SETTINGS;
+        return OZL_Config.TAG_STATICS;
     }
 
     protected OZ_ConfigBase CfgObj()
     {
-        if (!m_Ed)
+        if (!m_Ed || !IsCfgTab(m_RzTab))
             return null;
         OZL_EdDoc d = m_Ed.Doc(CfgTag());
         if (!d || !d.Loaded)
@@ -93,9 +92,7 @@ modded class OZ_VppAdminMenu
             return OZL_Owners.Cast(c).Owners.Count();
         if (m_RzTab == "modules")
             return OZL_Modules.Cast(c).Modules.Count();
-        if (m_RzTab == "statics")
-            return OZL_StaticsConfig.Cast(c).Entries.Count();
-        return 1;
+        return OZL_StaticsConfig.Cast(c).Entries.Count();
     }
 
     protected int CfgPicked()
@@ -130,14 +127,10 @@ modded class OZ_VppAdminMenu
                 return "?";
             return m.Classname + "  +" + OZL_EdChains.Pct(m.PurityBonus);
         }
-        if (m_RzTab == "statics")
-        {
-            OZL_StaticEntry e = OZL_StaticsConfig.Cast(c).Entries[i];
-            if (!e)
-                return "?";
-            return e.Id + "  -  " + e.ClassName;
-        }
-        return "Settings";
+        OZL_StaticEntry e = OZL_StaticsConfig.Cast(c).Entries[i];
+        if (!e)
+            return "?";
+        return e.Id + "  -  " + e.ClassName;
     }
 
     // Ключі stringtable назв полів і підказок, у порядку рядків форми.
@@ -148,7 +141,6 @@ modded class OZ_VppAdminMenu
         if (m_RzTab == "owners")
         {
             labels.Insert("#STR_OZL_ED_CFG_OW_ID");       hints.Insert("#STR_OZL_ED_CFG_OW_ID_H");
-            labels.Insert("#STR_OZL_ED_CFG_OW_SKIN");     hints.Insert("#STR_OZL_ED_CFG_OW_SKIN_H");
             labels.Insert("#STR_OZL_ED_CFG_OW_TERMS");    hints.Insert("#STR_OZL_ED_CFG_LIST_H");
             labels.Insert("#STR_OZL_ED_CFG_OW_DEVICES");  hints.Insert("#STR_OZL_ED_CFG_LIST_H");
         }
@@ -159,20 +151,15 @@ modded class OZ_VppAdminMenu
             labels.Insert("#STR_OZL_ED_CFG_MO_DOUBLE");   hints.Insert("#STR_OZL_ED_CFG_FRAC_H");
             labels.Insert("#STR_OZL_ED_CFG_NOTES");       hints.Insert("");
         }
-        else if (m_RzTab == "statics")
+        else
         {
             labels.Insert("#STR_OZL_ED_CFG_ST_ID");       hints.Insert("");
             labels.Insert("#STR_OZL_ED_CFG_ST_CLASS");    hints.Insert("#STR_OZL_ED_CFG_ST_CLASS_H");
-            labels.Insert("#STR_OZL_ED_CFG_ST_POS");      hints.Insert("#STR_OZL_ED_CFG_ST_POS_H");
+            labels.Insert("#STR_OZL_VPP_ST_X");           hints.Insert("#STR_OZL_VPP_ST_M_H");
+            labels.Insert("#STR_OZL_VPP_ST_Y");           hints.Insert("#STR_OZL_VPP_ST_M_H");
+            labels.Insert("#STR_OZL_VPP_ST_Z");           hints.Insert("#STR_OZL_VPP_ST_M_H");
             labels.Insert("#STR_OZL_ED_CFG_ST_YAW");      hints.Insert("#STR_OZL_ED_CFG_ST_YAW_H");
             labels.Insert("#STR_OZL_ED_CFG_NOTES");       hints.Insert("");
-        }
-        else
-        {
-            labels.Insert("#STR_OZL_ED_CFG_SE_OWNER");    hints.Insert("#STR_OZL_ED_CFG_SE_OWNER_H");
-            labels.Insert("#STR_OZL_ED_CFG_SE_RPOST");    hints.Insert("#STR_OZL_ED_CFG_SE_POST_H");
-            labels.Insert("#STR_OZL_ED_CFG_SE_BPOST");    hints.Insert("#STR_OZL_ED_CFG_SE_POST_H");
-            labels.Insert("#STR_OZL_ED_CFG_SE_DEPTH");    hints.Insert("#STR_OZL_ED_CFG_SE_DEPTH_H");
         }
     }
 
@@ -189,8 +176,6 @@ modded class OZ_VppAdminMenu
             if (f == 0)
                 return o.Id;
             if (f == 1)
-                return o.Skin;
-            if (f == 2)
                 return OZL_EdTree.ListText(o.TerminalClasses);
             return OZL_EdTree.ListText(o.DeviceClasses);
         }
@@ -207,38 +192,23 @@ modded class OZ_VppAdminMenu
                 return m.DoubleChance.ToString();
             return m.Notes;
         }
-        if (m_RzTab == "statics")
-        {
-            OZL_StaticEntry e = OZL_StaticsConfig.Cast(c).Entries[i];
-            if (!e)
-                return "";
-            if (f == 0)
-                return e.Id;
-            if (f == 1)
-                return e.ClassName;
-            if (f == 2)
-            {
-                string p = "";
-                for (int k = 0; k < e.Pos.Count(); k++)
-                {
-                    if (p != "")
-                        p += " ";
-                    p += e.Pos[k].ToString();
-                }
-                return p;
-            }
-            if (f == 3)
-                return e.Yaw.ToString();
-            return e.Note;
-        }
-        OZL_Settings s = OZL_Settings.Cast(c);
+        OZL_StaticEntry e = OZL_StaticsConfig.Cast(c).Entries[i];
+        if (!e)
+            return "";
         if (f == 0)
-            return s.DefaultOwner;
+            return e.Id;
         if (f == 1)
-            return s.ResearchPost;
-        if (f == 2)
-            return s.BasePost;
-        return s.TreeVisibilityDepth.ToString();
+            return e.ClassName;
+        if (f >= 2 && f <= 4)
+        {
+            int axis = f - 2;
+            if (axis < e.Pos.Count())
+                return e.Pos[axis].ToString();
+            return "";
+        }
+        if (f == 5)
+            return e.Yaw.ToString();
+        return e.Note;
     }
 
     protected void CfgSet(int i, int f, string v)
@@ -255,8 +225,6 @@ modded class OZ_VppAdminMenu
             if (f == 0)
                 o.Id = vt;
             else if (f == 1)
-                o.Skin = vt;
-            else if (f == 2)
                 OZL_EdTree.ParseList(v, o.TerminalClasses);
             else
                 OZL_EdTree.ParseList(v, o.DeviceClasses);
@@ -277,69 +245,44 @@ modded class OZ_VppAdminMenu
                 m.Notes = v;
             return;
         }
-        if (m_RzTab == "statics")
-        {
-            OZL_StaticEntry e = OZL_StaticsConfig.Cast(c).Entries[i];
-            if (!e)
-                return;
-            if (f == 0)
-                e.Id = vt;
-            else if (f == 1)
-                e.ClassName = vt;
-            else if (f == 2)
-                ParsePos(v, e.Pos);
-            else if (f == 3)
-                e.Yaw = vt.ToFloat();
-            else
-                e.Note = v;
+        OZL_StaticEntry e = OZL_StaticsConfig.Cast(c).Entries[i];
+        if (!e)
             return;
-        }
-        OZL_Settings s = OZL_Settings.Cast(c);
         if (f == 0)
-            s.DefaultOwner = vt;
+            e.Id = vt;
         else if (f == 1)
-            s.ResearchPost = vt;
-        else if (f == 2)
-            s.BasePost = vt;
+            e.ClassName = vt;
+        else if (f >= 2 && f <= 4)
+            SetAxis(e, f - 2, vt.ToFloat());
+        else if (f == 5)
+            e.Yaw = vt.ToFloat();
         else
-            s.TreeVisibilityDepth = vt.ToInt();
+            e.Note = v;
     }
 
-    // "x y z" або "x, y, z" -> три числа.
-    protected void ParsePos(string text, array<float> into)
+    // One coordinate of a static's position; a shorter list grows to x, y, z first.
+    protected void SetAxis(OZL_StaticEntry e, int axis, float value)
     {
-        into.Clear();
-        string t = text;
-        t.Replace(",", " ");
-        array<string> parts = new array<string>();
-        t.Split(" ", parts);
-        for (int i = 0; i < parts.Count(); i++)
-        {
-            string p = parts[i].Trim();
-            if (p != "")
-                into.Insert(p.ToFloat());
-        }
+        while (e.Pos.Count() < 3)
+            e.Pos.Insert(0);
+        e.Pos.Set(axis, value);
     }
 
     // ------------------------------------------------- сторінка
 
     protected void RepaintCfg(bool fillForm)
     {
-        if (!M_SUB_WIDGET || !m_CfgPick)
+        if (!M_SUB_WIDGET || !m_CfgPick || !IsCfgTab(m_RzTab))
             return;
-        bool list = (m_RzTab != "settings");
-        Widget side = M_SUB_WIDGET.FindAnyWidget("RzCfgSide");
-        if (side)
-            side.Show(list);
-        LayoutCfg();
 
-        SetLabel("RzCfgListHead", Tr("#STR_OZL_ED_CFG_HEAD_" + CfgHeadKey()), OZ_Palette.ACCENT);
+        string key = CfgHeadKey();
+        SetLabel("RzCfgListHead", Tr("#STR_OZL_VPP_CFG_COLS_" + key), 0);
 
         OZ_ConfigBase c = CfgObj();
         TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzCfgList"));
         int pick = CfgPicked();
         int n = CfgCount();
-        if (lb && list)
+        if (lb)
         {
             m_ResRepaint = true;
             lb.ClearItems();
@@ -354,73 +297,172 @@ modded class OZ_VppAdminMenu
                 lb.AddItem(Tr("#STR_OZL_ED_CFG_EMPTY"), NULL, 0);
             m_ResRepaint = false;
         }
+        string entries = Tr("#STR_OZL_VPP_CFG_COUNT");
+        SetLabel("RzCfgCount", entries + n.ToString(), 0);
 
         array<string> labels = new array<string>();
         array<string> hints = new array<string>();
         CfgFields(labels, hints);
         bool have = (c && n > 0);
-        string head = Tr("#STR_OZL_ED_CFG_HEAD_" + CfgHeadKey());
-        if (have && list)
+        string head = Tr("#STR_OZL_ED_CFG_EMPTY");
+        if (have)
             head = CfgRow(pick);
-        SetLabel("RzCfgHead", head, OZ_Palette.ACCENT);
+        SetLabel("RzCfgHead", head, 0);
+        ShowW("BtnRzCfgDel", have);
+        if (have)
+            SetBtnText("BtnRzCfgDel", Tr("#STR_OZL_VPP_CFG_DEL_" + key), OZL_Metal.BAD);
 
         if (fillForm)
             m_RzFill = true;
         for (int f = 0; f < CFG_ROWS; f++)
         {
-            Widget rowW = M_SUB_WIDGET.FindAnyWidget("RzCfgRow" + f.ToString());
             bool shown = (f < labels.Count() && have);
-            if (rowW)
-                rowW.Show(shown);
+            ShowW("RzCfgRow" + f.ToString(), shown);
             if (!shown)
                 continue;
-            SetLabel("RzCfgLbl" + f.ToString(), Tr(labels[f]), OZ_Palette.MUTED);
+            SetLabel("RzCfgLbl" + f.ToString(), Tr(labels[f]), OZL_Metal.MUTED);
             string hint = "";
             if (hints[f] != "")
                 hint = Tr(hints[f]);
-            SetLabel("RzCfgHint" + f.ToString(), hint, OZ_Palette.FAINT);
+            SetLabel("RzCfgHint" + f.ToString(), hint, OZL_Metal.FAINT);
             if (fillForm)
                 SetEdit("RzCfgFld" + f.ToString(), CfgGet(pick, f));
         }
         if (fillForm)
             m_RzFill = false;
 
-        Widget act = M_SUB_WIDGET.FindAnyWidget("BtnRzCfgAct");
-        bool hasAct = (m_RzTab == "statics" && have);
-        if (act)
-            act.Show(hasAct);
-        if (hasAct)
-            SetBtnText("BtnRzCfgAct", Tr("#STR_OZL_ED_CFG_ST_HERE"), OZ_Palette.ACCENT);
-
-        // Кнопка й примітка -- одразу під останнім показаним полем: рядки
-        // стоять на місцях, які дав генератор (шапка 22, рядок 28 + 4).
+        // Under the last shown row: the page's own block -- WHERE I STAND on
+        // STATICS, the tree window picker on OWNERS, what the module does on
+        // MODULES -- and the note.
         int shownRows = 0;
         if (have)
             shownRows = labels.Count();
         float s = Px();
-        float y = (26 + shownRows * 32) * s;
-        if (act)
-            act.SetPos(0, y);
-        if (hasAct)
-            y += 34 * s;
-        Widget note = M_SUB_WIDGET.FindAnyWidget("RzCfgNote");
-        if (note)
-            note.SetPos(0, y);
+        float y = (40 + shownRows * 32 + 6) * s;
 
-        SetBtnText("BtnRzCfgDel", Tr("#STR_OZL_ED_PT_DEL"), OZ_Palette.BAD);
-        SetLabel("RzCfgNote", Tr("#STR_OZL_ED_CFG_NOTE_" + CfgHeadKey()), OZ_Palette.MUTED);
+        bool hasAct = (m_RzTab == "statics" && have);
+        ShowW("BtnRzCfgAct", hasAct);
+        MoveW("BtnRzCfgAct", 0, y);
+        if (hasAct)
+        {
+            SetBtnText("BtnRzCfgAct", Tr("#STR_OZL_ED_CFG_ST_HERE"), OZL_Metal.ACCENT);
+            y += 38 * s;
+        }
+
+        bool skins = (m_RzTab == "owners" && have);
+        ShowW("RzCfgSkins", skins);
+        MoveW("RzCfgSkins", 0, y);
+        if (skins)
+        {
+            PaintSkins(pick);
+            y += 126 * s;
+        }
+
+        bool facts = (m_RzTab == "modules" && have);
+        ShowW("RzCfgFacts", facts);
+        MoveW("RzCfgFacts", 0, y);
+        if (facts)
+        {
+            OZL_ModuleDef md = OZL_Modules.Cast(c).Modules[pick];
+            if (md)
+                SetLabel("RzCfgFacts", ModuleFacts(md), 0);
+            y += 28 * s;
+        }
+
+        MoveW("RzCfgNote", 0, y);
+        SetLabel("RzCfgNote", Tr("#STR_OZL_ED_CFG_NOTE_" + key), OZL_Metal.MUTED);
     }
 
-    // Суфікс ключів stringtable вкладки: OW, MO, ST, SE.
+    // Суфікс ключів stringtable сторінки: OW, MO, ST.
     protected string CfgHeadKey()
     {
         if (m_RzTab == "owners")
             return "OW";
         if (m_RzTab == "modules")
             return "MO";
-        if (m_RzTab == "statics")
-            return "ST";
-        return "SE";
+        return "ST";
+    }
+
+    // The tree window picker of the picked owner: one button per skin and one for
+    // "by the faction's id", the one in force lit. A skin's caption says which way
+    // its tree grows.
+    protected void PaintSkins(int pick)
+    {
+        OZ_ConfigBase c = CfgObj();
+        if (!c)
+            return;
+        OZL_OwnerDef o = OZL_Owners.Cast(c).Owners[pick];
+        if (!o)
+            return;
+        if (m_CfgSkinDirs.Count() != m_CfgSkins.Count())
+        {
+            m_CfgSkinDirs.Clear();
+            for (int d = 0; d < m_CfgSkins.Count(); d++)
+            {
+                string dir = "";
+                if (m_CfgSkins[d] != "")
+                    dir = OZL_TreeSkins.Make(m_CfgSkins[d]).Dir;
+                m_CfgSkinDirs.Insert(dir);
+            }
+        }
+        string byId = Tr("#STR_OZL_VPP_SKIN_BY_ID");
+        for (int i = 0; i < m_CfgSkins.Count(); i++)
+        {
+            string btn = "BtnRzSkin_" + i.ToString();
+            string caption = byId;
+            if (m_CfgSkins[i] != "")
+            {
+                string way = SkinDir(m_CfgSkinDirs[i]);
+                caption = m_CfgSkins[i] + " - " + way;
+            }
+            SetBtnText(btn, caption, OZL_Metal.TEXT);
+            PaintToggle(btn, o.Skin == m_CfgSkins[i]);
+        }
+    }
+
+    // The picker's button i: that window for the picked owner, one undo step.
+    protected void CfgPickSkin(int i)
+    {
+        OZ_ConfigBase c = CfgObj();
+        if (!c || m_RzTab != "owners" || CfgCount() == 0 || i < 0 || i >= m_CfgSkins.Count())
+            return;
+        OZL_OwnerDef o = OZL_Owners.Cast(c).Owners[CfgPicked()];
+        if (!o || o.Skin == m_CfgSkins[i])
+            return;
+        string tag = CfgTag();
+        m_Ed.BeginOnce(tag, "");
+        o.Skin = m_CfgSkins[i];
+        m_Ed.Commit(tag);
+        m_Ed.EndGesture();
+        RepaintCfg(false);
+        PaintRzBar();
+        PaintSummary();
+    }
+
+    // What the picked module does to its line's sample: the purity before and after
+    // it, its chance of two, how many modules the line has.
+    protected string ModuleFacts(OZL_ModuleDef m)
+    {
+        string line = OZL_Lines.LineOf(m.Classname);
+        float base = OZL_Const.DEFAULT_PURITY;
+        OZL_PointTypes pts = DraftPointTypes();
+        OZL_PointType pt = null;
+        if (pts)
+            pt = pts.Find(line);
+        if (pt && pt.BasePurity > 0)
+            base = pt.BasePurity;
+        float after = base + m.PurityBonus;
+        if (after > 1)
+            after = 1;
+        array<OZL_ModuleDef> mods = new array<OZL_ModuleDef>();
+        OZL_EdChains.ModulesOf(DraftModules(), line, mods);
+        string purityWord = Tr("#STR_OZL_VPP_MO_PURITY");
+        string doubleWord = Tr("#STR_OZL_VPP_MO_DOUBLE");
+        string countWord = Tr("#STR_OZL_VPP_MO_IN_LINE");
+        string s = purityWord + OZL_EdChains.Pct(base) + " -> " + OZL_EdChains.Pct(after);
+        s += "  |  " + doubleWord + OZL_EdChains.Pct(m.DoubleChance);
+        s += "  |  " + countWord + mods.Count().ToString();
+        return s;
     }
 
     protected void OnCfgField(int f)
@@ -460,7 +502,7 @@ modded class OZ_VppAdminMenu
     protected void CfgAdd()
     {
         OZ_ConfigBase c = CfgObj();
-        if (!c || m_RzTab == "settings")
+        if (!c)
             return;
         string tag = CfgTag();
         m_Ed.BeginOnce(tag, "");
@@ -499,7 +541,7 @@ modded class OZ_VppAdminMenu
     {
         OZ_ConfigBase c = CfgObj();
         int n = CfgCount();
-        if (!c || m_RzTab == "settings" || n == 0)
+        if (!c || n == 0)
             return;
         int at = CfgPicked();
         m_CfgDelTab = m_RzTab;
@@ -587,61 +629,27 @@ modded class OZ_VppAdminMenu
 
     // ------------------------------------------------- розмір і події
 
-    // The page's size comes from the first layer (m_RzPageW / m_RzPageH); nothing
-    // is read back: on the first show the widgets still measure 0 x 0.
-    override void OnWindowResized(float w, float h)
+    // The config page in the page area pw x ph (pixels; nothing is read back): the
+    // list takes what the form leaves, the form keeps its 636 units.
+    override void RzLayPages(float pw, float ph)
     {
-        super.OnWindowResized(w, h);
-        if (!M_SUB_WIDGET || m_RzPageW <= 0)
+        super.RzLayPages(pw, ph);
+        if (!M_SUB_WIDGET)
             return;
         float s = Px();
-        float iw = m_RzPageW;
-        float ph = m_RzPageH;
-        Widget cols = M_SUB_WIDGET.FindAnyWidget("RzCfgCols");
-        if (cols)
-            cols.SetSize(iw, ph);
-        Widget side = M_SUB_WIDGET.FindAnyWidget("RzCfgSide");
-        if (side)
-            side.SetSize(300 * s, ph);
-        Widget list = M_SUB_WIDGET.FindAnyWidget("RzCfgList");
-        if (list)
-            list.SetSize(300 * s, ph - (22 + 6 + 6 + 28) * s);
-        Widget bar = M_SUB_WIDGET.FindAnyWidget("RzCfgListBar");
-        if (bar)
-            bar.SetPos(0, ph - 28 * s);
-        LayoutCfg();
-    }
-
-    // Форма -- уся ширина праворуч від списку, а без списку (НАЛАШТУВАННЯ) --
-    // від лівого краю; підказки й примітка беруть те, що лишилось.
-    protected void LayoutCfg()
-    {
-        Widget form = M_SUB_WIDGET.FindAnyWidget("RzCfgForm");
-        if (!form || m_RzPageW <= 0)
-            return;
-        float s = Px();
-        float cw = m_RzPageW;
-        float ch = m_RzPageH;
-        float fx = 312 * s;
-        if (m_RzTab == "settings")
-            fx = 0;
-        float fw = cw - fx;
-        if (fw < 470 * s)
-            fw = 470 * s;
-        form.SetPos(fx, 0);
-        form.SetSize(fw, ch);
-        for (int f = 0; f < CFG_ROWS; f++)
-        {
-            Widget row = M_SUB_WIDGET.FindAnyWidget("RzCfgRow" + f.ToString());
-            if (row)
-                row.SetSize(fw, 28 * s);
-            Widget hint = M_SUB_WIDGET.FindAnyWidget("RzCfgHint" + f.ToString());
-            if (hint)
-                hint.SetSize(fw - 470 * s, 28 * s);
-        }
-        Widget note = M_SUB_WIDGET.FindAnyWidget("RzCfgNote");
-        if (note)
-            note.SetSize(fw, 120 * s);
+        float gap = 16 * s;
+        float formW = 636 * s;
+        float listW = pw - formW - gap;
+        if (listW < 220 * s)
+            listW = 220 * s;
+        SizeW("RzCfgSide", listW, ph);
+        SizeW("RzCfgListHead", listW, 16 * s);
+        float listH = ph - (20 + 24) * s;
+        if (listH < 40 * s)
+            listH = 40 * s;
+        SizeW("RzCfgList", listW, listH);
+        SizeW("RzCfgCount", listW, 18 * s);
+        PlaceW("RzCfgForm", listW + gap, 0, formW, ph);
     }
 
     override bool OnItemSelected(Widget w, int x, int y, int row, int column, int oldRow, int oldColumn)
@@ -680,7 +688,8 @@ modded class OZ_VppAdminMenu
         if (w && M_SUB_WIDGET && m_CfgPick)
         {
             string nm = w.GetName();
-            if (nm == "BtnRzCfgAdd")
+            // The page head's action is a new entry on OWNERS, MODULES and STATICS.
+            if (nm == "BtnRzHdAct" && IsCfgTab(m_RzTab))
             {
                 CfgAdd();
                 return true;
@@ -693,6 +702,11 @@ modded class OZ_VppAdminMenu
             if (nm == "BtnRzCfgAct")
             {
                 CfgHere();
+                return true;
+            }
+            if (nm.IndexOf("BtnRzSkin_") == 0)
+            {
+                CfgPickSkin(nm.Substring(10, nm.Length() - 10).ToInt());
                 return true;
             }
         }

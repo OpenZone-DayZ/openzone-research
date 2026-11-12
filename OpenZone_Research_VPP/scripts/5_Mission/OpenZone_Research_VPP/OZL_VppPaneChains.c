@@ -1,14 +1,14 @@
-// Підвкладка ЛАНЦЮГИ редактора досліджень: правила переробки власника по
+// Сторінка ЛАНЦЮГИ редактора досліджень: правила переробки власника по
 // лініях (OZL_EdChains). Конвеєр лінії -- шість карток; під ними сировина
-// (правила пакувальника) за тирами вузлів із масовою правкою тіру, або
-// станок таким, яким його бачить гравець; праворуч -- поля вибраного
-// правила.
+// (правила пакувальника) за тирами вузлів із масовою правкою тіру, а поруч
+// -- станок таким, яким його бачить гравець (з 2026-11-12 поруч, а не
+// замість, дизайн вікна §5.5; у вузькому вікні -- під сировиною);
+// праворуч -- поля вибраного правила.
 //
 // Окремий modded-шар того самого OZ_VppAdminMenu, що й OZL_VppPane.c:
-// сторінку він додає через RzHasPage / RepaintRzPage, розкладає в
-// OnWindowResized. Ім'я файлу мусить сортуватися після OZL_VppPane.c --
-// файли теки компілюються за абеткою, і шар, що перекриває, мусить іти
-// пізніше.
+// сторінку він малює в RepaintRzPage, розкладає в RzLayPages. Ім'я файлу
+// мусить сортуватися після OZL_VppPane.c -- файли теки компілюються за
+// абеткою, і шар, що перекриває, мусить іти пізніше.
 //
 // Дизайн: docs/specs/2026-11-09-research-editor-vpp-design.md, §1 п. 4.
 
@@ -23,8 +23,6 @@ modded class OZ_VppAdminMenu
     private string m_ChRule  = "";
     // Вибрана картка конвеєра: raw, packer, sample, analyzer, carrier, terminal.
     private string m_ChCard  = "raw";
-    // Під картками -- станок, як його бачить гравець, а не список сировини.
-    private bool   m_ChPlayer = false;
     private ref array<ref OZL_EdLine> m_ChLines;
     // Id правил у рядках списку сировини, у порядку рядків.
     private ref array<string> m_ChRawIds;
@@ -34,13 +32,6 @@ modded class OZ_VppAdminMenu
         m_ChLines  = new array<ref OZL_EdLine>();
         m_ChRawIds = new array<string>();
         super.OnCreate(RootW);
-    }
-
-    override bool RzHasPage(string key)
-    {
-        if (key == "chains")
-            return true;
-        return super.RzHasPage(key);
     }
 
     override void RepaintRzPage(string tab)
@@ -106,17 +97,7 @@ modded class OZ_VppAdminMenu
             if (pt)
                 return OZL_PointTypes.ColorArgb(pt.Color);
         }
-        return OZ_Palette.TEXT;
-    }
-
-    protected void SetLabel(string name, string text, int color)
-    {
-        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget(name));
-        if (!t)
-            return;
-        t.SetText(text);
-        if (color != 0)
-            t.SetColor(color);
+        return OZL_Metal.TEXT;
     }
 
     // Правило, яке показує інспектор: вибране, а без нього -- за карткою.
@@ -233,54 +214,32 @@ modded class OZ_VppAdminMenu
             PaintChBulk(rules);
         PaintRuForm(rules, line, owners, pts, fillForm);
         bool station = PaintStation(line, rules, pts);
-        ShowChMode(station);
+        ShowStation(station);
     }
 
-    // Під картками: сировина (редагування) або станок (як бачить гравець);
-    // станка без правила -- картка терміналу -- немає, тоді рядок каже, які
-    // картки його показують.
-    protected void ShowChMode(bool station)
+    // The station beside the raw items: as the player meets it for the rule on the
+    // right; the terminal card has no station, and a line says which cards show one.
+    protected void ShowStation(bool station)
     {
-        Widget raw = M_SUB_WIDGET.FindAnyWidget("RzChRaw");
-        if (raw)
-            raw.Show(!m_ChPlayer);
-        Widget st = M_SUB_WIDGET.FindAnyWidget("RzChStation");
-        bool showSt = false;
-        if (m_ChPlayer && station)
-            showSt = true;
-        if (st)
-            st.Show(showSt);
-        Widget bulk = M_SUB_WIDGET.FindAnyWidget("RzChBulk");
-        if (bulk)
-            bulk.Show(!m_ChPlayer);
-        if (m_ChPlayer && !station)
-        {
-            SetLabel("RzChRawHead", Tr("#STR_OZL_ED_CH_ST_NONE"), 0);
-            SetBtnText("BtnRzChMode", Tr("#STR_OZL_ED_CH_MODE_EDIT"), OZ_Palette.ACCENT);
-        }
-        else if (m_ChPlayer)
-        {
-            SetLabel("RzChRawHead", Tr("#STR_OZL_ED_CH_ST_HEAD"), 0);
-            SetBtnText("BtnRzChMode", Tr("#STR_OZL_ED_CH_MODE_EDIT"), OZ_Palette.ACCENT);
-        }
-        else
-        {
-            SetLabel("RzChRawHead", Tr("#STR_OZL_ED_CH_RAW_HEAD"), 0);
-            SetBtnText("BtnRzChMode", Tr("#STR_OZL_ED_TR_VIEW"), OZ_Palette.ACCENT);
-        }
+        ShowW("RzChStBody", station);
+        ShowW("RzChStNone", !station);
     }
 
+    // A conveyor card: its kind, value and two lines; the picked card is lit.
     protected void ChCard(string k, string v, string c, string s, int vColor)
     {
         SetLabel("RzChV_" + k, v, vColor);
-        SetLabel("RzChC_" + k, c, OZ_Palette.MUTED);
-        SetLabel("RzChS_" + k, s, OZ_Palette.MUTED);
-        int kc = OZ_Palette.MUTED;
+        SetLabel("RzChC_" + k, c, OZL_Metal.MUTED);
+        SetLabel("RzChS_" + k, s, OZL_Metal.MUTED);
+        int kc = OZL_Metal.MUTED;
+        int rim = OZL_Metal.EDGE;
         if (k == m_ChCard)
-            kc = OZ_Palette.ACCENT;
-        TextWidget kind = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzChK_" + k));
-        if (kind)
-            kind.SetColor(kc);
+        {
+            kc = OZL_Metal.ACCENT;
+            rim = OZL_Metal.ACCENT;
+        }
+        SetColorOf("RzChK_" + k, kc);
+        SetColorOf("BtnRzChCard_" + k + "Edge", rim);
     }
 
     protected void PaintChCards(OZL_EdLine line, OZL_Rules rules, OZL_Owners owners, OZL_PointTypes pts)
@@ -289,7 +248,7 @@ modded class OZ_VppAdminMenu
         {
             array<string> keys = {"raw", "packer", "sample", "analyzer", "carrier", "terminal"};
             for (int k = 0; k < keys.Count(); k++)
-                ChCard(keys[k], "-", "", "", OZ_Palette.FAINT);
+                ChCard(keys[k], "-", "", "", OZL_Metal.FAINT);
             return;
         }
         OZL_TreeConfig tree = DraftTree();
@@ -323,9 +282,9 @@ modded class OZ_VppAdminMenu
             spread += Tr("#STR_OZL_ED_CH_T") + lo.ToString() + ": " + counts[ti].ToString();
         }
         if (line.Packers.Count() > 0)
-            ChCard("raw", Tr("#STR_OZL_ED_CH_KINDS") + line.Packers.Count().ToString(), spread, "", OZ_Palette.TEXT);
+            ChCard("raw", Tr("#STR_OZL_ED_CH_KINDS") + line.Packers.Count().ToString(), spread, "", OZL_Metal.TEXT);
         else
-            ChCard("raw", Tr("#STR_OZL_ED_CH_WORLD_ONLY"), "", Tr("#STR_OZL_ED_CH_NO_PACKER"), OZ_Palette.TEXT);
+            ChCard("raw", Tr("#STR_OZL_ED_CH_WORLD_ONLY"), "", Tr("#STR_OZL_ED_CH_NO_PACKER"), OZL_Metal.TEXT);
 
         // ПАКУВАЛЬНИК: станок першого правила, межі часу.
         string packDev = "";
@@ -352,11 +311,11 @@ modded class OZ_VppAdminMenu
             string times = Secs(tMin);
             if (tMax > tMin)
                 times = Secs(tMin) + " - " + Secs(tMax);
-            ChCard("packer", OZL_EdChains.ItemName(packDev), packDev, times, OZ_Palette.TEXT);
+            ChCard("packer", OZL_EdChains.ItemName(packDev), packDev, times, OZL_Metal.TEXT);
         }
         else
         {
-            ChCard("packer", "-", "", Tr("#STR_OZL_ED_CH_NO_PACKER"), OZ_Palette.FAINT);
+            ChCard("packer", "-", "", Tr("#STR_OZL_ED_CH_NO_PACKER"), OZL_Metal.FAINT);
         }
 
         // ПРОБА: клас і бали, які несуть проби цієї лінії.
@@ -381,16 +340,16 @@ modded class OZ_VppAdminMenu
         if (an)
         {
             string anDev = OZL_Match.StripExact(an.Device);
-            ChCard("analyzer", OZL_EdChains.ItemName(anDev), anDev, Secs(an.TimeSec) + "  " + Tr("#STR_OZL_ED_CH_MODS") + mods.Count().ToString(), OZ_Palette.TEXT);
+            ChCard("analyzer", OZL_EdChains.ItemName(anDev), anDev, Secs(an.TimeSec) + "  " + Tr("#STR_OZL_ED_CH_MODS") + mods.Count().ToString(), OZL_Metal.TEXT);
         }
         else
         {
-            ChCard("analyzer", "-", "", "", OZ_Palette.FAINT);
+            ChCard("analyzer", "-", "", "", OZL_Metal.FAINT);
         }
         if (line.Carrier != "")
             ChCard("carrier", OZL_EdChains.ItemName(line.Carrier), line.Carrier, Tr("#STR_OZL_ED_CH_CHANCE"), LineColor(pts, line.Line));
         else
-            ChCard("carrier", "-", "", "", OZ_Palette.FAINT);
+            ChCard("carrier", "-", "", "", OZL_Metal.FAINT);
 
         // ТЕРМІНАЛ -> ПУЛ: термінал власника й тип балів лінії.
         OZL_OwnerDef def = OZL_EdChains.OwnerDef(owners, m_ChOwner);
@@ -449,7 +408,7 @@ modded class OZ_VppAdminMenu
             }
             lb.AddItem(row, NULL, 0);
             if (!r.Enabled)
-                lb.SetItemColor(lb.GetNumItems() - 1, 0, OZ_Palette.BAD);
+                lb.SetItemColor(lb.GetNumItems() - 1, 0, OZL_Metal.BAD);
         }
         if (m_ChRawIds.Count() == 0)
             lb.AddItem(Tr("#STR_OZL_ED_CH_NO_RAW"), NULL, 0);
@@ -467,7 +426,7 @@ modded class OZ_VppAdminMenu
         m_RzFill = true;
         if (!r)
         {
-            SetLabel("RzChBulkTier", Tr("#STR_OZL_ED_CH_TIER") + "-", OZ_Palette.MUTED);
+            SetLabel("RzChBulkTier", Tr("#STR_OZL_ED_CH_TIER") + "-", OZL_Metal.MUTED);
             SetEdit("RzChBulkPts", "");
             SetEdit("RzChBulkNode", "");
             m_RzFill = false;
@@ -502,7 +461,7 @@ modded class OZ_VppAdminMenu
             }
             n++;
         }
-        SetLabel("RzChBulkTier", Tr("#STR_OZL_ED_CH_TIER") + t.ToString() + " (" + n.ToString() + ")", OZ_Palette.TEXT);
+        SetLabel("RzChBulkTier", Tr("#STR_OZL_ED_CH_TIER") + t.ToString() + " (" + n.ToString() + ")", OZL_Metal.TEXT);
         if (samePts)
             SetEdit("RzChBulkPts", pts0.ToString());
         else
@@ -521,8 +480,11 @@ modded class OZ_VppAdminMenu
         Widget form = M_SUB_WIDGET.FindAnyWidget("RzRuForm");
         TextWidget info = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzRuInfo"));
         OZL_Rule r = CardRule(rules, line);
+        ShowW("BtnRzRuEnabled", r != null);
         if (!r)
         {
+            SetLabel("RzRuHead", "-", 0);
+            SetLabel("RzRuSub", "", 0);
             if (form)
                 form.Show(false);
             if (!info)
@@ -553,20 +515,32 @@ modded class OZ_VppAdminMenu
         if (info)
             info.Show(false);
 
-        string where = "";
+        // The head: the rule's id; its group and the line it feeds under it; the
+        // switch that turns it on or off beside the tag.
+        SetLabel("RzRuHead", r.Id, OZL_Metal.TEXT);
+        string sub = "";
         OZL_RuleGroup grp = OZL_EdChains.GroupOf(rules, r.Id);
         if (grp)
-            where = "   (" + grp.Id + ")";
-        SetLabel("RzRuHead", r.Id + where, OZ_Palette.ACCENT);
+        {
+            string groupWord = Tr("#STR_OZL_VPP_RU_GROUP");
+            sub = groupWord + grp.Id;
+        }
+        if (line)
+        {
+            string lineWord = Tr("#STR_OZL_VPP_RU_LINE");
+            string lineName = LineName(pts, line.Line);
+            if (sub != "")
+                sub += "  |  ";
+            sub += lineWord + lineName;
+        }
+        SetLabel("RzRuSub", sub, 0);
         if (r.Enabled)
-            SetBtnText("BtnRzRuEnabled", Tr("#STR_OZL_ED_RU_ON"), OZ_Palette.OK);
+            PaintBtn("BtnRzRuEnabled", Tr("#STR_OZL_ED_RU_ON"), OZL_Metal.OK, OZL_Metal.RAISED, OZL_Metal.OK);
         else
-            SetBtnText("BtnRzRuEnabled", Tr("#STR_OZL_ED_RU_OFF"), OZ_Palette.BAD);
-        if (IsExact(r))
-            SetBtnText("BtnRzRuExact", Tr("#STR_OZL_ED_RU_EXACT"), OZ_Palette.ALERT);
-        else
-            SetBtnText("BtnRzRuExact", Tr("#STR_OZL_ED_RU_KIN"), OZ_Palette.TEXT);
-        SetBtnText("BtnRzRuDel", Tr("#STR_OZL_ED_RU_DEL"), OZ_Palette.BAD);
+            PaintBtn("BtnRzRuEnabled", Tr("#STR_OZL_ED_RU_OFF"), OZL_Metal.BAD, OZL_Metal.RAISED, OZL_Metal.BAD);
+        bool exact = IsExact(r);
+        PaintToggle("BtnRzRuKin", !exact);
+        PaintToggle("BtnRzRuExact", exact);
         if (!fillForm)
             return;
 
@@ -984,39 +958,51 @@ modded class OZ_VppAdminMenu
 
     // ------------------------------------------------- розмір і події
 
-    // The page's size comes from the first layer (m_RzPageW / m_RzPageH); nothing
-    // is read back: on the first show the widgets still measure 0 x 0.
-    override void OnWindowResized(float w, float h)
+    // The rule the inspector shows: the picked one, or the card's.
+    protected OZL_Rule CurrentRule()
     {
-        super.OnWindowResized(w, h);
-        if (!M_SUB_WIDGET || m_RzPageW <= 0)
+        OZL_Rules rules = DraftRules();
+        if (!rules)
+            return null;
+        OZL_Rule r = rules.Find(m_ChRule);
+        if (!r)
+            r = CardRule(rules, ChLine());
+        return r;
+    }
+
+    // The chains page in the page area pw x ph (pixels; RzLayout gives it, nothing
+    // is read back). The side column and the rule's form keep their widths; the
+    // middle takes the rest: the cards on top, then the raw items with the station
+    // beside them -- or under them, when the middle is narrower than 700 units.
+    override void RzLayPages(float pw, float ph)
+    {
+        super.RzLayPages(pw, ph);
+        if (!M_SUB_WIDGET)
             return;
         float s = Px();
-        float iw = m_RzPageW;
-        float ph = m_RzPageH;
-
-        Widget cols = M_SUB_WIDGET.FindAnyWidget("RzChCols");
-        if (cols)
-            cols.SetSize(iw, ph);
-        Widget side = M_SUB_WIDGET.FindAnyWidget("RzChSide");
-        if (side)
-            side.SetSize(200 * s, ph);
-        float lh = ph - 246 * s;
-        if (lh < 40 * s)
-            lh = 40 * s;
-        Widget lines = M_SUB_WIDGET.FindAnyWidget("RzChLines");
-        if (lines)
-            lines.SetSize(200 * s, lh);
-        PlaceBtn("BtnRzChMode", 0, ph - 28 * s, 200 * s, 28 * s);
-
-        float mw = iw - (200 + 290 + 24) * s;
+        float gap = 16 * s;
+        float sideW = 210 * s;
+        float inspW = 300 * s;
+        float mw = pw - sideW - inspW - 2 * gap;
         if (mw < 300 * s)
             mw = 300 * s;
-        Widget mid = M_SUB_WIDGET.FindAnyWidget("RzChMid");
-        if (mid)
-            mid.SetSize(mw, ph);
 
-        // Картки: в один ряд, коли влазять по 146, інакше по три.
+        // The side column: owners on top, the lines take the rest above the note.
+        SizeW("RzChSide", sideW, ph);
+        float linesH = ph - (174 + 58) * s;
+        if (linesH < 40 * s)
+            linesH = 40 * s;
+        SizeW("RzChLines", sideW, linesH);
+        SizeW("RzChSideNote", sideW, 50 * s);
+
+        PlaceW("RzChMid", sideW + gap, 0, mw, ph);
+        PlaceW("RzChInsp", pw - inspW, 0, inspW, ph);
+        float formH = ph - 66 * s;
+        if (formH < 40 * s)
+            formH = 40 * s;
+        SizeW("RzRuForm", inspW, formH);
+
+        // The cards: one row when six fit at 146 units, otherwise three in a row.
         array<string> keys = {"raw", "packer", "sample", "analyzer", "carrier", "terminal"};
         int perRow = 3;
         if (mw >= (6 * 146 + 5 * 4) * s)
@@ -1024,105 +1010,84 @@ modded class OZ_VppAdminMenu
         float cw = (mw - (perRow - 1) * 4 * s) / perRow;
         int rows = 6 / perRow;
         float pipeH = (rows * 64 + (rows - 1) * 6) * s;
-        Widget pipe = M_SUB_WIDGET.FindAnyWidget("RzChPipe");
-        if (pipe)
-            pipe.SetSize(mw, pipeH);
+        SizeW("RzChPipe", mw, pipeH);
+        array<string> parts = {"RzChK_", "RzChV_", "RzChC_", "RzChS_"};
+        array<float> partH = {14.0, 18.0, 14.0, 14.0};
         for (int i = 0; i < keys.Count(); i++)
         {
             int col = i % perRow;
             int row = i / perRow;
-            Widget card = M_SUB_WIDGET.FindAnyWidget("RzChCard_" + keys[i]);
-            if (!card)
-                continue;
-            card.SetPos(col * (cw + 4 * s), row * 70 * s);
-            card.SetSize(cw, 64 * s);
+            PlaceW("RzChCard_" + keys[i], col * (cw + 4 * s), row * 70 * s, cw, 64 * s);
             PlaceBtn("BtnRzChCard_" + keys[i], 0, 0, cw, 64 * s);
-            // The card's four lines keep the layout's heights (14, 18, 14, 14).
-            array<string> parts = {"RzChK_", "RzChV_", "RzChC_", "RzChS_"};
-            array<float> partH = {14.0, 18.0, 14.0, 14.0};
             for (int p = 0; p < parts.Count(); p++)
-            {
-                Widget lab = M_SUB_WIDGET.FindAnyWidget(parts[p] + keys[i]);
-                if (lab)
-                    lab.SetSize(cw - 12 * s, partH[p] * s);
-            }
+                SizeW(parts[p] + keys[i], cw - 12 * s, partH[p] * s);
         }
 
-        Widget head = M_SUB_WIDGET.FindAnyWidget("RzChRawHead");
-        if (head)
+        // The raw items and the station: side by side in a wide middle, stacked in a
+        // narrow one (the station keeps its 218 units of height then).
+        float bodyY = pipeH + 10 * s;
+        float bodyH = ph - bodyY;
+        float stationH = 218 * s;
+        float rawW = mw;
+        float rawH = bodyH;
+        float stX = 0;
+        float stY = bodyY;
+        float stW = mw;
+        if (mw >= 700 * s)
         {
-            head.SetPos(0, pipeH + 6 * s);
-            head.SetSize(mw, 22 * s);
+            rawW = (mw - gap) / 2;
+            stX = rawW + gap;
+            stW = mw - stX;
+            stationH = bodyH;
         }
-        float bodyY = pipeH + 6 * s + 22 * s + 6 * s;
-        Widget body = M_SUB_WIDGET.FindAnyWidget("RzChBody");
-        if (body)
+        else
         {
-            body.SetPos(0, bodyY);
-            body.SetSize(mw, ph - bodyY - 34 * s);
+            rawH = bodyH - stationH - 10 * s;
+            if (rawH < 110 * s)
+                rawH = 110 * s;
+            stY = bodyY + rawH + 10 * s;
         }
-        Widget bulk = M_SUB_WIDGET.FindAnyWidget("RzChBulk");
-        if (bulk)
-        {
-            bulk.SetPos(0, ph - 28 * s);
-            bulk.SetSize(mw, 28 * s);
-        }
-        Widget insp = M_SUB_WIDGET.FindAnyWidget("RzChInsp");
-        if (insp)
-            insp.SetPos(iw - 290 * s, 0);
+        PlaceW("RzChRawBox", 0, bodyY, rawW, rawH);
+        float listH = rawH - (40 + 36) * s;
+        if (listH < 30 * s)
+            listH = 30 * s;
+        SizeW("RzChRaw", rawW, listH);
+        SizeW("RzChBulk", rawW, 30 * s);
+        SizeW("RzChRawSub", rawW - 130 * s, 14 * s);
+        PlaceW("RzChStation", stX, stY, stW, stationH);
+        LayStation(stW);
+    }
 
-        // Станок: слоти й підказка -- за шириною колонки (слот не ширший за
-        // 220, підказка -- за 700); рамка панелі -- сусід на одиницю ширший.
-        float slotW = (mw - 12 * s) / 4;
+    // The station's slots, lines and tooltip at the station panel's width: a slot is
+    // at most 220 units, the tooltip at most 700.
+    protected void LayStation(float stW)
+    {
+        float s = Px();
+        SizeW("RzChStSub", stW, 14 * s);
+        SizeW("RzChStNone", stW, 60 * s);
+        SizeW("RzChStBody", stW, 178 * s);
+        float slotW = (stW - 12 * s) / 4;
         if (slotW > 220 * s)
             slotW = 220 * s;
         for (int sl = 0; sl < 4; sl++)
         {
             string sn = "RzStSlot" + sl.ToString();
             float sx = sl * (slotW + 4 * s);
-            Widget slot = M_SUB_WIDGET.FindAnyWidget(sn);
-            if (slot)
-            {
-                slot.SetPos(sx, 24 * s);
-                slot.SetSize(slotW, 44 * s);
-            }
-            Widget edge = M_SUB_WIDGET.FindAnyWidget(sn + "Edge");
-            if (edge)
-            {
-                edge.SetPos(sx - s, 23 * s);
-                edge.SetSize(slotW + 2 * s, 46 * s);
-            }
-            Widget kl = M_SUB_WIDGET.FindAnyWidget("RzStSlotK" + sl.ToString());
-            if (kl)
-                kl.SetSize(slotW - 10 * s, 14 * s);
-            Widget vl = M_SUB_WIDGET.FindAnyWidget("RzStSlotV" + sl.ToString());
-            if (vl)
-                vl.SetSize(slotW - 10 * s, 22 * s);
+            PlaceW(sn, sx, 24 * s, slotW, 44 * s);
+            PlaceW(sn + "Edge", sx - s, 23 * s, slotW + 2 * s, 46 * s);
+            SizeW("RzStSlotK" + sl.ToString(), slotW - 10 * s, 14 * s);
+            SizeW("RzStSlotV" + sl.ToString(), slotW - 10 * s, 22 * s);
         }
-        float tipW = mw;
+        float tipW = stW;
         if (tipW > 700 * s)
             tipW = 700 * s;
-        Widget tip = M_SUB_WIDGET.FindAnyWidget("RzStTip");
-        if (tip)
-            tip.SetSize(tipW, 64 * s);
-        Widget tipEdge = M_SUB_WIDGET.FindAnyWidget("RzStTipEdge");
-        if (tipEdge)
-            tipEdge.SetSize(tipW + 2 * s, 66 * s);
-        Widget tipName = M_SUB_WIDGET.FindAnyWidget("RzStTipName");
-        if (tipName)
-            tipName.SetSize(tipW - 12 * s, 18 * s);
-        Widget tipDesc = M_SUB_WIDGET.FindAnyWidget("RzStTipDesc");
-        if (tipDesc)
-            tipDesc.SetSize(tipW - 12 * s, 42 * s);
-        // The station's three lines keep the layout's heights (20, 20, 16).
-        array<string> wide = {"RzStHead", "RzStAction", "RzStAdmin"};
-        array<float> wideH = {20.0, 20.0, 16.0};
-        for (int wd = 0; wd < wide.Count(); wd++)
-        {
-            Widget wl = M_SUB_WIDGET.FindAnyWidget(wide[wd]);
-            if (wl)
-                wl.SetSize(mw, wideH[wd] * s);
-        }
+        SizeW("RzStTip", tipW, 64 * s);
+        PlaceW("RzStTipEdge", -s, 113 * s, tipW + 2 * s, 66 * s);
+        SizeW("RzStTipName", tipW - 12 * s, 18 * s);
+        SizeW("RzStTipDesc", tipW - 12 * s, 42 * s);
+        SizeW("RzStHead", stW, 20 * s);
+        SizeW("RzStAction", stW, 20 * s);
+        SizeW("RzStAdmin", stW, 16 * s);
     }
 
     override bool OnItemSelected(Widget w, int x, int y, int row, int column, int oldRow, int oldColumn)
@@ -1196,12 +1161,6 @@ modded class OZ_VppAdminMenu
             ChPickCard(nm.Substring(12, nm.Length() - 12));
             return true;
         }
-        if (nm == "BtnRzChMode")
-        {
-            m_ChPlayer = !m_ChPlayer;
-            RepaintChains(true);
-            return true;
-        }
         if (nm == "BtnRzChBulk")
         {
             ChBulk();
@@ -1217,9 +1176,14 @@ modded class OZ_VppAdminMenu
             RuToggle(false);
             return true;
         }
-        if (nm == "BtnRzRuExact")
+        // Which classes the input takes, as a pair: a press on the one in force
+        // changes nothing.
+        if (nm == "BtnRzRuKin" || nm == "BtnRzRuExact")
         {
-            RuToggle(true);
+            OZL_Rule cur = CurrentRule();
+            bool wantExact = (nm == "BtnRzRuExact");
+            if (cur && IsExact(cur) != wantExact)
+                RuToggle(true);
             return true;
         }
         if (nm == "BtnRzRuDup")
