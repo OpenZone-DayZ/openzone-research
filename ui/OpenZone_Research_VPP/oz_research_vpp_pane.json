@@ -582,7 +582,8 @@
                     {"label": {"name": "RzSeMark2", "at": [0, 144], "size": [22, 28], "text": "3", "font": "small", "color": "$vppMuted", "align": "center"}},
                     {"label": {"name": "RzSeWho2", "at": [30, 144], "size": [190, 28], "text": "-", "font": "small", "color": "$vppText"}},
                     {"label": {"name": "RzSeRule2", "at": [226, 144], "size": [270, 28], "text": "-", "font": "small", "color": "$vppMuted"}},
-                    {"text": {"name": "RzSeSpendNote", "at": [0, 184], "size": [496, 80], "plain": true, "grow": false, "font": "tiny", "color": "$vppMuted", "text": ""}},
+                    {"text": {"name": "RzSeSpendNote", "at": [0, 184], "size": [496, 80], "plain": true, "grow": false, "font": "tiny", "color": "$vppMuted",
+                      "text": "#STR_OZL_VPP_SE_SPEND_NOTE"}},
                     {"label": {"name": "RzSeFogHead", "at": [0, 276], "size": [496, 24], "text": "-", "font": "header", "color": "$vppText"}},
                     {"text": {"name": "RzSeFogText", "at": [0, 304], "size": [496, 80], "plain": true, "grow": false, "font": "tiny", "color": "$vppMuted",
                       "text": "#STR_OZL_VPP_SE_FOG_TEXT"}}

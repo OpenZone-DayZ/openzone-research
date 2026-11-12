@@ -237,6 +237,12 @@ modded class OZ_VppAdminMenu
         Ask(OZL_Const.SECTION, "list", "{}");
     }
 
+    // An answer of the core's config section other than cfg_set; the later layers take
+    // theirs (the settings page: `identity`).
+    protected void OnRzConfigAnswer(string op, bool ok, string json, string error)
+    {
+    }
+
     // Рядок зі stringtable мода, перекладений мовою клієнта.
     protected string Tr(string key)
     {
@@ -252,6 +258,13 @@ modded class OZ_VppAdminMenu
             string tag = op.Substring(8, op.Length() - 8);
             if (m_Ed && m_Ed.Owns(tag) && m_Ed.InFlight() == tag)
                 OnRzApplied(tag, ok, error);
+            return;
+        }
+
+        // The core's other config answers: the settings page takes `identity`.
+        if (section == OZ_AdminSect.CONFIG)
+        {
+            OnRzConfigAnswer(op, ok, json, error);
             return;
         }
 

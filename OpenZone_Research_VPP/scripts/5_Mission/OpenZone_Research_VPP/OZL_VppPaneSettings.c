@@ -5,6 +5,16 @@
 // праворуч -- хто тратить пул на цьому сервері рядками й що каже туман.
 // До 2026-11-12 ці чотири поля жили на спільній сторінці конфігів.
 //
+// ХТО ТРАТИТЬ ПУЛ, ВИРІШУЄ ДЖЕРЕЛО ФРАКЦІЙ, а не цей мод: OZL_Access.MaySpend
+// питає OZ_Identity.IsLeader і HasPost. Тож сторінка питає ядро, хто дає
+// фракції й що воно знає (Ask config identity -> OZ_AdminIdentity), і
+// показує це: OpenZone Factions -- лідер, далі власники постів; OpenZone
+// Identity FFR -- будь-який член групи або ніхто (її власне налаштування),
+// постів там немає; інший мод -- що він сам каже; лише ядро -- фракцій
+// немає, пул іде типовому власнику. Поля постів, яких джерело не знає,
+// гаснуть із поясненням. Сумісно з Міражем (FFR), з нашими фракціями й з
+// чужими (власник, 2026-11-12).
+//
 // Окремий modded-шар OZ_VppAdminMenu: ім'я файлу сортується після
 // OZL_VppPane.c, OZL_VppPaneChains.c й OZL_VppPaneConfigs.c (файли теки
 // компілюються за абеткою, шар, що перекриває, мусить іти пізніше).
@@ -15,6 +25,18 @@
 
 modded class OZ_VppAdminMenu
 {
+    // The core's answer about the source of factions, copied out of the parsed
+    // envelope: asked once per window, known when it came, failed when the core
+    // could not answer (a core older than the question).
+    private bool   m_SeIdAsked   = false;
+    private bool   m_SeIdKnown   = false;
+    private bool   m_SeIdFailed  = false;
+    private bool   m_SeIdPresent = false;
+    private string m_SeIdSource  = "";
+    private bool   m_SeIdLeaders = false;
+    private bool   m_SeIdPosts   = false;
+    private string m_SeIdMeans   = "";
+
     override void RepaintRzPage(string tab)
     {
         if (tab == "settings")
@@ -23,6 +45,60 @@ modded class OZ_VppAdminMenu
             return;
         }
         super.RepaintRzPage(tab);
+    }
+
+    // The settings page shown: the source of factions is asked once per window (it
+    // cannot change while the server runs).
+    override void OnPaneShown(string id)
+    {
+        super.OnPaneShown(id);
+        string page = RZ_PAGE;
+        if (id != page + "settings" || m_SeIdAsked)
+            return;
+        m_SeIdAsked = true;
+        Ask(OZ_AdminSect.CONFIG, "identity", "{}");
+    }
+
+    // A question, not an action: it does not open a line of the window's journal.
+    override bool IsReadOp(string op)
+    {
+        if (op == "identity")
+            return true;
+        return super.IsReadOp(op);
+    }
+
+    override void OnRzConfigAnswer(string op, bool ok, string json, string error)
+    {
+        super.OnRzConfigAnswer(op, ok, json, error);
+        if (op != "identity")
+            return;
+
+        m_SeIdKnown = true;
+        bool failed = true;
+        if (ok)
+        {
+            // Root made by the script, every field taken out at once (the core's
+            // OZ_ConfigBase header): the envelope lives only until it is parsed.
+            OZ_AdminIdentity info = new OZ_AdminIdentity();
+            string err;
+            if (JsonFileLoader<OZ_AdminIdentity>.LoadData(json, info, err))
+            {
+                bool present = info.Present;
+                string source = info.Source;
+                bool leaders = info.HasLeaders;
+                bool posts = info.HasPosts;
+                string means = info.LeaderMeans;
+                m_SeIdPresent = present;
+                m_SeIdSource = source;
+                m_SeIdLeaders = leaders;
+                m_SeIdPosts = posts;
+                m_SeIdMeans = means;
+                failed = false;
+            }
+        }
+        m_SeIdFailed = failed;
+        if (m_RzTab == "settings")
+            RepaintSettings(false);
     }
 
     protected OZL_Settings DraftSettings()
@@ -39,6 +115,7 @@ modded class OZ_VppAdminMenu
     // in: the cursor would jump to the end).
     protected void RepaintSettings(bool fillForm)
     {
+        PaintSource();
         OZL_Settings se = DraftSettings();
         if (!se)
         {
@@ -59,10 +136,69 @@ modded class OZ_VppAdminMenu
         PaintSpenders(se);
     }
 
-    // Who spends the pool, as the research mod decides it (OZL_Access.MaySpend): the
-    // faction's leader always, then whoever holds the post -- the research post in a
-    // group, the base post on the base axis; an empty post means nobody but the
-    // leader. Three rows, the ones in force lit.
+    // ------------------------------------------------- the source of factions
+
+    // Do we know what the source can say? Not while the answer is on its way, not
+    // when the core could not answer, not from a provider that names nothing (one that
+    // predates the question keeps the defaults, which would read as "knows nothing").
+    protected bool SeIdTold()
+    {
+        if (!m_SeIdKnown || m_SeIdFailed)
+            return false;
+        if (m_SeIdPresent && m_SeIdSource == "")
+            return false;
+        return true;
+    }
+
+    // "Factions come from": the source's name and what it knows.
+    protected void PaintSource()
+    {
+        string line;
+        int ink = OZL_Metal.TEXT;
+        if (!m_SeIdKnown)
+        {
+            line = Tr("#STR_OZL_VPP_SE_SRC_ASKING");
+            ink = OZL_Metal.MUTED;
+        }
+        else if (m_SeIdFailed)
+        {
+            line = Tr("#STR_OZL_VPP_SE_SRC_FAILED");
+            ink = OZL_Metal.ALERT;
+        }
+        else if (!m_SeIdPresent)
+        {
+            line = Tr("#STR_OZL_VPP_SE_SRC_NONE");
+            ink = OZL_Metal.ALERT;
+        }
+        else if (m_SeIdSource == "")
+        {
+            string nameless = Tr("#STR_OZL_VPP_SE_SRC_NAMELESS");
+            string untold = Tr("#STR_OZL_VPP_SE_CAPS_UNKNOWN");
+            line = nameless + "  |  " + untold;
+        }
+        else
+        {
+            // What the source calls its leader, in its own words, says more than "has
+            // leaders" (FFR: any member of a group).
+            string leaderPart = Tr("#STR_OZL_VPP_SE_NO_LEADERS");
+            if (m_SeIdLeaders && m_SeIdMeans != "")
+                leaderPart = m_SeIdMeans;
+            else if (m_SeIdLeaders)
+                leaderPart = Tr("#STR_OZL_VPP_SE_HAS_LEADERS");
+            string postPart = Tr("#STR_OZL_VPP_SE_NO_POSTS");
+            if (m_SeIdPosts)
+                postPart = Tr("#STR_OZL_VPP_SE_HAS_POSTS");
+            line = m_SeIdSource + "  |  " + leaderPart + ", " + postPart;
+        }
+        SetLabel("RzSeSource", line, ink);
+    }
+
+    // Who spends the pool on this server, as the research mod decides it
+    // (OZL_Access.MaySpend) with what the source of factions knows: the leader --
+    // or what the source calls its leader -- always, then whoever holds the post: the
+    // research post in a group, the base post on the base axis; an empty post means
+    // nobody but the leader. Three rows, the ones in force lit; the post fields go
+    // dim when the source has no posts.
     //
     // Every translated piece is taken into a local before it meets another: a
     // translation on the left of "+" (or beside another as an argument) is lost when
@@ -70,25 +206,133 @@ modded class OZ_VppAdminMenu
     // from SCRIPT").
     protected void PaintSpenders(OZL_Settings se)
     {
-        string tail = PostsTail(se);
-        string leader = Tr("#STR_OZL_VPP_SE_LEADER");
-        SetLabel("RzSeWhoMain", leader + tail, 0);
-        SetLabel("RzSeWhoWhy", Tr("#STR_OZL_ED_CFG_NOTE_SE"), 0);
+        bool told = SeIdTold();
+        bool none = (told && !m_SeIdPresent);
+        bool leaders = true;
+        bool posts = true;
+        if (told)
+        {
+            leaders = m_SeIdLeaders;
+            posts = m_SeIdPosts;
+        }
+        if (none)
+        {
+            leaders = false;
+            posts = false;
+        }
 
-        string whoLeader = Tr("#STR_OZL_VPP_SE_ROW_LEADER");
-        string always = Tr("#STR_OZL_VPP_SE_ALWAYS");
-        SpenderRow(0, whoLeader, always, true);
+        // The leader row: what the source calls its leader, or the leader.
+        string leaderWho = Tr("#STR_OZL_VPP_SE_ROW_LEADER");
+        if (told && m_SeIdMeans != "")
+            leaderWho = m_SeIdMeans;
+        string leaderRule = Tr("#STR_OZL_VPP_SE_ALWAYS");
+        if (none)
+            leaderRule = Tr("#STR_OZL_VPP_SE_OFF_NONE");
+        else if (!leaders)
+            leaderRule = Tr("#STR_OZL_VPP_SE_OFF_LEADERS");
+        SpenderRow(0, leaderWho, leaderRule, leaders);
+
+        // The post rows.
+        string offPosts = Tr("#STR_OZL_VPP_SE_OFF_POSTS");
+        if (none)
+            offPosts = Tr("#STR_OZL_VPP_SE_OFF_NONE");
         string whoResearch = Tr("#STR_OZL_VPP_SE_ROW_RPOST");
-        string ruleResearch = PostRule(se.ResearchPost);
-        SpenderRow(1, whoResearch, ruleResearch, se.ResearchPost != "");
+        string ruleResearch = offPosts;
+        if (posts)
+            ruleResearch = PostRule(se.ResearchPost);
+        bool researchOn = (posts && se.ResearchPost != "");
+        SpenderRow(1, whoResearch, ruleResearch, researchOn);
         string whoBase = Tr("#STR_OZL_VPP_SE_ROW_BPOST");
-        string ruleBase = PostRule(se.BasePost);
-        SpenderRow(2, whoBase, ruleBase, se.BasePost != "");
+        string ruleBase = offPosts;
+        if (posts)
+            ruleBase = PostRule(se.BasePost);
+        bool baseOn = (posts && se.BasePost != "");
+        SpenderRow(2, whoBase, ruleBase, baseOn);
+
+        // The post fields: dim where the source has no posts, with what holds instead.
+        string postHint = Tr("#STR_OZL_ED_CFG_SE_POST_H");
+        if (none)
+            postHint = Tr("#STR_OZL_VPP_SE_NO_SOURCE_H");
+        else if (!posts)
+            postHint = Tr("#STR_OZL_VPP_SE_NO_POSTS_H");
+        DimPostField("RzSeRPost", !posts, postHint);
+        DimPostField("RzSeBPost", !posts, postHint);
+
+        // The callout: who spends, in one line, and why.
+        string tail = "";
+        if (posts)
+            tail = PostsTail(se);
+        string whoLine = "";
+        if (leaders)
+        {
+            whoLine = Tr("#STR_OZL_VPP_SE_LEADER");
+            if (told && m_SeIdMeans != "")
+                whoLine = m_SeIdMeans;
+            whoLine += tail;
+        }
+        else if (tail != "")
+        {
+            string holders = Tr("#STR_OZL_VPP_SE_POST_HOLDS");
+            whoLine = holders + PostsList(se);
+        }
+        else
+        {
+            whoLine = Tr("#STR_OZL_VPP_SE_NOBODY");
+        }
+        SetLabel("RzSeWhoMain", whoLine, 0);
+        SetLabel("RzSeWhoWhy", SpendWhy(told, none, leaders, tail != ""), 0);
     }
 
-    // "; далі -- хто має пост «research»" for the posts that are set; nothing when
-    // neither is.
+    // Why the callout says what it says.
+    protected string SpendWhy(bool told, bool none, bool leaders, bool posts)
+    {
+        if (!told)
+            return Tr("#STR_OZL_VPP_SE_WHY_UNKNOWN");
+        if (none)
+            return Tr("#STR_OZL_VPP_SE_WHY_NONE");
+        if (!leaders && !posts)
+            return Tr("#STR_OZL_VPP_SE_WHY_NOBODY");
+        string fromWord = Tr("#STR_OZL_VPP_SE_WHY_FROM");
+        string rest = Tr("#STR_OZL_VPP_SE_WHY_TAIL");
+        return fromWord + m_SeIdSource + ". " + rest;
+    }
+
+    // A post field and its label in the page's ink, or dim and closed to typing.
+    protected void DimPostField(string name, bool dim, string hint)
+    {
+        Widget field = M_SUB_WIDGET.FindAnyWidget(name);
+        int ink = OZL_Metal.TEXT;
+        int labelInk = OZL_Metal.MUTED;
+        int hintInk = OZL_Metal.FAINT;
+        if (dim)
+        {
+            ink = OZL_Metal.FAINT;
+            labelInk = OZL_Metal.FAINT;
+            hintInk = OZL_Metal.ALERT;
+        }
+        bool open = !dim;
+        if (field)
+        {
+            field.Enable(open);
+            field.SetColor(ink);
+        }
+        SetColorOf(name + "Lbl", labelInk);
+        SetLabel(name + "H", hint, hintInk);
+    }
+
+    // "; далі -- хто має пост research, base" for the posts that are set; nothing
+    // when neither is.
     protected string PostsTail(OZL_Settings se)
+    {
+        string posts = PostsList(se);
+        if (posts == "")
+            return "";
+        string thenWord = Tr("#STR_OZL_VPP_SE_THEN_POST");
+        return thenWord + posts;
+    }
+
+    // The posts that are set, comma-separated.
+    protected string PostsList(OZL_Settings se)
     {
         string posts = "";
         if (se.ResearchPost != "")
@@ -99,10 +343,7 @@ modded class OZ_VppAdminMenu
                 posts += ", ";
             posts += se.BasePost;
         }
-        if (posts == "")
-            return "";
-        string thenWord = Tr("#STR_OZL_VPP_SE_THEN_POST");
-        return thenWord + posts;
+        return posts;
     }
 
     // What one post row says: who holds it spends, or nobody but the leader.

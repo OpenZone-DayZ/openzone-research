@@ -9475,7 +9475,7 @@ FrameWidgetClass PaneResearch {
            vexactsize 1
            color 0.627 0.624 0.6 1
            priority 12
-           text ""
+           text "#STR_OZL_VPP_SE_SPEND_NOTE"
            font "gui/fonts/sdf_MetronBook24"
            "exact text" 1
            "exact text size" 10

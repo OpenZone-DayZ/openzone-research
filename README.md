@@ -112,9 +112,12 @@ The faction state, `research\<faction>.json`, holds the pool, the completed node
 running projects. `OZ_Research_Statics_State.json` remembers which statics were placed.
 
 Editing: the seven configs are registered with the core's editor, so they are edited in
-the OpenZone admin window (VPPAdminTools, CONFIG pane) with validation and a backup on
-every write; the RESEARCH pane (the `_VPP` glue mod) lists the factions with their pools
-and runs resets, grants, completions and reloads.
+the OpenZone admin window (VPPAdminTools) with validation and a backup on every write. The
+research module of that window (the `_VPP` glue mod) has eight pages in the window's rail:
+Overview (the factions with their pools; resets, grants, completions and reloads), Tree,
+Chains, Point types, Owners, Modules, Statics and Settings -- one draft of the seven files
+with its problems, undo, redo, discard and apply. Settings asks the core who gives the
+factions and dims what that source does not know.
 
 ## The bridge and the web editor
 
@@ -154,7 +157,7 @@ Measurements: `docs/measurements/2026-09-20/bridge.md`. Design:
 - [OpenZone Core](https://steamcommunity.com/sharedfiles/filedetails/?id=3798432022)
 - Factions come from [OpenZone Factions](https://steamcommunity.com/sharedfiles/filedetails/?id=3798436325);
   without it every player belongs to the default owner from the settings.
-- The RESEARCH pane (`OpenZone_Research_VPP`) also needs OpenZone Core VPP and
+- The research pages (`OpenZone_Research_VPP`) also need OpenZone Core VPP and
   VPPAdminTools.
 
 ## Repository
@@ -162,7 +165,7 @@ Measurements: `docs/measurements/2026-09-20/bridge.md`. Design:
 | directory | what |
 |---|---|
 | `OpenZone_Research/` | the mod: configs, items, stations, the terminal, the tree, the service, the models |
-| `OpenZone_Research_VPP/` | the RESEARCH pane of the admin window |
+| `OpenZone_Research_VPP/` | the research pages of the admin window |
 | `OpenZone_Research_Bridge/` | a stand-only verb for the `dayz` MCP bridge, never published |
 | `source/models/` | the Blender generators of the models; see its README |
 | `ui/` | layout descriptions; `layout_build` writes the `.layout` files from them |
