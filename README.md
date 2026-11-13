@@ -168,7 +168,7 @@ Measurements: `docs/measurements/2026-09-20/bridge.md`. Design:
 | `OpenZone_Research_VPP/` | the research pages of the admin window |
 | `OpenZone_Research_Bridge/` | a stand-only verb for the `dayz` MCP bridge, never published |
 | `source/models/` | the Blender generators of the models; see its README |
-| `ui/` | layout descriptions; `layout_build` writes the `.layout` files from them |
+| `ui/` | layout descriptions (`layout_build` writes the mod's `.layout` files from them); `css2layout.json` converts the VPP pages from the mockup's boards (`layout_convert`) |
 | `examples/` | config packs: `example` (seven factions, what the mod ships) and `test-stand` |
 | `packaging/` | what a published `@Mod` needs besides the pbo |
 | `docs/` | measurements; the design lives in the series' `docs/specs/` |

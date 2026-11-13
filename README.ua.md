@@ -164,7 +164,7 @@ OpenZone (VPPAdminTools) з перевіркою й бекапом на коже
 | `OpenZone_Research_VPP/` | сторінки досліджень вікна адміна |
 | `OpenZone_Research_Bridge/` | стендовий verb для моста `dayz` MCP, не публікується |
 | `source/models/` | генератори моделей для Blender; див. його README |
-| `ui/` | описи розкладок; `layout_build` пише з них файли `.layout` |
+| `ui/` | описи розкладок (`layout_build` пише з них файли `.layout` мода); `css2layout.json` перетворює сторінки VPP з дощок макета (`layout_convert`) |
 | `examples/` | пакети конфігів: `example` (сім фракцій, його везе мод) і `test-stand` |
 | `packaging/` | те, що потрібно опублікованому `@Mod` окрім pbo |
 | `docs/` | вимірювання; дизайн живе в `docs/specs/` серії |
