@@ -1,0 +1,41 @@
+points: ResearchPoints.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_points.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 82; 1 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_points.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_pt_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  BtnRzPtAdd  ButtonWidget (parts: BtnRzPtAddEdge, BtnRzPtAddBg)
+  RzPtList  Frame
+  RzPtListRows  WrapSpacer: the list's rows go here (ozl_vpp_pt_row); its ScrollWidget is RzPtListScroll
+  RzPtCount  TextWidget (filled by script)
+  RzPtHeadRow  Frame
+  RzPtSwatch  Frame (parts: RzPtSwatchBg)
+  RzPtPicked  TextWidget (filled by script)
+  RzPtPickedName  TextWidget (filled by script)
+  BtnRzPtDel  ButtonWidget (parts: BtnRzPtDelEdge, BtnRzPtDelBg)
+  RzPtGrid  Frame
+  RzPtId  EditBox
+  RzPtName  EditBox
+  RzPtColor  EditBox
+  RzPtColorSw  Frame (parts: RzPtColorSwEdge, RzPtColorSwBg)
+  RzPtSort  EditBox
+  RzPtPurity  EditBox
+  RzPtIcon  EditBox
+
+ROW TEMPLATES
+  ozl_vpp_pt_row.layout  root OZL_VppPtRow (Button), 6 in the sample, 527 x 42 units, list RzPtListRows
+      OZL_VppPtRow  ButtonWidget (parts: OZL_VppPtRowEdge, OZL_VppPtRowBg)
+      PtRowSwatch  Frame (parts: PtRowSwatchBg)
+      PtRowId  TextWidget (filled by script)
+      PtRowName  TextWidget (filled by script)
+      PtRowSort  TextWidget (filled by script)
+      PtRowPurity  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x13
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  Panel rq42

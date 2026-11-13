@@ -494,7 +494,9 @@ class OZL_EdDocs
         if (m_ApplyQ.Count() == 0)
             return "";
         m_Applying = m_ApplyQ[0];
-        m_ApplyQ.Remove(0);
+        // RemoveOrdered: Remove() fills the hole with the LAST entry, which applied three
+        // or more changed files out of their declared order.
+        m_ApplyQ.RemoveOrdered(0);
         return m_Applying;
     }
 

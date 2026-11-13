@@ -1,0 +1,50 @@
+modules: ResearchModules.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_modules.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 84; 0 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_modules.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_mo_group.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_mo_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  BtnRzMoAdd  ButtonWidget (parts: BtnRzMoAddEdge, BtnRzMoAddBg)
+  RzMoFind  EditBox
+  RzMoCount  TextWidget (filled by script)
+  RzMoList  Frame
+  RzMoListRows  WrapSpacer: the list's rows go here (ozl_vpp_mo_group, ozl_vpp_mo_row); its ScrollWidget is RzMoListScroll
+  RzMoHeadRow  Frame
+  RzMoHead  TextWidget (filled by script)
+  RzMoSub  TextWidget (filled by script)
+  RzMoLine  Frame (parts: RzMoLineBg)
+  RzMoLineDot  Frame (parts: RzMoLineDotBg)
+  RzMoLineText  TextWidget (filled by script)
+  BtnRzMoDel  ButtonWidget (parts: BtnRzMoDelEdge, BtnRzMoDelBg)
+  BtnRzMoDelText  TextWidget (filled by script)
+  RzMoBody  Frame
+  RzMoClass  EditBox
+  RzMoPurity  EditBox
+  RzMoDouble  EditBox
+  RzMoNotes  EditBox
+  RzMoFactPurity  TextWidget (filled by script)
+  RzMoFactDouble  TextWidget (filled by script)
+  RzMoFactLine  TextWidget (filled by script)
+  RzMoFactCount  TextWidget (filled by script)
+
+ROW TEMPLATES
+  ozl_vpp_mo_group.layout  root OZL_VppMoGroup (Frame), 7 in the sample, 427 x 30 units, list RzMoListRows
+      OZL_VppMoGroup  Frame
+      MoGroupDot  Frame (parts: MoGroupDotBg)
+      MoGroupName  TextWidget (filled by script)
+      MoGroupCount  TextWidget (filled by script)
+  ozl_vpp_mo_row.layout  root OZL_VppMoRow (Button), 21 in the sample, 427 x 46 units, list RzMoListRows
+      OZL_VppMoRow  ButtonWidget (parts: OZL_VppMoRowEdge, OZL_VppMoRowBg)
+      MoRowClass  TextWidget (filled by script)
+      MoRowName  TextWidget (filled by script)
+      MoRowPurity  TextWidget (filled by script)
+      MoRowDouble  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x15
+  letter-spacing 0.5px (no tracked face for Fira Sans Condensed 500)  x1
+  letter-spacing 0.5px (no tracked face for Fira Sans Condensed 600)  x1

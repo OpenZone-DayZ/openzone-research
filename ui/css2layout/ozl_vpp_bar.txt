@@ -1,0 +1,34 @@
+bar: ResearchBar.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_bar.layout
+design size 1360 x 60, measured again one, two and three steps of 240 x 160 larger
+widgets: 37; 0 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_bar.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  RzStatusDot  ImageWidget (the sign ●: icon dot)
+  RzStatus  TextWidget (filled by script)
+  BtnRzProblems  ButtonWidget (parts: BtnRzProblemsEdge, BtnRzProblemsBg)
+  RzProbSignOk  ImageWidget (icon i_b5c850ed)
+  RzProbSignBad  Frame
+  RzProbSignBadIcon  ImageWidget (icon i_ae460f28)
+  BtnRzProblemsText  TextWidget (filled by script)
+  RzHintBox  Frame
+  RzHintOk  Frame
+  RzHintOkIcon  ImageWidget (icon i_b5c850ed)
+  ResHint  TextWidget (filled by script)
+  BtnRzUndo  ButtonWidget (parts: BtnRzUndoEdge, BtnRzUndoBg)
+  BtnRzUndoIcon  ImageWidget (icon i_1e4ba0ee)
+  BtnRzUndoText  TextWidget (a caption: recolour only)
+  BtnRzRedo  ButtonWidget (parts: BtnRzRedoEdge, BtnRzRedoBg)
+  BtnRzRedoIcon  ImageWidget (icon i_733cf071)
+  BtnRzRedoText  TextWidget (a caption: recolour only)
+  BtnRzDiscard  ButtonWidget (parts: BtnRzDiscardEdge, BtnRzDiscardBg)
+  BtnRzDiscardText  TextWidget (a caption: recolour only)
+  BtnRzApply  ButtonWidget (parts: BtnRzApplyEdge, BtnRzApplyBg)
+  BtnRzApplyLock  Frame
+  BtnRzApplyLockIcon  ImageWidget (icon i_d5bd2db1)
+  BtnRzApplyText  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x5

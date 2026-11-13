@@ -1,0 +1,69 @@
+settings: ResearchSettings.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_settings.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 112; 2 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_settings.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  RzSeLegPool  Frame (parts: RzSeLegPoolBg)
+  RzSeLegPoolText  TextWidget (a caption: recolour only)
+  RzSeOwner  EditBox
+  RzSeWhoMain  TextWidget (filled by script)
+  RzSeWhoWhy  RichText (filled by script)
+  BtnRzSeLink  ButtonWidget
+  BtnRzSeLinkText  TextWidget (filled by script)
+  RzSeRPostLbl  TextWidget (a caption: recolour only)
+  RzSeRPostBox  Frame (parts: RzSeRPostBoxEdge, RzSeRPostBoxBg)
+  RzSeRPost  EditBox
+  RzSeRPostH  TextWidget (filled by script)
+  RzSeBPostLbl  TextWidget (a caption: recolour only)
+  RzSeBPostBox  Frame (parts: RzSeBPostBoxEdge, RzSeBPostBoxBg)
+  RzSeBPost  EditBox
+  RzSeBPostH  TextWidget (filled by script)
+  RzSeLegFog  Frame (parts: RzSeLegFogBg)
+  RzSeLegFogText  TextWidget (a caption: recolour only)
+  BtnRzSeDepthDn  ButtonWidget (parts: BtnRzSeDepthDnEdge, BtnRzSeDepthDnBg)
+  RzSeDepth  EditBox
+  BtnRzSeDepthUp  ButtonWidget (parts: BtnRzSeDepthUpEdge, BtnRzSeDepthUpBg)
+  RzSeSpendRow  Frame
+  RzSeSourceTag  Frame (parts: RzSeSourceTagBg)
+  RzSeSourceTagText  TextWidget (a caption: recolour only)
+  RzSeSource  TextWidget (filled by script)
+  RzSeMark0  Frame (parts: RzSeMark0Bg)
+  RzSeMarkText0  TextWidget (a caption: recolour only)
+  RzSeWho0  TextWidget (filled by script)
+  RzSeRule0  TextWidget (filled by script)
+  RzSeMark1  Frame (parts: RzSeMark1Bg)
+  RzSeMarkText1  TextWidget (a caption: recolour only)
+  RzSeWho1  TextWidget (filled by script)
+  RzSeRule1  TextWidget (filled by script)
+  RzSeMark2  Frame (parts: RzSeMark2Bg)
+  RzSeMarkText2  TextWidget (a caption: recolour only)
+  RzSeWho2  TextWidget (filled by script)
+  RzSeRule2  TextWidget (filled by script)
+  RzSeSpendNote  RichText (filled by script)
+  RzSeFogRow  Frame
+  RzSeFogHead  TextWidget (filled by script)
+  RzSeFogChanged  TextWidget (a caption: recolour only)
+  RzSeFog  Frame
+  RzSeFogCanvas  CanvasWidget (a drawing of the mockup: a script draws it)
+  RzSeFogEdge  TextWidget (filled by script)
+  RzSeFogLab0  TextWidget (filled by script)
+  RzSeFogLab1  TextWidget (filled by script)
+  RzSeFogLab2  TextWidget (filled by script)
+  RzSeFogLab3  TextWidget (filled by script)
+  RzSeFogLab4  TextWidget (filled by script)
+  RzSeFogSub0  TextWidget (filled by script)
+  RzSeFogSub1  TextWidget (filled by script)
+  RzSeFogSub2  TextWidget (filled by script)
+  RzSeFogSub3  TextWidget (filled by script)
+  BtnRzSeFogLink  ButtonWidget
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x16
+  letter-spacing 0.5px (no tracked face for Fira Sans 400)  x1
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  Panel rg32
+  Panel rg38

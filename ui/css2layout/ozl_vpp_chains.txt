@@ -1,0 +1,149 @@
+chains: ResearchChains.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_chains.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 306; 6 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_chains.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_owner_row.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_line_row.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_tier_row.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_raw_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  RzChOw  Frame
+  RzChOwRows  WrapSpacer: the list's rows go here (ozl_vpp_ch_owner_row); its ScrollWidget is RzChOwScroll
+  RzChLn  Frame
+  RzChLnRows  WrapSpacer: the list's rows go here (ozl_vpp_ch_line_row); its ScrollWidget is RzChLnScroll
+  RzChSideNote  RichText (filled by script)
+  BtnRzChCard_raw  ButtonWidget (parts: BtnRzChCard_rawEdge, BtnRzChCard_rawBg)
+  RzChN_raw  Frame (parts: RzChN_rawBg)
+  RzChNT_raw  TextWidget (a caption: recolour only)
+  RzChK_raw  TextWidget (a caption: recolour only)
+  RzChV_raw  TextWidget (filled by script)
+  RzChC_raw  TextWidget (filled by script)
+  RzChS_raw  TextWidget (filled by script)
+  BtnRzChCard_packer  ButtonWidget (parts: BtnRzChCard_packerEdge, BtnRzChCard_packerBg)
+  RzChN_packer  Frame (parts: RzChN_packerBg)
+  RzChNT_packer  TextWidget (a caption: recolour only)
+  RzChK_packer  TextWidget (a caption: recolour only)
+  RzChV_packer  TextWidget (filled by script)
+  RzChC_packer  TextWidget (filled by script)
+  RzChS_packer  TextWidget (filled by script)
+  BtnRzChCard_sample  ButtonWidget (parts: BtnRzChCard_sampleEdge, BtnRzChCard_sampleBg)
+  RzChN_sample  Frame (parts: RzChN_sampleBg)
+  RzChNT_sample  TextWidget (a caption: recolour only)
+  RzChK_sample  TextWidget (a caption: recolour only)
+  RzChD_sample  Frame (parts: RzChD_sampleBg)
+  RzChV_sample  TextWidget (filled by script)
+  RzChC_sample  TextWidget (filled by script)
+  RzChS_sample  TextWidget (filled by script)
+  BtnRzChCard_analyzer  ButtonWidget (parts: BtnRzChCard_analyzerEdge, BtnRzChCard_analyzerBg)
+  RzChN_analyzer  Frame (parts: RzChN_analyzerBg)
+  RzChNT_analyzer  TextWidget (a caption: recolour only)
+  RzChK_analyzer  TextWidget (a caption: recolour only)
+  RzChV_analyzer  TextWidget (filled by script)
+  RzChC_analyzer  TextWidget (filled by script)
+  RzChS_analyzer  TextWidget (filled by script)
+  BtnRzChCard_carrier  ButtonWidget (parts: BtnRzChCard_carrierEdge, BtnRzChCard_carrierBg)
+  RzChN_carrier  Frame (parts: RzChN_carrierBg)
+  RzChNT_carrier  TextWidget (a caption: recolour only)
+  RzChK_carrier  TextWidget (a caption: recolour only)
+  RzChD_carrier  Frame (parts: RzChD_carrierBg)
+  RzChV_carrier  TextWidget (filled by script)
+  RzChC_carrier  TextWidget (filled by script)
+  RzChS_carrier  TextWidget (filled by script)
+  BtnRzChCard_terminal  ButtonWidget (parts: BtnRzChCard_terminalEdge, BtnRzChCard_terminalBg)
+  RzChN_terminal  Frame (parts: RzChN_terminalBg)
+  RzChNT_terminal  TextWidget (a caption: recolour only)
+  RzChK_terminal  TextWidget (a caption: recolour only)
+  RzChD_terminal  Frame (parts: RzChD_terminalBg)
+  RzChV_terminal  TextWidget (filled by script)
+  RzChC_terminal  TextWidget (filled by script)
+  RzChS_terminal  TextWidget (filled by script)
+  RzChRawSub  RichText (filled by script)
+  BtnRzChRawAdd  ButtonWidget (parts: BtnRzChRawAddEdge, BtnRzChRawAddBg)
+  RzChRaw  Frame
+  RzChRawRows  WrapSpacer: the list's rows go here (ozl_vpp_ch_tier_row, ozl_vpp_ch_raw_row); its ScrollWidget is RzChRawScroll
+  RzChBulkGap  Frame (parts: RzChBulkGapBg)
+  RzChBulkTier  TextWidget (filled by script)
+  RzChBulkPts  EditBox
+  RzChBulkNode  EditBox
+  BtnRzChBulk  ButtonWidget (parts: BtnRzChBulkEdge, BtnRzChBulkBg)
+  RzChStSub  RichText (filled by script)
+  RzChStBody  Frame
+  RzStKind  TextWidget (filled by script)
+  RzStNameBox  Frame
+  RzStName  TextWidget (filled by script)
+  RzStSlotK0  TextWidget (filled by script)
+  RzStSlotV0  TextWidget (filled by script)
+  RzStSlotK1  TextWidget (filled by script)
+  RzStSlotD1  Frame (parts: RzStSlotD1Bg)
+  RzStSlotV1  TextWidget (filled by script)
+  RzStSlotK2  TextWidget (filled by script)
+  RzStSlotV2  TextWidget (filled by script)
+  RzStSlotK3  TextWidget (filled by script)
+  RzStSlotV3  TextWidget (filled by script)
+  RzStKey  TextWidget (filled by script)
+  RzStAction  TextWidget (filled by script)
+  RzStAdmin  TextWidget (filled by script)
+  RzStTipDot  Frame (parts: RzStTipDotBg)
+  RzStTipName  TextWidget (filled by script)
+  RzStTipDesc  RichText (filled by script)
+  BtnRzRuEnabled  ButtonWidget (parts: BtnRzRuEnabledBg)
+  BtnRzRuEnabledBox  ButtonWidget (a checkbox; parts: BtnRzRuEnabledBoxEdge, BtnRzRuEnabledBoxBg); its mark is BtnRzRuEnabledBoxMark: show it when on
+  RzRuEnabledText  TextWidget (filled by script)
+  RzRuHead  TextWidget (filled by script)
+  RzRuSub  TextWidget (filled by script)
+  RzRuForm  Frame
+  RzRuDevice  EditBox
+  RzRuInput  EditBox
+  RzRuInQty  EditBox
+  BtnRzRuKin  ButtonWidget (parts: BtnRzRuKinBg)
+  BtnRzRuKinText  TextWidget (a caption: recolour only)
+  BtnRzRuExact  ButtonWidget (parts: BtnRzRuExactBg, BtnRzRuExactLine)
+  BtnRzRuExactText  TextWidget (a caption: recolour only)
+  RzRuTime  EditBox
+  RzRuPurity  EditBox
+  RzRuOut  EditBox
+  RzRuOutPts  EditBox
+  RzRuOutChance  EditBox
+  RzRuNode  EditBox
+  RzRuFactions  EditBox
+  RzRuNotes  EditBox
+  BtnRzRuDup  ButtonWidget (parts: BtnRzRuDupEdge, BtnRzRuDupBg)
+  BtnRzRuDel  ButtonWidget (parts: BtnRzRuDelEdge, BtnRzRuDelBg)
+  RzRuInfo  RichText (filled by script)
+
+ROW TEMPLATES
+  ozl_vpp_ch_owner_row.layout  root OZL_ChOwnerRow (Button), 7 in the sample, 225 x 32 units, list RzChOwRows
+      OZL_ChOwnerRow  ButtonWidget (parts: OZL_ChOwnerRowBg, OZL_ChOwnerRowBar)
+      ChOwId  TextWidget (filled by script)
+      ChOwDash  TextWidget (a caption: recolour only)
+      ChOwName  TextWidget (filled by script)
+      ChOwLines  TextWidget (filled by script)
+  ozl_vpp_ch_line_row.layout  root OZL_ChLineRow (Button), 3 in the sample, 225 x 32 units, list RzChLnRows
+      OZL_ChLineRow  ButtonWidget (parts: OZL_ChLineRowBg, OZL_ChLineRowBar)
+      ChLnDot  Frame (parts: ChLnDotBg)
+      ChLnName  TextWidget (filled by script)
+      ChLnCount  TextWidget (filled by script)
+  ozl_vpp_ch_tier_row.layout  root OZL_ChTierRow (Frame), 1 in the sample, 325 x 29 units, list RzChRawRows
+      OZL_ChTierRow  Frame (parts: OZL_ChTierRowLine)
+      ChTierName  TextWidget (filled by script)
+      ChTierSub  TextWidget (filled by script)
+  ozl_vpp_ch_raw_row.layout  root OZL_ChRawRow (Button), 2 in the sample, 325 x 36 units, list RzChRawRows
+      OZL_ChRawRow  ButtonWidget (parts: OZL_ChRawRowEdge, OZL_ChRawRowBg)
+      ChRawIn  TextWidget (filled by script)
+      ChRawPts  TextWidget (filled by script)
+      ChRawTime  TextWidget (filled by script)
+      ChRawNode  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x43
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  RichText RzChRawSub
+  Frame RzChRaw
+  Panel rc36
+  Text RzChBulkTier
+  RichText RzChStSub
+  Frame RzChStBody

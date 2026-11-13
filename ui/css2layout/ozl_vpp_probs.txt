@@ -1,0 +1,23 @@
+probs: ResearchProbs.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_probs.layout
+design size 1360 x 244, measured again one, two and three steps of 240 x 160 larger
+widgets: 21; 0 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_probs.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_prob_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  BtnRzProbClose  ButtonWidget (parts: BtnRzProbCloseEdge, BtnRzProbCloseBg)
+  RzProb  Frame
+  RzProbRows  WrapSpacer: the list's rows go here (ozl_vpp_prob_row); its ScrollWidget is RzProbScroll
+
+ROW TEMPLATES
+  ozl_vpp_prob_row.layout  root OZL_VppProbRow (Frame), 6 in the sample, 1312 x 28 units, list RzProbRows
+      OZL_VppProbRow  Frame (parts: OZL_VppProbRowBg)
+      ProbBadge  Frame (parts: ProbBadgeBg)
+      ProbMark  TextWidget (filled by script)
+      ProbText  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x3
+  letter-spacing 0.5px (no tracked face for Fira Sans 600)  x1

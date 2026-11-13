@@ -1,16 +1,17 @@
-// Сторінка ЛАНЦЮГИ редактора досліджень: правила переробки власника по
-// лініях (OZL_EdChains). Конвеєр лінії -- шість карток; під ними сировина
-// (правила пакувальника) за тирами вузлів із масовою правкою тіру, а поруч
-// -- станок таким, яким його бачить гравець (з 2026-11-12 поруч, а не
-// замість, дизайн вікна §5.5; у вузькому вікні -- під сировиною);
-// праворуч -- поля вибраного правила.
+// The page ЛАНЦЮГИ of the research editor: the owner's processing rules by line
+// (OZL_EdChains). A line's conveyor is six cards; under them the raw items (the packer's
+// rules) by the tier of their node, with a bulk edit of a whole tier, and beside them the
+// station as the player meets it; on the right the fields of the picked rule.
 //
-// Окремий modded-шар того самого OZ_VppAdminMenu, що й OZL_VppPane.c:
-// сторінку він малює в RepaintRzPage, розкладає в RzLayPages. Ім'я файлу
-// мусить сортуватися після OZL_VppPane.c -- файли теки компілюються за
-// абеткою, і шар, що перекриває, мусить іти пізніше.
+// The page is the pane ozl_vpp_chains, converted from its mockup board (css2layout) with its
+// four row templates; this file fills it from the draft and writes edits back. A separate
+// modded layer of the same OZ_VppAdminMenu as OZL_VppPane.c (the frame): the frame calls
+// RepaintRzPage and RzLayPages, and this layer takes the page "chains". The file name must
+// sort after OZL_VppPane.c -- the files of a folder compile in alphabetical order, and the
+// layer that overrides comes later.
 //
-// Дизайн: docs/specs/2026-11-09-research-editor-vpp-design.md, §1 п. 4.
+// Design: docs/specs/2026-11-09-research-editor-vpp-design.md, section 1 item 4; the page as
+// drawn: docs/specs/2026-11-13-openzone-vpp-page-guide.md.
 
 #ifdef AVPPAdminTools
 #ifdef OpenZone_VPP
@@ -18,19 +19,42 @@
 
 modded class OZ_VppAdminMenu
 {
-    private string m_ChOwner = "";
-    private string m_ChLine  = "";
-    private string m_ChRule  = "";
-    // Вибрана картка конвеєра: raw, packer, sample, analyzer, carrier, terminal.
-    private string m_ChCard  = "raw";
-    private ref array<ref OZL_EdLine> m_ChLines;
-    // Id правил у рядках списку сировини, у порядку рядків.
-    private ref array<string> m_ChRawIds;
+    // The picked owner, line and rule.
+    protected string m_ChOwner;
+    protected string m_ChLine;
+    protected string m_ChRule;
+    // The picked card of the conveyor: raw, packer, sample, analyzer, carrier, terminal.
+    protected string m_ChCard;
+    protected ref array<ref OZL_EdLine> m_ChLines;
+    // The ids of the rules in the raw list, in the order of its rows.
+    protected ref array<string> m_ChRawIds;
+
+    // The lists: owners, lines, and the raw items -- two kinds of rows in one list (a
+    // caption per tier, the tier's rules under it).
+    protected ref OZ_VppFlexRows m_ChOwRows;
+    protected ref OZ_VppFlexRows m_ChLnRows;
+    protected ref OZ_VppFlexRows m_ChTierRows;
+    protected ref OZ_VppFlexRows m_ChRawRows;
+
+    // Where the note under the rule's form stands (read once, in pixels): the same text
+    // widget says what a card without a rule is, in the form's place.
+    protected float m_RuInfoX;
+    protected float m_RuInfoY;
+    protected float m_RuInfoW;
+    protected float m_RuInfoH;
 
     override void OnCreate(Widget RootW)
     {
+        m_ChOwner = "";
+        m_ChLine = "";
+        m_ChRule = "";
+        m_ChCard = "raw";
         m_ChLines  = new array<ref OZL_EdLine>();
         m_ChRawIds = new array<string>();
+        m_RuInfoX = 0;
+        m_RuInfoY = 0;
+        m_RuInfoW = 0;
+        m_RuInfoH = 0;
         super.OnCreate(RootW);
     }
 
@@ -100,7 +124,7 @@ modded class OZ_VppAdminMenu
         return OZL_Metal.TEXT;
     }
 
-    // Правило, яке показує інспектор: вибране, а без нього -- за карткою.
+    // The rule the form shows: the picked one, and without it the card's.
     protected OZL_Rule CardRule(OZL_Rules rules, OZL_EdLine line)
     {
         if (m_ChRule != "")
@@ -137,32 +161,42 @@ modded class OZ_VppAdminMenu
     protected string Secs(float s)
     {
         int n = Math.Round(s);
-        return n.ToString() + " " + Tr("#STR_OZL_ED_CH_SEC");
+        string unit = Tr("#STR_OZL_ED_CH_SEC");
+        return n.ToString() + " " + unit;
     }
 
-    // ------------------------------------------------- сторінка
+    // ------------------------------------------------- the page
 
-    // fillForm -- переписати поля правила; під час набору -- ні, бо курсор у
-    // полі стрибав би в кінець.
+    // fillForm -- write the fields of the rule and of the bulk edit; not while one is
+    // typed in, the cursor would jump to the end.
     protected void RepaintChains(bool fillForm)
     {
         OZL_Rules rules = DraftRules();
         OZL_Owners owners = DraftOwners();
-        TextListboxWidget lo = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzChOwners"));
-        TextListboxWidget ll = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzChLines"));
-        if (!rules || !owners || !lo || !ll)
+        Widget hostO = M_SUB_WIDGET.FindAnyWidget("RzChOwRows");
+        Widget hostL = M_SUB_WIDGET.FindAnyWidget("RzChLnRows");
+        if (!rules || !owners || !hostO || !hostL)
             return;
+        if (!m_ChOwRows)
+            m_ChOwRows = new OZ_VppFlexRows(m_Flex, hostO, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_owner_row.layout", "OZL_ChOwnerRow", 225, 32);
+        if (!m_ChLnRows)
+            m_ChLnRows = new OZ_VppFlexRows(m_Flex, hostL, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_line_row.layout", "OZL_ChLineRow", 225, 32);
 
         int i;
         bool known = false;
+        string firstOwner = "";
         for (i = 0; i < owners.Owners.Count(); i++)
         {
-            if (owners.Owners[i] && owners.Owners[i].Id == m_ChOwner)
+            if (!owners.Owners[i])
+                continue;
+            if (firstOwner == "")
+                firstOwner = owners.Owners[i].Id;
+            if (owners.Owners[i].Id == m_ChOwner)
                 known = true;
         }
-        if (!known && owners.Owners.Count() > 0 && owners.Owners[0])
+        if (!known)
         {
-            m_ChOwner = owners.Owners[0].Id;
+            m_ChOwner = firstOwner;
             m_ChLine = "";
             m_ChRule = "";
         }
@@ -176,70 +210,129 @@ modded class OZ_VppAdminMenu
         if (m_ChRule != "" && !rules.Find(m_ChRule))
             m_ChRule = "";
 
+        // The owners, each with how many lines it has.
         OZL_PointTypes pts = DraftPointTypes();
         array<ref OZL_EdLine> tmp = new array<ref OZL_EdLine>();
-        m_ResRepaint = true;
-        lo.ClearItems();
+        Widget row;
+        m_ChOwRows.Clear();
         for (i = 0; i < owners.Owners.Count(); i++)
         {
             OZL_OwnerDef o = owners.Owners[i];
-            if (!o)
+            if (!o || m_ChOwRows.Count() >= RZ_LIST_MAX)
                 continue;
+            row = m_ChOwRows.Add(o.Id);
+            if (!row)
+                break;
             OZL_EdChains.Lines(rules, owners, o.Id, tmp);
-            string ol = "";
-            if (o.Id == m_ChOwner)
-                ol = "> ";
-            ol += o.Id + "  (" + tmp.Count().ToString() + ")";
-            lo.AddItem(ol, NULL, 0);
+            string ownerName = RzOwnerName(o.Id);
+            RzRowText(row, "ChOwId", o.Id, OZL_Metal.TEXT);
+            RzRowText(row, "ChOwName", ownerName, OZL_Metal.TEXT);
+            RzRowText(row, "ChOwLines", tmp.Count().ToString(), OZL_Metal.MUTED);
+            Widget dash = row.FindAnyWidget("ChOwDash");
+            if (dash)
+                dash.Show(ownerName != "");
+            RzLitRow(row, "OZL_ChOwnerRow", o.Id == m_ChOwner);
         }
+        m_ChOwRows.Fit();
 
-        ll.ClearItems();
+        // The owner's lines: the line's colour and name, its packer and analyzer rules.
+        m_ChLnRows.Clear();
         for (i = 0; i < m_ChLines.Count(); i++)
         {
             OZL_EdLine l = m_ChLines[i];
-            string lt = "";
-            if (l.Line == m_ChLine)
-                lt = "> ";
-            lt += LineName(pts, l.Line) + "  (" + l.Packers.Count().ToString() + " + " + l.Analyzers.Count().ToString() + ")";
-            ll.AddItem(lt, NULL, 0);
-            ll.SetItemColor(i, 0, LineColor(pts, l.Line));
+            row = m_ChLnRows.Add(l.Line);
+            if (!row)
+                break;
+            RzRowText(row, "ChLnName", LineName(pts, l.Line), OZL_Metal.TEXT);
+            RzRowText(row, "ChLnCount", l.Packers.Count().ToString() + " + " + l.Analyzers.Count().ToString(), OZL_Metal.MUTED);
+            OZ_VppFlex.Paint(row, "ChLnDotBg", LineColor(pts, l.Line));
+            RzLitRow(row, "OZL_ChLineRow", l.Line == m_ChLine);
         }
+        m_ChLnRows.Fit();
+        ChLaySideRows();
         if (m_ChLines.Count() == 0)
-            ll.AddItem(Tr("#STR_OZL_ED_CH_NO_LINES"), NULL, 0);
-        m_ResRepaint = false;
+            SetLabel("RzChSideNote", "#STR_OZL_ED_CH_NO_LINES", OZL_Metal.ALERT);
+        else
+            SetLabel("RzChSideNote", "#STR_OZL_VPP_CH_SIDE_NOTE", OZL_Metal.MUTED);
 
         PaintChCards(line, rules, owners, pts);
         PaintChRaw(line, rules);
-        if (fillForm)
-            PaintChBulk(rules);
+        PaintChBulk(rules, fillForm);
         PaintRuForm(rules, line, owners, pts, fillForm);
-        bool station = PaintStation(line, rules, pts);
-        ShowStation(station);
+        PaintStation(line, rules, pts);
     }
 
-    // The station beside the raw items: as the player meets it for the rule on the
-    // right; the terminal card has no station, and a line says which cards show one.
-    protected void ShowStation(bool station)
+    // The words of the two side lists along their rows (225 units a row): the owner's
+    // lines and the line's rules are written from the right.
+    protected void ChLaySideRows()
     {
-        ShowW("RzChStBody", station);
-        ShowW("RzChStNone", !station);
+        int i;
+        if (m_ChOwRows)
+        {
+            for (i = 0; i < m_ChOwRows.Count(); i++)
+                RzLaySideRow(m_ChOwRows.Row(i), "ChOwId", "ChOwDash", "ChOwName", "ChOwLines", 225);
+        }
+        if (!m_ChLnRows)
+            return;
+        float s = UnitScale();
+        for (i = 0; i < m_ChLnRows.Count(); i++)
+        {
+            Widget row = m_ChLnRows.Row(i);
+            if (!row)
+                continue;
+            float right = 215 * s;
+            TextWidget count = TextWidget.Cast(row.FindAnyWidget("ChLnCount"));
+            if (count)
+            {
+                int tw = RzFitText(count);
+                right = right - tw;
+                RzSetX(count, right);
+                right = right - 8 * s;
+            }
+            Widget name = row.FindAnyWidget("ChLnName");
+            if (name)
+            {
+                float w;
+                float h;
+                name.GetSize(w, h);
+                w = right - 26 * s;
+                if (w < 0)
+                    w = 0;
+                name.SetSize(w, h);
+            }
+        }
     }
 
-    // A conveyor card: its kind, value and two lines; the picked card is lit.
-    protected void ChCard(string k, string v, string c, string s, int vColor)
+    // A card of the conveyor: its value and two lines under it, its line's colour as a
+    // square before the value (the cards that have one), lit when it is the picked card.
+    protected void ChCard(string k, string v, string c, string sub, int ink, int dotColor)
     {
-        SetLabel("RzChV_" + k, v, vColor);
+        SetLabel("RzChV_" + k, v, ink);
         SetLabel("RzChC_" + k, c, OZL_Metal.MUTED);
-        SetLabel("RzChS_" + k, s, OZL_Metal.MUTED);
-        int kc = OZL_Metal.MUTED;
+        SetLabel("RzChS_" + k, sub, OZL_Metal.MUTED);
+        if (dotColor != 0)
+            OZ_VppFlex.Paint(M_SUB_WIDGET, "RzChD_" + k + "Bg", dotColor);
+        else
+            OZ_VppFlex.Paint(M_SUB_WIDGET, "RzChD_" + k + "Bg", OZL_Metal.FAINT);
+
         int rim = OZL_Metal.EDGE;
+        int ground = OZL_Metal.HEAD;
+        int badge = OZL_Metal.RAISED;
+        int number = OZL_Metal.MUTED;
+        int kind = OZL_Metal.MUTED;
         if (k == m_ChCard)
         {
-            kc = OZL_Metal.ACCENT;
             rim = OZL_Metal.ACCENT;
+            ground = OZL_Metal.PICK_PANEL;
+            badge = OZL_Metal.ACCENT;
+            number = OZL_Metal.INK;
+            kind = OZL_Metal.ACCENT;
         }
-        SetColorOf("RzChK_" + k, kc);
-        SetColorOf("BtnRzChCard_" + k + "Edge", rim);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "BtnRzChCard_" + k + "Edge", rim);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "BtnRzChCard_" + k + "Bg", ground);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "RzChN_" + k + "Bg", badge);
+        SetColorOf("RzChNT_" + k, number);
+        SetColorOf("RzChK_" + k, kind);
     }
 
     protected void PaintChCards(OZL_EdLine line, OZL_Rules rules, OZL_Owners owners, OZL_PointTypes pts)
@@ -248,13 +341,14 @@ modded class OZ_VppAdminMenu
         {
             array<string> keys = {"raw", "packer", "sample", "analyzer", "carrier", "terminal"};
             for (int k = 0; k < keys.Count(); k++)
-                ChCard(keys[k], "-", "", "", OZL_Metal.FAINT);
+                ChCard(keys[k], "-", "", "", OZL_Metal.FAINT, 0);
             return;
         }
         OZL_TreeConfig tree = DraftTree();
+        int lineInk = LineColor(pts, line.Line);
         int i;
 
-        // СИРОВИНА: скільки видів і як вони лягли по тирах.
+        // RAW ITEMS: how many kinds, and how they lie over the tiers.
         array<int> tiers = new array<int>();
         array<int> counts = new array<int>();
         for (i = 0; i < line.Packers.Count(); i++)
@@ -271,6 +365,9 @@ modded class OZ_VppAdminMenu
                 counts.Set(at, counts[at] + 1);
             }
         }
+        // Every translated piece goes into a local before it meets another (two
+        // translations in one expression lose one).
+        string tierMark = Tr("#STR_OZL_ED_CH_T");
         string spread = "";
         for (int lo = 0; lo <= 10; lo++)
         {
@@ -279,23 +376,22 @@ modded class OZ_VppAdminMenu
                 continue;
             if (spread != "")
                 spread += "  ";
-            spread += Tr("#STR_OZL_ED_CH_T") + lo.ToString() + ": " + counts[ti].ToString();
+            spread += tierMark + lo.ToString() + ": " + counts[ti].ToString();
         }
-        // Two translations never share one argument list: the engine hands a call's
-        // result back through a slot the next call of the same function reuses
-        // (dayz-modding enforce-script.md); each goes into a local first.
+        string noPacker = Tr("#STR_OZL_ED_CH_NO_PACKER");
         if (line.Packers.Count() > 0)
         {
-            ChCard("raw", Tr("#STR_OZL_ED_CH_KINDS") + line.Packers.Count().ToString(), spread, "", OZL_Metal.TEXT);
+            string kinds = Tr("#STR_OZL_ED_CH_KINDS");
+            string packerRules = Tr("#STR_OZL_VPP_CH_RAW_CARD");
+            ChCard("raw", kinds + line.Packers.Count().ToString(), spread, packerRules, OZL_Metal.TEXT, 0);
         }
         else
         {
             string worldOnly = Tr("#STR_OZL_ED_CH_WORLD_ONLY");
-            string noPacker = Tr("#STR_OZL_ED_CH_NO_PACKER");
-            ChCard("raw", worldOnly, "", noPacker, OZL_Metal.TEXT);
+            ChCard("raw", worldOnly, "", noPacker, OZL_Metal.TEXT, 0);
         }
 
-        // ПАКУВАЛЬНИК: станок першого правила, межі часу.
+        // PACKER: the station of the first rule, the span of the times.
         string packDev = "";
         float tMin = -1;
         float tMax = -1;
@@ -323,14 +419,14 @@ modded class OZ_VppAdminMenu
                 string upTo = Secs(tMax);
                 times = times + " - " + upTo;
             }
-            ChCard("packer", OZL_EdChains.ItemName(packDev), packDev, times, OZL_Metal.TEXT);
+            ChCard("packer", OZL_EdChains.ItemName(packDev), packDev, times, OZL_Metal.TEXT, 0);
         }
         else
         {
-            ChCard("packer", "-", "", Tr("#STR_OZL_ED_CH_NO_PACKER"), OZL_Metal.FAINT);
+            ChCard("packer", "-", "", noPacker, OZL_Metal.FAINT, 0);
         }
 
-        // ПРОБА: клас і бали, які несуть проби цієї лінії.
+        // SAMPLE: its class and the points the samples of this line carry.
         pointSet.Sort();
         string ptsText = "";
         for (i = 0; i < pointSet.Count(); i++)
@@ -340,10 +436,13 @@ modded class OZ_VppAdminMenu
             ptsText += "+" + pointSet[i].ToString();
         }
         if (ptsText != "")
-            ptsText += " " + Tr("#STR_OZL_ED_CH_PTS");
-        ChCard("sample", OZL_EdChains.ItemName(line.Sample), line.Sample, ptsText, LineColor(pts, line.Line));
+        {
+            string ptsWord = Tr("#STR_OZL_ED_CH_PTS");
+            ptsText = ptsText + " " + ptsWord;
+        }
+        ChCard("sample", OZL_EdChains.ItemName(line.Sample), line.Sample, ptsText, OZL_Metal.TEXT, lineInk);
 
-        // АНАЛІЗАТОР і НОСІЙ -- з правила аналізу.
+        // ANALYZER and CARRIER -- from the analysis rule.
         OZL_Rule an = null;
         if (line.Analyzers.Count() > 0)
             an = rules.Find(line.Analyzers[0]);
@@ -355,103 +454,234 @@ modded class OZ_VppAdminMenu
             string anName = OZL_EdChains.ItemName(anDev);
             string anTime = Secs(an.TimeSec);
             string modsWord = Tr("#STR_OZL_ED_CH_MODS");
-            string anSub = anTime + "  " + modsWord + mods.Count().ToString();
-            ChCard("analyzer", anName, anDev, anSub, OZL_Metal.TEXT);
+            string anSub = anTime + " · " + modsWord + mods.Count().ToString();
+            ChCard("analyzer", anName, anDev, anSub, OZL_Metal.TEXT, 0);
         }
         else
         {
-            ChCard("analyzer", "-", "", "", OZL_Metal.FAINT);
+            ChCard("analyzer", "-", "", "", OZL_Metal.FAINT, 0);
         }
         if (line.Carrier != "")
         {
             string carrierName = OZL_EdChains.ItemName(line.Carrier);
             string chanceWord = Tr("#STR_OZL_ED_CH_CHANCE");
-            ChCard("carrier", carrierName, line.Carrier, chanceWord, LineColor(pts, line.Line));
+            ChCard("carrier", carrierName, line.Carrier, chanceWord, OZL_Metal.TEXT, lineInk);
         }
         else
         {
-            ChCard("carrier", "-", "", "", OZL_Metal.FAINT);
+            ChCard("carrier", "-", "", "", OZL_Metal.FAINT, 0);
         }
 
-        // ТЕРМІНАЛ -> ПУЛ: термінал власника й тип балів лінії.
+        // TERMINAL - POOL: the owner's terminal and the line's point type.
         OZL_OwnerDef def = OZL_EdChains.OwnerDef(owners, m_ChOwner);
         string term = "-";
         if (def && def.TerminalClasses.Count() > 0)
             term = def.TerminalClasses[0];
-        ChCard("terminal", LineName(pts, line.Line), term, Tr("#STR_OZL_ED_CH_POOL") + m_ChOwner, LineColor(pts, line.Line));
+        string poolWord = Tr("#STR_OZL_ED_CH_POOL");
+        ChCard("terminal", LineName(pts, line.Line), term, poolWord + m_ChOwner, OZL_Metal.TEXT, lineInk);
     }
 
+    // The raw items of the line: the packer's rules by the tier of their node, a caption
+    // per tier (how many kinds; the node when the tier's rules share one) and a row per
+    // rule under it.
     protected void PaintChRaw(OZL_EdLine line, OZL_Rules rules)
     {
-        TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzChRaw"));
-        if (!lb)
+        Widget host = M_SUB_WIDGET.FindAnyWidget("RzChRawRows");
+        if (!host)
             return;
+        if (!m_ChTierRows)
+            m_ChTierRows = new OZ_VppFlexRows(m_Flex, host, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_tier_row.layout", "OZL_ChTierRow", 325, 29);
+        if (!m_ChRawRows)
+            m_ChRawRows = new OZ_VppFlexRows(m_Flex, host, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_ch_raw_row.layout", "OZL_ChRawRow", 325, 36);
+
         m_ChRawIds.Clear();
-        m_ResRepaint = true;
-        lb.ClearItems();
+        m_ChTierRows.Clear();
+        m_ChRawRows.Clear();
         if (!line)
         {
-            m_ResRepaint = false;
+            SetLabel("RzChRawSub", "#STR_OZL_VPP_CH_RAW_SUB", OZL_Metal.MUTED);
+            m_ChTierRows.Fit();
+            m_ChRawRows.Fit();
             return;
         }
         OZL_TreeConfig tree = DraftTree();
         OZL_EdChains.SortedPackers(rules, tree, line, m_ChRawIds);
+        if (m_ChRawIds.Count() == 0)
+            SetLabel("RzChRawSub", "#STR_OZL_VPP_CH_NO_RAW2", OZL_Metal.ALERT);
+        else
+            SetLabel("RzChRawSub", "#STR_OZL_VPP_CH_RAW_SUB", OZL_Metal.MUTED);
+
+        string tierWord = Tr("#STR_OZL_ED_CH_TIER");
+        string kindsWord = Tr("#STR_OZL_ED_CH_KINDS");
+        string noNode = Tr("#STR_OZL_ED_CH_NO_NODE");
+        string nodeWord = Tr("#STR_OZL_ED_CH_NODE");
+        string missing = Tr("#STR_OZL_ED_CH_NODE_MISSING");
+        string offWord = Tr("#STR_OZL_ED_CH_OFF");
+        string ptsWord = Tr("#STR_OZL_ED_CH_PTS");
+
+        int lastTier = -1;
+        Widget row;
         for (int i = 0; i < m_ChRawIds.Count(); i++)
         {
             OZL_Rule r = rules.Find(m_ChRawIds[i]);
-            if (!r)
+            if (!r || m_ChRawRows.Count() >= RZ_LIST_MAX)
                 continue;
-            string row = "";
-            if (r.Id == m_ChRule)
-                row = "> ";
-            if (!r.Enabled)
-                row += Tr("#STR_OZL_ED_CH_OFF");
             int t = OZL_EdChains.TierOf(r, tree);
-            row += Tr("#STR_OZL_ED_CH_T") + t.ToString() + "    " + r.InputItem.Classname;
+            if (t != lastTier)
+            {
+                // A new tier: its caption, with what the tier's rules share.
+                lastTier = t;
+                int inTier = 0;
+                string sameNode = r.RequiredNode;
+                for (int k = 0; k < m_ChRawIds.Count(); k++)
+                {
+                    OZL_Rule rr = rules.Find(m_ChRawIds[k]);
+                    if (!rr || OZL_EdChains.TierOf(rr, tree) != t)
+                        continue;
+                    inTier++;
+                    if (rr.RequiredNode != sameNode)
+                        sameNode = "?";
+                }
+                string tierSub = kindsWord + inTier.ToString();
+                if (sameNode == "")
+                    tierSub = tierSub + " · " + noNode;
+                else if (sameNode != "?")
+                    tierSub = tierSub + " · " + nodeWord + ChNodeName(tree, sameNode);
+                row = m_ChTierRows.Add("t" + t.ToString());
+                if (row)
+                {
+                    RzRowText(row, "ChTierName", tierWord + t.ToString(), OZL_Metal.TEXT);
+                    RzRowText(row, "ChTierSub", tierSub, OZL_Metal.MUTED);
+                }
+            }
+
+            row = m_ChRawRows.Add(r.Id);
+            if (!row)
+                break;
+            string input = r.InputItem.Classname;
             if (r.InputItem.Quantity != 1)
-                row += " x" + r.InputItem.Quantity.ToString();
+                input = input + " x" + r.InputItem.Quantity.ToString();
+            int inputInk = OZL_Metal.TEXT;
+            if (!r.Enabled)
+            {
+                input = offWord + input;
+                inputInk = OZL_Metal.BAD;
+            }
+            if (r.InputItem.Classname == "")
+                inputInk = OZL_Metal.BAD;
+            RzRowText(row, "ChRawIn", input, inputInk);
+            string points = "";
             OZL_RuleOutput so = OZL_EdChains.SampleOutput(r);
             if (so)
-                row += "    +" + so.Points.ToString() + " " + Tr("#STR_OZL_ED_CH_PTS");
-            row += "    " + Secs(r.TimeSec) + "    ";
+                points = "+" + so.Points.ToString() + " " + ptsWord;
+            RzRowText(row, "ChRawPts", points, OZL_Metal.TEXT);
+            RzRowText(row, "ChRawTime", Secs(r.TimeSec), OZL_Metal.MUTED);
             if (r.RequiredNode == "")
-            {
-                row += Tr("#STR_OZL_ED_CH_NO_NODE");
-            }
+                RzRowText(row, "ChRawNode", noNode, OZL_Metal.MUTED);
+            else if (tree && tree.FindNode(r.RequiredNode))
+                RzRowText(row, "ChRawNode", ChNodeName(tree, r.RequiredNode), OZL_Metal.MUTED);
             else
-            {
-                OZL_TreeNode n = null;
-                if (tree)
-                    n = tree.FindNode(r.RequiredNode);
-                if (n)
-                    row += Tr("#STR_OZL_ED_CH_NODE") + n.Name;
-                else
-                    row += r.RequiredNode + Tr("#STR_OZL_ED_CH_NODE_MISSING");
-            }
-            lb.AddItem(row, NULL, 0);
-            if (!r.Enabled)
-                lb.SetItemColor(lb.GetNumItems() - 1, 0, OZL_Metal.BAD);
+                RzRowText(row, "ChRawNode", r.RequiredNode + missing, OZL_Metal.BAD);
         }
-        if (m_ChRawIds.Count() == 0)
-            lb.AddItem(Tr("#STR_OZL_ED_CH_NO_RAW"), NULL, 0);
-        m_ResRepaint = false;
+        m_ChTierRows.Fit();
+        m_ChRawRows.Fit();
+        ChLayRawRows();
     }
 
-    // Рядок масової правки: тір вибраного рядка сировини, і спільні для
-    // його тіру бали й вузол (різні -- поле порожнє).
-    protected void PaintChBulk(OZL_Rules rules)
+    // A node's name for a row: its name in the draft's tree, else its id.
+    protected string ChNodeName(OZL_TreeConfig tree, string nodeId)
+    {
+        OZL_TreeNode n = null;
+        if (tree)
+            n = tree.FindNode(nodeId);
+        if (n && n.Name != "")
+            return n.Name;
+        return nodeId;
+    }
+
+    // The rows of the raw list: the picked rule's row is lit; the points and the time are
+    // written from the right (their cells end 127 and 79 units before the row's end); a
+    // tier's caption is as wide as its words, what it says stands after them.
+    protected void ChLayRawRows()
+    {
+        float s = UnitScale();
+        int i;
+        Widget row;
+        int tw;
+        if (m_ChTierRows)
+        {
+            for (i = 0; i < m_ChTierRows.Count(); i++)
+            {
+                row = m_ChTierRows.Row(i);
+                if (!row)
+                    continue;
+                TextWidget tier = TextWidget.Cast(row.FindAnyWidget("ChTierName"));
+                Widget sub = row.FindAnyWidget("ChTierSub");
+                if (!tier || !sub)
+                    continue;
+                tw = RzFitText(tier);
+                float sw;
+                float sh;
+                sub.GetSize(sw, sh);
+                float sx = 2 * s + tw + 8 * s;
+                RzSetX(sub, sx);
+                sw = m_ChTierRows.Width() - sx - 2 * s;
+                if (sw < 0)
+                    sw = 0;
+                sub.SetSize(sw, sh);
+            }
+        }
+        if (!m_ChRawRows)
+            return;
+        float w = m_ChRawRows.Width();
+        for (i = 0; i < m_ChRawRows.Count(); i++)
+        {
+            row = m_ChRawRows.Row(i);
+            if (!row)
+                continue;
+            int rim = OZL_Metal.HEAD;
+            int ground = OZL_Metal.HEAD;
+            if (m_ChRawRows.Key(i) == m_ChRule)
+            {
+                rim = OZL_Metal.ACCENT;
+                ground = OZL_Metal.PICK_PANEL;
+            }
+            OZ_VppFlex.Paint(row, "OZL_ChRawRowEdge", rim);
+            OZ_VppFlex.Paint(row, "OZL_ChRawRowBg", ground);
+            TextWidget points = TextWidget.Cast(row.FindAnyWidget("ChRawPts"));
+            if (points)
+            {
+                tw = RzFitText(points);
+                RzSetX(points, w - 127 * s - tw);
+            }
+            TextWidget secs = TextWidget.Cast(row.FindAnyWidget("ChRawTime"));
+            if (secs)
+            {
+                tw = RzFitText(secs);
+                RzSetX(secs, w - 79 * s - tw);
+            }
+        }
+    }
+
+    // The bulk edit under the raw list: the tier of the picked raw row, and the points
+    // and the node its tier's rules share (a field is empty when they differ).
+    protected void PaintChBulk(OZL_Rules rules, bool fillForm)
     {
         OZL_TreeConfig tree = DraftTree();
         OZL_Rule r = null;
         if (m_ChRawIds.Find(m_ChRule) > -1)
             r = rules.Find(m_ChRule);
-        m_RzFill = true;
         if (!r)
         {
-            SetLabel("RzChBulkTier", Tr("#STR_OZL_ED_CH_TIER") + "-", OZL_Metal.MUTED);
-            SetEdit("RzChBulkPts", "");
-            SetEdit("RzChBulkNode", "");
-            m_RzFill = false;
+            SetLabel("RzChBulkTier", "#STR_OZL_VPP_CH_BULK_NONE", OZL_Metal.MUTED);
+            ChLayBulk();
+            if (fillForm)
+            {
+                m_RzFill = true;
+                SetEdit("RzChBulkPts", "");
+                SetEdit("RzChBulkNode", "");
+                m_RzFill = false;
+            }
             return;
         }
         int t = OZL_EdChains.TierOf(r, tree);
@@ -483,7 +713,13 @@ modded class OZ_VppAdminMenu
             }
             n++;
         }
-        SetLabel("RzChBulkTier", Tr("#STR_OZL_ED_CH_TIER") + t.ToString() + " (" + n.ToString() + ")", OZL_Metal.TEXT);
+        string toTier = Tr("#STR_OZL_VPP_CH_BULK_TO");
+        string rulesWord = Tr("#STR_OZL_VPP_CH_BULK_N");
+        SetLabel("RzChBulkTier", toTier + t.ToString() + " · " + rulesWord + n.ToString(), OZL_Metal.MUTED);
+        ChLayBulk();
+        if (!fillForm)
+            return;
+        m_RzFill = true;
         if (samePts)
             SetEdit("RzChBulkPts", pts0.ToString());
         else
@@ -495,23 +731,26 @@ modded class OZ_VppAdminMenu
         m_RzFill = false;
     }
 
-    // Інспектор: поля правила, а для картки терміналу чи без правила --
-    // пояснення.
+    // The bulk box's caption stands on the box's frame: it is as wide as its words, and
+    // the frame is broken under it (six units of air on each side).
+    protected void ChLayBulk()
+    {
+        RzFitLegend("RzChBulkTier", "RzChBulkGap");
+    }
+
+    // The rule's form: the fields of the rule, and for the terminal card or without a
+    // rule the note under the form says what there is, in the form's place.
     protected void PaintRuForm(OZL_Rules rules, OZL_EdLine line, OZL_Owners owners, OZL_PointTypes pts, bool fillForm)
     {
-        Widget form = M_SUB_WIDGET.FindAnyWidget("RzRuForm");
-        TextWidget info = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzRuInfo"));
         OZL_Rule r = CardRule(rules, line);
         ShowW("BtnRzRuEnabled", r != null);
+        ShowW("RzRuForm", r != null);
+        string word;
         if (!r)
         {
-            SetLabel("RzRuHead", "-", 0);
+            SetLabel("RzRuHead", "-", OZL_Metal.FAINT);
             SetLabel("RzRuSub", "", 0);
-            if (form)
-                form.Show(false);
-            if (!info)
-                return;
-            info.Show(true);
+            RuPlaceInfo(true);
             if (m_ChCard == "terminal" && line)
             {
                 OZL_OwnerDef def = OZL_EdChains.OwnerDef(owners, m_ChOwner);
@@ -524,45 +763,50 @@ modded class OZ_VppAdminMenu
                     pt = pts.Find(line.Line);
                 if (pt && pt.BasePurity > 0)
                     base = pt.BasePurity;
-                info.SetText(Tr("#STR_OZL_ED_CH_INFO_TERM") + terms + "\n" + Tr("#STR_OZL_ED_CH_INFO_PURITY") + OZL_EdChains.Pct(base) + "\n\n" + Tr("#STR_OZL_ED_CH_INFO_WHERE"));
+                string termWord = Tr("#STR_OZL_ED_CH_INFO_TERM");
+                string purityWord = Tr("#STR_OZL_ED_CH_INFO_PURITY");
+                string whereWord = Tr("#STR_OZL_ED_CH_INFO_WHERE");
+                string info = termWord + terms + "\n" + purityWord + OZL_EdChains.Pct(base);
+                info = info + "\n\n" + whereWord;
+                SetLabel("RzRuInfo", info, OZL_Metal.MUTED);
             }
             else
             {
-                info.SetText(Tr("#STR_OZL_ED_CH_INFO_PICK"));
+                SetLabel("RzRuInfo", "#STR_OZL_ED_CH_INFO_PICK", OZL_Metal.MUTED);
             }
             return;
         }
-        if (form)
-            form.Show(true);
-        if (info)
-            info.Show(false);
+        RuPlaceInfo(false);
+        SetLabel("RzRuInfo", "#STR_OZL_VPP_RU_NOTE1", OZL_Metal.MUTED);
 
-        // The head: the rule's id; its group and the line it feeds under it; the
-        // switch that turns it on or off beside the tag.
+        // The head: the rule's id; its group and the line it feeds under it; the switch
+        // that turns it on or off beside the tag.
         SetLabel("RzRuHead", r.Id, OZL_Metal.TEXT);
         string sub = "";
         OZL_RuleGroup grp = OZL_EdChains.GroupOf(rules, r.Id);
         if (grp)
         {
-            string groupWord = Tr("#STR_OZL_VPP_RU_GROUP");
-            sub = groupWord + grp.Id;
+            word = Tr("#STR_OZL_VPP_RU_GROUP");
+            sub = word + grp.Id;
         }
         if (line)
         {
-            string lineWord = Tr("#STR_OZL_VPP_RU_LINE");
+            word = Tr("#STR_OZL_VPP_RU_LINE");
             string lineName = LineName(pts, line.Line);
             if (sub != "")
-                sub += "  |  ";
-            sub += lineWord + lineName;
+                sub += " · ";
+            sub += word + lineName;
         }
         SetLabel("RzRuSub", sub, 0);
         if (r.Enabled)
-            PaintBtn("BtnRzRuEnabled", Tr("#STR_OZL_ED_RU_ON"), OZL_Metal.OK, OZL_Metal.RAISED, OZL_Metal.OK);
+            SetLabel("RzRuEnabledText", "#STR_OZL_ED_RU_ON", OZL_Metal.OK);
         else
-            PaintBtn("BtnRzRuEnabled", Tr("#STR_OZL_ED_RU_OFF"), OZL_Metal.BAD, OZL_Metal.RAISED, OZL_Metal.BAD);
+            SetLabel("RzRuEnabledText", "#STR_OZL_ED_RU_OFF", OZL_Metal.BAD);
+        RzPaintTick("BtnRzRuEnabledBox", r.Enabled, OZL_Metal.OK);
+        RuLayEnabled();
         bool exact = IsExact(r);
-        PaintToggle("BtnRzRuKin", !exact);
-        PaintToggle("BtnRzRuExact", exact);
+        RzSeg("BtnRzRuKin", !exact);
+        RzSeg("BtnRzRuExact", exact);
         if (!fillForm)
             return;
 
@@ -594,33 +838,96 @@ modded class OZ_VppAdminMenu
         m_RzFill = false;
     }
 
-    // Станок, як його бачить гравець: назви й описи предметів -- з
-    // config.cpp і stringtable мода мовою клієнта, дія -- та, що в меню дій
-    // гравця. Час, вузол і чистота -- рядком для адміна: гравець їх не бачить.
-    protected bool PaintStation(OZL_EdLine line, OZL_Rules rules, OZL_PointTypes pts)
+    // The rule's switch is as wide as its word and ends where it was drawn to end.
+    protected void RuLayEnabled()
+    {
+        Widget b = M_SUB_WIDGET.FindAnyWidget("BtnRzRuEnabled");
+        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzRuEnabledText"));
+        if (!b || !t)
+            return;
+        float s = UnitScale();
+        float x;
+        float y;
+        float w;
+        float h;
+        b.GetPos(x, y);
+        b.GetSize(w, h);
+        float right = x + w;
+        int tw = RzFitText(t);
+        w = 24 * s + tw + 2;
+        b.SetSize(w, h);
+        b.SetPos(right - w, y);
+        Widget ground = M_SUB_WIDGET.FindAnyWidget("BtnRzRuEnabledBg");
+        if (ground)
+            ground.SetSize(w, h);
+    }
+
+    // The note under the form: in the form's place and as tall as a few lines while no
+    // rule is shown, back under the form otherwise.
+    protected void RuPlaceInfo(bool up)
+    {
+        Widget info = M_SUB_WIDGET.FindAnyWidget("RzRuInfo");
+        Widget form = M_SUB_WIDGET.FindAnyWidget("RzRuForm");
+        if (!info || !form)
+            return;
+        if (m_RuInfoW <= 0)
+        {
+            info.GetPos(m_RuInfoX, m_RuInfoY);
+            info.GetSize(m_RuInfoW, m_RuInfoH);
+        }
+        if (m_RuInfoW <= 0)
+            return;
+        if (!up)
+        {
+            info.SetPos(m_RuInfoX, m_RuInfoY);
+            info.SetSize(m_RuInfoW, m_RuInfoH);
+            return;
+        }
+        float fx;
+        float fy;
+        form.GetPos(fx, fy);
+        info.SetPos(m_RuInfoX, fy);
+        info.SetSize(m_RuInfoW, 240 * UnitScale());
+    }
+
+    // The station as the player meets it: the names and descriptions of the items come
+    // from config.cpp and the mod's stringtable in the client's language, the action is
+    // the one of the player's action menu. The time, the node and the purity are a line
+    // for the admin: the player does not see them. The terminal card has no station.
+    protected void PaintStation(OZL_EdLine line, OZL_Rules rules, OZL_PointTypes pts)
     {
         OZL_Rule r = null;
         if (line)
             r = CardRule(rules, line);
+        ShowW("RzChStBody", r != null);
         if (!r)
-            return false;
+        {
+            SetLabel("RzChStSub", "#STR_OZL_ED_CH_ST_NONE", OZL_Metal.MUTED);
+            return;
+        }
+        SetLabel("RzChStSub", "#STR_OZL_VPP_CH_ST_SUB", OZL_Metal.MUTED);
+
         bool analysis = (line.Analyzers.Find(r.Id) > -1);
         string dev = OZL_Match.StripExact(r.Device);
-        string kind = Tr("#STR_OZL_ED_CH_K_PACKER");
+        int lineInk = LineColor(pts, line.Line);
         if (analysis)
-            kind = Tr("#STR_OZL_ED_CH_K_ANALYZER");
-        SetLabel("RzStHead", kind + "   " + OZL_EdChains.ItemName(dev), 0);
+            SetLabel("RzStKind", "#STR_OZL_ED_CH_K_ANALYZER", OZL_Metal.MUTED);
+        else
+            SetLabel("RzStKind", "#STR_OZL_ED_CH_K_PACKER", OZL_Metal.MUTED);
+        SetLabel("RzStName", OZL_EdChains.ItemName(dev), OZL_Metal.TEXT);
+        ChLayStation();
 
         string inName = OZL_EdChains.ItemName(r.InputItem.Classname);
         if (r.InputItem.Quantity > 1)
             inName += " x" + r.InputItem.Quantity.ToString();
-        SetLabel("RzStSlotK0", Tr("#STR_OZL_ED_ST_SLOT_IN"), 0);
+        SetLabel("RzStSlotK0", "#STR_OZL_ED_ST_SLOT_IN", 0);
         SetLabel("RzStSlotV0", inName, 0);
         string outCls = "";
         if (r.Outputs.Count() > 0 && r.Outputs[0])
             outCls = r.Outputs[0].Classname;
-        SetLabel("RzStSlotK1", Tr("#STR_OZL_ED_ST_SLOT_OUT"), 0);
-        SetLabel("RzStSlotV1", OZL_EdChains.ItemName(outCls), LineColor(pts, line.Line));
+        SetLabel("RzStSlotK1", "#STR_OZL_ED_ST_SLOT_OUT", 0);
+        SetLabel("RzStSlotV1", OZL_EdChains.ItemName(outCls), 0);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "RzStSlotD1Bg", lineInk);
         array<OZL_ModuleDef> mods = new array<OZL_ModuleDef>();
         OZL_EdChains.ModulesOf(DraftModules(), line.Line, mods);
         for (int m = 0; m < 2; m++)
@@ -628,32 +935,70 @@ modded class OZ_VppAdminMenu
             string mv = "-";
             if (m < mods.Count())
                 mv = OZL_EdChains.ItemName(mods[m].Classname);
-            SetLabel("RzStSlotK" + (m + 2).ToString(), Tr("#STR_OZL_ED_ST_SLOT_MOD"), 0);
+            SetLabel("RzStSlotK" + (m + 2).ToString(), "#STR_OZL_ED_ST_SLOT_MOD", 0);
             SetLabel("RzStSlotV" + (m + 2).ToString(), mv, 0);
         }
 
-        SetLabel("RzStAction", "[F]  " + Tr("#STR_OZL_action_start"), 0);
-        // Спершу права частина: TranslateString ліворуч від "+" затирається,
-        // коли права частина сама кличе переклад (Secs перекладає "с"), --
-        // виміряно 2026-11-09, dayz-modding mod-structure.md, "Reading
-        // strings from SCRIPT".
+        SetLabel("RzStKey", "F", 0);
+        SetLabel("RzStAction", "#STR_OZL_action_start", 0);
+        // Each translated piece into a local first (Secs translates its unit).
         string secs = Secs(r.TimeSec);
-        string admin = Tr("#STR_OZL_ED_ST_ADMIN") + secs;
+        string adminWord = Tr("#STR_OZL_ED_ST_ADMIN");
+        string admin = adminWord + secs;
         if (r.RequiredNode != "")
-            admin += "  -  " + Tr("#STR_OZL_ED_CH_NODE") + r.RequiredNode;
+        {
+            string nodeWord = Tr("#STR_OZL_ED_CH_NODE");
+            admin = admin + " · " + nodeWord + r.RequiredNode;
+        }
         if (!analysis)
-            admin += "  -  " + Tr("#STR_OZL_ED_RU_PURITY") + " " + OZL_EdChains.Pct(OZL_Rules.StartPurity(r, dev, pts));
+        {
+            string purityWord = Tr("#STR_OZL_ED_RU_PURITY");
+            admin = admin + " · " + purityWord + " " + OZL_EdChains.Pct(OZL_Rules.StartPurity(r, dev, pts));
+        }
         SetLabel("RzStAdmin", admin, 0);
 
-        SetLabel("RzStTipName", OZL_EdChains.ItemName(outCls), LineColor(pts, line.Line));
+        SetLabel("RzStTipName", OZL_EdChains.ItemName(outCls), OZL_Metal.TEXT);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "RzStTipDotBg", lineInk);
         string desc = OZL_EdChains.ItemDesc(outCls);
         if (desc == "")
             desc = "-";
         SetLabel("RzStTipDesc", desc, 0);
-        return true;
     }
 
-    // ------------------------------------------------- дії
+    // The station's name stands after its kind: the kind's caption is as wide as its
+    // word, and the box that holds the name begins 8 units after it and keeps its end.
+    protected void ChLayStation()
+    {
+        TextWidget kind = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzStKind"));
+        Widget name = M_SUB_WIDGET.FindAnyWidget("RzStName");
+        Widget box = M_SUB_WIDGET.FindAnyWidget("RzStNameBox");
+        if (!kind || !name || !box)
+            return;
+        float s = UnitScale();
+        int tw = RzFitText(kind);
+        float kx;
+        float ky;
+        kind.GetPos(kx, ky);
+        float bx;
+        float by;
+        float bw;
+        float bh;
+        box.GetPos(bx, by);
+        box.GetSize(bw, bh);
+        float right = bx + bw;
+        float nx = kx + tw + 8 * s;
+        bw = right - nx;
+        if (bw < 0)
+            bw = 0;
+        box.SetPos(nx, by);
+        box.SetSize(bw, bh);
+        float nw;
+        float nh;
+        name.GetSize(nw, nh);
+        name.SetSize(bw, nh);
+    }
+
+    // ------------------------------------------------- actions
 
     protected void ChPickCard(string k)
     {
@@ -686,9 +1031,9 @@ modded class OZ_VppAdminMenu
         RepaintChains(true);
     }
 
-    // Масова правка тіру: бали за пробу й вузол -- усім правилам сировини
-    // того тіру, що й вибраний рядок. Порожнє поле не чіпається; "-" у полі
-    // вузла знімає вузол.
+    // The bulk edit of a tier: the points per sample and the node go to every raw rule of
+    // the picked row's tier. An empty field touches nothing; "-" in the node field takes
+    // the node away.
     protected void ChBulk()
     {
         OZL_Rules rules = DraftRules();
@@ -720,6 +1065,8 @@ modded class OZ_VppAdminMenu
         for (i = 0; i < group.Count(); i++)
         {
             OZL_Rule g = rules.Find(group[i]);
+            if (!g)
+                continue;
             if (pts != "")
             {
                 OZL_RuleOutput so = OZL_EdChains.SampleOutput(g);
@@ -736,12 +1083,13 @@ modded class OZ_VppAdminMenu
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_CH_BULK_DONE") + group.Count().ToString());
+        string word = Tr("#STR_OZL_ED_CH_BULK_DONE");
+        Hint(word + group.Count().ToString());
     }
 
-    // + СИРОВИНА: копія вибраного (чи першого) правила сировини лінії з
-    // порожнім входом -- адмін вписує клас; без пакувальника в лінії --
-    // нове правило з пробою лінії на виході.
+    // + RAW ITEM: a copy of the picked (or the first) raw rule of the line with an empty
+    // input -- the admin types the class; a line with no packer gets a new rule with the
+    // line's sample as its output.
     protected void ChRawAdd()
     {
         OZL_Rules rules = DraftRules();
@@ -793,7 +1141,8 @@ modded class OZ_VppAdminMenu
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_CH_RAW_ADDED") + r.Id);
+        string word = Tr("#STR_OZL_ED_CH_RAW_ADDED");
+        Hint(word + r.Id);
     }
 
     protected OZL_RuleOutput FirstOutput(OZL_Rule r)
@@ -855,7 +1204,8 @@ modded class OZ_VppAdminMenu
         PaintSummary();
     }
 
-    // Перемикачі й кнопки правила: один знімок на натискання.
+    // The rule's switches: one undo step per press. exact -- which classes the input
+    // takes; otherwise the rule is turned on or off.
     protected void RuToggle(bool exact)
     {
         OZL_Rules rules = DraftRules();
@@ -916,7 +1266,8 @@ modded class OZ_VppAdminMenu
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_RU_DUPED") + c.Id);
+        string word = Tr("#STR_OZL_ED_RU_DUPED");
+        Hint(word + c.Id);
     }
 
     protected void RuDelete()
@@ -935,16 +1286,18 @@ modded class OZ_VppAdminMenu
         Confirm(ask + r.Id + "? " + tail, "#STR_OZL_VPP_YES_DELETE", "rz:rudel:" + r.Id);
     }
 
-    // The strip's "yes": the rule is found again by its id.
+    // The strip's yes: the rule is found again by its id.
     protected void RuDeleteNow(string ruleId)
     {
         OZL_Rules rules = DraftRules();
         OZL_Rule r = null;
         if (rules)
             r = rules.Find(ruleId);
+        string word;
         if (!r)
         {
-            Hint(Tr("#STR_OZL_VPP_GONE") + ruleId);
+            word = Tr("#STR_OZL_VPP_GONE");
+            Hint(word + ruleId);
             return;
         }
         OZL_RuleGroup grp = OZL_EdChains.GroupOf(rules, r.Id);
@@ -965,7 +1318,8 @@ modded class OZ_VppAdminMenu
         RepaintChains(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_RU_DELETED") + id);
+        word = Tr("#STR_OZL_ED_RU_DELETED");
+        Hint(word + id);
     }
 
     override void OnConfirmed(string action)
@@ -978,9 +1332,9 @@ modded class OZ_VppAdminMenu
         super.OnConfirmed(action);
     }
 
-    // ------------------------------------------------- розмір і події
+    // ------------------------------------------------- size and events
 
-    // The rule the inspector shows: the picked one, or the card's.
+    // The rule the form shows: the picked one, or the card's.
     protected OZL_Rule CurrentRule()
     {
         OZL_Rules rules = DraftRules();
@@ -992,167 +1346,27 @@ modded class OZ_VppAdminMenu
         return r;
     }
 
-    // The chains page in the page area pw x ph (pixels; RzLayout gives it, nothing
-    // is read back). The side column and the rule's form keep their widths; the
-    // middle takes the rest: the cards on top, then the raw items with the station
-    // beside them -- or under them, when the middle is narrower than 700 units.
+    // The page changed its size, or its texts have their widths now: the lists are fitted
+    // and what follows a text is placed again. The page itself follows the window by the
+    // rule its layout carries.
     override void RzLayPages(float pw, float ph)
     {
         super.RzLayPages(pw, ph);
-        if (!M_SUB_WIDGET)
+        if (!M_SUB_WIDGET || m_RzTab != "chains")
             return;
-        float s = Px();
-        float gap = 16 * s;
-        float sideW = 210 * s;
-        float inspW = 300 * s;
-        float mw = pw - sideW - inspW - 2 * gap;
-        if (mw < 300 * s)
-            mw = 300 * s;
-
-        // The side column: owners on top, the lines take the rest above the note.
-        SizeW("RzChSide", sideW, ph);
-        float linesH = ph - (174 + 58) * s;
-        if (linesH < 40 * s)
-            linesH = 40 * s;
-        SizeW("RzChLines", sideW, linesH);
-        SizeW("RzChSideNote", sideW, 50 * s);
-
-        PlaceW("RzChMid", sideW + gap, 0, mw, ph);
-        PlaceW("RzChInsp", pw - inspW, 0, inspW, ph);
-        float formH = ph - 66 * s;
-        if (formH < 40 * s)
-            formH = 40 * s;
-        SizeW("RzRuForm", inspW, formH);
-
-        // The cards: one row when six fit at 146 units, otherwise three in a row.
-        array<string> keys = {"raw", "packer", "sample", "analyzer", "carrier", "terminal"};
-        int perRow = 3;
-        if (mw >= (6 * 146 + 5 * 4) * s)
-            perRow = 6;
-        float cw = (mw - (perRow - 1) * 4 * s) / perRow;
-        int rows = 6 / perRow;
-        float pipeH = (rows * 64 + (rows - 1) * 6) * s;
-        SizeW("RzChPipe", mw, pipeH);
-        array<string> parts = {"RzChK_", "RzChV_", "RzChC_", "RzChS_"};
-        array<float> partH = {14.0, 18.0, 14.0, 14.0};
-        for (int i = 0; i < keys.Count(); i++)
-        {
-            int col = i % perRow;
-            int row = i / perRow;
-            PlaceW("RzChCard_" + keys[i], col * (cw + 4 * s), row * 70 * s, cw, 64 * s);
-            PlaceBtn("BtnRzChCard_" + keys[i], 0, 0, cw, 64 * s);
-            for (int p = 0; p < parts.Count(); p++)
-                SizeW(parts[p] + keys[i], cw - 12 * s, partH[p] * s);
-        }
-
-        // The raw items and the station: side by side in a wide middle, stacked in a
-        // narrow one (the station keeps its 218 units of height then).
-        float bodyY = pipeH + 10 * s;
-        float bodyH = ph - bodyY;
-        float stationH = 218 * s;
-        float rawW = mw;
-        float rawH = bodyH;
-        float stX = 0;
-        float stY = bodyY;
-        float stW = mw;
-        if (mw >= 700 * s)
-        {
-            rawW = (mw - gap) / 2;
-            stX = rawW + gap;
-            stW = mw - stX;
-            stationH = bodyH;
-        }
-        else
-        {
-            rawH = bodyH - stationH - 10 * s;
-            if (rawH < 110 * s)
-                rawH = 110 * s;
-            stY = bodyY + rawH + 10 * s;
-        }
-        PlaceW("RzChRawBox", 0, bodyY, rawW, rawH);
-        float listH = rawH - (40 + 36) * s;
-        if (listH < 30 * s)
-            listH = 30 * s;
-        SizeW("RzChRaw", rawW, listH);
-        SizeW("RzChBulk", rawW, 30 * s);
-        SizeW("RzChRawSub", rawW - 130 * s, 14 * s);
-        PlaceW("RzChStation", stX, stY, stW, stationH);
-        LayStation(stW);
-    }
-
-    // The station's slots, lines and tooltip at the station panel's width: a slot is
-    // at most 220 units, the tooltip at most 700.
-    protected void LayStation(float stW)
-    {
-        float s = Px();
-        SizeW("RzChStSub", stW, 14 * s);
-        SizeW("RzChStNone", stW, 60 * s);
-        SizeW("RzChStBody", stW, 178 * s);
-        float slotW = (stW - 12 * s) / 4;
-        if (slotW > 220 * s)
-            slotW = 220 * s;
-        for (int sl = 0; sl < 4; sl++)
-        {
-            string sn = "RzStSlot" + sl.ToString();
-            float sx = sl * (slotW + 4 * s);
-            PlaceW(sn, sx, 24 * s, slotW, 44 * s);
-            PlaceW(sn + "Edge", sx - s, 23 * s, slotW + 2 * s, 46 * s);
-            SizeW("RzStSlotK" + sl.ToString(), slotW - 10 * s, 14 * s);
-            SizeW("RzStSlotV" + sl.ToString(), slotW - 10 * s, 22 * s);
-        }
-        float tipW = stW;
-        if (tipW > 700 * s)
-            tipW = 700 * s;
-        SizeW("RzStTip", tipW, 64 * s);
-        PlaceW("RzStTipEdge", -s, 113 * s, tipW + 2 * s, 66 * s);
-        SizeW("RzStTipName", tipW - 12 * s, 18 * s);
-        SizeW("RzStTipDesc", tipW - 12 * s, 42 * s);
-        SizeW("RzStHead", stW, 20 * s);
-        SizeW("RzStAction", stW, 20 * s);
-        SizeW("RzStAdmin", stW, 16 * s);
-    }
-
-    override bool OnItemSelected(Widget w, int x, int y, int row, int column, int oldRow, int oldColumn)
-    {
-        if (!M_SUB_WIDGET || m_ResRepaint || !w || !m_ChLines)
-            return super.OnItemSelected(w, x, y, row, column, oldRow, oldColumn);
-        string nm = w.GetName();
-        if (nm == "RzChOwners")
-        {
-            OZL_Owners owners = DraftOwners();
-            if (owners && row >= 0 && row < owners.Owners.Count() && owners.Owners[row])
-            {
-                m_ChOwner = owners.Owners[row].Id;
-                m_ChLine = "";
-                m_ChRule = "";
-                m_Ed.EndGesture();
-                RepaintChains(true);
-            }
-            return true;
-        }
-        if (nm == "RzChLines")
-        {
-            if (row >= 0 && row < m_ChLines.Count())
-            {
-                m_ChLine = m_ChLines[row].Line;
-                m_ChRule = "";
-                m_Ed.EndGesture();
-                ChPickCard(m_ChCard);
-            }
-            return true;
-        }
-        if (nm == "RzChRaw")
-        {
-            if (row >= 0 && row < m_ChRawIds.Count())
-            {
-                m_ChRule = m_ChRawIds[row];
-                m_ChCard = "raw";
-                m_Ed.EndGesture();
-                RepaintChains(true);
-            }
-            return true;
-        }
-        return super.OnItemSelected(w, x, y, row, column, oldRow, oldColumn);
+        if (m_ChOwRows)
+            m_ChOwRows.Fit();
+        if (m_ChLnRows)
+            m_ChLnRows.Fit();
+        ChLaySideRows();
+        if (m_ChTierRows)
+            m_ChTierRows.Fit();
+        if (m_ChRawRows)
+            m_ChRawRows.Fit();
+        ChLayRawRows();
+        ChLayBulk();
+        ChLayStation();
+        RuLayEnabled();
     }
 
     override bool OnChange(Widget w, int x, int y, bool finished)
@@ -1175,7 +1389,7 @@ modded class OZ_VppAdminMenu
 
     override bool OnClick(Widget w, int x, int y, int button)
     {
-        if (!M_SUB_WIDGET || !w || !m_ChLines)
+        if (!M_SUB_WIDGET || !w || !m_ChLines || !m_Ed)
             return super.OnClick(w, x, y, button);
         string nm = w.GetName();
         if (nm.IndexOf("BtnRzChCard_") == 0)
@@ -1193,7 +1407,8 @@ modded class OZ_VppAdminMenu
             ChRawAdd();
             return true;
         }
-        if (nm == "BtnRzRuEnabled")
+        // The rule's switch: its box or its word.
+        if (nm == "BtnRzRuEnabled" || nm == "BtnRzRuEnabledBox")
         {
             RuToggle(false);
             return true;
@@ -1217,6 +1432,48 @@ modded class OZ_VppAdminMenu
         {
             RuDelete();
             return true;
+        }
+
+        // The rows of the three lists (a row, or anything inside one).
+        if (m_RzTab != "chains")
+            return super.OnClick(w, x, y, button);
+        int at;
+        if (m_ChOwRows)
+        {
+            at = m_ChOwRows.IndexOf(w);
+            if (at != -1)
+            {
+                m_ChOwner = m_ChOwRows.Key(at);
+                m_ChLine = "";
+                m_ChRule = "";
+                m_Ed.EndGesture();
+                RepaintChains(true);
+                return true;
+            }
+        }
+        if (m_ChLnRows)
+        {
+            at = m_ChLnRows.IndexOf(w);
+            if (at != -1)
+            {
+                m_ChLine = m_ChLnRows.Key(at);
+                m_ChRule = "";
+                m_Ed.EndGesture();
+                ChPickCard(m_ChCard);
+                return true;
+            }
+        }
+        if (m_ChRawRows)
+        {
+            at = m_ChRawRows.IndexOf(w);
+            if (at != -1)
+            {
+                m_ChRule = m_ChRawRows.Key(at);
+                m_ChCard = "raw";
+                m_Ed.EndGesture();
+                RepaintChains(true);
+                return true;
+            }
         }
         return super.OnClick(w, x, y, button);
     }

@@ -1,0 +1,40 @@
+statics: ResearchStatics.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_statics.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 82; 1 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_statics.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_stc_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  BtnRzStcAdd  ButtonWidget (parts: BtnRzStcAddEdge, BtnRzStcAddBg)
+  RzStcFind  EditBox
+  RzStcCount  TextWidget (filled by script)
+  RzStcList  Frame
+  RzStcListRows  WrapSpacer: the list's rows go here (ozl_vpp_stc_row); its ScrollWidget is RzStcListScroll
+  RzStcHeadRow  Frame
+  RzStcHead  TextWidget (filled by script)
+  RzStcSub  TextWidget (filled by script)
+  BtnRzStcDel  ButtonWidget (parts: BtnRzStcDelEdge, BtnRzStcDelBg)
+  BtnRzStcDelText  TextWidget (filled by script)
+  RzStcBody  Frame
+  RzStcId  EditBox
+  RzStcClass  EditBox
+  RzStcX  EditBox
+  RzStcY  EditBox
+  RzStcZ  EditBox
+  RzStcYaw  EditBox
+  BtnRzStcHere  ButtonWidget (parts: BtnRzStcHereEdge, BtnRzStcHereBg)
+  RzStcNote  EditBox
+
+ROW TEMPLATES
+  ozl_vpp_stc_row.layout  root OZL_VppStcRow (Button), 39 in the sample, 427 x 44 units, list RzStcListRows
+      OZL_VppStcRow  ButtonWidget (parts: OZL_VppStcRowEdge, OZL_VppStcRowBg)
+      StcRowId  TextWidget (filled by script)
+      StcRowClass  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x13
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  Panel rs45

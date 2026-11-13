@@ -1,0 +1,62 @@
+owners: ResearchOwners.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_owners.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 117; 1 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_owners.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ow_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  BtnRzOwAdd  ButtonWidget (parts: BtnRzOwAddEdge, BtnRzOwAddBg)
+  RzOwList  Frame
+  RzOwListRows  WrapSpacer: the list's rows go here (ozl_vpp_ow_row); its ScrollWidget is RzOwListScroll
+  RzOwCount  TextWidget (filled by script)
+  RzOwHeadRow  Frame
+  RzOwHead  TextWidget (filled by script)
+  RzOwChip  Frame (parts: RzOwChipBg)
+  RzOwChipText  TextWidget (filled by script)
+  BtnRzOwDel  ButtonWidget (parts: BtnRzOwDelEdge, BtnRzOwDelBg)
+  BtnRzOwDelText  TextWidget (filled by script)
+  RzOwBody  Frame
+  RzOwId  EditBox
+  RzOwTerms  EditBox
+  BtnRzSkin_0  ButtonWidget (parts: BtnRzSkin_0Edge, BtnRzSkin_0Bg)
+  RzSkinName0  TextWidget (filled by script)
+  RzSkinHow0  TextWidget (filled by script)
+  BtnRzSkin_1  ButtonWidget (parts: BtnRzSkin_1Edge, BtnRzSkin_1Bg)
+  RzSkinName1  TextWidget (filled by script)
+  RzSkinHow1  TextWidget (filled by script)
+  BtnRzSkin_2  ButtonWidget (parts: BtnRzSkin_2Edge, BtnRzSkin_2Bg)
+  RzSkinName2  TextWidget (filled by script)
+  RzSkinHow2  TextWidget (filled by script)
+  BtnRzSkin_3  ButtonWidget (parts: BtnRzSkin_3Edge, BtnRzSkin_3Bg)
+  RzSkinName3  TextWidget (filled by script)
+  RzSkinHow3  TextWidget (filled by script)
+  BtnRzSkin_4  ButtonWidget (parts: BtnRzSkin_4Edge, BtnRzSkin_4Bg)
+  RzSkinName4  TextWidget (filled by script)
+  RzSkinHow4  TextWidget (filled by script)
+  BtnRzSkin_5  ButtonWidget (parts: BtnRzSkin_5Edge, BtnRzSkin_5Bg)
+  RzSkinName5  TextWidget (filled by script)
+  RzSkinHow5  TextWidget (filled by script)
+  BtnRzSkin_6  ButtonWidget (parts: BtnRzSkin_6Edge, BtnRzSkin_6Bg)
+  RzSkinName6  TextWidget (filled by script)
+  RzSkinHow6  TextWidget (filled by script)
+  BtnRzSkin_7  ButtonWidget (parts: BtnRzSkin_7Edge, BtnRzSkin_7Bg)
+  RzSkinName7  TextWidget (filled by script)
+  RzSkinHow7  TextWidget (filled by script)
+  RzOwDevices  MultilineEditBox
+
+ROW TEMPLATES
+  ozl_vpp_ow_row.layout  root OZL_VppOwRow (Button), 7 in the sample, 387 x 54 units, list RzOwListRows
+      OZL_VppOwRow  ButtonWidget (parts: OZL_VppOwRowEdge, OZL_VppOwRowBg)
+      OwRowId  TextWidget (filled by script)
+      OwRowDash  TextWidget (a caption: recolour only)
+      OwRowName  TextWidget (filled by script)
+      OwRowSub  TextWidget (filled by script)
+      OwRowCount  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x24
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  Panel rw44

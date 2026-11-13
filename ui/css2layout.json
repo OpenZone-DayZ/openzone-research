@@ -1,0 +1,133 @@
+{
+  "note": "The pages of this mod in the OpenZone window of VPP, converted from the mockup (docs/specs/2026-11-12-openzone-vpp-mockup/project) by `python -m dayz_mcp.css2layout ui/css2layout.json [page] [--demo]` (the MCP repository's src). The fonts, the icons and how to mark a page: the core's ui/css2layout.json and docs/specs/2026-11-13-openzone-vpp-page-guide.md.",
+  "extends": "../../openzone-core/ui/css2layout.json",
+  "out": "../OpenZone_Research_VPP/gui/layouts",
+  "prefix": "OpenZone_Research_VPP/gui/layouts",
+  "report": "css2layout",
+  "runtime": null,
+  "strings": {
+    "files": [
+      "../OpenZone_Research/stringtable.csv"
+    ],
+    "column": "original",
+    "fold": {
+      "І": "I"
+    },
+    "pending": [
+      "css2layout/strings.pending.json",
+      "css2layout/strings.r1.pending.json"
+    ]
+  },
+  "pages": {
+    "bar": {
+      "page": "ResearchBar.html",
+      "size": [
+        1360,
+        60
+      ],
+      "layout": "ozl_vpp_bar",
+      "root": "OZL_VppBar",
+      "auto": "rb",
+      "hidden": true
+    },
+    "probs": {
+      "page": "ResearchProbs.html",
+      "size": [
+        1360,
+        244
+      ],
+      "layout": "ozl_vpp_probs",
+      "root": "OZL_VppProbs",
+      "auto": "rp",
+      "hidden": true
+    },
+    "overview": {
+      "page": "ResearchOverview.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_overview",
+      "root": "PaneRzOverview",
+      "auto": "ro",
+      "hidden": true
+    },
+    "tree": {
+      "page": "ResearchTree.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_tree",
+      "root": "PaneRzTree",
+      "auto": "rt",
+      "hidden": true
+    },
+    "chains": {
+      "page": "ResearchChains.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_chains",
+      "root": "PaneRzChains",
+      "auto": "rc",
+      "hidden": true
+    },
+    "points": {
+      "page": "ResearchPoints.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_points",
+      "root": "PaneRzPoints",
+      "auto": "rq",
+      "hidden": true
+    },
+    "owners": {
+      "page": "ResearchOwners.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_owners",
+      "root": "PaneRzOwners",
+      "auto": "rw",
+      "hidden": true
+    },
+    "modules": {
+      "page": "ResearchModules.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_modules",
+      "root": "PaneRzModules",
+      "auto": "rm",
+      "hidden": true
+    },
+    "statics": {
+      "page": "ResearchStatics.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_statics",
+      "root": "PaneRzStatics",
+      "auto": "rs",
+      "hidden": true
+    },
+    "settings": {
+      "page": "ResearchSettings.dc.html",
+      "size": [
+        1360,
+        812
+      ],
+      "layout": "ozl_vpp_settings",
+      "root": "PaneRzSettings",
+      "auto": "rg",
+      "hidden": true
+    }
+  }
+}

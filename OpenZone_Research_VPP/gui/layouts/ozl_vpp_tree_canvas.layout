@@ -1,0 +1,59 @@
+// WRITTEN BY HAND: the inside of the tree page's canvas (Дослідження › Дерево). The page itself
+// is converted from the mockup (ozl_vpp_tree.layout); its canvas area is the empty frame
+// RzTrHost, and OZL_VppPane.c creates this file into it. The converter has no answer for what
+// stands here -- a scroll area with BOTH bars and a canvas the script draws the skin's links
+// on --, so the four widgets are written as the layout generator wrote them until 2026-11-13
+// (oz_research_vpp_pane.layout). The script sizes RzTrScroll with its host and RzTrContent
+// with the branch's plan; RzTrLines and RzTrNodes fill the content.
+ScrollWidgetClass RzTrScroll {
+ visible 1
+ position 1 1
+ size 680 544
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ color 0.235 0.235 0.227 1
+ priority 3
+ clipchildren 1
+ "Scrollbar V" 1
+ "Scrollbar H" 1
+ style blank
+ {
+  FrameWidgetClass RzTrContent {
+   visible 1
+   position 0 0
+   size 668 532
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   priority 0
+   {
+    // Grid and links, drawn by OZL_TreeLines with the owner's skin; the frame of the picked node.
+    CanvasWidgetClass RzTrLines {
+     visible 1
+     position 0 0
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     priority 0
+     ignorepointer 1
+    }
+    // One node cell of the skin per node, placed by the plan; each cell's NodeHit is renamed rznode:<id>. The OR labels and the child handle go here too. A press on the frame itself pans the canvas; a click without a move drops the picked node.
+    FrameWidgetClass RzTrNodes {
+     visible 1
+     position 0 0
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     priority 1
+    }
+   }
+  }
+ }
+}

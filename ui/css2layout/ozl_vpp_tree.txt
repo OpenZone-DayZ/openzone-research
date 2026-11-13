@@ -1,0 +1,83 @@
+tree: ResearchTree.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_tree.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 182; 1 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_tree.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_tr_owner_row.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_tr_branch_row.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_tree_plus.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_cost_chip.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  RzTrTitle  TextWidget (filled by script)
+  BtnRzTrDemo  ButtonWidget (a select: the script cycles or lists its options ["нова фракція", "з балами", "корені готові"]); its caption is BtnRzTrDemoText
+  BtnRzTrView  ButtonWidget (parts: BtnRzTrViewEdge, BtnRzTrViewBg)
+  RzTrOw  Frame
+  RzTrOwRows  WrapSpacer: the list's rows go here (ozl_vpp_tr_owner_row); its ScrollWidget is RzTrOwScroll
+  BtnRzBrAdd  ButtonWidget (parts: BtnRzBrAddEdge, BtnRzBrAddBg)
+  RzTrBr  Frame
+  RzTrBrRows  WrapSpacer: the list's rows go here (ozl_vpp_tr_branch_row); its ScrollWidget is RzTrBrScroll
+  RzBrGap  Frame (parts: RzBrGapBg)
+  RzBrLegend  TextWidget (a caption: recolour only)
+  RzBrId  EditBox
+  RzBrSort  EditBox
+  RzBrName  EditBox
+  RzBrOwners  EditBox
+  RzBrIcon  EditBox
+  BtnRzBrDel  ButtonWidget (parts: BtnRzBrDelEdge, BtnRzBrDelBg)
+  RzTrDirIcon  ImageWidget (icon i_e0cb331d)
+  RzTrSkinTag  TextWidget (a caption: recolour only)
+  RzTrSkinId  TextWidget (filled by script)
+  RzTrSkinDir  TextWidget (filled by script)
+  BtnRzTrRoot  ButtonWidget (parts: BtnRzTrRootEdge, BtnRzTrRootBg)
+  BtnRzTrChild  ButtonWidget (parts: BtnRzTrChildEdge, BtnRzTrChildBg)
+  BtnRzTrLink  ButtonWidget (parts: BtnRzTrLinkEdge, BtnRzTrLinkBg)
+  BtnRzTrLinkIcon  ImageWidget (icon i_bc4fd8e9)
+  BtnRzTrLinkText  TextWidget (a caption: recolour only)
+  RzTrHost  Frame (parts: RzTrHostEdge, RzTrHostBg)
+  RzTrInfo  RichText (filled by script)
+  RzTnHead  TextWidget (filled by script)
+  RzTnSub  TextWidget (filled by script)
+  RzTnForm  Frame
+  RzTnId  EditBox
+  RzTnName  EditBox
+  RzTnTier  EditBox
+  RzTnTime  EditBox
+  RzTnParents  EditBox
+  BtnRzTnModeAll  ButtonWidget (parts: BtnRzTnModeAllBg)
+  BtnRzTnModeAllText  TextWidget (a caption: recolour only)
+  BtnRzTnModeAny  ButtonWidget (parts: BtnRzTnModeAnyBg, BtnRzTnModeAnyLine)
+  BtnRzTnModeAnyText  TextWidget (a caption: recolour only)
+  RzTnCost  EditBox
+  RzTnPrice  Frame
+  RzTnTail  Frame
+  RzTnItems  EditBox
+  RzTnIcon  EditBox
+  BtnRzTnDel  ButtonWidget (parts: BtnRzTnDelEdge, BtnRzTnDelBg)
+
+ROW TEMPLATES
+  ozl_vpp_tr_owner_row.layout  root OZL_TrOwnerRow (Button), 7 in the sample, 251 x 32 units, list RzTrOwRows
+      OZL_TrOwnerRow  ButtonWidget (parts: OZL_TrOwnerRowBg, OZL_TrOwnerRowBar)
+      TrOwId  TextWidget (filled by script)
+      TrOwDash  TextWidget (a caption: recolour only)
+      TrOwName  TextWidget (filled by script)
+      TrOwSkin  TextWidget (filled by script)
+  ozl_vpp_tr_branch_row.layout  root OZL_TrBranchRow (Button), 1 in the sample, 251 x 34 units, list RzTrBrRows
+      OZL_TrBranchRow  ButtonWidget (parts: OZL_TrBranchRowBg, OZL_TrBranchRowBar)
+      TrBrName  TextWidget (filled by script)
+      TrBrCount  TextWidget (filled by script)
+  ozl_vpp_tree_plus.layout  root BtnRzTrPlus (Button), 1 in the sample, 23 x 22 units, placed by script
+      BtnRzTrPlus  ButtonWidget (parts: BtnRzTrPlusBg)
+  ozl_vpp_cost_chip.layout  root OZL_CostChip (Frame), 3 in the sample, 100 x 24 units, placed by script
+      OZL_CostChip  Frame (parts: OZL_CostChipBg)
+      CostDot  Frame (parts: CostDotEdge, CostDotBg)
+      CostName  TextWidget (filled by script)
+      CostAmount  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border style dashed (drawn solid)  x1
+  border-radius  x28
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  RichText RzTrInfo

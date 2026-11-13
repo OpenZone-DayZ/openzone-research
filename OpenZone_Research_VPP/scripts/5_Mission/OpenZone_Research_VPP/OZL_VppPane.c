@@ -1,19 +1,37 @@
-// Модуль «ДОСЛІДЖЕННЯ» в адмінському вікні OpenZone. З 2026-11-09 це редактор
-// досліджень (docs/specs/2026-11-09-research-editor-vpp-design.md): по
-// сторінці на розділ і смуга дій чернетки. З 2026-11-12 (переробка вікна VPP,
-// дизайн §5.5) розділи -- це сторінки рейки вікна: вісім сторінок модуля
-// "research" показують ОДНУ панель, а сторінку всередині перемикає
-// OnPaneShown. ОГЛЯД -- те, чим панель була досі: фракції з пулами,
-// нарахування, завершення вузла, скидання, перечитування конфігів. Чернетка
-// семи файлів -- у OZL_EdDocs. Чіпляється через modded class -- ядро про
-// дослідження не знає й знати не мусить.
+// The module «Дослідження» of the OpenZone admin window: the research editor
+// (docs/specs/2026-11-09-research-editor-vpp-design.md). Since 2026-11-13 every page of the
+// rail is a pane of its own, converted from its mockup board
+// (docs/specs/2026-11-13-openzone-vpp-page-guide.md): eight layouts ozl_vpp_<page>, and two
+// strips that exist once and lie over the bottom of whichever research page is open -- the
+// draft bar (ozl_vpp_bar) and, above it while it is open, the problems panel (ozl_vpp_probs).
 //
-// Гарди: NO_GUI -- сервер компілює Mission без UI; AVPPAdminTools і
-// OpenZone_VPP -- імена класів CfgMods (їх авто-дефайнить рушій).
+// THIS FILE IS THE FRAME and two of the pages. The frame: the eight panes are created and
+// registered here (a pane whose layout is missing is left out with an error line), the draft
+// of the seven files (OZL_EdDocs) is fetched, checked, undone, discarded and applied here,
+// and the bar and the panel are painted here. The pages: Огляд (factions and their pools,
+// grants, a node completed, a reset, the configs read again) and Дерево (a branch drawn in
+// its owner's skin, with the editor's handles). Ланцюги lives in OZL_VppPaneChains.c; Типи
+// балів, Власники, Модулі, Статики and Налаштування in OZL_VppPaneConfigs.c and
+// OZL_VppPaneSettings.c. Each of those is a later modded layer of the same class.
 //
-// Розмітка -- з опису ui/OpenZone_Research_VPP/oz_research_vpp_pane.json
-// (layout_build); тут лише імена віджетів. Незворотні дії -- у два
-// натискання, як і всюди у вікні: модальні вікна у VPP -- пастка.
+// What a page layer takes from the frame:
+//   RepaintRzPage(tab)   override, call super: fill page `tab` from the draft. Called when
+//                        the page is shown and after a fetch, an undo, a redo, a discard, an
+//                        apply -- only while a research page is on screen;
+//   RzLayPages(pw, ph)   override, call super: the open page (m_RzTab) changed its size, or
+//                        its texts have their widths now: fit the lists, place what follows
+//                        a text. Called after a resize and two frames after every repaint
+//                        and every PaintRzBar. pw x ph is the content area in pixels;
+//   OnRzConfigAnswer     override, call super: an answer of the core's config section
+//                        other than cfg_set;
+//   OnConfirmed(action)  override: take your own "rz:..." actions, hand the rest to super;
+//   m_Ed, m_RzTab, m_RzFill; PaintRzBar() and PaintSummary() after every edit of the draft;
+//   RzSay / RzHint / Hint for a line on the bar; the Draft* getters; the small widget
+//   helpers below (SetLabel, SetColorOf, ShowW, RzFitText, RzFlowAfter, RzFitLegend,
+//   RzPaintTick, RzSeg ...).
+//
+// Guards: NO_GUI -- the server compiles Mission without UI; AVPPAdminTools and OpenZone_VPP
+// are CfgMods class names (the engine defines them).
 
 #ifdef AVPPAdminTools
 #ifdef OpenZone_VPP
@@ -21,90 +39,117 @@
 
 modded class OZ_VppAdminMenu
 {
-    // The page ids of the rail are "research." + the key of the page inside the pane.
+    // The page ids of the rail are "research." + the page's key.
     static const string RZ_PAGE = "research.";
 
-    private ref array<ref OZL_AdminOwner> m_ResOwners;
-    private int  m_ResPicked    = -1;
-    // Перемальовування списку кличе SelectRow, рушій відповідає OnItemSelected
-    // -- прапорець рве це коло (як у ядрі й у сусідніх панелях).
-    private bool m_ResRepaint = false;
+    // The strips, in layout units (ozl_vpp_bar and ozl_vpp_probs as converted: convert
+    // again, check these). The problems panel is drawn for six rows; a row and its gap
+    // are 31 units, and the panel shows eight rows at most before its list scrolls.
+    static const float RZ_BAR_H    = 60;
+    static const float RZ_PROBS_H  = 244;
+    static const int   RZ_PROBS_ROWS = 8;
 
-    // ------------------------------------------------- редактор
-    private ref OZL_EdDocs m_Ed;
+    // A list draws at most this many rows.
+    static const int RZ_LIST_MAX = 300;
 
-    // Відкрита сторінка (ключ сторінки рейки після "research.") і чи відкрита
-    // над смугою чернетки панель проблем.
-    private string m_RzTab = "overview";
-    private bool   m_RzProblems = false;
+    // ------------------------------------------------- the frame
+    protected ref OZL_EdDocs m_Ed;
 
-    // The content area the shell gave the pane (OnWindowResized), and the page area
-    // inside it as RzLayout left it, in pixels: every layer lays its page out from
-    // these instead of reading sizes back.
-    private float m_RzW = 0;
-    private float m_RzH = 0;
-    private float m_RzPageW = 0;
-    private float m_RzPageH = 0;
+    // The open page (its key after "research."), whether the problems panel is open, and
+    // whether the seven files were asked for (once per window).
+    protected string m_RzTab;
+    protected bool   m_RzProblems;
+    protected bool   m_RzAsked;
 
-    // Сім cfg_get уже стоять у черзі ядра (раз на вікно; далі -- лише
-    // перечитування застосованого).
-    private bool m_RzAsked = false;
+    // The script is writing the fields of a form: an OnChange that comes of it is no edit.
+    protected bool   m_RzFill;
 
-    // Скрипт пише поля форми сам: OnChange, що прилетить на це, -- не правка.
-    private bool m_RzFill = false;
+    // The open pane in pixels, as the shell last sized it.
+    protected float  m_RzW;
+    protected float  m_RzH;
 
-    // Типи балів: вибраний рядок.
-    private int  m_PtPicked = -1;
+    // The two strips, the rows of the problems panel, the line the bar shows and its
+    // level (0 plain, 1 done, 2 failed), the level of the Hint under way, and the frames
+    // left until the open page is fitted once more (texts made this frame have their
+    // widths by then).
+    protected Widget m_RzBar;
+    protected Widget m_RzProbs;
+    protected ref OZ_VppFlexRows m_RzProbRows;
+    protected string m_RzSaid;
+    protected int    m_RzSaidLevel;
+    protected int    m_RzSayLevel;
+    protected int    m_RzRefit;
 
-    // Дерево: власник, гілка, вибраний вузол.
-    private string m_TrOwner  = "";
-    private string m_TrBranch = "";
-    private string m_TrSel    = "";
+    // ------------------------------------------------- Огляд
+    // The last list answer as copies made by script, the picked faction (its id), whether
+    // the list was asked for, and what the answer said besides the factions.
+    protected ref array<ref OZL_AdminOwner> m_ResOwners;
+    protected string m_ResPick;
+    protected bool   m_ResAsked;
+    protected string m_ResCounters;
+    protected string m_ResStatics;
+    protected ref OZ_VppFlexRows m_OvFacRows;
+    protected ref OZ_VppFlexRows m_OvStRows;
+    protected ref array<Widget>  m_OvPickChips;
+    protected string m_OvPickRest;
 
-    // Id, на який зараз указують посилання, поки поле Id набирається:
-    // посилання йдуть за вузлом лише на вільний Id (RenameTn).
-    private string m_TnRefId = "";
+    // ------------------------------------------------- Дерево
+    // The owner, the branch, the picked node.
+    protected string m_TrOwner;
+    protected string m_TrBranch;
+    protected string m_TrSel;
 
-    // Полотно: скін власника, план, вигляд гілки, комірки, мітки "АБО".
-    private ref OZL_TreeSkin   m_TrSkin;
-    private string             m_TrSkinId = "";
-    private ref OZL_TreePlan   m_TrPlan;
-    private ref OZL_BranchView m_TrView;
-    private ref array<Widget>  m_TrCells;
-    private ref array<ref OZL_TreeOrMark> m_TrOrs;
-    private ref array<Widget>  m_TrOrLabels;
+    // The id the links point at while the id field is typed in: they follow the node to
+    // a free id only (RenameTn).
+    protected string m_TnRefId;
 
-    // Контейнери фішок ціни, що чекають розкладки: тексти мають ширину лише
-    // кадром пізніше (OnUpdate -> RunTrFlows).
-    private ref array<Widget>  m_TrFlows;
-    private int                m_TrFlowTries = 0;
+    // The canvas: the owner's skin, the plan, the branch as the player's window would get
+    // it, the cells, the OR marks and their labels, the handle that adds a child.
+    protected ref OZL_TreeSkin   m_TrSkin;
+    protected string             m_TrSkinId;
+    protected ref OZL_TreePlan   m_TrPlan;
+    protected ref OZL_BranchView m_TrView;
+    protected ref array<Widget>  m_TrCells;
+    protected ref array<ref OZL_TreeOrMark> m_TrOrs;
+    protected ref array<Widget>  m_TrOrLabels;
+    protected Widget             m_TrPlus;
 
-    // Режим зв'язку: увімкнений і від якого вузла (порожньо -- батька ще не
-    // вибрано).
-    private bool   m_TrLink     = false;
-    private string m_TrLinkFrom = "";
+    // Price chips of the cells that wait for their texts' widths (a frame later).
+    protected ref array<Widget>  m_TrFlows;
+    protected int                m_TrFlowTries;
 
-    // Перегляд гравця: демо-стан фракції (OZL_EdTree.DemoState).
-    private int    m_TrDemo = 0;
+    // The link mode: on, and from which node ("" -- the parent is not picked yet).
+    protected bool   m_TrLink;
+    protected string m_TrLinkFrom;
 
-    // Вузол, який тягнуть уздовж осі (тір), і полотно, яке тягнуть (прокрутка).
-    // Миша опитується з OnUpdate, як у вікні гравця (OZL_TreeMenu.Drag): так
-    // клік і перетягування не залежать від прапорця DRAGGABLE.
-    private string m_TnDragId    = "";
-    private bool   m_TnDragMoved = false;
-    private int    m_TnDragX     = 0;
-    private int    m_TnDragY     = 0;
-    private float  m_TnCellX     = 0;
-    private float  m_TnCellY     = 0;
-    // Клік, що приходить разом із відпусканням після перетягування, -- не
-    // вибір: кілька кадрів він ігнорується.
-    private int    m_TnSkipClick = 0;
-    private bool   m_TrPanDown   = false;
-    private bool   m_TrPanMoved  = false;
-    private int    m_TrPanX      = 0;
-    private int    m_TrPanY      = 0;
-    private float  m_TrPanH      = 0;
-    private float  m_TrPanV      = 0;
+    // The player's preview: the demo state of the faction (OZL_EdTree.DemoState).
+    protected int    m_TrDemo;
+
+    // A node dragged along the axis (its tier), and the canvas dragged (its scroll). The
+    // mouse is polled from OnUpdate, as the player's window does.
+    protected string m_TnDragId;
+    protected bool   m_TnDragMoved;
+    protected int    m_TnDragX;
+    protected int    m_TnDragY;
+    protected float  m_TnCellX;
+    protected float  m_TnCellY;
+    // A click that comes with the release after a drag is no pick: ignored for a few frames.
+    protected int    m_TnSkipClick;
+    protected bool   m_TrPanDown;
+    protected bool   m_TrPanMoved;
+    protected int    m_TrPanX;
+    protected int    m_TrPanY;
+    protected float  m_TrPanH;
+    protected float  m_TrPanV;
+
+    // The side lists, the chips of the picked node's price, and where the tail of the
+    // node's form stands when the chips take one line (read once, in pixels).
+    protected ref OZ_VppFlexRows m_TrOwRows;
+    protected ref OZ_VppFlexRows m_TrBrRows;
+    protected ref array<Widget>  m_TnChips;
+    protected float  m_TnTailY;
+    protected float  m_TnFormW;
+    protected float  m_TnFormH;
 
     override void OnCreate(Widget RootW)
     {
@@ -112,57 +157,125 @@ modded class OZ_VppAdminMenu
         if (!M_SUB_WIDGET)
             return;
 
+        m_Ed = new OZL_EdDocs();
+        m_RzTab = "";
+        m_RzProblems = false;
+        m_RzAsked = false;
+        m_RzFill = false;
+        // The content area as the shell opens the window; OnWindowResized keeps it.
+        m_RzW = m_WinW - (DEF_W - CONTENT_W) * UnitScale();
+        m_RzH = m_WinH - (DEF_H - CONTENT_H) * UnitScale();
+        m_RzSaid = "";
+        m_RzSaidLevel = 0;
+        m_RzSayLevel = 0;
+        m_RzRefit = 0;
+
         m_ResOwners = new array<ref OZL_AdminOwner>();
-        m_Ed        = new OZL_EdDocs();
-        m_TrCells   = new array<Widget>();
-        m_TrOrs     = new array<ref OZL_TreeOrMark>();
+        m_ResPick = "";
+        m_ResAsked = false;
+        m_ResCounters = "";
+        m_ResStatics = "";
+        m_OvPickChips = new array<Widget>();
+        m_OvPickRest = "";
+
+        m_TrOwner = "";
+        m_TrBranch = "";
+        m_TrSel = "";
+        m_TnRefId = "";
+        m_TrSkinId = "";
+        m_TrCells = new array<Widget>();
+        m_TrOrs = new array<ref OZL_TreeOrMark>();
         m_TrOrLabels = new array<Widget>();
-        m_TrFlows   = new array<Widget>();
+        m_TrFlows = new array<Widget>();
+        m_TrFlowTries = 0;
+        m_TrLink = false;
+        m_TrLinkFrom = "";
+        m_TrDemo = 0;
+        m_TnDragId = "";
+        m_TnDragMoved = false;
+        m_TnSkipClick = 0;
+        m_TrPanDown = false;
+        m_TrPanMoved = false;
+        m_TnChips = new array<Widget>();
+        m_TnTailY = 0;
+        m_TnFormW = 0;
+        m_TnFormH = 0;
 
-        Widget pane = GetGame().GetWorkspace().CreateWidgets("OpenZone_Research_VPP/gui/layouts/oz_research_vpp_pane.layout", M_SUB_WIDGET);
-        if (!pane)
-        {
-            OZL_Log.Error("research vpp pane: layout failed to load");
-            return;
-        }
+        RzMakeStrips();
 
-        // The rail's pages of the module (design 5.5): one pane registered under
-        // each page id; the shell shows it for any of them, OnPaneShown picks the
-        // page inside it.
+        // The rail's pages of the module, each a pane of its own.
         array<string> keys = new array<string>();
         array<string> labels = new array<string>();
-        RzPageList(keys, labels);
+        array<string> roots = new array<string>();
+        RzPageList(keys, labels, roots);
         for (int k = 0; k < keys.Count(); k++)
-            RegisterPage("research", "#STR_OZL_VPP_MOD", RZ_PAGE + keys[k], labels[k], pane, "ResHint");
+        {
+            Widget pane = RzMakePane(keys[k], roots[k]);
+            if (!pane)
+                continue;
+            RegisterPage("research", "#STR_OZL_VPP_MOD", RZ_PAGE + keys[k], labels[k], pane, "");
+        }
 
-        // Власний слухач відповідей: список і операції -- наші, ядро про них
-        // не знає; а ще він бачить відповіді cfg_set на наші файли.
+        // A listener of our own: the list and the operations are ours, the core knows
+        // nothing of them; it also sees the answers of cfg_set for our files.
         OZ_ClientState.AdminWatch().Insert(this.OnResearchResponse);
-
-        ShowRzTab("overview");
     }
 
-    // The rail's pages in their order, with their captions (the in-game page names).
-    protected void RzPageList(array<string> keys, array<string> labels)
+    void ~OZ_VppAdminMenu()
+    {
+        OZ_ClientState.AdminWatch().Remove(this.OnResearchResponse);
+    }
+
+    // The rail's pages in their order: key, caption, the root of the page's layout.
+    protected void RzPageList(array<string> keys, array<string> labels, array<string> roots)
     {
         keys.Clear();
         labels.Clear();
+        roots.Clear();
         keys.Insert("overview");
         labels.Insert("#STR_OZL_VPP_PAGE_OVERVIEW");
+        roots.Insert("PaneRzOverview");
         keys.Insert("tree");
         labels.Insert("#STR_OZL_VPP_PAGE_TREE");
+        roots.Insert("PaneRzTree");
         keys.Insert("chains");
         labels.Insert("#STR_OZL_VPP_PAGE_CHAINS");
+        roots.Insert("PaneRzChains");
         keys.Insert("points");
         labels.Insert("#STR_OZL_VPP_PAGE_POINTS");
+        roots.Insert("PaneRzPoints");
         keys.Insert("owners");
         labels.Insert("#STR_OZL_VPP_PAGE_OWNERS");
+        roots.Insert("PaneRzOwners");
         keys.Insert("modules");
         labels.Insert("#STR_OZL_VPP_PAGE_MODULES");
+        roots.Insert("PaneRzModules");
         keys.Insert("statics");
         labels.Insert("#STR_OZL_VPP_PAGE_STATICS");
+        roots.Insert("PaneRzStatics");
         keys.Insert("settings");
         labels.Insert("#STR_OZL_VPP_PAGE_SETTINGS");
+        roots.Insert("PaneRzSettings");
+    }
+
+    // A page's pane from its layout; null (and a line in the log) when the layout is
+    // missing or another file's widgets came for it.
+    protected Widget RzMakePane(string key, string rootName)
+    {
+        string layout = "OpenZone_Research_VPP/gui/layouts/ozl_vpp_" + key + ".layout";
+        Widget pane = OZ_VppFlex.Create(layout, M_SUB_WIDGET, rootName);
+        if (!pane)
+        {
+            OZL_Log.Error("research vpp: the page '" + key + "' is left out, its layout did not load: " + layout);
+            return null;
+        }
+        if (pane.GetName() != rootName)
+        {
+            OZL_Log.Error("research vpp: the page '" + key + "' is left out, " + layout + " gave the root '" + pane.GetName() + "' instead of '" + rootName + "'");
+            pane.Unlink();
+            return null;
+        }
+        return pane;
     }
 
     protected bool IsRzPage(string id)
@@ -171,51 +284,175 @@ modded class OZ_VppAdminMenu
     }
 
     // Is one of the module's pages on screen: answers that come while another page is
-    // shown must not write into that page's hint line.
+    // shown must not write into this module's bar.
     protected bool RzShown()
     {
         return IsRzPage(CurrentPane());
     }
 
-    // A line for the admin, written only while a research page is shown.
-    protected void RzHint(string text)
+    // A stringtable key of the mod in the client's language.
+    protected string Tr(string key)
     {
-        if (RzShown())
-            Hint(text);
+        return Widget.TranslateString(key);
     }
 
-    void ~OZ_VppAdminMenu()
+    // Pixels in a layout unit (the shell's UnitScale under the name the pages use).
+    protected float Px()
     {
-        OZ_ClientState.AdminWatch().Remove(this.OnResearchResponse);
+        return UnitScale();
     }
 
-    // The shell repaints the shown pane from the series palette to the window's metal
-    // shortly after each event and answer (OZ_VppPaint). This pane is metal already --
-    // its description takes the vpp* tokens, its script OZL_Metal -- and its tree
-    // canvas holds the skins' own node cells, which must keep the colours the player
-    // sees: a skin colour that happens to equal a series colour would turn to metal.
-    // So the pane is repainted once, when it registers (the field frames and panel
-    // borders the generator writes in the series colours), and never after.
-    override void RepaintSoon()
+    // ================================================= the strips
+
+    // The draft bar and the problems panel: made once, moved into the content frame beside
+    // the pages and laid over them (a page's root has priority 100, the window's confirm
+    // strip 200).
+    protected void RzMakeStrips()
+    {
+        m_RzBar = OZ_VppFlex.Create("OpenZone_Research_VPP/gui/layouts/ozl_vpp_bar.layout", M_SUB_WIDGET, "OZL_VppBar");
+        if (m_RzBar)
+        {
+            if (m_Content)
+                m_Content.AddChild(m_RzBar);
+            m_RzBar.SetSort(150);
+            m_RzBar.Show(false);
+        }
+        else
+            OZL_Log.Error("research vpp: the draft bar's layout did not load; the draft cannot be applied from the window");
+
+        m_RzProbs = OZ_VppFlex.Create("OpenZone_Research_VPP/gui/layouts/ozl_vpp_probs.layout", M_SUB_WIDGET, "OZL_VppProbs");
+        if (m_RzProbs)
+        {
+            if (m_Content)
+                m_Content.AddChild(m_RzProbs);
+            m_RzProbs.SetSort(150);
+            m_RzProbs.Show(false);
+        }
+        else
+            OZL_Log.Error("research vpp: the problems panel's layout did not load");
+    }
+
+    protected void RzShowStrips(bool on)
+    {
+        if (m_RzBar)
+            m_RzBar.Show(on);
+        bool panel = false;
+        if (on && m_RzProblems)
+            panel = true;
+        if (m_RzProbs)
+            m_RzProbs.Show(panel);
+    }
+
+    // How tall the problems panel is, in units: as many rows as it has problems, one at
+    // least and RZ_PROBS_ROWS at most, and two units more, so that a list that fits draws
+    // no scrollbar (a scroll area exactly as tall as its content draws one).
+    protected float RzProbsHeight()
+    {
+        int rows = 1;
+        if (m_RzProbRows)
+            rows = m_RzProbRows.Count();
+        if (rows < 1)
+            rows = 1;
+        if (rows > RZ_PROBS_ROWS)
+            rows = RZ_PROBS_ROWS;
+        return RZ_PROBS_H - (6 - rows) * 31 + 2;
+    }
+
+    // The strips at the bottom of the content area, as wide as it. The window's confirm
+    // strip stands above the bar (ConfirmLift).
+    protected void RzPlaceStrips()
+    {
+        if (!M_SUB_WIDGET || !m_Flex)
+            return;
+        float s = UnitScale();
+        float cw = m_WinW - (DEF_W - CONTENT_W) * s;
+        float ch = m_WinH - (DEF_H - CONTENT_H) * s;
+        if (m_RzBar)
+        {
+            m_Flex.Resize(m_RzBar, cw, RZ_BAR_H * s, PAGE_W * s, RZ_BAR_H * s);
+            m_RzBar.SetPos(0, ch - RZ_BAR_H * s);
+            RzFlowBar();
+        }
+        if (m_RzProbs)
+        {
+            float ph = RzProbsHeight() * s;
+            m_Flex.Resize(m_RzProbs, cw, ph, PAGE_W * s, RZ_PROBS_H * s);
+            m_RzProbs.SetPos(0, ch - RZ_BAR_H * s - ph);
+            if (m_RzProbRows)
+                m_RzProbRows.Fit();
+        }
+    }
+
+    override float ConfirmLift()
     {
         if (IsRzPage(m_Shown))
-            return;
-        super.RepaintSoon();
+            return RZ_BAR_H;
+        return super.ConfirmLift();
     }
 
-    // A page of the module was shown on the rail: the page inside the pane follows.
+    // The window changed its size: the content area is w x h pixels now and the shell has
+    // sized every pane. The strips follow; the open page fits its lists.
+    override void OnWindowResized(float w, float h)
+    {
+        super.OnWindowResized(w, h);
+        if (!M_SUB_WIDGET || !m_Ed)
+            return;
+
+        m_RzW = w;
+        m_RzH = h;
+
+        RzPlaceStrips();
+        if (IsRzPage(m_Shown))
+            RzLayPages(m_RzW, m_RzH);
+    }
+
+    // The open page after a resize, and once more two frames after it was painted (a text
+    // made this frame has its width by then): fit the lists, place what follows a text.
+    // This layer: Огляд and Дерево; the later layers add theirs after super.
+    protected void RzLayPages(float pw, float ph)
+    {
+        if (m_RzTab == "overview")
+        {
+            if (m_OvFacRows)
+            {
+                m_OvFacRows.Fit();
+                OvLayFacRows();
+            }
+            if (m_OvStRows)
+            {
+                m_OvStRows.Fit();
+                OvLayStatics();
+            }
+            OvLayPickLine();
+            OvLayHeads();
+        }
+        else if (m_RzTab == "tree")
+        {
+            if (m_TrOwRows)
+                m_TrOwRows.Fit();
+            if (m_TrBrRows)
+                m_TrBrRows.Fit();
+            RzLayTrRows();
+            RzLayTree();
+            FlowTrSkin();
+            LayTnChips();
+            RzFitLegend("RzBrLegend", "RzBrGap");
+        }
+    }
+
+    // A page of the module was shown on the rail.
     override void OnPaneShown(string id)
     {
         super.OnPaneShown(id);
-        if (!IsRzPage(id) || !m_Ed)
+        if (!m_Ed)
             return;
+        if (!IsRzPage(id))
+        {
+            RzShowStrips(false);
+            return;
+        }
 
-        // A repaint asked for on the page before (the click on the rail asks first)
-        // would land on this pane: it is dropped (RepaintSoon above).
-        GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(this.RepaintShown);
-        m_RepaintQueued = false;
-
-        // Сім файлів -- у чергу ядра, раз на вікно: AskCfg шле по одному.
+        // The seven files into the core's queue, once per window: AskCfg sends one at a time.
         if (!m_RzAsked)
         {
             m_RzAsked = true;
@@ -226,10 +463,21 @@ modded class OZ_VppAdminMenu
 
         string prefix = RZ_PAGE;
         int skip = prefix.Length();
-        string key = id.Substring(skip, id.Length() - skip);
-        if (key == "overview")
+        m_RzTab = id.Substring(skip, id.Length() - skip);
+        m_TrLink = false;
+        m_TrLinkFrom = "";
+        m_Ed.EndGesture();
+
+        RzShowStrips(true);
+        RzPlaceStrips();
+
+        // The factions: Огляд lists them; Дерево and Ланцюги take their names from the answer.
+        if (m_RzTab == "overview" || !m_ResAsked)
+        {
+            m_ResAsked = true;
             AskResearchList();
-        ShowRzTab(key);
+        }
+        RepaintRz();
     }
 
     protected void AskResearchList()
@@ -237,22 +485,64 @@ modded class OZ_VppAdminMenu
         Ask(OZL_Const.SECTION, "list", "{}");
     }
 
+    // ================================================= lines for the admin
+
+    // Every line the window says while a research page is open is shown on the draft bar
+    // too (the journal and the status bar get it from the shell).
+    override void Hint(string t)
+    {
+        super.Hint(t);
+        if (!m_Ed || !RzShown())
+            return;
+        // An error key of a stringtable (a refusal the shell passes on) is said in red,
+        // as the journal files it.
+        int level = m_RzSayLevel;
+        if (level == 0 && t.IndexOf("#STR_") == 0 && t.IndexOf("ERR") > 0)
+            level = 2;
+        RzBarSay(t, level);
+    }
+
+    // A line with its colour on the bar: 0 plain, 1 done (green, a check), 2 failed (red).
+    protected void RzSay(string text, int level)
+    {
+        m_RzSayLevel = level;
+        Hint(text);
+        m_RzSayLevel = 0;
+    }
+
+    // A line written only while a research page is shown.
+    protected void RzHint(string text)
+    {
+        if (RzShown())
+            Hint(text);
+    }
+
+    protected void RzHintLevel(string text, int level)
+    {
+        if (RzShown())
+            RzSay(text, level);
+    }
+
+    protected void RzBarSay(string text, int level)
+    {
+        m_RzSaid = text;
+        m_RzSaidLevel = level;
+        PaintRzSaid();
+        RzFlowBar();
+    }
+
+    // ================================================= answers
+
     // An answer of the core's config section other than cfg_set; the later layers take
     // theirs (the settings page: `identity`).
     protected void OnRzConfigAnswer(string op, bool ok, string json, string error)
     {
     }
 
-    // Рядок зі stringtable мода, перекладений мовою клієнта.
-    protected string Tr(string key)
-    {
-        return Widget.TranslateString(key);
-    }
-
     void OnResearchResponse(string section, string op, bool ok, string json, string error)
     {
-        // Відповідь на ЗАСТОСУВАТИ: ядро вже сказало своє «applied» у рядок
-        // підказки, а нам треба знати, ЯКИЙ файл, і слати наступний.
+        // The answer to APPLY: the core has said its "applied" already; we need to know
+        // WHICH file, and send the next.
         if (section == OZ_AdminSect.CONFIG && op.IndexOf("cfg_set:") == 0)
         {
             string tag = op.Substring(8, op.Length() - 8);
@@ -273,7 +563,7 @@ modded class OZ_VppAdminMenu
 
         if (!ok)
         {
-            RzHint(op + ": " + Words(error));
+            RzHintLevel(op + ": " + Words(error), 2);
             return;
         }
 
@@ -282,16 +572,18 @@ modded class OZ_VppAdminMenu
         if (!JsonFileLoader<OZL_AdminList>.LoadData(json, l, err))
         {
             string unreadable = Tr("#STR_OZL_VPP_HINT_UNREADABLE");
-            RzHint(unreadable + " (" + err + ")");
+            RzHintLevel(unreadable + " (" + err + ")", 2);
             return;
         }
 
-        // Рядки знімаємо одразу: далі будуються рядки списку, а конверт
-        // розібрав серіалізатор (шапка OZ_ConfigBase ядра).
+        // The strings are taken at once: rows are built below, and the envelope was made
+        // by the serializer (the header of the core's OZ_ConfigBase).
         string statics = l.Statics;
         string counters = l.Counters;
 
-        // Копія, яку збудував скрипт: те, що приїхало, живе лише до розбору.
+        // A copy made by script: what came lives only until it is parsed. The names as
+        // they were, to tell whether the side lists of the other pages must follow.
+        string namesWere = RzOwnerNames();
         m_ResOwners.Clear();
         for (int i = 0; i < l.Owners.Count(); i++)
         {
@@ -307,19 +599,21 @@ modded class OZ_VppAdminMenu
             o.Known     = src.Known;
             m_ResOwners.Insert(o);
         }
-        if (m_ResPicked >= m_ResOwners.Count())
-            m_ResPicked = -1;
+        if (!PickedOwnerRow())
+            m_ResPick = "";
+        m_ResCounters = counters;
+        m_ResStatics = statics;
 
-        m_ResRepaint = true;
-        RepaintOwners();
-        m_ResRepaint = false;
-        PaintPicked();
+        if (RzShown())
+        {
+            if (m_RzTab == "overview")
+                RepaintOverview();
+            else if (RzOwnerNames() != namesWere)
+                RepaintRzPage(m_RzTab);
+        }
 
-        PaintCounters(counters);
-        PaintStatics(statics);
-
-        // Після «перечитати конфіги» файли на сервері, можливо, інші: чернетка
-        // без правок бере їх, з правками -- рахує зміни від нових.
+        // After "reload the configs" the files on the server may be others: a draft with
+        // no edits takes them, one with edits counts its changes from the new ones.
         if (op == "reload" && m_Ed)
         {
             array<string> tags = m_Ed.Tags();
@@ -336,278 +630,54 @@ modded class OZ_VppAdminMenu
         else
         {
             said = Tr("#STR_OZL_VPP_HINT_DONE");
-            RzHint(op + ": " + said);
+            RzHintLevel(op + ": " + said, 1);
         }
     }
 
-    // ================================================= огляд
-
-    protected void RepaintOwners()
+    // A file of the draft came from the server (the core's cfg_get).
+    override void OnCfgText(string name, string body)
     {
-        TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("ResOwners"));
-        if (!lb)
+        super.OnCfgText(name, body);
+        if (!m_Ed || !m_Ed.Owns(name))
             return;
-        lb.ClearItems();
-        string noState = Tr("#STR_OZL_VPP_OV_NO_STATE");
-        for (int i = 0; i < m_ResOwners.Count(); i++)
+
+        string err;
+        if (!m_Ed.OnFetched(name, body, err))
         {
-            OZL_AdminOwner o = m_ResOwners[i];
-            string line = "";
-            if (i == m_ResPicked)
-                line = "> ";
-            line += o.Id;
-            if (o.Name != "" && o.Name != o.Id)
-                line += "  -  " + o.Name;
-            if (o.Known == 1)
-            {
-                line += "  |  " + o.Pool;
-                line += "  |  " + o.Completed.ToString() + " / " + o.Active.ToString();
-            }
-            else
-            {
-                line += "  |  " + noState;
-            }
-            lb.AddItem(line, NULL, 0);
-            if (o.Known != 1)
-                lb.SetItemColor(lb.GetNumItems() - 1, 0, OZL_Metal.MUTED);
-            if (i == m_ResPicked)
-                lb.SelectRow(i);
+            string bad = Tr("#STR_OZL_ED_HINT_BAD_FILE");
+            RzHintLevel(bad + name + " (" + err + ")", 2);
         }
-        string entries = Tr("#STR_OZL_VPP_OV_FAC_COUNT");
-        SetLabel("RzOvFacCount", entries + m_ResOwners.Count().ToString(), 0);
-    }
-
-    // The picked faction: its id and name, and its pool on the line under them.
-    protected void PaintPicked()
-    {
-        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("ResPicked"));
-        TextWidget pool = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzOvPool"));
-        OZL_AdminOwner o = null;
-        if (m_ResPicked >= 0 && m_ResPicked < m_ResOwners.Count())
-            o = m_ResOwners[m_ResPicked];
-        if (!o)
-        {
-            if (t)
-                t.SetText("#STR_OZL_ED_OV_PICK");
-            if (pool)
-                pool.SetText("");
-            return;
-        }
-
-        string who = o.Id;
-        if (o.Name != "" && o.Name != o.Id)
-            who = o.Id + " - " + o.Name;
-        if (t)
-            t.SetText(who);
-        if (!pool)
-            return;
-        if (o.Known != 1)
-        {
-            pool.SetText(Tr("#STR_OZL_VPP_OV_NO_STATE"));
-            return;
-        }
-        string poolWord = Tr("#STR_OZL_VPP_OV_POOL");
-        string doneWord = Tr("#STR_OZL_VPP_OV_DONE");
-        string runWord = Tr("#STR_OZL_VPP_OV_RUNNING");
-        string line = poolWord + o.Pool + "  |  " + doneWord + o.Completed.ToString();
-        line += "  |  " + runWord + o.Active.ToString();
-        pool.SetText(line);
-    }
-
-    protected string PickedOwner()
-    {
-        if (m_ResPicked < 0 || m_ResPicked >= m_ResOwners.Count())
-            return "";
-        return m_ResOwners[m_ResPicked].Id;
-    }
-
-    // The confirm strip's words for a reset: whose pool and nodes go.
-    protected string ResetAsk(string owner)
-    {
-        string who = owner;
-        if (m_ResPicked >= 0 && m_ResPicked < m_ResOwners.Count())
-        {
-            OZL_AdminOwner o = m_ResOwners[m_ResPicked];
-            if (o && o.Id == owner && o.Name != "" && o.Name != owner)
-                who = owner + " - " + o.Name;
-        }
-        string ask = Tr("#STR_OZL_VPP_ASK_RESET");
-        string tail = Tr("#STR_OZL_VPP_ASK_RESET2");
-        return ask + who + tail;
-    }
-
-    // The server's counters from the list answer ("owners=7 pointTypes=7 ... problems=0"):
-    // what the server reads now, one cell each.
-    protected void PaintCounters(string counters)
-    {
-        array<string> keys = {"pointTypes", "owners", "rules", "nodes", "modules", "statics", "problems"};
-        array<string> parts = new array<string>();
-        counters.Split(" ", parts);
-        for (int k = 0; k < keys.Count(); k++)
-        {
-            string value = "-";
-            for (int p = 0; p < parts.Count(); p++)
-            {
-                string kv = parts[p];
-                int eq = kv.IndexOf("=");
-                if (eq <= 0)
-                    continue;
-                if (kv.Substring(0, eq) == keys[k])
-                    value = kv.Substring(eq + 1, kv.Length() - eq - 1);
-            }
-            int color = OZL_Metal.TEXT;
-            if (keys[k] == "problems" && value != "-")
-            {
-                color = OZL_Metal.OK;
-                if (value.ToInt() > 0)
-                    color = OZL_Metal.BAD;
-            }
-            SetLabel("RzOvV" + k.ToString(), value, color);
-        }
-    }
-
-    // One entry of the static spawner's line: "id=Class[spawned]".
-    protected bool StaticShaped(string token)
-    {
-        int eq = token.IndexOf("=");
-        if (eq <= 0)
-            return false;
-        int br = token.IndexOf("[");
-        if (br <= eq)
-            return false;
-        int n = token.Length();
-        return token.Substring(n - 1, 1) == "]";
-    }
-
-    // The static spawner's line from the list answer, one row per entry, spawned or
-    // waiting. A line of another shape (no entries, a broken state file) is shown as
-    // it came. String values of a parsed answer stop at 1023 bytes (dayz-modding
-    // persistence-networking), so a long list can end cut: its broken last entry
-    // becomes "...", and the count says so.
-    protected void PaintStatics(string statics)
-    {
-        TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzOvStList"));
-        if (!lb)
-            return;
-        m_ResRepaint = true;
-        lb.ClearItems();
-        array<string> parts = new array<string>();
-        statics.Split(" ", parts);
-        bool shaped = false;
-        if (parts.Count() > 0)
-            shaped = StaticShaped(parts[0]);
-        if (!shaped)
-        {
-            if (statics != "")
-                lb.AddItem(statics, NULL, 0);
-            SetLabel("RzOvStCount", "", 0);
-            m_ResRepaint = false;
-            return;
-        }
-
-        string spawnedWord = Tr("#STR_OZL_VPP_OV_ST_SPAWNED");
-        string pendingWord = Tr("#STR_OZL_VPP_OV_ST_PENDING");
-        int total = 0;
-        int spawned = 0;
-        bool cut = false;
-        for (int i = 0; i < parts.Count(); i++)
-        {
-            string token = parts[i];
-            if (!StaticShaped(token))
-            {
-                cut = true;
-                lb.AddItem("...", NULL, 0);
-                break;
-            }
-            int eq = token.IndexOf("=");
-            int br = token.IndexOf("[");
-            string id = token.Substring(0, eq);
-            string flag = token.Substring(br + 1, token.Length() - br - 2);
-            total++;
-            string word = pendingWord;
-            int color = OZL_Metal.ALERT;
-            if (flag == "spawned")
-            {
-                spawned++;
-                word = spawnedWord;
-                color = OZL_Metal.OK;
-            }
-            lb.AddItem(id + "   " + word, NULL, 0);
-            lb.SetItemColor(lb.GetNumItems() - 1, 0, color);
-        }
-        m_ResRepaint = false;
-
-        string placed = Tr("#STR_OZL_VPP_OV_ST_PLACED");
-        string ofWord = Tr("#STR_OZL_VPP_OV_ST_OF");
-        string countText = placed + spawned.ToString() + ofWord + total.ToString();
-        if (cut)
-            countText += "+";
-        int countColor = OZL_Metal.OK;
-        if (spawned < total || cut)
-            countColor = OZL_Metal.ALERT;
-        SetLabel("RzOvStCount", countText, countColor);
-    }
-
-    // ================================================= редактор: оболонка
-
-    // A page of the module shown: its head, its page, the draft bar. The problems
-    // panel stays open from page to page -- it is about the whole draft.
-    protected void ShowRzTab(string key)
-    {
-        m_RzTab = key;
-        m_TrLink = false;
-        m_TrLinkFrom = "";
-        if (m_Ed)
-            m_Ed.EndGesture();
-        RzLayHead();
         RepaintRz();
     }
 
-    // The page inside the pane that shows a rail page: OWNERS, MODULES and STATICS
-    // share one (cfg); every other page has its own.
-    protected string RzPageOf(string key)
-    {
-        if (key == "owners" || key == "modules" || key == "statics")
-            return "cfg";
-        return key;
-    }
+    // ================================================= the pages
 
-    // Fills the open page. The later layers (chains, the config files, settings)
-    // take their keys and hand the rest to super.
+    // Fills the open page. The later layers (chains, the config files, settings) take
+    // their keys and hand the rest to super.
     protected void RepaintRzPage(string tab)
     {
-        if (tab == "points")
-            RepaintPoints(true);
+        if (tab == "overview")
+            RepaintOverview();
         else if (tab == "tree")
             RepaintTree(true);
     }
 
-    // The open page of the pane; the rail marks which one it is (the row of sub-tabs
-    // that did it here went with the rework, design 5.5).
-    protected void ShowRzPage(string page)
-    {
-        array<string> pages = {"overview", "points", "tree", "chains", "cfg", "settings"};
-        for (int i = 0; i < pages.Count(); i++)
-        {
-            Widget p = M_SUB_WIDGET.FindAnyWidget("RzPage_" + pages[i]);
-            if (p)
-                p.Show(pages[i] == page);
-        }
-    }
-
-    // Усе, що залежить від чернетки: сторінка, смуга дій, підсумок, проблеми.
+    // Everything that depends on the draft: the open page, the bar, the overview's line.
     protected void RepaintRz()
     {
         if (!M_SUB_WIDGET || !m_Ed)
             return;
 
-        ShowRzPage(RzPageOf(m_RzTab));
-        RepaintRzPage(m_RzTab);
+        if (RzShown())
+        {
+            RepaintRzPage(m_RzTab);
+            m_RzRefit = 2;
+        }
         PaintRzBar();
         PaintSummary();
     }
 
-    // ------------------------------------------------- дрібне для віджетів
+    // ------------------------------------------------- small things for widgets
 
     protected void SetBtnText(string btn, string text, int color)
     {
@@ -618,41 +688,96 @@ modded class OZ_VppAdminMenu
         t.SetColor(color);
     }
 
-    // A generated button's caption, ground and border (Text, Bg, Edge); a colour of 0
+    // A button's caption, ground and frame (<btn>Text, <btn>Bg, <btn>Edge); a colour of 0
     // leaves that part as it is.
     protected void PaintBtn(string btn, string text, int textColor, int bgColor, int edgeColor)
     {
         SetBtnText(btn, text, textColor);
-        Widget bg = M_SUB_WIDGET.FindAnyWidget(btn + "Bg");
-        if (bg && bgColor != 0)
-            bg.SetColor(bgColor);
-        Widget edge = M_SUB_WIDGET.FindAnyWidget(btn + "Edge");
-        if (edge && edgeColor != 0)
-            edge.SetColor(edgeColor);
+        if (bgColor != 0)
+            OZ_VppFlex.Paint(M_SUB_WIDGET, btn + "Bg", bgColor);
+        if (edgeColor != 0)
+            OZ_VppFlex.Paint(M_SUB_WIDGET, btn + "Edge", edgeColor);
     }
 
-    // One button of a pair that says which of two values is in force: lit when on.
-    protected void PaintToggle(string btn, bool on)
+    // One half of a pair that says which of two values is in force (on the head ground):
+    // the one in force on the accent's soft ground with bright words.
+    protected void RzSeg(string btn, bool on)
     {
-        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget(btn + "Text"));
-        Widget edge = M_SUB_WIDGET.FindAnyWidget(btn + "Edge");
-        int ink = OZL_Metal.MUTED;
-        int rim = OZL_Metal.EDGE;
         if (on)
         {
-            ink = OZL_Metal.ACCENT;
-            rim = OZL_Metal.ACCENT;
+            OZ_VppFlex.Paint(M_SUB_WIDGET, btn + "Bg", OZL_Metal.PICK_HEAD);
+            SetColorOf(btn + "Text", OZL_Metal.TEXT);
+            return;
         }
-        if (t)
-            t.SetColor(ink);
-        if (edge)
-            edge.SetColor(rim);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, btn + "Bg", OZL_Metal.HEAD);
+        SetColorOf(btn + "Text", OZL_Metal.MUTED);
+    }
+
+    // A tick box of a converted page: a button with its frame (<name>Edge), its ground
+    // (<name>Bg) and its mark (<name>Mark). On: filled in `lit` (the colour the board
+    // draws that box in), the mark shown; off: the cell's ground in a faint frame, no mark.
+    protected void RzPaintTick(string name, bool on, int lit)
+    {
+        Widget box = M_SUB_WIDGET.FindAnyWidget(name);
+        if (!box)
+            return;
+        int rim = OZL_Metal.FAINT;
+        int ground = OZL_Metal.CELL;
+        if (on)
+        {
+            rim = lit;
+            ground = lit;
+        }
+        string markName = name + "Mark";
+        if (box.FindAnyWidget(name + "Edge"))
+        {
+            OZ_VppFlex.Paint(box, name + "Edge", rim);
+            OZ_VppFlex.Paint(box, name + "Bg", ground);
+            Widget mark = box.FindAnyWidget(markName);
+            if (mark)
+                mark.Show(on);
+            return;
+        }
+
+        // A layout written before the parts had names: the frame is the first child, the
+        // ground the next.
+        int n = 0;
+        Widget part = box.GetChildren();
+        while (part)
+        {
+            if (part.GetName() == markName)
+            {
+                part.Show(on);
+            }
+            else
+            {
+                if (n == 0)
+                    part.SetColor(rim);
+                else
+                    part.SetColor(ground);
+                n++;
+            }
+            part = part.GetSibling();
+        }
     }
 
     // A label's text, and its colour unless the colour is 0.
     protected void SetLabel(string name, string text, int color)
     {
         TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget(name));
+        if (!t)
+            return;
+        t.SetText(text);
+        if (color != 0)
+            t.SetColor(color);
+    }
+
+    // The same inside a row (or any part of the window).
+    protected void RzRowText(Widget row, string name, string text, int color)
+    {
+        if (!row)
+            return;
+        TextWidget t = TextWidget.Cast(row.FindAnyWidget(name));
         if (!t)
             return;
         t.SetText(text);
@@ -674,15 +799,7 @@ modded class OZ_VppAdminMenu
             w.Show(show);
     }
 
-    // Size and place in pixels (SetPos and SetSize of an exact-size widget take pixels,
-    // dayz-modding gui-layouts §24).
-    protected void SizeW(string name, float w, float h)
-    {
-        Widget x = M_SUB_WIDGET.FindAnyWidget(name);
-        if (x)
-            x.SetSize(w, h);
-    }
-
+    // A widget's place in pixels.
     protected void MoveW(string name, float x, float y)
     {
         Widget m = M_SUB_WIDGET.FindAnyWidget(name);
@@ -690,54 +807,298 @@ modded class OZ_VppAdminMenu
             m.SetPos(x, y);
     }
 
-    protected void PlaceW(string name, float x, float y, float w, float h)
+    // A widget moved along its line: its height on the line stays.
+    protected void RzSetX(Widget w, float x)
     {
-        Widget p = M_SUB_WIDGET.FindAnyWidget(name);
-        if (!p)
+        if (!w)
             return;
-        p.SetPos(x, y);
-        p.SetSize(w, h);
+        float px;
+        float py;
+        w.GetPos(px, py);
+        w.SetPos(x, py);
     }
 
-    // ------------------------------------------------- смуга чернетки
+    // A text as wide as its words (a TextWidget cuts its text at its own box); returns the
+    // width of the words in pixels.
+    protected int RzFitText(TextWidget t)
+    {
+        if (!t)
+            return 0;
+        int tw = OZ_VppFlex.TextWidth(t);
+        float w;
+        float h;
+        t.GetSize(w, h);
+        t.SetSize(tw + 2, h);
+        return tw;
+    }
 
+    // Two texts of one line and one parent: the first as wide as its words (the layout
+    // sized it for the board's sample), the second `gap` units after its last letter and
+    // ending where it ended. A text that has no width yet leaves both as they are.
+    protected void RzFlowAfter(string first, string second, float gap)
+    {
+        TextWidget a = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget(first));
+        Widget b = M_SUB_WIDGET.FindAnyWidget(second);
+        if (!a || !b)
+            return;
+        if (OZ_VppFlex.TextWidth(a) <= 0)
+            return;
+        float ax;
+        float ay;
+        float bx;
+        float by;
+        float bw;
+        float bh;
+        a.GetPos(ax, ay);
+        b.GetPos(bx, by);
+        b.GetSize(bw, bh);
+        float end = bx + bw;
+        int tw = RzFitText(a);
+        float at = ax + tw + gap * UnitScale();
+        float room = end - at;
+        if (room < 1)
+            room = 1;
+        b.SetPos(at, by);
+        b.SetSize(room, bh);
+    }
+
+    // A caption that stands on a box's frame (a legend): as wide as its words, and the
+    // frame is broken under it -- the gap is the words and six units of air on each side.
+    // The gap is the frame <gapName> with its ground <gapName>Bg.
+    protected void RzFitLegend(string capName, string gapName)
+    {
+        TextWidget cap = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget(capName));
+        Widget gap = M_SUB_WIDGET.FindAnyWidget(gapName);
+        if (!cap)
+            return;
+        if (OZ_VppFlex.TextWidth(cap) <= 0)
+            return;
+        int tw = RzFitText(cap);
+        if (!gap)
+            return;
+        float w;
+        float h;
+        gap.GetSize(w, h);
+        w = tw + 12 * UnitScale();
+        gap.SetSize(w, h);
+        Widget ground = M_SUB_WIDGET.FindAnyWidget(gapName + "Bg");
+        if (ground)
+            ground.SetSize(w, h);
+    }
+
+    // A converted button made as wide as its caption: the caption stands textX pixels in,
+    // pad pixels stay after it. Its parts are <name>Edge, <name>Bg and <name>Text. Returns
+    // the button's width.
+    protected float RzHugBtn(string name, float textX, float pad)
+    {
+        Widget b = M_SUB_WIDGET.FindAnyWidget(name);
+        TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget(name + "Text"));
+        if (!b || !t)
+            return 0;
+        float s = UnitScale();
+        float w;
+        float h;
+        b.GetSize(w, h);
+        int tw = RzFitText(t);
+        RzSetX(t, textX);
+        w = textX + tw + pad;
+        b.SetSize(w, h);
+        Widget edge = M_SUB_WIDGET.FindAnyWidget(name + "Edge");
+        if (edge)
+            edge.SetSize(w, h);
+        Widget bg = M_SUB_WIDGET.FindAnyWidget(name + "Bg");
+        if (bg)
+            bg.SetSize(w - 2 * s, h - 2 * s);
+        return w;
+    }
+
+    // A row of a side list (owners, branches, lines): its ground and its accent bar. A
+    // button always keeps an opaque child over it (a bare one paints a light box under the
+    // pointer), so the ground of a row that is not picked takes the column's colour.
+    protected void RzLitRow(Widget row, string rootName, bool picked)
+    {
+        if (!row)
+            return;
+        Widget bar = row.FindAnyWidget(rootName + "Bar");
+        if (bar)
+            bar.Show(picked);
+        if (picked)
+            OZ_VppFlex.Paint(row, rootName + "Bg", OZL_Metal.PICK_PANEL);
+        else
+            OZ_VppFlex.Paint(row, rootName + "Bg", OZL_Metal.PANEL);
+    }
+
+    // The words of a side row along its line: the id, a dash and a name from the left, a
+    // tail (a count, a window's name) written from the right; the name takes what is left.
+    // rowW is the row's width in units; a part that the row has not is "".
+    protected void RzLaySideRow(Widget row, string idName, string dashName, string nameName, string tailName, float rowW)
+    {
+        if (!row)
+            return;
+        float s = UnitScale();
+        float x = 10 * s;
+        int tw;
+        TextWidget id = TextWidget.Cast(row.FindAnyWidget(idName));
+        if (id)
+        {
+            tw = RzFitText(id);
+            RzSetX(id, x);
+            x = x + tw + 6 * s;
+        }
+        Widget dash = row.FindAnyWidget(dashName);
+        if (dash && dash.IsVisible())
+        {
+            RzSetX(dash, x);
+            x = x + 17 * s;
+        }
+        float right = (rowW - 10) * s;
+        TextWidget tail = TextWidget.Cast(row.FindAnyWidget(tailName));
+        if (tail)
+        {
+            tw = RzFitText(tail);
+            right = right - tw;
+            RzSetX(tail, right);
+            right = right - 8 * s;
+        }
+        TextWidget name = TextWidget.Cast(row.FindAnyWidget(nameName));
+        if (name)
+        {
+            float w;
+            float h;
+            name.GetSize(w, h);
+            w = right - x;
+            if (w < 0)
+                w = 0;
+            RzSetX(name, x);
+            name.SetSize(w, h);
+        }
+    }
+
+    // A faction's name as the server last told it (the list answer), else as the client's
+    // own source of factions knows it; "" when nobody names it.
+    protected string RzOwnerName(string id)
+    {
+        for (int i = 0; i < m_ResOwners.Count(); i++)
+        {
+            if (m_ResOwners[i] && m_ResOwners[i].Id == id)
+            {
+                if (m_ResOwners[i].Name == id)
+                    return "";
+                return m_ResOwners[i].Name;
+            }
+        }
+        OZ_IdentityService svc = OZ_Identity.Get();
+        if (!svc)
+            return "";
+        string name = svc.FactionName(id);
+        if (name == id)
+            return "";
+        return name;
+    }
+
+    // Every faction's id and name in one string: two answers that name the same compare equal.
+    protected string RzOwnerNames()
+    {
+        string all = "";
+        for (int i = 0; i < m_ResOwners.Count(); i++)
+        {
+            if (m_ResOwners[i])
+                all = all + m_ResOwners[i].Id + "=" + m_ResOwners[i].Name + ";";
+        }
+        return all;
+    }
+
+    // A dashed line on a canvas (pixels).
+    protected void RzDashLine(CanvasWidget cv, float x1, float y1, float x2, float y2, float width, int color, float dashOn, float dashOff)
+    {
+        float dx = x2 - x1;
+        float dy = y2 - y1;
+        float len = Math.Sqrt(dx * dx + dy * dy);
+        if (!cv || len <= 0 || dashOn <= 0)
+            return;
+        float ux = dx / len;
+        float uy = dy / len;
+        float at = 0;
+        int guard = 0;
+        while (at < len && guard < 600)
+        {
+            float stop = at + dashOn;
+            if (stop > len)
+                stop = len;
+            cv.DrawLine(x1 + ux * at, y1 + uy * at, x1 + ux * stop, y1 + uy * stop, width, color);
+            at = at + dashOn + dashOff;
+            guard++;
+        }
+    }
+
+    // ================================================= the draft bar
+
+    // The bar from the draft: how many files changed, the problems, what each button
+    // would do now.
     protected void PaintRzBar()
     {
+        if (!M_SUB_WIDGET || !m_Ed)
+            return;
+
+        // Every edit of the draft ends here: the open page is fitted once more two frames
+        // on (RzLayPages), when the texts it wrote have their widths.
+        if (RzShown())
+            m_RzRefit = 2;
+        if (!m_RzBar)
+            return;
+
         int changed = m_Ed.Changed();
         string state;
-        int stateColor = OZL_Metal.MUTED;
+        int stateColor = OZL_Metal.TEXT;
+        bool dot = false;
+        string word;
         if (!m_Ed.AllLoaded())
         {
-            state = Tr("#STR_OZL_ED_STATUS_LOADING") + m_Ed.LoadedCount().ToString() + "/" + m_Ed.Tags().Count().ToString();
+            word = Tr("#STR_OZL_ED_STATUS_LOADING");
+            state = word + m_Ed.LoadedCount().ToString() + "/" + m_Ed.Tags().Count().ToString();
+            stateColor = OZL_Metal.MUTED;
         }
         else if (changed > 0)
         {
-            state = Tr("#STR_OZL_ED_STATUS_CHANGED") + changed.ToString();
+            word = Tr("#STR_OZL_ED_STATUS_CHANGED");
+            state = word + changed.ToString();
             stateColor = OZL_Metal.ALERT;
+            dot = true;
         }
         else
         {
             state = Tr("#STR_OZL_ED_STATUS_CLEAN");
         }
         SetLabel("RzStatus", state, stateColor);
-        SetColorOf("RzStatusDot", stateColor);
+        Widget dotW = M_SUB_WIDGET.FindAnyWidget("RzStatusDot");
+        if (dotW)
+        {
+            dotW.Show(dot);
+            dotW.SetColor(stateColor);
+        }
 
+        // The problems button: clean, warnings, errors; its frame takes the words' colour
+        // while the panel is open.
         int errs = m_Ed.Errors();
         int warns = m_Ed.Warnings();
         string probs;
         int probInk = OZL_Metal.OK;
         int probRim = OZL_Metal.EDGE;
+        int probGround = OZL_Metal.HEAD;
         if (errs > 0)
         {
-            probs = Tr("#STR_OZL_ED_PROB_ERRORS") + errs.ToString();
+            word = Tr("#STR_OZL_ED_PROB_ERRORS");
+            probs = word + errs.ToString();
             if (warns > 0)
-                probs += " +" + warns.ToString();
+                probs = probs + " +" + warns.ToString();
             probInk = OZL_Metal.BAD;
             probRim = OZL_Metal.BAD;
+            probGround = OZL_Metal.BAD_SOFT;
         }
         else if (warns > 0)
         {
-            probs = Tr("#STR_OZL_ED_PROB_WARNINGS") + warns.ToString();
+            word = Tr("#STR_OZL_ED_PROB_WARNINGS");
+            probs = word + warns.ToString();
             probInk = OZL_Metal.ALERT;
         }
         else
@@ -746,17 +1107,15 @@ modded class OZ_VppAdminMenu
         }
         if (m_RzProblems)
             probRim = probInk;
-        PaintBtn("BtnRzProblems", probs, probInk, OZL_Metal.RAISED, probRim);
+        PaintBtn("BtnRzProblems", probs, probInk, probGround, probRim);
+        bool clean = (errs == 0 && warns == 0);
+        ShowW("RzProbSignOk", clean);
+        ShowW("RzProbSignBad", !clean);
+        SetColorOf("RzProbSignBadIcon", probInk);
 
-        int undoInk = OZL_Metal.FAINT;
-        if (m_Ed.CanUndo())
-            undoInk = OZL_Metal.TEXT;
-        SetBtnText("BtnRzUndo", Tr("#STR_OZL_ED_BTN_UNDO"), undoInk);
-
-        int redoInk = OZL_Metal.FAINT;
-        if (m_Ed.CanRedo())
-            redoInk = OZL_Metal.TEXT;
-        SetBtnText("BtnRzRedo", Tr("#STR_OZL_ED_BTN_REDO"), redoInk);
+        // Undo and redo: raised while there is a step to take.
+        RzPaintStep("BtnRzUndo", m_Ed.CanUndo());
+        RzPaintStep("BtnRzRedo", m_Ed.CanRedo());
 
         int discardInk = OZL_Metal.FAINT;
         int discardRim = OZL_Metal.EDGE;
@@ -765,45 +1124,181 @@ modded class OZ_VppAdminMenu
             discardInk = OZL_Metal.BAD;
             discardRim = OZL_Metal.BAD;
         }
-        PaintBtn("BtnRzDiscard", Tr("#STR_OZL_ED_BTN_DISCARD"), discardInk, OZL_Metal.RAISED, discardRim);
+        SetColorOf("BtnRzDiscardText", discardInk);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "BtnRzDiscardEdge", discardRim);
 
-        // APPLY is the one lit button: accent while there is something to send and
-        // nothing stops it, red while errors keep it shut, plain with nothing to do.
+        // APPLY is the one lit button: the accent while there is something to send and
+        // nothing stops it, a lock in a red frame while errors keep it shut, plain with
+        // nothing to do.
         string apply = Tr("#STR_OZL_ED_BTN_APPLY");
         int applyInk = OZL_Metal.FAINT;
         int applyGround = OZL_Metal.RAISED;
         int applyRim = OZL_Metal.EDGE;
+        bool locked = false;
         if (changed > 0)
         {
-            apply += " - " + changed.ToString();
+            apply = apply + " · " + changed.ToString();
             if (errs == 0)
             {
-                applyInk = OZL_Metal.TEXT;
+                applyInk = OZL_Metal.INK;
                 applyGround = OZL_Metal.ACCENT;
                 applyRim = OZL_Metal.ACCENT;
             }
             else
             {
-                applyInk = OZL_Metal.BAD;
+                applyInk = OZL_Metal.MUTED;
+                applyGround = OZL_Metal.HEAD;
                 applyRim = OZL_Metal.BAD;
+                locked = true;
             }
         }
         PaintBtn("BtnRzApply", apply, applyInk, applyGround, applyRim);
+        ShowW("BtnRzApplyLock", locked);
+        SetColorOf("BtnRzApplyLockIcon", applyInk);
 
-        // The panel follows every edit while it is open: the pages stay usable under
-        // it now, so the draft changes while it is read.
+        PaintRzSaid();
+        RzFlowBar();
+
+        // The panel follows every edit while it is open: the pages stay usable under it,
+        // so the draft changes while it is read.
         RepaintProblems();
     }
 
-    // Підсумок для ОГЛЯДУ: що тримає чернетка (сервер -- у клітинках над ним).
+    protected void RzPaintStep(string btn, bool can)
+    {
+        int ink = OZL_Metal.FAINT;
+        int ground = OZL_Metal.HEAD;
+        if (can)
+        {
+            ink = OZL_Metal.TEXT;
+            ground = OZL_Metal.RAISED;
+        }
+        SetColorOf(btn + "Text", ink);
+        SetColorOf(btn + "Icon", ink);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, btn + "Bg", ground);
+    }
+
+    // The line in the middle of the bar: the last thing said on a research page, or what
+    // the bar is for while nothing was said.
+    protected void PaintRzSaid()
+    {
+        if (!m_RzBar)
+            return;
+        string text = m_RzSaid;
+        int ink = OZL_Metal.MUTED;
+        if (text == "")
+            text = "#STR_OZL_VPP_BAR_IDLE";
+        else if (m_RzSaidLevel == 1)
+            ink = OZL_Metal.OK;
+        else if (m_RzSaidLevel == 2)
+            ink = OZL_Metal.BAD;
+        SetLabel("ResHint", text, ink);
+        bool check = false;
+        if (m_RzSaidLevel == 1 && m_RzSaid != "")
+            check = true;
+        ShowW("RzHintOk", check);
+    }
+
+    // The bar's parts along it: the state and the problems button from the left, each as
+    // wide as its words; the four buttons from the right, the last as wide as its words;
+    // the line takes what is between. The numbers are ozl_vpp_bar.layout's, in units.
+    protected void RzFlowBar()
+    {
+        if (!m_RzBar)
+            return;
+        float s = UnitScale();
+        float bw;
+        float bh;
+        m_RzBar.GetSize(bw, bh);
+        if (bw <= 0)
+            return;
+
+        // From the right: apply (its lock, when shown, stands before its words), discard,
+        // redo, undo, 12 units apart, 24 from the edge.
+        float lead = 19 * s;
+        Widget shut = M_SUB_WIDGET.FindAnyWidget("BtnRzApplyLock");
+        if (shut && shut.IsVisible())
+            lead = 40 * s;
+        float w = RzHugBtn("BtnRzApply", lead, 19 * s);
+        float right = bw - 24 * s;
+        MoveW("BtnRzApply", right - w, 13 * s);
+        right = right - w - 12 * s;
+        right = RzBarPut("BtnRzDiscard", right);
+        right = RzBarPut("BtnRzRedo", right);
+        right = RzBarPut("BtnRzUndo", right);
+
+        // From the left: the state under its caption (a dot before it while files are
+        // changed), then the problems button.
+        TextWidget state = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzStatus"));
+        Widget dot = M_SUB_WIDGET.FindAnyWidget("RzStatusDot");
+        float left = 24 * s;
+        if (state)
+        {
+            float sx = 24 * s;
+            if (dot && dot.IsVisible())
+                sx = 36 * s;
+            int stateW = RzFitText(state);
+            RzSetX(state, sx);
+            left = sx + stateW;
+        }
+        if (left < 164 * s)
+            left = 164 * s;
+        left = left + 12 * s;
+        w = RzHugBtn("BtnRzProblems", 37 * s, 13 * s);
+        MoveW("BtnRzProblems", left, 13 * s);
+        left = left + w + 12 * s;
+
+        // The line: its check, when shown, before its words.
+        Widget box = M_SUB_WIDGET.FindAnyWidget("RzHintBox");
+        TextWidget hint = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("ResHint"));
+        if (!box || !hint)
+            return;
+        float room = right - left;
+        if (room < 0)
+            room = 0;
+        box.SetPos(left, 21 * s);
+        box.SetSize(room, 20 * s);
+        float hx = 0;
+        Widget check = M_SUB_WIDGET.FindAnyWidget("RzHintOk");
+        if (check && check.IsVisible())
+            hx = 23 * s;
+        float hw;
+        float hh;
+        hint.GetSize(hw, hh);
+        RzSetX(hint, hx);
+        hw = room - hx;
+        if (hw < 0)
+            hw = 0;
+        hint.SetSize(hw, hh);
+    }
+
+    // A button of the bar put with its right edge at `right`; returns where the next one's
+    // right edge is.
+    protected float RzBarPut(string name, float right)
+    {
+        Widget b = M_SUB_WIDGET.FindAnyWidget(name);
+        if (!b)
+            return right;
+        float w;
+        float h;
+        b.GetSize(w, h);
+        RzSetX(b, right - w);
+        return right - w - 12 * UnitScale();
+    }
+
+    // What the draft holds, for Огляд (what the server reads is in the tiles above it).
     protected void PaintSummary()
     {
+        if (!M_SUB_WIDGET || !m_Ed)
+            return;
         TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzSummary"));
         if (!t)
             return;
+        string word;
         if (!m_Ed.AllLoaded())
         {
-            t.SetText(Tr("#STR_OZL_ED_STATUS_LOADING") + m_Ed.LoadedCount().ToString() + "/" + m_Ed.Tags().Count().ToString());
+            word = Tr("#STR_OZL_ED_STATUS_LOADING");
+            t.SetText(word + m_Ed.LoadedCount().ToString() + "/" + m_Ed.Tags().Count().ToString());
             return;
         }
 
@@ -813,228 +1308,97 @@ modded class OZ_VppAdminMenu
         OZL_TreeConfig tr = OZL_TreeConfig.Cast(m_Ed.Doc(OZL_Config.TAG_TREE).Obj);
         OZL_Modules    mo = OZL_Modules.Cast(m_Ed.Doc(OZL_Config.TAG_MODULES).Obj);
         OZL_StaticsConfig sc = OZL_StaticsConfig.Cast(m_Ed.Doc(OZL_Config.TAG_STATICS).Obj);
+        if (!pt || !ow || !ru || !tr || !mo || !sc)
+            return;
 
-        string s = Tr("#STR_OZL_VPP_OV_DRAFT_SUM");
-        s += pt.PointTypes.Count().ToString() + " / " + ow.Owners.Count().ToString();
-        s += " / " + ru.Count().ToString() + " / " + tr.NodeCount().ToString();
-        s += " / " + mo.Modules.Count().ToString() + " / " + sc.Entries.Count().ToString();
-        t.SetText(s);
+        // The order of the tiles: types, owners, rules, nodes, modules, statics.
+        word = Tr("#STR_OZL_VPP_OV_DRAFT_SHORT");
+        string sum = word + pt.PointTypes.Count().ToString() + " / " + ow.Owners.Count().ToString();
+        sum = sum + " / " + ru.Count().ToString() + " / " + tr.NodeCount().ToString();
+        sum = sum + " / " + mo.Modules.Count().ToString() + " / " + sc.Entries.Count().ToString();
+        t.SetText(sum);
     }
 
-    // ------------------------------------------------- панель проблем
+    // ================================================= the problems panel
 
-    // The problems of the draft, errors first (they keep APPLY shut), in a panel
-    // above the draft bar while it is open.
+    // The problems of the draft, errors first (they keep APPLY shut), a row each.
     protected void RepaintProblems()
     {
-        if (!m_RzProblems)
+        if (!m_RzProblems || !m_RzProbs || !m_Ed)
             return;
-        TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzProbList"));
-        if (!lb)
+        Widget host = m_RzProbs.FindAnyWidget("RzProbRows");
+        if (!host)
             return;
-        m_ResRepaint = true;
-        lb.ClearItems();
+        if (!m_RzProbRows)
+            m_RzProbRows = new OZ_VppFlexRows(m_Flex, host, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_prob_row.layout", "OZL_VppProbRow", 1312, 28);
 
+        m_RzProbRows.Clear();
         array<string> probs = m_Ed.Problems();
+        Widget row;
         if (probs.Count() == 0)
         {
-            lb.AddItem(Tr("#STR_OZL_ED_PROB_CLEAN"), NULL, 0);
-            lb.SetItemColor(0, 0, OZL_Metal.OK);
-            m_ResRepaint = false;
-            return;
+            row = m_RzProbRows.Add("");
+            if (row)
+            {
+                Widget badge = row.FindAnyWidget("ProbBadge");
+                if (badge)
+                    badge.Show(false);
+                RzRowText(row, "ProbText", "#STR_OZL_ED_PROB_CLEAN", OZL_Metal.OK);
+            }
+        }
+        else
+        {
+            string markE = Tr("#STR_OZL_ED_PROB_MARK_ERROR");
+            markE = markE.Trim();
+            string markW = Tr("#STR_OZL_ED_PROB_MARK_WARN");
+            markW = markW.Trim();
+            int i;
+            int shown = 0;
+            for (i = 0; i < probs.Count(); i++)
+            {
+                if (!OZL_EdCodec.IsError(probs[i]) || shown >= RZ_LIST_MAX)
+                    continue;
+                row = m_RzProbRows.Add(i.ToString());
+                if (row)
+                    RzProbRow(row, markE, probs[i], OZL_Metal.BAD, OZL_Metal.BAD_CHIP);
+                shown++;
+            }
+            for (i = 0; i < probs.Count(); i++)
+            {
+                if (OZL_EdCodec.IsError(probs[i]) || shown >= RZ_LIST_MAX)
+                    continue;
+                row = m_RzProbRows.Add(i.ToString());
+                if (row)
+                    RzProbRow(row, markW, probs[i], OZL_Metal.ALERT, OZL_Metal.WARN_CHIP);
+                shown++;
+            }
         }
 
-        string markE = Tr("#STR_OZL_ED_PROB_MARK_ERROR");
-        string markW = Tr("#STR_OZL_ED_PROB_MARK_WARN");
-        int i;
-        for (i = 0; i < probs.Count(); i++)
-        {
-            if (!OZL_EdCodec.IsError(probs[i]))
-                continue;
-            lb.AddItem(markE + probs[i], NULL, 0);
-            lb.SetItemColor(lb.GetNumItems() - 1, 0, OZL_Metal.BAD);
-        }
-        for (i = 0; i < probs.Count(); i++)
-        {
-            if (OZL_EdCodec.IsError(probs[i]))
-                continue;
-            lb.AddItem(markW + probs[i], NULL, 0);
-            lb.SetItemColor(lb.GetNumItems() - 1, 0, OZL_Metal.ALERT);
-        }
-        m_ResRepaint = false;
+        // The panel is as tall as its rows: placed again, then the rows fitted.
+        RzPlaceStrips();
     }
 
-    // The problems button and the panel's own close: the panel opens or closes, and
-    // the pages above it get their height back or give it.
+    protected void RzProbRow(Widget row, string mark, string text, int ink, int ground)
+    {
+        RzRowText(row, "ProbMark", mark, ink);
+        OZ_VppFlex.Paint(row, "ProbBadgeBg", ground);
+        RzRowText(row, "ProbText", text, OZL_Metal.TEXT);
+    }
+
+    // The problems button and the panel's own close: the panel opens over the bottom of
+    // the open page, or goes.
     protected void RzShowProblems(bool open)
     {
         m_RzProblems = open;
-        RzLayout();
+        bool panel = false;
+        if (open && IsRzPage(m_Shown))
+            panel = true;
+        if (m_RzProbs)
+            m_RzProbs.Show(panel);
         PaintRzBar();
     }
 
-    // ------------------------------------------------- голова сторінки
-
-    // The shown page's title, its line and its actions; the title is clipped short of
-    // the actions.
-    protected void RzLayHead()
-    {
-        if (!M_SUB_WIDGET)
-            return;
-        string up = m_RzTab;
-        up.ToUpper();
-        string title = Tr("#STR_OZL_VPP_H_" + up);
-        string sub = Tr("#STR_OZL_VPP_HS_" + up);
-        SetLabel("RzHeadTitle", title, 0);
-        SetLabel("RzHeadSub", sub, 0);
-
-        string act = "";
-        if (m_RzTab == "overview")
-            act = "#STR_OZL_ED_OV_REFRESH";
-        else if (m_RzTab == "points")
-            act = "#STR_OZL_VPP_PT_ADD";
-        else if (m_RzTab == "owners")
-            act = "#STR_OZL_VPP_OW_ADD";
-        else if (m_RzTab == "modules")
-            act = "#STR_OZL_VPP_MO_ADD";
-        else if (m_RzTab == "statics")
-            act = "#STR_OZL_VPP_ST_ADD";
-        bool hasAct = (act != "");
-        ShowW("BtnRzHdAct", hasAct);
-        if (hasAct)
-            SetBtnText("BtnRzHdAct", Tr(act), OZL_Metal.TEXT);
-
-        bool tree = (m_RzTab == "tree");
-        array<string> treeActs = {"RzTrDemoLbl", "BtnRzTrDemoPrev", "BtnRzTrDemo", "BtnRzTrDemoNext", "BtnRzTrView"};
-        for (int i = 0; i < treeActs.Count(); i++)
-            ShowW(treeActs[i], tree);
-
-        if (m_RzW <= 0)
-            return;
-        float s = Px();
-        float acts = 0;
-        if (hasAct)
-            acts = (220 + 16) * s;
-        if (tree)
-            acts = (594 + 16) * s;
-        float clipW = m_RzW - 48 * s - acts;
-        if (clipW < 100 * s)
-            clipW = 100 * s;
-        SizeW("RzHead", m_RzW, 60 * s);
-        SizeW("RzHeadClip", clipW, 59 * s);
-        SizeW("RzHeadRule", m_RzW, s);
-    }
-
-    // ------------------------------------------------- розкладка
-
-    // The pane laid out in the content area the shell gave it (m_RzW x m_RzH): the
-    // head, the pages between it and the draft bar -- shorter while the problems panel
-    // is open over the bar --, the panel and the bar; then the pages themselves
-    // (RzLayPages, which the later layers extend). Nothing is read back.
-    protected void RzLayout()
-    {
-        if (!M_SUB_WIDGET || m_RzW <= 0 || m_RzH <= 0)
-            return;
-        float s = Px();
-        float w = m_RzW;
-        float h = m_RzH;
-        float barH = 56 * s;
-        float probH = 150 * s;
-        float top = 72 * s;
-        float bottom = h - barH - 12 * s;
-        if (m_RzProblems)
-            bottom = bottom - probH;
-        float pw = w - 48 * s;
-        float ph = bottom - top;
-        if (ph < 120 * s)
-            ph = 120 * s;
-        m_RzPageW = pw;
-        m_RzPageH = ph;
-
-        RzLayHead();
-
-        SizeW("RzPages", pw, ph);
-        array<string> pages = {"overview", "points", "tree", "chains", "cfg", "settings"};
-        for (int i = 0; i < pages.Count(); i++)
-            SizeW("RzPage_" + pages[i], pw, ph);
-
-        PlaceW("RzProbs", 0, h - barH - probH, w, probH);
-        ShowW("RzProbs", m_RzProblems);
-        SizeW("RzProbLine", w, s);
-        SizeW("RzProbList", w - 48 * s, 102 * s);
-        float subW = w - (270 + 64 + 300 + 12) * s;
-        if (subW < 0)
-            subW = 0;
-        SizeW("RzProbSub", subW, 20 * s);
-
-        PlaceW("RzBar", 0, h - barH, w, barH);
-        SizeW("RzBarLine", w, s);
-        float hintW = w - (338 + 500) * s;
-        if (hintW < 0)
-            hintW = 0;
-        SizeW("ResHint", hintW, 32 * s);
-
-        RzLayPages(pw, ph);
-    }
-
-    // Each page in the page area pw x ph (pixels). This layer: overview, point types
-    // and the tree; the later layers add theirs after super.
-    protected void RzLayPages(float pw, float ph)
-    {
-        float s = Px();
-        float gap = 16 * s;
-
-        // Overview: the factions take what the two fixed columns leave.
-        float colW = 290 * s;
-        float leftW = pw - 2 * colW - 2 * gap;
-        if (leftW < 300 * s)
-            leftW = 300 * s;
-        SizeW("RzOvLeft", leftW, ph);
-        SizeW("RzOvFacCols", leftW, 16 * s);
-        SizeW("RzOvFacCount", leftW - 136 * s, 18 * s);
-        float ownersH = ph - (48 + 46) * s;
-        if (ownersH < 40 * s)
-            ownersH = 40 * s;
-        SizeW("ResOwners", leftW, ownersH);
-        SizeW("RzOvFacNote", leftW, 40 * s);
-        PlaceW("RzOvMid", leftW + gap, 0, colW, ph);
-        PlaceW("RzOvRight", leftW + colW + 2 * gap, 0, colW, ph);
-        float staticsH = ph - 294 * s;
-        if (staticsH < 40 * s)
-            staticsH = 40 * s;
-        SizeW("RzOvStList", colW, staticsH);
-
-        // Point types: the list takes what the form leaves.
-        float formW = 616 * s;
-        float listW = pw - formW - gap;
-        if (listW < 220 * s)
-            listW = 220 * s;
-        SizeW("RzPtLeft", listW, ph);
-        SizeW("RzPtHead", listW, 16 * s);
-        float typesH = ph - (20 + 24) * s;
-        if (typesH < 40 * s)
-            typesH = 40 * s;
-        SizeW("RzPtList", listW, typesH);
-        SizeW("RzPtCount", listW, 18 * s);
-        PlaceW("RzPtForm", listW + gap, 0, formW, ph);
-
-        RzLayTree(pw, ph);
-    }
-
-    // Файл чернетки приїхав із сервера (cfg_get ядра).
-    override void OnCfgText(string name, string body)
-    {
-        super.OnCfgText(name, body);
-        if (!m_Ed || !m_Ed.Owns(name))
-            return;
-
-        string err;
-        if (!m_Ed.OnFetched(name, body, err))
-            RzHint(Tr("#STR_OZL_ED_HINT_BAD_FILE") + name + " (" + err + ")");
-        RepaintRz();
-    }
-
-    // ------------------------------------------------- дії чернетки
+    // ================================================= the draft's actions
 
     protected void RzUndo(bool redo)
     {
@@ -1045,6 +1409,7 @@ modded class OZ_VppAdminMenu
         else
             done = m_Ed.Undo(tag);
 
+        string word;
         if (!done)
         {
             if (redo)
@@ -1054,16 +1419,16 @@ modded class OZ_VppAdminMenu
             return;
         }
 
-        ClampPicked();
         RepaintRz();
         if (redo)
-            Hint(Tr("#STR_OZL_ED_HINT_REDONE") + tag);
+            word = Tr("#STR_OZL_ED_HINT_REDONE");
         else
-            Hint(Tr("#STR_OZL_ED_HINT_UNDONE") + tag);
+            word = Tr("#STR_OZL_ED_HINT_UNDONE");
+        Hint(word + tag);
     }
 
-    // ВІДКИНУТИ питає рядком підтвердження вікна (дизайн вікна §3.4) і каже,
-    // які файли пропадуть; «так» приходить у OnConfirmed -> RzDiscardNow.
+    // DISCARD asks on the window's confirm strip and says which files lose their edits;
+    // the yes comes to OnConfirmed -> RzDiscardNow.
     protected void RzDiscard()
     {
         if (m_Ed.Changed() == 0)
@@ -1103,13 +1468,12 @@ modded class OZ_VppAdminMenu
         if (m_Ed.Changed() == 0)
             return;
         m_Ed.Discard();
-        ClampPicked();
         RepaintRz();
         Hint(Tr("#STR_OZL_ED_HINT_DISCARDED"));
     }
 
-    // The confirm strip's "yes" (design 3.4). Research's actions start with "rz:";
-    // the later layers take theirs (rz:rudel:, rz:cfgdel:) before they call super.
+    // The confirm strip's yes. Research's actions start with "rz:"; the later layers take
+    // theirs (rz:rudel:, rz:ptdel:, rz:cfgdel:) before they call super.
     override void OnConfirmed(string action)
     {
         if (action.IndexOf("rz:") != 0)
@@ -1128,16 +1492,13 @@ modded class OZ_VppAdminMenu
             Hint(Tr("#STR_OZL_VPP_RELOADING"));
             return;
         }
+        string word;
         if (action.IndexOf("rz:reset:") == 0)
         {
             string owner = action.Substring(9, action.Length() - 9);
             Ask(OZL_Const.SECTION, "reset:" + owner, "{}");
-            Hint(Tr("#STR_OZL_VPP_RESETTING") + owner);
-            return;
-        }
-        if (action.IndexOf("rz:ptdel:") == 0)
-        {
-            PtDeleteNow(action.Substring(9, action.Length() - 9));
+            word = Tr("#STR_OZL_VPP_RESETTING");
+            Hint(word + owner);
             return;
         }
         if (action.IndexOf("rz:tndel:") == 0)
@@ -1153,8 +1514,8 @@ modded class OZ_VppAdminMenu
         super.OnConfirmed(action);
     }
 
-    // ЗАСТОСУВАТИ: змінені файли по одному, у порядку OZL_EdDocs; помилки
-    // чернетки не пускають -- сервер викинув би те, що на них стоїть.
+    // APPLY: the changed files one at a time, in the order of OZL_EdDocs; the draft's
+    // errors keep it shut -- the server would drop what stands on them.
     protected void RzApply()
     {
         if (!m_Ed.AllLoaded())
@@ -1174,7 +1535,7 @@ modded class OZ_VppAdminMenu
         }
         if (m_Ed.Errors() > 0)
         {
-            Hint(Tr("#STR_OZL_ED_HINT_FIX_FIRST"));
+            RzSay(Tr("#STR_OZL_ED_HINT_FIX_FIRST"), 2);
             return;
         }
 
@@ -1189,15 +1550,18 @@ modded class OZ_VppAdminMenu
         if (tag == "")
             return;
         SendCfg(tag, m_Ed.Doc(tag).Cur);
-        RzHint(Tr("#STR_OZL_ED_HINT_APPLYING") + tag);
+        string word = Tr("#STR_OZL_ED_HINT_APPLYING");
+        RzHint(word + tag);
     }
 
     protected void OnRzApplied(string tag, bool ok, string error)
     {
         m_Ed.ApplyDone(tag, ok);
+        string word;
         if (!ok)
         {
-            RzHint(tag + Tr("#STR_OZL_ED_HINT_REFUSED") + " (" + Words(error) + ")");
+            word = Tr("#STR_OZL_ED_HINT_REFUSED");
+            RzHintLevel(tag + word + " (" + Words(error) + ")", 2);
             RepaintRz();
             return;
         }
@@ -1209,17 +1573,25 @@ modded class OZ_VppAdminMenu
             return;
         }
 
-        // Усе пройшло. Сервер переписав файли з розібраного (Validate, бекап),
-        // тож показуємо вже його текст: перечитуємо застосоване.
+        // All of them went. The server wrote the files again from what it parsed
+        // (Validate, a backup), so its text is shown: what was applied is read again.
         array<string> done = m_Ed.Applied();
-        RzHint(Tr("#STR_OZL_ED_HINT_APPLIED") + done.Count().ToString());
         m_Ed.ClearHistory();
+        string names = "";
         for (int i = 0; i < done.Count(); i++)
+        {
             AskCfg(done[i]);
+            if (names != "")
+                names = names + ", ";
+            names = names + done[i];
+        }
         RepaintRz();
+        word = Tr("#STR_OZL_ED_HINT_APPLIED");
+        string reread = Tr("#STR_OZL_VPP_BAR_REREAD");
+        RzHintLevel(word + done.Count().ToString() + " · " + names + reread, 1);
     }
 
-    // ================================================= типи балів
+    // ================================================= the draft's files
 
     protected OZL_PointTypes DraftPointTypes()
     {
@@ -1230,262 +1602,6 @@ modded class OZ_VppAdminMenu
             return null;
         return OZL_PointTypes.Cast(d.Obj);
     }
-
-    protected void ClampPicked()
-    {
-        OZL_PointTypes pts = DraftPointTypes();
-        if (!pts || m_PtPicked >= pts.PointTypes.Count())
-            m_PtPicked = -1;
-    }
-
-    // Список і, коли fillForm, поля вибраного. Під час набору поле не
-    // переписується -- інакше курсор стрибав би в кінець на кожну літеру.
-    protected void RepaintPoints(bool fillForm)
-    {
-        TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzPtList"));
-        if (!lb)
-            return;
-
-        OZL_PointTypes pts = DraftPointTypes();
-        m_ResRepaint = true;
-        lb.ClearItems();
-        if (pts)
-        {
-            // Маркер "> " -- вибраний рядок: список у стилі NoScrollBar
-            // підсвічування рядка не малює (зміряно 2026-11-09), а червона смуга
-            // прокрутки стилю за замовчуванням була гірша за маркер.
-            for (int i = 0; i < pts.PointTypes.Count(); i++)
-            {
-                OZL_PointType p = pts.PointTypes[i];
-                string line = "";
-                if (i == m_PtPicked)
-                    line = "> ";
-                line += p.Id + "  -  " + p.Name;
-                line += "  -  " + p.SortOrder.ToString() + "  -  " + p.BasePurity.ToString();
-                lb.AddItem(line, NULL, 0);
-            }
-            if (m_PtPicked >= 0 && m_PtPicked < pts.PointTypes.Count())
-                lb.SelectRow(m_PtPicked);
-            string inDraft = Tr("#STR_OZL_VPP_PT_COUNT");
-            SetLabel("RzPtCount", inDraft + pts.PointTypes.Count().ToString(), 0);
-        }
-        m_ResRepaint = false;
-
-        PaintPtHead();
-        if (fillForm)
-            FillPtForm();
-    }
-
-    protected OZL_PointType PickedPointType()
-    {
-        OZL_PointTypes pts = DraftPointTypes();
-        if (pts && m_PtPicked >= 0 && m_PtPicked < pts.PointTypes.Count())
-            return pts.PointTypes[m_PtPicked];
-        return null;
-    }
-
-    // The form's head: the picked type's id, its name and its own colour -- painted on
-    // every keystroke, the fields only when a row is picked.
-    protected void PaintPtHead()
-    {
-        OZL_PointType p = PickedPointType();
-        Widget swatch = M_SUB_WIDGET.FindAnyWidget("RzPtSwatch");
-        if (!p)
-        {
-            SetLabel("RzPtPicked", "#STR_OZL_ED_PT_PICK", 0);
-            SetLabel("RzPtPickedName", "", 0);
-            if (swatch)
-                swatch.Show(false);
-            return;
-        }
-        SetLabel("RzPtPicked", p.Id, 0);
-        SetLabel("RzPtPickedName", p.Name, 0);
-        if (swatch)
-        {
-            swatch.SetColor(OZL_PointTypes.ColorArgb(p.Color));
-            swatch.Show(true);
-        }
-    }
-
-    protected void FillPtForm()
-    {
-        OZL_PointType p = PickedPointType();
-
-        m_RzFill = true;
-        if (p)
-        {
-            SetEdit("RzPtId", p.Id);
-            SetEdit("RzPtName", p.Name);
-            SetEdit("RzPtColor", ColorShown(p.Color));
-            SetEdit("RzPtSort", p.SortOrder.ToString());
-            SetEdit("RzPtPurity", p.BasePurity.ToString());
-            SetEdit("RzPtIcon", p.Icon);
-        }
-        else
-        {
-            SetEdit("RzPtId", "");
-            SetEdit("RzPtName", "");
-            SetEdit("RzPtColor", "");
-            SetEdit("RzPtSort", "");
-            SetEdit("RzPtPurity", "");
-            SetEdit("RzPtIcon", "");
-        }
-        m_RzFill = false;
-    }
-
-    // КОЛІР БЕЗ "#" У ПОЛІ. Текст на "#" рушій читає як ключ stringtable:
-    // SetText("#7CB342") показав "7CB342" (зміряно 2026-11-09), і поле, яке
-    // потім правили, повертало колір без решітки. Тож поле показує шість
-    // цифр, а у файл іде "#RRGGBB" -- як писав колір пакет і як читає
-    // OZL_PointTypes.ColorArgb.
-    protected string ColorShown(string stored)
-    {
-        string c = stored.Trim();
-        if (c.IndexOf("#") == 0)
-            c = c.Substring(1, c.Length() - 1);
-        return c;
-    }
-
-    protected string ColorStored(string typed)
-    {
-        string c = typed.Trim();
-        if (c == "" || c.IndexOf("#") == 0)
-            return c;
-        return "#" + c;
-    }
-
-    // Поле форми змінилось: правка вибраного типу, один знімок на поле.
-    protected void OnPtField(string field)
-    {
-        OZL_PointTypes pts = DraftPointTypes();
-        if (!pts || m_PtPicked < 0 || m_PtPicked >= pts.PointTypes.Count())
-            return;
-
-        string tag = OZL_Config.TAG_POINT_TYPES;
-        m_Ed.BeginOnce(tag, "pt:" + m_PtPicked.ToString() + ":" + field);
-
-        OZL_PointType p = pts.PointTypes[m_PtPicked];
-        string v = GetEdit(field);
-        if (field == "RzPtId")
-            p.Id = v.Trim();
-        else if (field == "RzPtName")
-            p.Name = v;
-        else if (field == "RzPtColor")
-            p.Color = ColorStored(v);
-        else if (field == "RzPtSort")
-            p.SortOrder = v.ToInt();
-        else if (field == "RzPtPurity")
-            p.BasePurity = v.ToFloat();
-        else if (field == "RzPtIcon")
-            p.Icon = v.Trim();
-
-        m_Ed.Commit(tag);
-        RepaintPoints(false);
-        PaintRzBar();
-        PaintSummary();
-    }
-
-    protected void PtAdd()
-    {
-        OZL_PointTypes pts = DraftPointTypes();
-        if (!pts)
-        {
-            Hint(Tr("#STR_OZL_ED_HINT_LOADING"));
-            return;
-        }
-
-        string tag = OZL_Config.TAG_POINT_TYPES;
-        m_Ed.BeginOnce(tag, "");
-
-        // Нова лінія з вільним Id і порядком у кінці: адмін перейменує.
-        int order = 0;
-        int i;
-        for (i = 0; i < pts.PointTypes.Count(); i++)
-        {
-            if (pts.PointTypes[i].SortOrder > order)
-                order = pts.PointTypes[i].SortOrder;
-        }
-        string id = "new_line";
-        int n = 1;
-        while (pts.Find(id))
-        {
-            n++;
-            id = "new_line_" + n.ToString();
-        }
-
-        OZL_PointType p = new OZL_PointType();
-        p.Id = id;
-        p.Name = id;
-        p.Color = "#FFFFFF";
-        p.SortOrder = order + 1;
-        p.BasePurity = OZL_Const.DEFAULT_PURITY;
-        pts.PointTypes.Insert(p);
-
-        m_Ed.Commit(tag);
-        m_Ed.EndGesture();
-        m_PtPicked = pts.PointTypes.Count() - 1;
-        RepaintPoints(true);
-        PaintRzBar();
-        PaintSummary();
-        Hint(Tr("#STR_OZL_ED_PT_ADDED") + id);
-    }
-
-    protected void PtDelete()
-    {
-        OZL_PointTypes pts = DraftPointTypes();
-        if (!pts || m_PtPicked < 0 || m_PtPicked >= pts.PointTypes.Count())
-        {
-            Hint(Tr("#STR_OZL_ED_PT_PICK"));
-            return;
-        }
-
-        string id = pts.PointTypes[m_PtPicked].Id;
-        string ask = Tr("#STR_OZL_VPP_ASK_DEL_PT");
-        string tail = Tr("#STR_OZL_VPP_ASK_DRAFT");
-        Confirm(ask + id + "? " + tail, "#STR_OZL_VPP_YES_DELETE", "rz:ptdel:" + id);
-    }
-
-    // The strip's "yes": the type is found again by its id -- the picked row may
-    // have moved while the strip was open.
-    protected void PtDeleteNow(string id)
-    {
-        OZL_PointTypes pts = DraftPointTypes();
-        if (!pts)
-            return;
-        int at = -1;
-        int i;
-        for (i = 0; i < pts.PointTypes.Count(); i++)
-        {
-            if (at < 0 && pts.PointTypes[i] && pts.PointTypes[i].Id == id)
-                at = i;
-        }
-        OZL_PointType picked = null;
-        if (m_PtPicked >= 0 && m_PtPicked < pts.PointTypes.Count())
-            picked = pts.PointTypes[m_PtPicked];
-        if (picked && picked.Id == id)
-            at = m_PtPicked;
-        if (at < 0)
-        {
-            Hint(Tr("#STR_OZL_VPP_GONE") + id);
-            return;
-        }
-
-        string tag = OZL_Config.TAG_POINT_TYPES;
-        m_Ed.BeginOnce(tag, "");
-        pts.PointTypes.RemoveOrdered(at);
-        m_Ed.Commit(tag);
-        m_Ed.EndGesture();
-        if (at < m_PtPicked)
-            m_PtPicked--;
-        if (m_PtPicked >= pts.PointTypes.Count())
-            m_PtPicked = pts.PointTypes.Count() - 1;
-        RepaintPoints(true);
-        PaintRzBar();
-        PaintSummary();
-        Hint(Tr("#STR_OZL_ED_PT_DELETED") + id);
-    }
-
-    // ================================================= дерево
 
     protected OZL_TreeConfig DraftTree()
     {
@@ -1507,14 +1623,635 @@ modded class OZ_VppAdminMenu
         return OZL_Owners.Cast(d.Obj);
     }
 
-    // Одиниця розмітки в пікселях: висота екрана на 1080 (SetPos і SetSize
-    // беруть пікселі, dayz-modding gui-layouts §24).
-    protected float Px()
+    // ================================================= Огляд
+
+    protected OZL_AdminOwner PickedOwnerRow()
     {
-        int sw, sh;
-        GetScreenSize(sw, sh);
-        return sh / 1080.0;
+        if (m_ResPick == "")
+            return null;
+        for (int i = 0; i < m_ResOwners.Count(); i++)
+        {
+            if (m_ResOwners[i] && m_ResOwners[i].Id == m_ResPick)
+                return m_ResOwners[i];
+        }
+        return null;
     }
+
+    protected string PickedOwner()
+    {
+        if (!PickedOwnerRow())
+            return "";
+        return m_ResPick;
+    }
+
+    // The page from the last list answer and the draft's point types (the colours of the
+    // pools).
+    protected void RepaintOverview()
+    {
+        if (!M_SUB_WIDGET)
+            return;
+        RepaintOwners();
+        PaintPicked();
+        PaintCounters(m_ResCounters);
+        PaintStatics(m_ResStatics);
+        PaintSummary();
+        OvLayHeads();
+    }
+
+    // "anomaly=4, protection=2" (OZL_Points.Describe) into types and amounts; "empty" and
+    // "?" give none.
+    protected void OvPool(string pool, array<string> types, array<string> amounts)
+    {
+        types.Clear();
+        amounts.Clear();
+        if (pool == "" || pool == "empty" || pool == "?")
+            return;
+        array<string> parts = new array<string>();
+        pool.Split(",", parts);
+        for (int i = 0; i < parts.Count(); i++)
+        {
+            string p = parts[i];
+            p = p.Trim();
+            int eq = p.IndexOf("=");
+            if (eq <= 0)
+                continue;
+            types.Insert(p.Substring(0, eq));
+            amounts.Insert(p.Substring(eq + 1, p.Length() - eq - 1));
+        }
+    }
+
+    // A chip of a pool into `box`: a square in the type's colour and "type amount". A type
+    // the draft's point types have not is a hollow square; type "" is words alone. The
+    // chip's userID says which: 0 words, 1 a known type, 2 a type that is gone.
+    protected Widget OvAddChip(Widget box, string type, string text, int ink)
+    {
+        Widget chip = OZ_VppFlex.Create("OpenZone_Research_VPP/gui/layouts/ozl_vpp_pool_chip.layout", box, "OZL_PoolChip");
+        if (!chip)
+            return null;
+        chip.SetFlags(WidgetFlags.IGNOREPOINTER);
+        RzRowText(chip, "PoolText", text, ink);
+        int mark = 0;
+        if (type == "")
+        {
+            Widget dot = chip.FindAnyWidget("PoolDot");
+            if (dot)
+                dot.Show(false);
+        }
+        else
+        {
+            OZL_PointTypes pts = DraftPointTypes();
+            OZL_PointType pt = null;
+            if (pts)
+                pt = pts.Find(type);
+            mark = 2;
+            if (pt)
+            {
+                int c = OZL_PointTypes.ColorArgb(pt.Color);
+                OZ_VppFlex.Paint(chip, "PoolDotEdge", c);
+                OZ_VppFlex.Paint(chip, "PoolDotBg", c);
+                mark = 1;
+            }
+            else
+                OZ_VppFlex.Paint(chip, "PoolDotEdge", OZL_Metal.MUTED);
+        }
+        chip.SetUserID(mark);
+        return chip;
+    }
+
+    // One chip as wide as its words; returns its width in pixels. `ground` is what shows
+    // through a hollow square.
+    protected float OvHugChip(Widget chip, int ground)
+    {
+        float s = UnitScale();
+        float lead = 16 * s;
+        if (chip.GetUserID() == 0)
+            lead = 0;
+        if (chip.GetUserID() == 2)
+            OZ_VppFlex.Paint(chip, "PoolDotBg", ground);
+        TextWidget t = TextWidget.Cast(chip.FindAnyWidget("PoolText"));
+        int tw = 0;
+        if (t)
+        {
+            tw = RzFitText(t);
+            RzSetX(t, lead);
+        }
+        float w = lead + tw + 2;
+        chip.SetSize(w, 15 * s);
+        return w;
+    }
+
+    protected void RepaintOwners()
+    {
+        Widget host = M_SUB_WIDGET.FindAnyWidget("RzOvFacRows");
+        if (!host)
+            return;
+        if (!m_OvFacRows)
+            m_OvFacRows = new OZ_VppFlexRows(m_Flex, host, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_ov_fac_row.layout", "OZL_OvFacRow", 567, 69);
+
+        m_OvFacRows.Clear();
+        int shown = 0;
+        for (int i = 0; i < m_ResOwners.Count(); i++)
+        {
+            OZL_AdminOwner o = m_ResOwners[i];
+            if (!o || shown >= RZ_LIST_MAX)
+                continue;
+            Widget row = m_OvFacRows.Add(o.Id);
+            if (!row)
+                break;
+            OvFillFacRow(row, o);
+            shown++;
+        }
+        m_OvFacRows.Fit();
+        OvLayFacRows();
+
+        string entries = Tr("#STR_OZL_VPP_OV_FAC_COUNT");
+        string who = Tr("#STR_OZL_VPP_OV_FAC_WHO");
+        string count = entries + m_ResOwners.Count().ToString() + who;
+        if (m_ResOwners.Count() > shown)
+        {
+            string first = Tr("#STR_OZL_VPP_SHOWN_FIRST");
+            count = count + first + shown.ToString();
+        }
+        SetLabel("RzOvFacCount", count, 0);
+    }
+
+    // A faction's row: its id and name, its pool as chips, its done nodes and its
+    // projects under way.
+    protected void OvFillFacRow(Widget row, OZL_AdminOwner o)
+    {
+        RzRowText(row, "OvFacSlug", o.Id, OZL_Metal.TEXT);
+        // A faction nobody names (the registry answers with the id itself, or with
+        // nothing) says so in the name's place.
+        bool unnamed = false;
+        if (o.Name == "" || o.Name == o.Id)
+            unnamed = true;
+        if (unnamed)
+            RzRowText(row, "OvFacName", "#STR_OZL_VPP_OV_NO_NAME", OZL_Metal.MUTED);
+        else
+            RzRowText(row, "OvFacName", o.Name, OZL_Metal.TEXT);
+
+        string done = "-";
+        string active = "-";
+        if (o.Known == 1)
+        {
+            done = o.Completed.ToString();
+            active = o.Active.ToString();
+        }
+        RzRowText(row, "OvFacDone", done, OZL_Metal.TEXT);
+        RzRowText(row, "OvFacActive", active, OZL_Metal.MUTED);
+
+        Widget pool = row.FindAnyWidget("OvFacPool");
+        if (!pool)
+            return;
+        if (o.Known != 1)
+        {
+            OvAddChip(pool, "", "#STR_OZL_VPP_OV_NO_STATE", OZL_Metal.FAINT);
+            return;
+        }
+        array<string> types = new array<string>();
+        array<string> amounts = new array<string>();
+        OvPool(o.Pool, types, amounts);
+        if (types.Count() == 0)
+        {
+            OvAddChip(pool, "", "#STR_OZL_VPP_OV_EMPTY", OZL_Metal.MUTED);
+            return;
+        }
+        for (int i = 0; i < types.Count(); i++)
+            OvAddChip(pool, types[i], types[i] + " " + amounts[i], OZL_Metal.TEXT);
+    }
+
+    // Every faction's row laid out: the pool's chips wrap inside their column and the row
+    // is as tall as they need (42 units at least), its words stand in the middle of it;
+    // the picked row is lit. The numbers are ozl_vpp_ov_fac_row.layout's, in units.
+    protected void OvLayFacRows()
+    {
+        if (!m_OvFacRows)
+            return;
+        for (int i = 0; i < m_OvFacRows.Count(); i++)
+            OvLayFacRow(m_OvFacRows.Row(i), m_OvFacRows.Key(i) == m_ResPick);
+
+        Widget host = m_OvFacRows.Host();
+        if (!host)
+            return;
+        host.Update();
+        ScrollWidget sc = ScrollWidget.Cast(host.GetParent());
+        if (sc)
+            sc.Update();
+    }
+
+    protected void OvLayFacRow(Widget row, bool picked)
+    {
+        if (!row)
+            return;
+        float s = UnitScale();
+        int rim = OZL_Metal.HEAD;
+        int ground = OZL_Metal.HEAD;
+        if (picked)
+        {
+            rim = OZL_Metal.ACCENT;
+            ground = OZL_Metal.PICK_PANEL;
+        }
+        OZ_VppFlex.Paint(row, "OZL_OvFacRowEdge", rim);
+        OZ_VppFlex.Paint(row, "OZL_OvFacRowBg", ground);
+
+        // The chips of the pool, wrapped at the column's 200 units.
+        Widget pool = row.FindAnyWidget("OvFacPool");
+        int lines = 1;
+        float x = 0;
+        float y = 0;
+        if (pool)
+        {
+            Widget chip = pool.GetChildren();
+            while (chip)
+            {
+                float cw = OvHugChip(chip, ground);
+                if (x > 0 && x + cw > 200 * s)
+                {
+                    x = 0;
+                    y = y + 19 * s;
+                    lines++;
+                }
+                chip.SetPos(x, y);
+                x = x + cw + 12 * s;
+                chip = chip.GetSibling();
+            }
+        }
+        float poolH = (lines * 15 + (lines - 1) * 4) * s;
+        float h = poolH + 16 * s;
+        if (h < 42 * s)
+            h = 42 * s;
+
+        float rowW;
+        float rowH;
+        row.GetSize(rowW, rowH);
+        row.SetSize(rowW, h);
+        Widget edge = row.FindAnyWidget("OZL_OvFacRowEdge");
+        if (edge)
+            edge.SetSize(rowW, h);
+        Widget bg = row.FindAnyWidget("OZL_OvFacRowBg");
+        if (bg)
+            bg.SetSize(rowW - 2 * s, h - 2 * s);
+        if (pool)
+        {
+            pool.SetPos(194 * s, (h - poolH) / 2);
+            pool.SetSize(200 * s, poolH);
+        }
+
+        // The words: id, dash and name from the left (the name cut where the pool
+        // begins), the two counts written from the right.
+        float ty = (h - 17 * s) / 2;
+        float tx = 13 * s;
+        int tw;
+        TextWidget slug = TextWidget.Cast(row.FindAnyWidget("OvFacSlug"));
+        if (slug)
+        {
+            tw = RzFitText(slug);
+            slug.SetPos(tx, ty);
+            tx = tx + tw + 8 * s;
+        }
+        Widget dash = row.FindAnyWidget("OvFacDash");
+        if (dash && dash.IsVisible())
+        {
+            dash.SetPos(tx, ty);
+            tx = tx + 19 * s;
+        }
+        Widget name = row.FindAnyWidget("OvFacName");
+        if (name)
+        {
+            float nameW = 186 * s - tx;
+            if (nameW < 0)
+                nameW = 0;
+            name.SetPos(tx, ty);
+            name.SetSize(nameW, 17 * s);
+        }
+        TextWidget done = TextWidget.Cast(row.FindAnyWidget("OvFacDone"));
+        if (done)
+        {
+            tw = RzFitText(done);
+            done.SetPos(468 * s - tw, ty);
+        }
+        TextWidget active = TextWidget.Cast(row.FindAnyWidget("OvFacActive"));
+        if (active)
+        {
+            tw = RzFitText(active);
+            active.SetPos(554 * s - tw, ty);
+        }
+    }
+
+    // The picked faction beside the list: its id and name, its pool on one line (the
+    // chips that fit, and how many do not), its done nodes and projects.
+    protected void PaintPicked()
+    {
+        int i;
+        for (i = 0; i < m_OvPickChips.Count(); i++)
+        {
+            if (m_OvPickChips[i])
+                m_OvPickChips[i].Unlink();
+        }
+        m_OvPickChips.Clear();
+        m_OvPickRest = "";
+
+        OZL_AdminOwner o = PickedOwnerRow();
+        if (!o)
+        {
+            SetLabel("ResPicked", "#STR_OZL_ED_OV_PICK", OZL_Metal.MUTED);
+            ShowW("RzOvPoolTag", false);
+            SetLabel("RzOvPoolRest", "", 0);
+            return;
+        }
+
+        string who = o.Id;
+        if (o.Name != "" && o.Name != o.Id)
+            who = o.Id + " — " + o.Name;
+        SetLabel("ResPicked", who, OZL_Metal.TEXT);
+        ShowW("RzOvPoolTag", true);
+
+        Widget line = M_SUB_WIDGET.FindAnyWidget("RzOvPoolLine");
+        if (o.Known != 1)
+        {
+            m_OvPickRest = Tr("#STR_OZL_VPP_OV_NO_STATE");
+            OvLayPickLine();
+            return;
+        }
+
+        array<string> types = new array<string>();
+        array<string> amounts = new array<string>();
+        OvPool(o.Pool, types, amounts);
+        Widget chip;
+        if (line)
+        {
+            if (types.Count() == 0)
+            {
+                chip = OvAddChip(line, "", "#STR_OZL_VPP_OV_EMPTY", OZL_Metal.MUTED);
+                if (chip)
+                    m_OvPickChips.Insert(chip);
+            }
+            for (i = 0; i < types.Count(); i++)
+            {
+                chip = OvAddChip(line, types[i], types[i] + " " + amounts[i], OZL_Metal.TEXT);
+                if (chip)
+                    m_OvPickChips.Insert(chip);
+            }
+        }
+        string doneWord = Tr("#STR_OZL_VPP_OV_DONE");
+        string runWord = Tr("#STR_OZL_VPP_OV_RUNNING");
+        m_OvPickRest = doneWord + o.Completed.ToString() + " · " + runWord + o.Active.ToString();
+        OvLayPickLine();
+    }
+
+    // The picked faction's line: "Пул", the chips that fit, then the rest of the words.
+    // The chips that do not fit are hidden and counted before the words ("+2").
+    protected void OvLayPickLine()
+    {
+        Widget line = M_SUB_WIDGET.FindAnyWidget("RzOvPoolLine");
+        TextWidget rest = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzOvPoolRest"));
+        if (!line || !rest)
+            return;
+        float s = UnitScale();
+        float lw;
+        float lh;
+        line.GetSize(lw, lh);
+
+        float x = 0;
+        TextWidget tag = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzOvPoolTag"));
+        if (tag && tag.IsVisible())
+        {
+            int tagW = RzFitText(tag);
+            x = tagW + 6 * s;
+        }
+
+        rest.SetText(m_OvPickRest);
+        int restW = OZ_VppFlex.TextWidth(rest);
+        int n = m_OvPickChips.Count();
+        int hidden = 0;
+        for (int i = 0; i < n; i++)
+        {
+            Widget chip = m_OvPickChips[i];
+            if (!chip)
+                continue;
+            if (hidden > 0)
+            {
+                chip.Show(false);
+                hidden++;
+                continue;
+            }
+            float cw = OvHugChip(chip, OZL_Metal.HEAD);
+            // Room for the words after it, and for "+N · " while chips are still to come.
+            float need = x + cw + 14 * s + restW;
+            if (i < n - 1)
+                need = need + 34 * s;
+            if (i > 0 && need > lw)
+            {
+                chip.Show(false);
+                hidden = 1;
+                continue;
+            }
+            chip.Show(true);
+            chip.SetPos(x, 1 * s);
+            x = x + cw + 12 * s;
+        }
+        if (hidden > 0)
+            rest.SetText("+" + hidden.ToString() + " · " + m_OvPickRest);
+        if (n > 0)
+            x = x + 2 * s;
+        float rw = lw - x;
+        if (rw < 0)
+            rw = 0;
+        rest.SetPos(x, 1 * s);
+        rest.SetSize(rw, 15 * s);
+    }
+
+    // The confirm strip's words for a reset: whose pool and nodes go.
+    protected string ResetAsk(string owner)
+    {
+        string who = owner;
+        OZL_AdminOwner o = PickedOwnerRow();
+        if (o && o.Id == owner && o.Name != "" && o.Name != owner)
+            who = owner + " - " + o.Name;
+        string ask = Tr("#STR_OZL_VPP_ASK_RESET");
+        string tail = Tr("#STR_OZL_VPP_ASK_RESET2");
+        return ask + who + tail;
+    }
+
+    // The server's counters from the list answer ("owners=7 pointTypes=7 ... problems=0"):
+    // what the server reads now, a tile each, and its count of problems beside the heading.
+    protected void PaintCounters(string counters)
+    {
+        array<string> keys = {"pointTypes", "owners", "rules", "nodes", "modules", "statics", "problems"};
+        array<string> parts = new array<string>();
+        counters.Split(" ", parts);
+        string word = Tr("#STR_OZL_VPP_OV_PROBLEMS");
+        for (int k = 0; k < keys.Count(); k++)
+        {
+            string value = "-";
+            for (int p = 0; p < parts.Count(); p++)
+            {
+                string kv = parts[p];
+                int eq = kv.IndexOf("=");
+                if (eq <= 0)
+                    continue;
+                if (kv.Substring(0, eq) == keys[k])
+                    value = kv.Substring(eq + 1, kv.Length() - eq - 1);
+            }
+            if (keys[k] != "problems")
+            {
+                SetLabel("RzOvV" + k.ToString(), value, OZL_Metal.TEXT);
+                continue;
+            }
+            int color = OZL_Metal.MUTED;
+            if (value != "-")
+            {
+                color = OZL_Metal.OK;
+                if (value.ToInt() > 0)
+                    color = OZL_Metal.BAD;
+            }
+            SetLabel("RzOvProblems", word + value, color);
+            RzFitText(TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzOvProblems")));
+        }
+    }
+
+    // The heading over the statics is as wide as its words in the client's language; the
+    // count beside it stands ten units after it.
+    protected void OvLayHeads()
+    {
+        RzFlowAfter("RzOvStHead", "RzOvStCount", 10);
+    }
+
+    // One entry of the static spawner's line: "id=Class[spawned]".
+    protected bool StaticShaped(string token)
+    {
+        int eq = token.IndexOf("=");
+        if (eq <= 0)
+            return false;
+        int br = token.IndexOf("[");
+        if (br <= eq)
+            return false;
+        int n = token.Length();
+        return token.Substring(n - 1, 1) == "]";
+    }
+
+    // The static spawner's line from the list answer, a row per entry, placed or waiting.
+    // A line of another shape (no entries, a broken state file) is shown as it came. String
+    // values of a parsed answer stop at 1023 bytes, so a long list can end cut: its broken
+    // last entry becomes "...", and the count says so.
+    protected void PaintStatics(string statics)
+    {
+        Widget host = M_SUB_WIDGET.FindAnyWidget("RzOvStRows");
+        if (!host)
+            return;
+        if (!m_OvStRows)
+            m_OvStRows = new OZ_VppFlexRows(m_Flex, host, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_ov_static_row.layout", "OZL_OvStRow", 339, 30);
+
+        m_OvStRows.Clear();
+        array<string> parts = new array<string>();
+        statics.Split(" ", parts);
+        bool shaped = false;
+        if (parts.Count() > 0)
+            shaped = StaticShaped(parts[0]);
+        Widget row;
+        if (!shaped)
+        {
+            if (statics != "")
+            {
+                row = m_OvStRows.Add("");
+                OvFillStatic(row, statics, "", 0);
+            }
+            m_OvStRows.Fit();
+            OvLayStatics();
+            SetLabel("RzOvStCount", "", 0);
+            return;
+        }
+
+        string spawnedWord = Tr("#STR_OZL_VPP_OV_ST_SPAWNED");
+        string pendingWord = Tr("#STR_OZL_VPP_OV_ST_PENDING");
+        int total = 0;
+        int spawned = 0;
+        bool cut = false;
+        for (int i = 0; i < parts.Count(); i++)
+        {
+            string token = parts[i];
+            if (!StaticShaped(token))
+            {
+                cut = true;
+                row = m_OvStRows.Add("");
+                OvFillStatic(row, "...", "", 0);
+                break;
+            }
+            int eq = token.IndexOf("=");
+            int br = token.IndexOf("[");
+            string id = token.Substring(0, eq);
+            string flag = token.Substring(br + 1, token.Length() - br - 2);
+            total++;
+            bool placedNow = (flag == "spawned");
+            if (placedNow)
+                spawned++;
+            if (total > RZ_LIST_MAX)
+                continue;
+            row = m_OvStRows.Add(id);
+            if (placedNow)
+                OvFillStatic(row, id, spawnedWord, 1);
+            else
+                OvFillStatic(row, id, pendingWord, 2);
+        }
+        m_OvStRows.Fit();
+        OvLayStatics();
+
+        string placed = Tr("#STR_OZL_VPP_OV_ST_PLACED");
+        string ofWord = Tr("#STR_OZL_VPP_OV_ST_OF");
+        string countText = placed + spawned.ToString() + ofWord + total.ToString();
+        if (cut)
+            countText += "+";
+        int countColor = OZL_Metal.OK;
+        if (spawned < total || cut)
+            countColor = OZL_Metal.ALERT;
+        SetLabel("RzOvStCount", countText, countColor);
+    }
+
+    // A static's row: its id and a chip that says whether it stands (state 1) or waits
+    // (state 2); state 0 is words alone.
+    protected void OvFillStatic(Widget row, string id, string word, int state)
+    {
+        if (!row)
+            return;
+        RzRowText(row, "OvStId", id, OZL_Metal.TEXT);
+        Widget chip = row.FindAnyWidget("OvStChip");
+        if (chip)
+            chip.Show(state != 0);
+        if (state == 0)
+            return;
+        int ink = OZL_Metal.OK;
+        int ground = OZL_Metal.OK_CHIP;
+        if (state == 2)
+        {
+            ink = OZL_Metal.ALERT;
+            ground = OZL_Metal.WARN_CHIP;
+        }
+        RzRowText(row, "OvStState", word, ink);
+        OZ_VppFlex.Paint(row, "OvStChipBg", ground);
+    }
+
+    // Every static's chip as wide as its word, at the row's right end.
+    protected void OvLayStatics()
+    {
+        if (!m_OvStRows)
+            return;
+        float s = UnitScale();
+        float w = m_OvStRows.Width();
+        for (int i = 0; i < m_OvStRows.Count(); i++)
+        {
+            Widget row = m_OvStRows.Row(i);
+            if (!row)
+                continue;
+            Widget chip = row.FindAnyWidget("OvStChip");
+            TextWidget t = TextWidget.Cast(row.FindAnyWidget("OvStState"));
+            if (!chip || !t)
+                continue;
+            float cw = OZ_VppFlex.Hug(chip, row.FindAnyWidget("OvStChipBg"), t, 8 * s);
+            chip.SetPos(w - 10 * s - cw, 6 * s);
+        }
+    }
+
+    // ================================================= Дерево
 
     protected OZL_TreeBranch TrBranch(OZL_TreeConfig tree)
     {
@@ -1535,10 +2272,9 @@ modded class OZ_VppAdminMenu
         return tree.FindNode(m_TrSel);
     }
 
-    // Гілки власника в порядку файла -- рядки списку гілок. Вибрана гілка,
-    // якої власник уже не має (у полі власників набирають інший список),
-    // лишається в кінці: інакше вибір стрибав би на іншу гілку посеред
-    // набору.
+    // The owner's branches in the file's order -- the rows of the branch list. A picked
+    // branch the owner no longer has (another list is being typed into the owners field)
+    // stays at the end: the pick would jump to another branch in the middle of typing.
     protected void TrBranchIds(OZL_TreeConfig tree, array<string> into)
     {
         into.Clear();
@@ -1552,24 +2288,32 @@ modded class OZ_VppAdminMenu
             into.Insert(m_TrBranch);
     }
 
-    // Списки ліворуч; вибір за замовчуванням -- перший власник і його перша
-    // гілка.
+    // The lists on the left; the default pick is the first owner and its first branch.
     protected void RepaintTrLists(OZL_TreeConfig tree, OZL_Owners owners)
     {
-        TextListboxWidget lo = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrOwners"));
-        TextListboxWidget lb = TextListboxWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrBranches"));
-        if (!lo || !lb)
+        Widget hostO = M_SUB_WIDGET.FindAnyWidget("RzTrOwRows");
+        Widget hostB = M_SUB_WIDGET.FindAnyWidget("RzTrBrRows");
+        if (!hostO || !hostB)
             return;
+        if (!m_TrOwRows)
+            m_TrOwRows = new OZ_VppFlexRows(m_Flex, hostO, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_tr_owner_row.layout", "OZL_TrOwnerRow", 251, 32);
+        if (!m_TrBrRows)
+            m_TrBrRows = new OZ_VppFlexRows(m_Flex, hostB, "OpenZone_Research_VPP/gui/layouts/ozl_vpp_tr_branch_row.layout", "OZL_TrBranchRow", 251, 34);
 
         int i;
         bool ownerKnown = false;
+        string firstOwner = "";
         for (i = 0; i < owners.Owners.Count(); i++)
         {
-            if (owners.Owners[i] && owners.Owners[i].Id == m_TrOwner)
+            if (!owners.Owners[i])
+                continue;
+            if (firstOwner == "")
+                firstOwner = owners.Owners[i].Id;
+            if (owners.Owners[i].Id == m_TrOwner)
                 ownerKnown = true;
         }
-        if (!ownerKnown && owners.Owners.Count() > 0)
-            m_TrOwner = owners.Owners[0].Id;
+        if (!ownerKnown)
+            m_TrOwner = firstOwner;
 
         array<string> ids = new array<string>();
         TrBranchIds(tree, ids);
@@ -1581,43 +2325,102 @@ modded class OZ_VppAdminMenu
             m_TrSel = "";
         }
 
-        m_ResRepaint = true;
-        lo.ClearItems();
+        Widget row;
+        m_TrOwRows.Clear();
         for (i = 0; i < owners.Owners.Count(); i++)
         {
             OZL_OwnerDef o = owners.Owners[i];
-            if (!o)
+            if (!o || m_TrOwRows.Count() >= RZ_LIST_MAX)
                 continue;
-            string ol = "";
-            if (o.Id == m_TrOwner)
-                ol = "> ";
-            ol += o.Id + "  -  " + owners.SkinOf(o.Id);
-            lo.AddItem(ol, NULL, 0);
+            row = m_TrOwRows.Add(o.Id);
+            if (!row)
+                break;
+            string ownerName = RzOwnerName(o.Id);
+            RzRowText(row, "TrOwId", o.Id, OZL_Metal.TEXT);
+            RzRowText(row, "TrOwName", ownerName, OZL_Metal.TEXT);
+            RzRowText(row, "TrOwSkin", owners.SkinOf(o.Id), OZL_Metal.MUTED);
+            Widget dash = row.FindAnyWidget("TrOwDash");
+            if (dash)
+                dash.Show(ownerName != "");
+            RzLitRow(row, "OZL_TrOwnerRow", o.Id == m_TrOwner);
         }
+        m_TrOwRows.Fit();
 
-        lb.ClearItems();
+        string nodesWord = Tr("#STR_OZL_VPP_TR_NODES_N");
+        string otherWord = Tr("#STR_OZL_ED_BR_OTHER");
+        m_TrBrRows.Clear();
         for (i = 0; i < ids.Count(); i++)
         {
-            OZL_TreeBranch br = null;
-            for (int b = 0; b < tree.Branches.Count(); b++)
-            {
-                if (tree.Branches[b] && tree.Branches[b].Id == ids[i])
-                    br = tree.Branches[b];
-            }
-            if (!br)
+            OZL_TreeBranch br = OZL_EdTree.FindBranch(tree, ids[i]);
+            if (!br || m_TrBrRows.Count() >= RZ_LIST_MAX)
                 continue;
-            string bl = "";
-            if (br.Id == m_TrBranch)
-                bl = "> ";
+            row = m_TrBrRows.Add(br.Id);
+            if (!row)
+                break;
             string bn = br.Name;
             if (bn == "")
                 bn = br.Id;
-            bl += bn + "  (" + br.Nodes.Count().ToString() + ")";
             if (!br.BelongsTo(m_TrOwner))
-                bl += Tr("#STR_OZL_ED_BR_OTHER");
-            lb.AddItem(bl, NULL, 0);
+                bn = bn + otherWord;
+            RzRowText(row, "TrBrName", bn, OZL_Metal.TEXT);
+            RzRowText(row, "TrBrCount", nodesWord + br.Nodes.Count().ToString(), OZL_Metal.MUTED);
+            RzLitRow(row, "OZL_TrBranchRow", br.Id == m_TrBranch);
         }
-        m_ResRepaint = false;
+        m_TrBrRows.Fit();
+        RzLayTrRows();
+    }
+
+    // The words of the side rows along their lines (251 units a row).
+    protected void RzLayTrRows()
+    {
+        int i;
+        if (m_TrOwRows)
+        {
+            for (i = 0; i < m_TrOwRows.Count(); i++)
+                RzLaySideRow(m_TrOwRows.Row(i), "TrOwId", "TrOwDash", "TrOwName", "TrOwSkin", 251);
+        }
+        if (m_TrBrRows)
+        {
+            for (i = 0; i < m_TrBrRows.Count(); i++)
+                RzLaySideRow(m_TrBrRows.Row(i), "", "", "TrBrName", "TrBrCount", 251);
+        }
+    }
+
+    // The inside of the canvas (a scroll area with both bars, a canvas for the links, a
+    // frame for the cells): made once into the page's RzTrHost.
+    protected void RzTrEnsureCanvas()
+    {
+        Widget host = M_SUB_WIDGET.FindAnyWidget("RzTrHost");
+        if (!host)
+            return;
+        if (!M_SUB_WIDGET.FindAnyWidget("RzTrScroll"))
+        {
+            Widget made = OZ_VppFlex.Create("OpenZone_Research_VPP/gui/layouts/ozl_vpp_tree_canvas.layout", host, "RzTrScroll");
+            if (!made)
+            {
+                OZL_Log.Error("research vpp: the tree canvas did not load (ozl_vpp_tree_canvas.layout); the tree page draws no branch");
+                return;
+            }
+        }
+        RzLayTree();
+    }
+
+    // The scroll area as large as its host inside the host's one-unit frame.
+    protected void RzLayTree()
+    {
+        Widget host = M_SUB_WIDGET.FindAnyWidget("RzTrHost");
+        ScrollWidget scroll = ScrollWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrScroll"));
+        if (!host || !scroll)
+            return;
+        float s = UnitScale();
+        float hw;
+        float hh;
+        host.GetSize(hw, hh);
+        if (hw <= 4 * s || hh <= 4 * s)
+            return;
+        scroll.SetPos(s, s);
+        scroll.SetSize(hw - 2 * s, hh - 2 * s);
+        scroll.Update();
     }
 
     protected void ClearTrCells()
@@ -1630,6 +2433,11 @@ modded class OZ_VppAdminMenu
         m_TrCells.Clear();
         m_TrFlows.Clear();
         ClearTrOrs();
+        if (m_TrPlus)
+        {
+            m_TrPlus.Unlink();
+            m_TrPlus = null;
+        }
     }
 
     protected void ClearTrOrs()
@@ -1642,8 +2450,8 @@ modded class OZ_VppAdminMenu
         m_TrOrLabels.Clear();
     }
 
-    // Мітки "АБО" на місцях, які OZL_TreeLines.Draw поклав у m_TrOrs: рядок
-    // скіна or_label, текст і колір -- як у вікні гравця (DrawLines).
+    // The OR labels at the places OZL_TreeLines.Draw put into m_TrOrs: the skin's or_label
+    // row, its text and colour as in the player's window.
     protected void PaintTrOrs(float k)
     {
         ClearTrOrs();
@@ -1669,16 +2477,20 @@ modded class OZ_VppAdminMenu
         }
     }
 
-    // Рядок під полотном: що зараз зробить клік чи перетягування.
+    // The line under the canvas: what a click or a drag does right now.
     protected void PaintTrInfo()
     {
         TextWidget t = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrInfo"));
         if (!t)
             return;
+        string word;
         if (m_TrLink && m_TrLinkFrom == "")
             t.SetText(Tr("#STR_OZL_ED_TR_LINK_FROM"));
         else if (m_TrLink)
-            t.SetText(Tr("#STR_OZL_ED_TR_LINK_TO") + m_TrLinkFrom);
+        {
+            word = Tr("#STR_OZL_ED_TR_LINK_TO");
+            t.SetText(word + m_TrLinkFrom);
+        }
         else
             t.SetText(Tr("#STR_OZL_ED_TR_INFO"));
         if (m_TrLink)
@@ -1696,9 +2508,8 @@ modded class OZ_VppAdminMenu
         t.SetColor(OZL_Metal.ACCENT);
     }
 
-    // Рамка ріже дітей по своєму краю (gui-layouts §31): комірка й
-    // контейнери NodeHit пускають мітки й написи за край -- як
-    // OZL_TreeMenu.Unclip.
+    // A frame cuts its children at its edge: the cell and the containers of NodeHit let
+    // marks and names reach past it, as OZL_TreeMenu.Unclip does.
     protected void UnclipCell(Widget cell, Widget hit)
     {
         cell.ClearFlags(WidgetFlags.CLIPCHILDREN);
@@ -1712,17 +2523,18 @@ modded class OZ_VppAdminMenu
         }
     }
 
-    // Полотно. full -- заново план і комірки (структура змінилась: власник,
-    // гілка, Id, тір, батьки, умова, новий чи прибраний вузол, скасування);
-    // інакше -- лише фарба комірок і лінії (вибір, назва, ціна, іконка).
-    // fillForm -- переписати поля інспектора; під час набору -- ні, бо
-    // курсор у полі стрибав би в кінець.
+    // The page. full -- the plan and the cells again (the structure changed: owner, branch,
+    // id, tier, parents, condition, a node added or gone, an undo); otherwise only the
+    // cells' paint and the links (the pick, a name, a price, an icon). fillForm -- write
+    // the fields of the two forms; not while one is typed in, the cursor would jump.
     protected void RepaintTree(bool full, bool fillForm = true)
     {
         OZL_TreeConfig tree = DraftTree();
         OZL_Owners owners = DraftOwners();
-        TextWidget skinLbl = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrSkin"));
+        RzTrEnsureCanvas();
         CanvasWidget lines = CanvasWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrLines"));
+        SetLabel("RzTrTitle", "#STR_OZL_VPP_H_TREE", 0);
+        RzFitLegend("RzBrLegend", "RzBrGap");
         PaintTrButtons();
         PaintTrInfo();
         if (!tree || !owners)
@@ -1730,6 +2542,12 @@ modded class OZ_VppAdminMenu
             ClearTrCells();
             if (lines)
                 lines.Clear();
+            PaintTrSkin("", "", Tr("#STR_OZL_ED_HINT_LOADING"));
+            if (fillForm)
+            {
+                FillTnForm(null);
+                FillBrForm(null);
+            }
             return;
         }
 
@@ -1746,8 +2564,7 @@ modded class OZ_VppAdminMenu
             m_TrPlan = null;
             if (lines)
                 lines.Clear();
-            if (skinLbl)
-                skinLbl.SetText(Tr("#STR_OZL_ED_TR_NO_BRANCH"));
+            PaintTrSkin("", "", Tr("#STR_OZL_ED_TR_NO_BRANCH"));
             if (fillForm)
             {
                 FillTnForm(null);
@@ -1766,6 +2583,9 @@ modded class OZ_VppAdminMenu
         float k = Px();
         m_TrSkin.PxPerUnit = k;
 
+        // The canvas takes the ground of the owner's window.
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "RzTrHostBg", m_TrSkin.Lcd);
+
         m_TrView = OZL_EdTree.View(tree, br, m_TrOwner);
         if (full || !m_TrPlan || m_TrCells.Count() != m_TrView.Nodes.Count())
             BuildTrCells(k);
@@ -1778,14 +2598,10 @@ modded class OZ_VppAdminMenu
                 focus = m_TrLinkFrom;
             OZL_TreeLines.Draw(lines, m_TrSkin, m_TrPlan, m_TrView, focus, m_TrOrs);
             PaintTrOrs(k);
+            DrawTrPick(lines, k);
         }
-
-        if (skinLbl)
-        {
-            string dir = SkinDir(m_TrSkin.Dir);
-            string windowWord = Tr("#STR_OZL_VPP_TR_WINDOW");
-            skinLbl.SetText(windowWord + skinId + " - " + dir);
-        }
+        PlaceTrPlus(k);
+        PaintTrSkin(skinId, m_TrSkin.Dir, "");
 
         if (fillForm)
         {
@@ -1804,7 +2620,73 @@ modded class OZ_VppAdminMenu
         return Tr("#STR_OZL_ED_TR_DIR_DOWN");
     }
 
-    // План гілки під розмір вікна скіна і комірки на його місцях.
+    // The line over the canvas: whose window draws the branch and which way its tree grows
+    // (an arrow, the skin's id, the way and the shape of its nodes), or `instead` -- why
+    // there is nothing to draw.
+    protected void PaintTrSkin(string skinId, string dir, string instead)
+    {
+        ImageWidget arrow = ImageWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrDirIcon"));
+        bool has = (skinId != "");
+        if (arrow)
+        {
+            arrow.Show(has);
+            // The arrow is drawn pointing right; a positive yaw turns it clockwise.
+            float yaw = 0;
+            if (dir == "down")
+                yaw = 90;
+            else if (dir == "up")
+                yaw = 270;
+            arrow.SetRotation(0, 0, yaw);
+        }
+        ShowW("RzTrSkinTag", has);
+        if (!has)
+        {
+            SetLabel("RzTrSkinId", instead, OZL_Metal.MUTED);
+            SetLabel("RzTrSkinDir", "", 0);
+            FlowTrSkin();
+            return;
+        }
+
+        SetLabel("RzTrSkinId", skinId, OZL_Metal.TEXT);
+        string way = SkinDir(dir);
+        string tail = "· " + way;
+        // The shape of the skin's nodes, when the stringtable names it.
+        string shapeKey = skinId;
+        shapeKey.ToUpper();
+        string shape = Tr("#STR_OZL_VPP_SKIN_S_" + shapeKey);
+        if (shape != "" && shape.IndexOf("STR_") == -1)
+            tail = tail + " · " + shape;
+        SetLabel("RzTrSkinDir", tail, OZL_Metal.MUTED);
+        FlowTrSkin();
+    }
+
+    // The words of that line one after another (the page's units: the arrow at 294, the
+    // words from 318, at 100 down).
+    protected void FlowTrSkin()
+    {
+        TextWidget tag = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrSkinTag"));
+        TextWidget id = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrSkinId"));
+        TextWidget way = TextWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrSkinDir"));
+        if (!id || !way)
+            return;
+        float s = UnitScale();
+        float x = 294 * s;
+        int tw;
+        if (tag && tag.IsVisible())
+        {
+            x = 318 * s;
+            tw = RzFitText(tag);
+            RzSetX(tag, x);
+            x = x + tw + 4 * s;
+        }
+        tw = RzFitText(id);
+        RzSetX(id, x);
+        x = x + tw + 5 * s;
+        RzFitText(way);
+        RzSetX(way, x);
+    }
+
+    // The branch's plan for the size of the skin's own window, and the cells at its places.
     protected void BuildTrCells(float k)
     {
         m_TrPlan = new OZL_TreePlan();
@@ -1843,11 +2725,17 @@ modded class OZ_VppAdminMenu
             UnclipCell(cell, hit);
             m_TrCells.Insert(cell);
         }
+
+        // The editor's handle that adds a child to the picked node: made after the cells,
+        // so it lies over them.
+        m_TrPlus = OZ_VppFlex.Create("OpenZone_Research_VPP/gui/layouts/ozl_vpp_tree_plus.layout", nodes, "BtnRzTrPlus");
+        if (m_TrPlus)
+            m_TrPlus.Show(false);
     }
 
-    // Фарба комірок: стан "available" для всіх (редактор стану не має),
-    // вибраний (і джерело зв'язку) -- виділений; ціна -- фішками з вузла
-    // чернетки, як у вікні гравця, або рядком, якщо скін фішок не має.
+    // The cells' paint: the state "available" for all (the editor has no state), the
+    // picked one (and the source of a link) marked; the price as chips from the draft's
+    // node, as the player's window does, or as a line when the skin has no chips.
     protected void PaintTrCells(OZL_TreeConfig tree)
     {
         OZL_PointTypes pts = DraftPointTypes();
@@ -1883,7 +2771,7 @@ modded class OZ_VppAdminMenu
         }
     }
 
-    // Фішки, що чекають ширини тексту; після дванадцяти кадрів -- як є.
+    // Chips that wait for their texts' widths; after twelve frames -- as they are.
     protected void RunTrFlows()
     {
         if (m_TrFlows.Count() == 0)
@@ -1906,29 +2794,92 @@ modded class OZ_VppAdminMenu
             m_TrFlowTries = 0;
     }
 
-    // Кнопки полотна: ЗВ'ЯЗОК світиться, поки режим увімкнено; поле стану
-    // перегляду в голові сторінки називає стан, з яким відкриється перегляд.
+    // The node the editor's handles stand at: the picked one, or the source of a link.
+    protected string TrMarked()
+    {
+        if (m_TrLink && m_TrLinkFrom != "")
+            return m_TrLinkFrom;
+        return m_TrSel;
+    }
+
+    // The editor's own mark of that node: a dashed orange frame around its cell, drawn
+    // on the links' canvas after the links (the player's window has none).
+    protected void DrawTrPick(CanvasWidget cv, float k)
+    {
+        string id = TrMarked();
+        if (!cv || id == "")
+            return;
+        Widget cell = M_SUB_WIDGET.FindAnyWidget("rzcell:" + id);
+        if (!cell)
+            return;
+        float cx, cy, cw, ch;
+        cell.GetPos(cx, cy);
+        cell.GetSize(cw, ch);
+        float m = 4 * k;
+        float x1 = cx - m;
+        float y1 = cy - m;
+        float x2 = cx + cw + m;
+        float y2 = cy + ch + m;
+        float wd = 1.5 * k;
+        int ink = OZL_Metal.ACCENT;
+        RzDashLine(cv, x1, y1, x2, y1, wd, ink, 5 * k, 4 * k);
+        RzDashLine(cv, x2, y1, x2, y2, wd, ink, 5 * k, 4 * k);
+        RzDashLine(cv, x2, y2, x1, y2, wd, ink, 5 * k, 4 * k);
+        RzDashLine(cv, x1, y2, x1, y1, wd, ink, 5 * k, 4 * k);
+    }
+
+    // The handle that adds a child, at the top right corner of that frame; hidden while
+    // no node is picked and in the link mode.
+    protected void PlaceTrPlus(float k)
+    {
+        if (!m_TrPlus)
+            return;
+        Widget cell = null;
+        if (m_TrSel != "" && !m_TrLink)
+            cell = M_SUB_WIDGET.FindAnyWidget("rzcell:" + m_TrSel);
+        if (!cell)
+        {
+            m_TrPlus.Show(false);
+            return;
+        }
+        float cx, cy, cw, ch;
+        cell.GetPos(cx, cy);
+        cell.GetSize(cw, ch);
+        m_TrPlus.SetPos(cx + cw + 4 * k - 11.5 * k, cy - 4 * k - 11 * k);
+        m_TrPlus.Show(true);
+    }
+
+    // The canvas's buttons: LINK is lit while the mode is on; the select of the page's
+    // head names the state the preview opens with.
     protected void PaintTrButtons()
     {
-        PaintToggle("BtnRzTrLink", m_TrLink);
+        int ink = OZL_Metal.TEXT;
+        int rim = OZL_Metal.EDGE;
+        if (m_TrLink)
+        {
+            ink = OZL_Metal.ACCENT;
+            rim = OZL_Metal.ACCENT;
+        }
+        SetColorOf("BtnRzTrLinkText", ink);
+        SetColorOf("BtnRzTrLinkIcon", ink);
+        OZ_VppFlex.Paint(M_SUB_WIDGET, "BtnRzTrLinkEdge", rim);
 
         string demo = "#STR_OZL_ED_TR_DEMO_NEW";
         if (m_TrDemo == 1)
             demo = "#STR_OZL_ED_TR_DEMO_FUNDED";
         else if (m_TrDemo == 2)
             demo = "#STR_OZL_ED_TR_DEMO_PROGRESS";
-        SetBtnText("BtnRzTrDemo", Tr(demo), OZL_Metal.TEXT);
+        SetLabel("BtnRzTrDemoText", demo, OZL_Metal.TEXT);
     }
 
-    // Інспектор вузла: поля вибраного вузла, а без нього -- рядок, як вибрати.
-    // Гілка має свою форму ліворуч, поруч (дизайн вікна §5.5).
+    // The node's form: the picked node's fields, and without one a line that says how to
+    // pick. The branch has its own form on the left.
     protected void FillTnForm(OZL_TreeNode n)
     {
         ShowW("RzTnForm", n != null);
-        ShowW("RzTnEmpty", n == null);
         if (!n)
         {
-            SetLabel("RzTnHead", "#STR_OZL_ED_TN_PICK", 0);
+            SetLabel("RzTnHead", "#STR_OZL_ED_TN_PICK", OZL_Metal.MUTED);
             SetLabel("RzTnSub", "", 0);
             m_TnRefId = "";
             return;
@@ -1949,8 +2900,8 @@ modded class OZ_VppAdminMenu
         m_RzFill = false;
     }
 
-    // The node's head (its name; id, tier and branch under it), its condition pair
-    // and its cost in the lines' own names -- painted on every keystroke too.
+    // The node's head (its name; id, tier and branch under it), its condition pair and
+    // its price as chips in the lines' own names -- painted on every keystroke too.
     protected void PaintTnHead(OZL_TreeNode n)
     {
         if (!n)
@@ -1958,32 +2909,144 @@ modded class OZ_VppAdminMenu
         string name = n.Name;
         if (name == "")
             name = n.Id;
-        SetLabel("RzTnHead", name, 0);
+        SetLabel("RzTnHead", name, OZL_Metal.TEXT);
         string tierWord = Tr("#STR_OZL_VPP_TN_TIER");
         string branchWord = Tr("#STR_OZL_VPP_TN_BRANCH");
-        string sub = n.Id + "  |  " + tierWord + n.Tier.ToString();
-        sub += "  |  " + branchWord + m_TrBranch;
+        string sub = n.Id + " · " + tierWord + n.Tier.ToString();
+        sub = sub + " · " + branchWord + m_TrBranch;
         SetLabel("RzTnSub", sub, 0);
 
         string mode = n.ParentsMode;
         mode.ToLower();
         bool anyMode = (mode == "any");
-        PaintToggle("BtnRzTnModeAll", !anyMode);
-        PaintToggle("BtnRzTnModeAny", anyMode);
+        RzSeg("BtnRzTnModeAll", !anyMode);
+        RzSeg("BtnRzTnModeAny", anyMode);
 
-        SetLabel("RzTnPrice", OZL_EdTree.PriceText(n, DraftPointTypes()), 0);
+        PaintTnChips(n);
     }
 
-    // Форма гілки ліворуч: поля вибраної гілки, порожні без неї.
+    // The node's price as chips under its field: a square in the line's colour, the
+    // line's name and the amount; a type the draft has not is a hollow square under its id.
+    protected void PaintTnChips(OZL_TreeNode n)
+    {
+        int i;
+        for (i = 0; i < m_TnChips.Count(); i++)
+        {
+            if (m_TnChips[i])
+                m_TnChips[i].Unlink();
+        }
+        m_TnChips.Clear();
+        Widget box = M_SUB_WIDGET.FindAnyWidget("RzTnPrice");
+        if (!box || !n)
+            return;
+
+        OZL_PointTypes pts = DraftPointTypes();
+        for (i = 0; i < n.Cost.Count(); i++)
+        {
+            OZL_TreeCost c = n.Cost[i];
+            if (!c || m_TnChips.Count() >= 12)
+                continue;
+            Widget chip = OZ_VppFlex.Create("OpenZone_Research_VPP/gui/layouts/ozl_vpp_cost_chip.layout", box, "OZL_CostChip");
+            if (!chip)
+                break;
+            OZL_PointType pt = null;
+            if (pts)
+                pt = pts.Find(c.Type);
+            string shownName = c.Type;
+            if (pt)
+            {
+                int ink = OZL_PointTypes.ColorArgb(pt.Color);
+                OZ_VppFlex.Paint(chip, "CostDotEdge", ink);
+                OZ_VppFlex.Paint(chip, "CostDotBg", ink);
+                if (pt.Name != "")
+                    shownName = pt.Name;
+            }
+            else
+            {
+                OZ_VppFlex.Paint(chip, "CostDotEdge", OZL_Metal.MUTED);
+                OZ_VppFlex.Paint(chip, "CostDotBg", OZL_Metal.CELL);
+            }
+            RzRowText(chip, "CostName", shownName, OZL_Metal.TEXT);
+            RzRowText(chip, "CostAmount", c.Amount.ToString(), OZL_Metal.TEXT);
+            m_TnChips.Insert(chip);
+        }
+        LayTnChips();
+    }
+
+    // The chips in their box, two lines at most (what does not fit is hidden: the field
+    // above holds the whole price); the fields under the box move down by the second
+    // line. The numbers are ozl_vpp_cost_chip.layout's, in units.
+    protected void LayTnChips()
+    {
+        Widget box = M_SUB_WIDGET.FindAnyWidget("RzTnPrice");
+        Widget tail = M_SUB_WIDGET.FindAnyWidget("RzTnTail");
+        Widget form = M_SUB_WIDGET.FindAnyWidget("RzTnForm");
+        if (!box || !tail || !form)
+            return;
+        float s = UnitScale();
+        float bw;
+        float bh;
+        box.GetSize(bw, bh);
+        if (bw <= 0)
+            return;
+
+        // Where the tail stands with one line of chips: read once, before it is moved.
+        float tx;
+        float ty;
+        if (m_TnTailY <= 0)
+        {
+            tail.GetPos(tx, ty);
+            m_TnTailY = ty;
+            form.GetSize(m_TnFormW, m_TnFormH);
+        }
+        if (m_TnTailY <= 0)
+            return;
+
+        float x = 0;
+        float y = 0;
+        int lines = 1;
+        for (int i = 0; i < m_TnChips.Count(); i++)
+        {
+            Widget chip = m_TnChips[i];
+            if (!chip)
+                continue;
+            TextWidget nm = TextWidget.Cast(chip.FindAnyWidget("CostName"));
+            TextWidget am = TextWidget.Cast(chip.FindAnyWidget("CostAmount"));
+            int nw = RzFitText(nm);
+            int aw = RzFitText(am);
+            float ax = 23 * s + nw + 4 * s;
+            RzSetX(am, ax);
+            float cw = ax + aw + 8 * s;
+            chip.SetSize(cw, 24 * s);
+            Widget bg = chip.FindAnyWidget("OZL_CostChipBg");
+            if (bg)
+                bg.SetSize(cw, 24 * s);
+            if (x > 0 && x + cw > bw)
+            {
+                x = 0;
+                y = y + 30 * s;
+                lines++;
+            }
+            if (lines > 2)
+            {
+                chip.Show(false);
+                continue;
+            }
+            chip.Show(true);
+            chip.SetPos(x, y);
+            x = x + cw + 6 * s;
+        }
+        float extra = 0;
+        if (lines > 1)
+            extra = 30 * s;
+        box.SetSize(bw, 24 * s + extra);
+        tail.SetPos(0, m_TnTailY + extra);
+        form.SetSize(m_TnFormW, m_TnFormH + extra);
+    }
+
+    // The branch's form on the left: the picked branch's fields, empty without one.
     protected void FillBrForm(OZL_TreeBranch br)
     {
-        string head = Tr("#STR_OZL_ED_TR_NO_BRANCH");
-        if (br)
-        {
-            string branchWord = Tr("#STR_OZL_ED_BR_HEAD");
-            head = branchWord + " " + br.Id;
-        }
-        SetLabel("RzBrHead", head, 0);
         m_RzFill = true;
         if (br)
         {
@@ -2004,7 +3067,7 @@ modded class OZ_VppAdminMenu
         m_RzFill = false;
     }
 
-    // Поле гілки змінилось: один знімок на поле, як у вузла.
+    // A field of the branch changed: one undo step per field, as for a node.
     protected void OnBrField(string field)
     {
         OZL_TreeConfig tree = DraftTree();
@@ -2031,8 +3094,6 @@ modded class OZ_VppAdminMenu
 
         m_Ed.Commit(tag);
         RepaintTree(true, false);
-        string branchWord = Tr("#STR_OZL_ED_BR_HEAD");
-        SetLabel("RzBrHead", branchWord + " " + br.Id, 0);
         PaintRzBar();
         PaintSummary();
     }
@@ -2064,11 +3125,12 @@ modded class OZ_VppAdminMenu
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_BR_ADDED") + br.Id);
+        string word = Tr("#STR_OZL_ED_BR_ADDED");
+        Hint(word + br.Id);
     }
 
-    // Гілка йде разом зі своїми вузлами й усіма посиланнями на них -- після
-    // «так» у рядку підтвердження вікна.
+    // A branch goes with its nodes and every link to them -- after the yes on the
+    // window's confirm strip.
     protected void BrDelete()
     {
         OZL_TreeConfig tree = DraftTree();
@@ -2091,9 +3153,11 @@ modded class OZ_VppAdminMenu
         OZL_TreeBranch br = null;
         if (tree)
             br = OZL_EdTree.FindBranch(tree, branchId);
+        string word;
         if (!br)
         {
-            Hint(Tr("#STR_OZL_VPP_GONE") + branchId);
+            word = Tr("#STR_OZL_VPP_GONE");
+            Hint(word + branchId);
             return;
         }
 
@@ -2126,10 +3190,11 @@ modded class OZ_VppAdminMenu
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_BR_DELETED") + id);
+        word = Tr("#STR_OZL_ED_BR_DELETED");
+        Hint(word + id);
     }
 
-    // ------------------------------------------------- зв'язки, тір, перегляд
+    // ------------------------------------------------- links, tiers, the preview
 
     protected void TrLinkToggle()
     {
@@ -2141,12 +3206,12 @@ modded class OZ_VppAdminMenu
         RepaintTree(false);
     }
 
-    // Клік по вузлу в режимі зв'язку: перший -- батько, далі -- діти; клік
-    // по дитині, що вже має цей зв'язок, його прибирає; клік по самому
-    // батькові -- вибрати іншого.
+    // A click on a node in the link mode: the first is the parent, the next are children;
+    // a click on a child that has this link takes it away; a click on the parent itself
+    // lets another be picked.
     protected void TrLinkClick(string id)
     {
-        if (m_TrLinkFrom == "" )
+        if (m_TrLinkFrom == "")
         {
             m_TrLinkFrom = id;
             m_TrSel = id;
@@ -2161,12 +3226,15 @@ modded class OZ_VppAdminMenu
         }
 
         OZL_TreeConfig tree = DraftTree();
+        if (!tree)
+            return;
         OZL_TreeNode parent = tree.FindNode(m_TrLinkFrom);
         OZL_TreeNode child = tree.FindNode(id);
         if (!parent || !child)
             return;
 
         string tag = OZL_Config.TAG_TREE;
+        string word;
         int at = child.Parents.Find(m_TrLinkFrom);
         if (at >= 0)
         {
@@ -2174,13 +3242,15 @@ modded class OZ_VppAdminMenu
             child.Parents.RemoveOrdered(at);
             m_Ed.Commit(tag);
             m_Ed.EndGesture();
-            Hint(Tr("#STR_OZL_ED_TR_UNLINKED") + m_TrLinkFrom + " -> " + id);
+            word = Tr("#STR_OZL_ED_TR_UNLINKED");
+            Hint(word + m_TrLinkFrom + " -> " + id);
         }
         else
         {
             if (OZL_EdTree.DependsOn(tree, parent, id, 0))
             {
-                Hint(Tr("#STR_OZL_ED_TR_CYCLE") + m_TrLinkFrom + " -> " + id);
+                word = Tr("#STR_OZL_ED_TR_CYCLE");
+                RzSay(word + m_TrLinkFrom + " -> " + id, 2);
                 return;
             }
             m_Ed.BeginOnce(tag, "");
@@ -2189,20 +3259,22 @@ modded class OZ_VppAdminMenu
             if (child.Tier <= parent.Tier)
             {
                 child.Tier = parent.Tier + 1;
-                note = Tr("#STR_OZL_ED_TR_BUMPED") + child.Tier.ToString();
+                string bumped = Tr("#STR_OZL_ED_TR_BUMPED");
+                note = bumped + child.Tier.ToString();
             }
             m_Ed.Commit(tag);
             m_Ed.EndGesture();
-            Hint(Tr("#STR_OZL_ED_TR_LINKED") + m_TrLinkFrom + " -> " + id + note);
+            word = Tr("#STR_OZL_ED_TR_LINKED");
+            Hint(word + m_TrLinkFrom + " -> " + id + note);
         }
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
     }
 
-    // Тір під вузлом, зсунутим уздовж осі на along пікселів: ряд плану, у
-    // який потрапив центр вузла. За останнім рядом -- новий тір, перед
-    // першим -- на один менший (не нижче 1).
+    // The tier under a node moved along the axis by `along` pixels: the row of the plan
+    // the node's centre fell into. Past the last row -- a new tier, before the first --
+    // one less (not below 1).
     protected int TierAt(string id, float along)
     {
         if (!m_TrPlan || !m_TrSkin)
@@ -2230,8 +3302,8 @@ modded class OZ_VppAdminMenu
         return m_TrPlan.Tiers[ti];
     }
 
-    // Натиснули на вузлі й тягнуть: комірка їде за мишею вздовж осі, рядок
-    // під полотном називає тір; відпустили -- тір вузла, один знімок.
+    // A node is pressed and dragged: its cell follows the mouse along the axis, the line
+    // under the canvas names the tier; released -- the node's tier, one undo step.
     protected void TrackTnDrag()
     {
         if (m_TnDragId == "")
@@ -2270,7 +3342,8 @@ modded class OZ_VppAdminMenu
             else
                 cell.SetPos(m_TnCellX, m_TnCellY + dy);
         }
-        TrInfoText(Tr("#STR_OZL_ED_TR_DRAG_TIER") + TierAt(m_TnDragId, along).ToString());
+        string word = Tr("#STR_OZL_ED_TR_DRAG_TIER");
+        TrInfoText(word + TierAt(m_TnDragId, along).ToString());
     }
 
     protected void DropTier(string id, float along)
@@ -2295,11 +3368,12 @@ modded class OZ_VppAdminMenu
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_TR_TIER_SET") + id + ": " + was.ToString() + " -> " + tier.ToString());
+        string word = Tr("#STR_OZL_ED_TR_TIER_SET");
+        Hint(word + id + ": " + was.ToString() + " -> " + tier.ToString());
     }
 
-    // Натиснули на порожньому полотні: тягнення прокручує, клік без руху --
-    // зняти вибір вузла (інспектор показує гілку).
+    // The empty canvas is pressed: a drag scrolls it, a click without a move drops the
+    // picked node.
     protected void TrackTrPan()
     {
         if (!m_TrPanDown)
@@ -2331,8 +3405,8 @@ modded class OZ_VppAdminMenu
         sw.VScrollToPos(m_TrPanV - dy);
     }
 
-    // Чи натиснуто на смугу прокрутки полотна (10 одиниць біля правого й
-    // нижнього краю, як у вікні гравця).
+    // Whether the press is on the canvas's scrollbars (10 units at its right and bottom
+    // edges, as in the player's window).
     protected bool OnTrScrollbar(int x, int y)
     {
         Widget sw = M_SUB_WIDGET.FindAnyWidget("RzTrScroll");
@@ -2351,9 +3425,9 @@ modded class OZ_VppAdminMenu
         return onBar;
     }
 
-    // ЯК У ГРАВЦЯ: вікно дерева гравця поверх адмінського, з виглядом із
-    // чернетки й демо-стану. Меню VPP лишається батьком (як записка над
-    // інвентарем у ванілі): ESC закриває дерево й повертає сюди.
+    // AS THE PLAYER SEES IT: the player's tree window over the admin one, with a view made
+    // of the draft and the demo state. The VPP menu stays its parent: ESC closes the tree
+    // and comes back here.
     protected void TrPreview()
     {
         OZL_TreeConfig tree = DraftTree();
@@ -2377,58 +3451,14 @@ modded class OZ_VppAdminMenu
         if (!menu)
         {
             OZL_TreeMenu.PreviewNext("");
-            Hint(Tr("#STR_OZL_ED_TR_VIEW_FAIL"));
+            RzSay(Tr("#STR_OZL_ED_TR_VIEW_FAIL"), 2);
             return;
         }
-        Hint(Tr("#STR_OZL_ED_TR_VIEW_OPEN") + m_TrOwner);
+        string word = Tr("#STR_OZL_ED_TR_VIEW_OPEN");
+        Hint(word + m_TrOwner);
     }
 
-    override void OnUpdate(float timeslice)
-    {
-        super.OnUpdate(timeslice);
-        if (!M_SUB_WIDGET || !m_TrFlows)
-            return;
-        RunTrFlows();
-        TrackTnDrag();
-        TrackTrPan();
-        if (m_TnSkipClick > 0)
-            m_TnSkipClick--;
-    }
-
-    override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-    {
-        if (w && M_SUB_WIDGET && m_TrFlows && button == MouseState.LEFT && m_RzTab == "tree" && RzShown())
-        {
-            string nm = w.GetName();
-            if (nm.IndexOf("rznode:") == 0)
-            {
-                m_TnDragMoved = false;
-                if (!m_TrLink)
-                {
-                    m_TnDragId = nm.Substring(7, nm.Length() - 7);
-                    GetMousePos(m_TnDragX, m_TnDragY);
-                    Widget cell = M_SUB_WIDGET.FindAnyWidget("rzcell:" + m_TnDragId);
-                    if (cell)
-                        cell.GetPos(m_TnCellX, m_TnCellY);
-                }
-            }
-            else if (nm == "RzTrNodes" || nm == "RzTrContent" || (nm == "RzTrScroll" && !OnTrScrollbar(x, y)))
-            {
-                ScrollWidget sw = ScrollWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrScroll"));
-                if (sw)
-                {
-                    m_TrPanDown = true;
-                    m_TrPanMoved = false;
-                    GetMousePos(m_TrPanX, m_TrPanY);
-                    m_TrPanH = sw.GetHScrollPos();
-                    m_TrPanV = sw.GetVScrollPos();
-                }
-            }
-        }
-        return super.OnMouseButtonDown(w, x, y, button);
-    }
-
-    // Поле інспектора змінилось: правка вибраного вузла, один знімок на поле.
+    // A field of the node's form changed: an edit of the picked node, one undo step per field.
     protected void OnTnField(string field)
     {
         OZL_TreeConfig tree = DraftTree();
@@ -2474,9 +3504,9 @@ modded class OZ_VppAdminMenu
         PaintSummary();
     }
 
-    // Новий Id вузла. Посилання (батьки інших вузлів) ідуть за ним лише на
-    // ВІЛЬНИЙ Id: проміжний Id, що збігся з чужим, під час набору лишає їх
-    // на попередньому -- інакше вони перейшли б до чужого вузла назавжди.
+    // A node's new id. The links (other nodes' parents) follow it to a FREE id only: an
+    // id that meets another node's on the way stays behind, or the links would go over
+    // to that node for good.
     protected void RenameTn(OZL_TreeConfig tree, OZL_TreeNode n, string id)
     {
         n.Id = id;
@@ -2528,7 +3558,8 @@ modded class OZ_VppAdminMenu
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_TR_ADDED") + n.Id);
+        string word = Tr("#STR_OZL_ED_TR_ADDED");
+        Hint(word + n.Id);
     }
 
     protected void TnDelete()
@@ -2545,16 +3576,18 @@ modded class OZ_VppAdminMenu
         Confirm(ask + n.Id + tail, "#STR_OZL_VPP_YES_DELETE", "rz:tndel:" + n.Id);
     }
 
-    // The strip's "yes": the node is found again by its id, every link to it goes too.
+    // The strip's yes: the node is found again by its id, every link to it goes too.
     protected void TnDeleteNow(string nodeId)
     {
         OZL_TreeConfig tree = DraftTree();
         OZL_TreeNode n = null;
         if (tree)
             n = tree.FindNode(nodeId);
+        string word;
         if (!n)
         {
-            Hint(Tr("#STR_OZL_VPP_GONE") + nodeId);
+            word = Tr("#STR_OZL_VPP_GONE");
+            Hint(word + nodeId);
             return;
         }
 
@@ -2564,6 +3597,8 @@ modded class OZ_VppAdminMenu
         for (int b = 0; b < tree.Branches.Count(); b++)
         {
             OZL_TreeBranch br = tree.Branches[b];
+            if (!br)
+                continue;
             for (int i = br.Nodes.Count() - 1; i >= 0; i--)
             {
                 if (br.Nodes[i] == n)
@@ -2579,11 +3614,12 @@ modded class OZ_VppAdminMenu
         RepaintTree(true);
         PaintRzBar();
         PaintSummary();
-        Hint(Tr("#STR_OZL_ED_TR_DELETED") + id);
+        word = Tr("#STR_OZL_ED_TR_DELETED");
+        Hint(word + id);
     }
 
-    // The node's condition from its pair of buttons: any parent, or all of them. A
-    // press on the one in force changes nothing and takes no undo step.
+    // The node's condition from its pair of buttons: any parent, or all of them. A press
+    // on the one in force changes nothing and takes no undo step.
     protected void TnSetMode(bool anyParent)
     {
         OZL_TreeConfig tree = DraftTree();
@@ -2611,170 +3647,62 @@ modded class OZ_VppAdminMenu
         PaintSummary();
     }
 
-    // ================================================= розмір вікна
+    // ================================================= events
 
-    // Вікно змінило розмір (OZ_VppAdminMenu.ApplyWindowSize): панель тепер
-    // w x h пікселів -- область вмісту праворуч від рейки (1060 x 680 одиниць
-    // за замовчуванням). Генератор розмітки поставив усе в точні місця, тож
-    // голова, сторінки, панель проблем і смуга чернетки перекладаються звідси
-    // (RzLayout): списки, полотно дерева й сировина тягнуться, форми лишаються
-    // своєї ширини.
-    //
-    // NOTHING IS READ BACK: the shell lays the window out once before the engine's
-    // first layout pass (the first show), and a widget measured then reads 0 x 0
-    // (dayz-modding gui-layouts §23a). Every size comes from w, h and the layout's own
-    // numbers.
-    override void OnWindowResized(float w, float h)
+    override void OnUpdate(float timeslice)
     {
-        super.OnWindowResized(w, h);
-        if (!M_SUB_WIDGET)
+        super.OnUpdate(timeslice);
+        if (!M_SUB_WIDGET || !m_TrFlows)
             return;
-        m_RzW = w;
-        m_RzH = h;
-        RzLayout();
-    }
+        RunTrFlows();
+        TrackTnDrag();
+        TrackTrPan();
+        if (m_TnSkipClick > 0)
+            m_TnSkipClick--;
 
-    // The tree page: the side column (owners, branches, the branch's form at the
-    // bottom), the canvas taking what is left, the node's form on the right.
-    protected void RzLayTree(float pw, float ph)
-    {
-        float s = Px();
-        float gap = 16 * s;
-        float sideW = 250 * s;
-        float inspW = 300 * s;
-        float midW = pw - sideW - inspW - 2 * gap;
-        if (midW < 160 * s)
-            midW = 160 * s;
-
-        // The side column: the branch's form keeps its 250 units at the bottom, the two
-        // lists share the rest (the owners a little less), each at least 40.
-        SizeW("RzTrSide", sideW, ph);
-        float avail = ph - (18 + 8 + 30) * s - 250 * s - 8 * s;
-        float ownersH = avail * 0.45;
-        if (ownersH < 40 * s)
-            ownersH = 40 * s;
-        float branchesH = avail - ownersH;
-        if (branchesH < 40 * s)
-            branchesH = 40 * s;
-        SizeW("RzTrOwners", sideW, ownersH);
-        float headY = 18 * s + ownersH + 8 * s;
-        MoveW("RzTrBrHead", 0, headY);
-        MoveW("BtnRzBrAdd", 150 * s, headY);
-        PlaceW("RzTrBranches", 0, headY + 30 * s, sideW, branchesH);
-
-        // The canvas.
-        PlaceW("RzTrMid", sideW + gap, 0, midW, ph);
-        SizeW("RzTrBar", midW, 32 * s);
-        float skinW = midW - (318 + 8) * s;
-        if (skinW < 0)
-            skinW = 0;
-        SizeW("RzTrSkin", skinW, 32 * s);
-        float canvasH = ph - (36 + 26) * s;
-        if (canvasH < 60 * s)
-            canvasH = 60 * s;
-        SizeW("RzTrHost", midW, canvasH);
-        SizeW("RzTrScroll", midW, canvasH);
-        SizeW("RzTrInfo", midW, 22 * s);
-
-        // The node's form.
-        PlaceW("RzTrInsp", pw - inspW, 0, inspW, ph);
-        float formH = ph - 66 * s;
-        if (formH < 40 * s)
-            formH = 40 * s;
-        SizeW("RzTnForm", inspW, formH);
-
-        ScrollWidget sw = ScrollWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrScroll"));
-        if (sw)
-            sw.Update();
-    }
-
-    // Кнопка генератора -- корінь і троє дітей тієї самої ширини: рамка на
-    // одиницю ширша з кожного боку, тло й напис -- як корінь.
-    protected void PlaceBtn(string name, float x, float y, float w, float h)
-    {
-        Widget b = M_SUB_WIDGET.FindAnyWidget(name);
-        if (!b)
-            return;
-        float s = Px();
-        b.SetPos(x, y);
-        b.SetSize(w, h);
-        Widget edge = b.FindAnyWidget(name + "Edge");
-        if (edge)
-            edge.SetSize(w + 2 * s, h + 2 * s);
-        Widget bg = b.FindAnyWidget(name + "Bg");
-        if (bg)
-            bg.SetSize(w, h);
-        Widget tx = b.FindAnyWidget(name + "Text");
-        if (tx)
-            tx.SetSize(w, h);
-    }
-
-    // ================================================= події
-
-    override bool OnItemSelected(Widget w, int x, int y, int row, int column, int oldRow, int oldColumn)
-    {
-        if (!M_SUB_WIDGET || m_ResRepaint || !w)
-            return super.OnItemSelected(w, x, y, row, column, oldRow, oldColumn);
-
-        string nm = w.GetName();
-        if (nm == "ResOwners")
+        // The open page fitted once more, two frames after it was painted.
+        if (m_RzRefit > 0)
         {
-            if (row >= 0 && row < m_ResOwners.Count())
+            m_RzRefit--;
+            if (m_RzRefit == 0 && RzShown())
             {
-                m_ResPicked = row;
-                m_ResRepaint = true;
-                RepaintOwners();
-                m_ResRepaint = false;
-                PaintPicked();
-                string pickedHint = Tr("#STR_OZL_VPP_HINT_FACTION");
-                Hint(pickedHint + PickedOwner());
+                RzFlowBar();
+                RzLayPages(m_RzW, m_RzH);
             }
-            return true;
         }
-        if (nm == "RzTrOwners")
+    }
+
+    override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+    {
+        if (w && M_SUB_WIDGET && m_TrFlows && button == MouseState.LEFT && m_RzTab == "tree" && RzShown())
         {
-            OZL_Owners owners = DraftOwners();
-            if (owners && row >= 0 && row < owners.Owners.Count() && owners.Owners[row])
+            string nm = w.GetName();
+            if (nm.IndexOf("rznode:") == 0)
             {
-                m_TrOwner = owners.Owners[row].Id;
-                m_TrBranch = "";
-                m_TrSel = "";
-                m_TrLinkFrom = "";
-                m_Ed.EndGesture();
-                RepaintTree(true);
-            }
-            return true;
-        }
-        if (nm == "RzTrBranches")
-        {
-            OZL_TreeConfig tree = DraftTree();
-            if (tree)
-            {
-                array<string> ids = new array<string>();
-                TrBranchIds(tree, ids);
-                if (row >= 0 && row < ids.Count())
+                m_TnDragMoved = false;
+                if (!m_TrLink)
                 {
-                    m_TrBranch = ids[row];
-                    m_TrSel = "";
-                    m_TrLinkFrom = "";
-                    m_Ed.EndGesture();
-                    RepaintTree(true);
+                    m_TnDragId = nm.Substring(7, nm.Length() - 7);
+                    GetMousePos(m_TnDragX, m_TnDragY);
+                    Widget cell = M_SUB_WIDGET.FindAnyWidget("rzcell:" + m_TnDragId);
+                    if (cell)
+                        cell.GetPos(m_TnCellX, m_TnCellY);
                 }
             }
-            return true;
-        }
-        if (nm == "RzPtList")
-        {
-            OZL_PointTypes pts = DraftPointTypes();
-            if (pts && row >= 0 && row < pts.PointTypes.Count())
+            else if (nm == "RzTrNodes" || nm == "RzTrContent" || (nm == "RzTrScroll" && !OnTrScrollbar(x, y)))
             {
-                m_PtPicked = row;
-                m_Ed.EndGesture();
-                RepaintPoints(true);
+                ScrollWidget sw = ScrollWidget.Cast(M_SUB_WIDGET.FindAnyWidget("RzTrScroll"));
+                if (sw)
+                {
+                    m_TrPanDown = true;
+                    m_TrPanMoved = false;
+                    GetMousePos(m_TrPanX, m_TrPanY);
+                    m_TrPanH = sw.GetHScrollPos();
+                    m_TrPanV = sw.GetVScrollPos();
+                }
             }
-            return true;
         }
-        return super.OnItemSelected(w, x, y, row, column, oldRow, oldColumn);
+        return super.OnMouseButtonDown(w, x, y, button);
     }
 
     override bool OnChange(Widget w, int x, int y, bool finished)
@@ -2782,13 +3710,6 @@ modded class OZ_VppAdminMenu
         if (w && M_SUB_WIDGET && !m_RzFill && m_Ed)
         {
             string nm = w.GetName();
-            if (nm == "RzPtId" || nm == "RzPtName" || nm == "RzPtColor" || nm == "RzPtSort" || nm == "RzPtPurity" || nm == "RzPtIcon")
-            {
-                OnPtField(nm);
-                if (finished)
-                    m_Ed.EndGesture();
-                return true;
-            }
             if (nm.IndexOf("RzTn") == 0)
             {
                 OnTnField(nm);
@@ -2809,86 +3730,14 @@ modded class OZ_VppAdminMenu
 
     override bool OnClick(Widget w, int x, int y, int button)
     {
-        if (!M_SUB_WIDGET || !w)
+        if (!M_SUB_WIDGET || !w || !m_Ed)
             return super.OnClick(w, x, y, button);
 
         string nm = w.GetName();
 
-        // Вузол на полотні: NodeHit його комірки названий rznode:<id>. Клік,
-        // що прийшов із відпусканням після перетягування, -- не вибір.
-        if (nm.IndexOf("rznode:") == 0)
-        {
-            if (m_TnSkipClick > 0 || m_TnDragMoved)
-                return true;
-            string picked = nm.Substring(7, nm.Length() - 7);
-            m_Ed.EndGesture();
-            if (m_TrLink)
-            {
-                TrLinkClick(picked);
-                return true;
-            }
-            m_TrSel = picked;
-            RepaintTree(false);
-            return true;
-        }
-        if (nm == "BtnRzTrRoot")
-        {
-            TnAdd(false);
-            return true;
-        }
-        if (nm == "BtnRzTrChild")
-        {
-            TnAdd(true);
-            return true;
-        }
-        if (nm == "BtnRzTrLink")
-        {
-            TrLinkToggle();
-            return true;
-        }
-        if (nm == "BtnRzTrView")
-        {
-            TrPreview();
-            return true;
-        }
-        // The preview's state, a select of three: the value steps on, the arrows
-        // step either way.
-        if (nm == "BtnRzTrDemo" || nm == "BtnRzTrDemoNext")
-        {
-            m_TrDemo = (m_TrDemo + 1) % 3;
-            PaintTrButtons();
-            return true;
-        }
-        if (nm == "BtnRzTrDemoPrev")
-        {
-            m_TrDemo = (m_TrDemo + 2) % 3;
-            PaintTrButtons();
-            return true;
-        }
-        if (nm == "BtnRzBrAdd")
-        {
-            BrAdd();
-            return true;
-        }
-        if (nm == "BtnRzBrDel")
-        {
-            BrDelete();
-            return true;
-        }
-        if (nm == "BtnRzTnModeAll" || nm == "BtnRzTnModeAny")
-        {
-            bool anyParent = (nm == "BtnRzTnModeAny");
-            TnSetMode(anyParent);
-            return true;
-        }
-        if (nm == "BtnRzTnDel")
-        {
-            TnDelete();
-            return true;
-        }
-
-        // The problems panel above the draft bar opens and closes here and on its
-        // own close button.
+        // ---- the strips
+        // The problems panel above the draft bar opens and closes here and on its own
+        // close button.
         if (nm == "BtnRzProblems")
         {
             RzShowProblems(!m_RzProblems);
@@ -2919,27 +3768,83 @@ modded class OZ_VppAdminMenu
             RzApply();
             return true;
         }
-        if (nm == "BtnRzPtDel")
+
+        // ---- Дерево
+        // A node on the canvas: the NodeHit of its cell is named rznode:<id>. A click that
+        // came with the release after a drag is no pick.
+        if (nm.IndexOf("rznode:") == 0)
         {
-            PtDelete();
+            if (m_TnSkipClick > 0 || m_TnDragMoved)
+                return true;
+            string picked = nm.Substring(7, nm.Length() - 7);
+            m_Ed.EndGesture();
+            if (m_TrLink)
+            {
+                TrLinkClick(picked);
+                return true;
+            }
+            m_TrSel = picked;
+            RepaintTree(false);
+            return true;
+        }
+        if (nm == "BtnRzTrRoot")
+        {
+            TnAdd(false);
+            return true;
+        }
+        if (nm == "BtnRzTrChild" || nm == "BtnRzTrPlus")
+        {
+            TnAdd(true);
+            return true;
+        }
+        if (nm == "BtnRzTrLink")
+        {
+            TrLinkToggle();
+            return true;
+        }
+        if (nm == "BtnRzTrView")
+        {
+            TrPreview();
+            return true;
+        }
+        // The preview's state, a select of three: a press steps on.
+        if (nm == "BtnRzTrDemo")
+        {
+            m_TrDemo = (m_TrDemo + 1) % 3;
+            PaintTrButtons();
+            return true;
+        }
+        if (nm == "BtnRzBrAdd")
+        {
+            BrAdd();
+            return true;
+        }
+        if (nm == "BtnRzBrDel")
+        {
+            BrDelete();
+            return true;
+        }
+        if (nm == "BtnRzTnModeAll" || nm == "BtnRzTnModeAny")
+        {
+            bool anyParent = (nm == "BtnRzTnModeAny");
+            TnSetMode(anyParent);
+            return true;
+        }
+        if (nm == "BtnRzTnDel")
+        {
+            TnDelete();
             return true;
         }
 
-        // The page head's one action: refresh on the overview, a new point type here;
-        // the config layer takes it for owners, modules and statics.
-        if (nm == "BtnRzHdAct" && m_RzTab == "overview")
+        // ---- Огляд
+        if (nm == "BtnRzOvRefresh")
         {
             AskResearchList();
             return true;
         }
-        if (nm == "BtnRzHdAct" && m_RzTab == "points")
-        {
-            PtAdd();
-            return true;
-        }
 
-        // Перечитування й скидання питають рядком підтвердження вікна (дизайн
-        // вікна §3.4); «так» шле операцію з OnConfirmed.
+        // The reload and the reset ask on the window's confirm strip; the yes sends the
+        // operation from OnConfirmed.
         if (nm == "BtnReload")
         {
             Confirm(Tr("#STR_OZL_VPP_ASK_RELOAD"), "#STR_OZL_VPP_YES_RELOAD", "rz:reload");
@@ -2991,6 +3896,49 @@ modded class OZ_VppAdminMenu
             string completing = Tr("#STR_OZL_VPP_HINT_COMPLETING");
             Hint(completing + node + " -> " + cOwner);
             return true;
+        }
+
+        // ---- rows of the lists (a row, or anything inside one)
+        int at;
+        if (m_OvFacRows && m_RzTab == "overview")
+        {
+            at = m_OvFacRows.IndexOf(w);
+            if (at != -1)
+            {
+                m_ResPick = m_OvFacRows.Key(at);
+                OvLayFacRows();
+                PaintPicked();
+                string pickedHint = Tr("#STR_OZL_VPP_HINT_FACTION");
+                Hint(pickedHint + m_ResPick);
+                return true;
+            }
+        }
+        if (m_TrOwRows && m_RzTab == "tree")
+        {
+            at = m_TrOwRows.IndexOf(w);
+            if (at != -1)
+            {
+                m_TrOwner = m_TrOwRows.Key(at);
+                m_TrBranch = "";
+                m_TrSel = "";
+                m_TrLinkFrom = "";
+                m_Ed.EndGesture();
+                RepaintTree(true);
+                return true;
+            }
+        }
+        if (m_TrBrRows && m_RzTab == "tree")
+        {
+            at = m_TrBrRows.IndexOf(w);
+            if (at != -1)
+            {
+                m_TrBranch = m_TrBrRows.Key(at);
+                m_TrSel = "";
+                m_TrLinkFrom = "";
+                m_Ed.EndGesture();
+                RepaintTree(true);
+                return true;
+            }
         }
 
         return super.OnClick(w, x, y, button);

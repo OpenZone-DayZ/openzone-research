@@ -1,0 +1,72 @@
+overview: ResearchOverview.dc.html -> OpenZone_Research_VPP/gui/layouts/ozl_vpp_overview.layout
+design size 1360 x 812, measured again one, two and three steps of 240 x 160 larger
+widgets: 128; 13 of them the browser re-flows as the page grows (the rule keeps them as designed)
+
+FILES
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_overview.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ov_fac_row.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_pool_chip.layout
+  OpenZone_Research_VPP/gui/layouts/ozl_vpp_ov_static_row.layout
+
+NAMED WIDGETS OF THE PAGE (FindAnyWidget)
+  BtnRzOvRefresh  ButtonWidget (parts: BtnRzOvRefreshEdge, BtnRzOvRefreshBg)
+  RzOvFacCount  TextWidget (filled by script)
+  RzOvFac  Frame
+  RzOvFacRows  WrapSpacer: the list's rows go here (ozl_vpp_ov_fac_row); its ScrollWidget is RzOvFacScroll
+  ResPicked  TextWidget (filled by script)
+  RzOvPoolLine  Frame
+  RzOvPoolTag  TextWidget (a caption: recolour only)
+  RzOvPoolRest  TextWidget (filled by script)
+  GrantType  EditBox
+  GrantN  EditBox
+  BtnGrant  ButtonWidget (parts: BtnGrantEdge, BtnGrantBg)
+  NodeId  EditBox
+  BtnComplete  ButtonWidget (parts: BtnCompleteEdge, BtnCompleteBg)
+  BtnReset  ButtonWidget (parts: BtnResetEdge, BtnResetBg)
+  BtnReload  ButtonWidget (parts: BtnReloadEdge, BtnReloadBg)
+  RzOvV0  TextWidget (filled by script)
+  RzOvV1  TextWidget (filled by script)
+  RzOvV2  TextWidget (filled by script)
+  RzOvV3  TextWidget (filled by script)
+  RzOvV4  TextWidget (filled by script)
+  RzOvV5  TextWidget (filled by script)
+  RzOvProblems  TextWidget (filled by script)
+  RzSummary  TextWidget (filled by script)
+  RzOvStHead  TextWidget (a caption: recolour only)
+  RzOvStCount  TextWidget (filled by script)
+  RzOvSt  Frame
+  RzOvStRows  WrapSpacer: the list's rows go here (ozl_vpp_ov_static_row); its ScrollWidget is RzOvStScroll
+
+ROW TEMPLATES
+  ozl_vpp_ov_fac_row.layout  root OZL_OvFacRow (Button), 10 in the sample, 567 x 69 units, list RzOvFacRows
+      OZL_OvFacRow  ButtonWidget (parts: OZL_OvFacRowEdge, OZL_OvFacRowBg)
+      OvFacSlug  TextWidget (filled by script)
+      OvFacDash  TextWidget (a caption: recolour only)
+      OvFacName  TextWidget (filled by script)
+      OvFacPool  Frame
+      OvFacDone  TextWidget (filled by script)
+      OvFacActive  TextWidget (filled by script)
+  ozl_vpp_pool_chip.layout  root OZL_PoolChip (Frame), 4 in the sample, 77 x 15 units, placed by script
+      OZL_PoolChip  Frame
+      PoolDot  Frame (parts: PoolDotEdge, PoolDotBg)
+      PoolText  TextWidget (filled by script)
+  ozl_vpp_ov_static_row.layout  root OZL_OvStRow (Frame), 39 in the sample, 339 x 30 units, list RzOvStRows
+      OZL_OvStRow  Frame (parts: OZL_OvStRowBg)
+      OvStId  TextWidget (filled by script)
+      OvStChip  Frame (parts: OvStChipBg)
+      OvStState  TextWidget (filled by script)
+
+CSS THE ENGINE HAS NO ANSWER FOR
+  border-radius  x20
+
+RESIZE: WHERE THE BROWSER RE-FLOWS (a text unwraps, a box changes its row); the first of them
+  RichText ro49
+  Panel ro50
+  Panel ro52
+  Panel ro54
+  Panel ro56
+  Panel ro58
+  Panel ro60
+  Text RzOvProblems
+  Frame ro62
+  Panel ro63

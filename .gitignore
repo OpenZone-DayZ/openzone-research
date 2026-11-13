@@ -37,3 +37,10 @@ dayz-mcp.local.toml
 # the font converter: previews and bytecode (fonts.json builds land in OpenZone_Research/gui/fonts)
 source/fonts/preview/
 source/fonts/**/__pycache__/
+
+# css2layout: previews and measurements, never packed or committed
+_demo_*.layout
+ui/css2layout/*.measure.json
+ui/css2layout/icons.json
+ui/css2layout/icons.png
+ui/css2layout/chrome_profile*/
