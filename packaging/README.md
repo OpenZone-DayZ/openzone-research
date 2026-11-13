@@ -12,6 +12,12 @@ packaging/<Mod>.workshop.bbcode
                             the Workshop listing, English and Ukrainian in one field
 packaging/<Mod>.workshop.png
                             the preview image the item's page shows, 1024x512
+packaging/<Mod>.shot<N>[.<en|uk>].jpg
+                            the item's screenshot strip, in order: the windows in English
+                            and Ukrainian, in-world shots without a language; flat beside
+                            the preview, never in packaging/<Mod>/, which package.ps1
+                            copies into the mod. They go up with workshop_publish(...,
+                            previews=[...], content=False); every call ADDS pictures
 packaging/OZ_Research_types.xml
                             the item economy example: every class of the mod with nominal=0,
                             for server owners to copy next to the mission and turn on
