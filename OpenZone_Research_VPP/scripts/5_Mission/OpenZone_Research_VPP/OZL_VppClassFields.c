@@ -16,12 +16,14 @@ modded class OZ_VppAdminMenu
         pick.Bind("RzRuInput", OZ_ClassIndex.ITEM);
         pick.Bind("RzRuOut", OZ_ClassIndex.ITEM);
         pick.Bind("RzRuDevice", OZ_ClassIndex.ITEM + OZ_ClassIndex.OBJECT);
-        // A module's class, a static's object.
+        // A module's class; a static: the series' stations and terminals are items by config
+        // (OZL_StaticDevice_Base : Inventory_Base), a map object is not.
         pick.Bind("RzMoClass", OZ_ClassIndex.ITEM);
-        pick.Bind("RzStcClass", OZ_ClassIndex.OBJECT);
-        // A tree node's items (class:quantity) and an owner's devices (classes, comma
-        // between).
+        pick.Bind("RzStcClass", OZ_ClassIndex.ITEM + OZ_ClassIndex.OBJECT);
+        // A tree node's items (class:quantity); an owner's terminals and stations (classes,
+        // comma between; the stations' box has many lines).
         pick.Bind("RzTnItems", OZ_ClassIndex.ITEM, true);
+        pick.Bind("RzOwTerms", OZ_ClassIndex.ITEM + OZ_ClassIndex.OBJECT, true);
         pick.Bind("RzOwDevices", OZ_ClassIndex.ITEM + OZ_ClassIndex.OBJECT, true);
     }
 }
